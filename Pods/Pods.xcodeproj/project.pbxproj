@@ -1,0 +1,757 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D45036917ACE7C10CD69B5D4ADA1CAF /* Pods-CoffeeChat-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B622CA8217C43EAA135C31EE708AD2 /* Pods-CoffeeChat-dummy.m */; };
+		40ACC17283F5624FDC0A4084EF9E3BDB /* Pods-CoffeeChatTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EE3F58D601973ED30D5747D8202A536C /* Pods-CoffeeChatTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		584DBCBF3448D72E86C27138234C7224 /* Pods-CoffeeChat-CoffeeChatUITests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FB0F79F2976A1A12F2EF76663F4E1266 /* Pods-CoffeeChat-CoffeeChatUITests-dummy.m */; };
+		635591B949D99C9BBE2565C8D121A76F /* Pods-CoffeeChat-CoffeeChatUITests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EF20C53CBCAA99A8B8F4F2FB51964B4B /* Pods-CoffeeChat-CoffeeChatUITests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		95CDF0631548C435E98123996794B7C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		A23015CD6C312BA5BE26A766DDA6DCC2 /* Pods-CoffeeChat-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 150609189C05451B2929B3950014B434 /* Pods-CoffeeChat-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB57B12B4D6FA80C062BFF10853737FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		D30A7D9CFBBEAD643F8BE29D6BB9215A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		FED42AF2FB6973D546361911ED430E49 /* Pods-CoffeeChatTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615F7FD86EA428F006B9F06637AB0CCE /* Pods-CoffeeChatTests-dummy.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		776E276C19A33F231179143F2554CAE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 728F16140D011187D5F95D8EED63853C;
+			remoteInfo = "Pods-CoffeeChat";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1055F1C285907AB28226CAA7B50F311B /* Pods-CoffeeChatTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChatTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		1234501A3E3E488F6AAAD608E7D3291F /* Pods-CoffeeChatTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CoffeeChatTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		12FC9CD201EE65F6A39DC3C97BD4C8E2 /* Pods-CoffeeChatTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-CoffeeChatTests.modulemap"; sourceTree = "<group>"; };
+		150609189C05451B2929B3950014B434 /* Pods-CoffeeChat-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoffeeChat-umbrella.h"; sourceTree = "<group>"; };
+		1B02821E22961B73FD0FB6D9FD4F6701 /* Pods-CoffeeChat-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CoffeeChat-acknowledgements.markdown"; sourceTree = "<group>"; };
+		2024AE7C1EF215D63C9164FE6B87905D /* Pods-CoffeeChatTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChatTests-Info.plist"; sourceTree = "<group>"; };
+		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		34455C65F51220CE14E2C13A80E55A2A /* Pods-CoffeeChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChat.debug.xcconfig"; sourceTree = "<group>"; };
+		34698D677A8F901917AD13E1247DF2F5 /* Pods-CoffeeChat-CoffeeChatUITests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChat-CoffeeChatUITests-Info.plist"; sourceTree = "<group>"; };
+		46B622CA8217C43EAA135C31EE708AD2 /* Pods-CoffeeChat-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CoffeeChat-dummy.m"; sourceTree = "<group>"; };
+		615F7FD86EA428F006B9F06637AB0CCE /* Pods-CoffeeChatTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CoffeeChatTests-dummy.m"; sourceTree = "<group>"; };
+		81B0FAEDCAB6E77F0EE47A2814BCD2DF /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8F7BCB0B1869593A9E0870BC897F1AB3 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		90FEBDEC655EE81ABA22DD95BDF2902D /* Pods-CoffeeChat-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChat-acknowledgements.plist"; sourceTree = "<group>"; };
+		92201F81D6C17B45EA771D8E0BB60D00 /* Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A54A433CDA423AC39FC57624540BB592 /* Pods-CoffeeChat.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-CoffeeChat.modulemap"; sourceTree = "<group>"; };
+		A840901B0CBB39B557473035DE77294D /* Pods_CoffeeChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoffeeChat.framework; path = "Pods-CoffeeChat.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4957BFAA4F8CA9B28E9701C02CA1774 /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
+		B97C1058EF7146524590221035786D60 /* Pods-CoffeeChat-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChat-Info.plist"; sourceTree = "<group>"; };
+		CA841D12D0F77E5F361E0ACD1FBAC1A5 /* Pods_CoffeeChatTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoffeeChatTests.framework; path = "Pods-CoffeeChatTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D176DC81DAF2DF77730E638001954719 /* Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.plist"; sourceTree = "<group>"; };
+		DE6E1E18D764218BC7BA99D57E67E055 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
+		E479D832E760B79FA2ED4C16342C6A6D /* Pods-CoffeeChat-CoffeeChatUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-CoffeeChat-CoffeeChatUITests.modulemap"; sourceTree = "<group>"; };
+		E6D06856C7BF9451543C4310490E5E39 /* Pods_CoffeeChat_CoffeeChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoffeeChat_CoffeeChatUITests.framework; path = "Pods-CoffeeChat-CoffeeChatUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE3F58D601973ED30D5747D8202A536C /* Pods-CoffeeChatTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoffeeChatTests-umbrella.h"; sourceTree = "<group>"; };
+		EF20C53CBCAA99A8B8F4F2FB51964B4B /* Pods-CoffeeChat-CoffeeChatUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoffeeChat-CoffeeChatUITests-umbrella.h"; sourceTree = "<group>"; };
+		F549B1D940F035A147AFD3FCD3659364 /* Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig"; sourceTree = "<group>"; };
+		FB0F79F2976A1A12F2EF76663F4E1266 /* Pods-CoffeeChat-CoffeeChatUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CoffeeChat-CoffeeChatUITests-dummy.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0CCC8D72A2B2EE25B3B9654A4D264FB7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB57B12B4D6FA80C062BFF10853737FA /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A616C421B29CE0A265E6F1FE345FA42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D30A7D9CFBBEAD643F8BE29D6BB9215A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E06FA34054FE30B211DA55992329683A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95CDF0631548C435E98123996794B7C0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E6B01CEEF8DF88736DFC5DE0A2100F9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A840901B0CBB39B557473035DE77294D /* Pods_CoffeeChat.framework */,
+				E6D06856C7BF9451543C4310490E5E39 /* Pods_CoffeeChat_CoffeeChatUITests.framework */,
+				CA841D12D0F77E5F361E0ACD1FBAC1A5 /* Pods_CoffeeChatTests.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		274E244EB6CF140443FC4273D2289D9B /* Pods-CoffeeChat */ = {
+			isa = PBXGroup;
+			children = (
+				A54A433CDA423AC39FC57624540BB592 /* Pods-CoffeeChat.modulemap */,
+				1B02821E22961B73FD0FB6D9FD4F6701 /* Pods-CoffeeChat-acknowledgements.markdown */,
+				90FEBDEC655EE81ABA22DD95BDF2902D /* Pods-CoffeeChat-acknowledgements.plist */,
+				46B622CA8217C43EAA135C31EE708AD2 /* Pods-CoffeeChat-dummy.m */,
+				B97C1058EF7146524590221035786D60 /* Pods-CoffeeChat-Info.plist */,
+				150609189C05451B2929B3950014B434 /* Pods-CoffeeChat-umbrella.h */,
+				34455C65F51220CE14E2C13A80E55A2A /* Pods-CoffeeChat.debug.xcconfig */,
+				B4957BFAA4F8CA9B28E9701C02CA1774 /* Pods-CoffeeChat.release.xcconfig */,
+			);
+			name = "Pods-CoffeeChat";
+			path = "Target Support Files/Pods-CoffeeChat";
+			sourceTree = "<group>";
+		};
+		30AF809857D369F751F14BF468B205EE /* Pods-CoffeeChatTests */ = {
+			isa = PBXGroup;
+			children = (
+				12FC9CD201EE65F6A39DC3C97BD4C8E2 /* Pods-CoffeeChatTests.modulemap */,
+				1234501A3E3E488F6AAAD608E7D3291F /* Pods-CoffeeChatTests-acknowledgements.markdown */,
+				1055F1C285907AB28226CAA7B50F311B /* Pods-CoffeeChatTests-acknowledgements.plist */,
+				615F7FD86EA428F006B9F06637AB0CCE /* Pods-CoffeeChatTests-dummy.m */,
+				2024AE7C1EF215D63C9164FE6B87905D /* Pods-CoffeeChatTests-Info.plist */,
+				EE3F58D601973ED30D5747D8202A536C /* Pods-CoffeeChatTests-umbrella.h */,
+				81B0FAEDCAB6E77F0EE47A2814BCD2DF /* Pods-CoffeeChatTests.debug.xcconfig */,
+				DE6E1E18D764218BC7BA99D57E67E055 /* Pods-CoffeeChatTests.release.xcconfig */,
+			);
+			name = "Pods-CoffeeChatTests";
+			path = "Target Support Files/Pods-CoffeeChatTests";
+			sourceTree = "<group>";
+		};
+		9DEA7AF674D31BBC014DD0B147598932 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				274E244EB6CF140443FC4273D2289D9B /* Pods-CoffeeChat */,
+				F40F784148879A5F419656BE08EBCA7D /* Pods-CoffeeChat-CoffeeChatUITests */,
+				30AF809857D369F751F14BF468B205EE /* Pods-CoffeeChatTests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				1E6B01CEEF8DF88736DFC5DE0A2100F9 /* Products */,
+				9DEA7AF674D31BBC014DD0B147598932 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C0834CEBB1379A84116EF29F93051C60 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F40F784148879A5F419656BE08EBCA7D /* Pods-CoffeeChat-CoffeeChatUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E479D832E760B79FA2ED4C16342C6A6D /* Pods-CoffeeChat-CoffeeChatUITests.modulemap */,
+				92201F81D6C17B45EA771D8E0BB60D00 /* Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.markdown */,
+				D176DC81DAF2DF77730E638001954719 /* Pods-CoffeeChat-CoffeeChatUITests-acknowledgements.plist */,
+				FB0F79F2976A1A12F2EF76663F4E1266 /* Pods-CoffeeChat-CoffeeChatUITests-dummy.m */,
+				34698D677A8F901917AD13E1247DF2F5 /* Pods-CoffeeChat-CoffeeChatUITests-Info.plist */,
+				EF20C53CBCAA99A8B8F4F2FB51964B4B /* Pods-CoffeeChat-CoffeeChatUITests-umbrella.h */,
+				8F7BCB0B1869593A9E0870BC897F1AB3 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */,
+				F549B1D940F035A147AFD3FCD3659364 /* Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig */,
+			);
+			name = "Pods-CoffeeChat-CoffeeChatUITests";
+			path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1AFA87E448A3EBD2B10266F046A7A496 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A23015CD6C312BA5BE26A766DDA6DCC2 /* Pods-CoffeeChat-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8E6DA2D20806672896AF1B021C883CF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				635591B949D99C9BBE2565C8D121A76F /* Pods-CoffeeChat-CoffeeChatUITests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCCDDCFF3D4AEADFA4D5F0756C998F9E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40ACC17283F5624FDC0A4084EF9E3BDB /* Pods-CoffeeChatTests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		41A67D2A1FAD8459F6EA83E72738839E /* Pods-CoffeeChatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0BCD5111673A0941F57AFF738348445 /* Build configuration list for PBXNativeTarget "Pods-CoffeeChatTests" */;
+			buildPhases = (
+				FCCDDCFF3D4AEADFA4D5F0756C998F9E /* Headers */,
+				0E92AF0ADA15A5C261B8DE50A5443E98 /* Sources */,
+				E06FA34054FE30B211DA55992329683A /* Frameworks */,
+				7C163BD573AE5B9E922E66C2F27B3B1E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ACBE9E832DF32B0F9CAF5C4F6A6F990A /* PBXTargetDependency */,
+			);
+			name = "Pods-CoffeeChatTests";
+			productName = "Pods-CoffeeChatTests";
+			productReference = CA841D12D0F77E5F361E0ACD1FBAC1A5 /* Pods_CoffeeChatTests.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		728F16140D011187D5F95D8EED63853C /* Pods-CoffeeChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 469FC266639394210732200EBE2155CC /* Build configuration list for PBXNativeTarget "Pods-CoffeeChat" */;
+			buildPhases = (
+				1AFA87E448A3EBD2B10266F046A7A496 /* Headers */,
+				FDE9F3A74D87CC196894799CC32FD6DA /* Sources */,
+				0CCC8D72A2B2EE25B3B9654A4D264FB7 /* Frameworks */,
+				0306CC0CDB9444F9CCBA1B2C92F3203C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-CoffeeChat";
+			productName = "Pods-CoffeeChat";
+			productReference = A840901B0CBB39B557473035DE77294D /* Pods_CoffeeChat.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EBD34BEB1BF1698BB02C4374002E6728 /* Pods-CoffeeChat-CoffeeChatUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 17769BC4FB26790EA649AC256677B66E /* Build configuration list for PBXNativeTarget "Pods-CoffeeChat-CoffeeChatUITests" */;
+			buildPhases = (
+				D8E6DA2D20806672896AF1B021C883CF /* Headers */,
+				E0E084154D327B55453569BC2EFB9054 /* Sources */,
+				9A616C421B29CE0A265E6F1FE345FA42 /* Frameworks */,
+				079357A03EA637E6169F13CD4A27EAEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-CoffeeChat-CoffeeChatUITests";
+			productName = "Pods-CoffeeChat-CoffeeChatUITests";
+			productReference = E6D06856C7BF9451543C4310490E5E39 /* Pods_CoffeeChat_CoffeeChatUITests.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 1E6B01CEEF8DF88736DFC5DE0A2100F9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				728F16140D011187D5F95D8EED63853C /* Pods-CoffeeChat */,
+				EBD34BEB1BF1698BB02C4374002E6728 /* Pods-CoffeeChat-CoffeeChatUITests */,
+				41A67D2A1FAD8459F6EA83E72738839E /* Pods-CoffeeChatTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0306CC0CDB9444F9CCBA1B2C92F3203C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		079357A03EA637E6169F13CD4A27EAEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C163BD573AE5B9E922E66C2F27B3B1E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0E92AF0ADA15A5C261B8DE50A5443E98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FED42AF2FB6973D546361911ED430E49 /* Pods-CoffeeChatTests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0E084154D327B55453569BC2EFB9054 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				584DBCBF3448D72E86C27138234C7224 /* Pods-CoffeeChat-CoffeeChatUITests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FDE9F3A74D87CC196894799CC32FD6DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D45036917ACE7C10CD69B5D4ADA1CAF /* Pods-CoffeeChat-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ACBE9E832DF32B0F9CAF5C4F6A6F990A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-CoffeeChat";
+			target = 728F16140D011187D5F95D8EED63853C /* Pods-CoffeeChat */;
+			targetProxy = 776E276C19A33F231179143F2554CAE3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0207A092028B4DBF04375BBB48AE232D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE6E1E18D764218BC7BA99D57E67E055 /* Pods-CoffeeChatTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6D8184051DCC1FA61D8CDB3147203ABC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F7BCB0B1869593A9E0870BC897F1AB3 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		71A07BBBE366D135C7A35F26405C2521 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34455C65F51220CE14E2C13A80E55A2A /* Pods-CoffeeChat.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		939F1A8F6BCEB7F9F64D9EEE50CAE014 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		DC340249BC570D6D58764610E55414F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F549B1D940F035A147AFD3FCD3659364 /* Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E138A659ED10CB1B88C767FB1D087D4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81B0FAEDCAB6E77F0EE47A2814BCD2DF /* Pods-CoffeeChatTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		ECB437504DF805BD96CAABF97400B526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		F8FF1C84BBFAA4AE2929022E71FE8A69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4957BFAA4F8CA9B28E9701C02CA1774 /* Pods-CoffeeChat.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		17769BC4FB26790EA649AC256677B66E /* Build configuration list for PBXNativeTarget "Pods-CoffeeChat-CoffeeChatUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D8184051DCC1FA61D8CDB3147203ABC /* Debug */,
+				DC340249BC570D6D58764610E55414F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		469FC266639394210732200EBE2155CC /* Build configuration list for PBXNativeTarget "Pods-CoffeeChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71A07BBBE366D135C7A35F26405C2521 /* Debug */,
+				F8FF1C84BBFAA4AE2929022E71FE8A69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939F1A8F6BCEB7F9F64D9EEE50CAE014 /* Debug */,
+				ECB437504DF805BD96CAABF97400B526 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0BCD5111673A0941F57AFF738348445 /* Build configuration list for PBXNativeTarget "Pods-CoffeeChatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E138A659ED10CB1B88C767FB1D087D4D /* Debug */,
+				0207A092028B4DBF04375BBB48AE232D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

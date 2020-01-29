@@ -1,0 +1,6 @@
+framework module Pods_CoffeeChat_CoffeeChatUITests {
+  umbrella header "Pods-CoffeeChat-CoffeeChatUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
