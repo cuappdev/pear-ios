@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
+		D480EBEE23E144F600513063 /* Cells in Resources */ = {isa = PBXBuildFile; fileRef = D480EBED23E144F600513063 /* Cells */; };
+		D480EBF123E1453B00513063 /* Views in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF023E1453B00513063 /* Views */; };
+		D480EBF423E1457600513063 /* Networking in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF323E1457600513063 /* Networking */; };
+		D480EBF723E1460400513063 /* Supporting in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF623E1460400513063 /* Supporting */; };
+		D480EBF923E1463300513063 /* Model in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF823E1463300513063 /* Model */; };
+		D480EBFB23E1465C00513063 /* Controllers in Resources */ = {isa = PBXBuildFile; fileRef = D480EBFA23E1465C00513063 /* Controllers */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
 		D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00C23DE099200E88129 /* SceneDelegate.swift */; };
 		D48BB00F23DE099200E88129 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00E23DE099200E88129 /* ViewController.swift */; };
@@ -45,6 +51,12 @@
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		D480EBED23E144F600513063 /* Cells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Cells; sourceTree = "<group>"; };
+		D480EBF023E1453B00513063 /* Views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Views; sourceTree = "<group>"; };
+		D480EBF323E1457600513063 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Networking; sourceTree = "<group>"; };
+		D480EBF623E1460400513063 /* Supporting */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Supporting; sourceTree = "<group>"; };
+		D480EBF823E1463300513063 /* Model */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Model; sourceTree = "<group>"; };
+		D480EBFA23E1465C00513063 /* Controllers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Controllers; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB00A23DE099200E88129 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D48BB00C23DE099200E88129 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -111,7 +123,6 @@
 				480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */,
 				B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -140,6 +151,12 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
+				D480EBED23E144F600513063 /* Cells */,
+				D480EBFA23E1465C00513063 /* Controllers */,
+				D480EBF023E1453B00513063 /* Views */,
+				D480EBF623E1460400513063 /* Supporting */,
+				D480EBF323E1457600513063 /* Networking */,
+				D480EBF823E1463300513063 /* Model */,
 				D48BB00A23DE099200E88129 /* AppDelegate.swift */,
 				D48BB00C23DE099200E88129 /* SceneDelegate.swift */,
 				D48BB00E23DE099200E88129 /* ViewController.swift */,
@@ -276,9 +293,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D480EBF423E1457600513063 /* Networking in Resources */,
 				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
+				D480EBF123E1453B00513063 /* Views in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
+				D480EBFB23E1465C00513063 /* Controllers in Resources */,
+				D480EBEE23E144F600513063 /* Cells in Resources */,
+				D480EBF923E1463300513063 /* Model in Resources */,
+				D480EBF723E1460400513063 /* Supporting in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
