@@ -51,12 +51,12 @@
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		D480EBED23E144F600513063 /* Cells */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Cells; path = CoffeeChat/Cells; sourceTree = SOURCE_ROOT; };
-		D480EBF023E1453B00513063 /* Views */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Views; path = CoffeeChat/Views; sourceTree = SOURCE_ROOT; };
-		D480EBF323E1457600513063 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Networking; path = CoffeeChat/Networking; sourceTree = SOURCE_ROOT; };
-		D480EBF623E1460400513063 /* Supporting */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Supporting; path = CoffeeChat/Supporting; sourceTree = SOURCE_ROOT; };
-		D480EBF823E1463300513063 /* Model */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Model; path = CoffeeChat/Model; sourceTree = SOURCE_ROOT; };
-		D480EBFA23E1465C00513063 /* Controllers */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Controllers; path = CoffeeChat/Controllers; sourceTree = SOURCE_ROOT; };
+		D480EBED23E144F600513063 /* Cells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Cells; sourceTree = "<group>"; };
+		D480EBF023E1453B00513063 /* Views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Views; sourceTree = "<group>"; };
+		D480EBF323E1457600513063 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Networking; sourceTree = "<group>"; };
+		D480EBF623E1460400513063 /* Supporting */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Supporting; sourceTree = "<group>"; };
+		D480EBF823E1463300513063 /* Model */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Model; sourceTree = "<group>"; };
+		D480EBFA23E1465C00513063 /* Controllers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Controllers; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB00A23DE099200E88129 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D48BB00C23DE099200E88129 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
