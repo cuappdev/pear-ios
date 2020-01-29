@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
-		D480EBEE23E144F600513063 /* Cells in Resources */ = {isa = PBXBuildFile; fileRef = D480EBED23E144F600513063 /* Cells */; };
 		D480EBF123E1453B00513063 /* Views in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF023E1453B00513063 /* Views */; };
 		D480EBF423E1457600513063 /* Networking in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF323E1457600513063 /* Networking */; };
 		D480EBF723E1460400513063 /* Supporting in Resources */ = {isa = PBXBuildFile; fileRef = D480EBF623E1460400513063 /* Supporting */; };
@@ -51,7 +50,6 @@
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		D480EBED23E144F600513063 /* Cells */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Cells; sourceTree = "<group>"; };
 		D480EBF023E1453B00513063 /* Views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Views; sourceTree = "<group>"; };
 		D480EBF323E1457600513063 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Networking; sourceTree = "<group>"; };
 		D480EBF623E1460400513063 /* Supporting */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Supporting; sourceTree = "<group>"; };
@@ -126,6 +124,13 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		D480EBFD23E2425C00513063 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		D48BAFFE23DE099200E88129 = {
 			isa = PBXGroup;
 			children = (
@@ -151,7 +156,7 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
-				D480EBED23E144F600513063 /* Cells */,
+				D480EBFD23E2425C00513063 /* Cells */,
 				D480EBFA23E1465C00513063 /* Controllers */,
 				D480EBF023E1453B00513063 /* Views */,
 				D480EBF623E1460400513063 /* Supporting */,
@@ -299,7 +304,6 @@
 				D480EBF123E1453B00513063 /* Views in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
 				D480EBFB23E1465C00513063 /* Controllers in Resources */,
-				D480EBEE23E144F600513063 /* Cells in Resources */,
 				D480EBF923E1463300513063 /* Model in Resources */,
 				D480EBF723E1460400513063 /* Supporting in Resources */,
 			);
