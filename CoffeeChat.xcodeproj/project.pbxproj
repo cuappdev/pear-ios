@@ -10,6 +10,7 @@
 		30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0023E249AC006DC6C3 /* LoginViewController.swift */; };
 		30304E0323E53B02006DC6C3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30304E0223E53B02006DC6C3 /* GoogleService-Info.plist */; };
 		30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0423E53BEE006DC6C3 /* Keys.swift */; };
+		30304E0923E78228006DC6C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0823E78228006DC6C3 /* Constants.swift */; };
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
 		D480EBFF23E2429600513063 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* Cell.swift */; };
@@ -47,6 +48,7 @@
 		30304E0023E249AC006DC6C3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		30304E0223E53B02006DC6C3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		30304E0423E53BEE006DC6C3 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		30304E0823E78228006DC6C3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		593F0F3478D4151754C87BF5 /* Pods-CoffeeChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.debug.xcconfig"; sourceTree = "<group>"; };
 		81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoffeeChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +156,7 @@
 			children = (
 				30304E0223E53B02006DC6C3 /* GoogleService-Info.plist */,
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
+				30304E0823E78228006DC6C3 /* Constants.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 				D480EC0823E2483A00513063 /* HomeView.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
+				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

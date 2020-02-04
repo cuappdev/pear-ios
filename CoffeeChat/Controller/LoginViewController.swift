@@ -28,7 +28,7 @@ class LoginViewController: UIViewController {
 
     private func setupConstraints() {
         loginButton.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.center.equalToSuperview()
         }
     }
 
@@ -43,6 +43,19 @@ extension LoginViewController: GIDSignInDelegate {
             } else {
                 print("\(error.localizedDescription)")
             }
+            return
+        }
+
+        print(user.userID)
+        print(user.authentication.idToken)
+        print(user.profile.name)
+        
+        if let email = user.profile.email, !(email.contains("@cornell.edu")) {
+            GIDSignIn.sharedInstance().signOut()
+            let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
+            let action = UIAlertAction(title: Constants.Alerts.LoginFailure.action, style: .cancel, handler: nil)
+            alertController.addAction(action)
+            present(alertController, animated: true, completion: nil)
             return
         }
 

@@ -20,14 +20,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: scene)
-        let loginVC = LoginViewController()
-        let homeVC = HomeViewController()
-        guard let signIn = GIDSignIn.sharedInstance() else { return }
+        guard let signIn = GIDSignIn.sharedInstance() else {
+            window.rootViewController = LoginViewController()
+            return
+        }
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            window.rootViewController = homeVC
+            window.rootViewController = HomeViewController()
         } else {
-            window.rootViewController = loginVC
+            window.rootViewController = LoginViewController()
         }
         self.window = window
         window.makeKeyAndVisible()

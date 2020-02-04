@@ -6,7 +6,11 @@ target 'CoffeeChat' do
   use_frameworks!
 
   # Pods for CoffeeChat
+
+  # User Data
   pod 'GoogleSignIn'
+
+  # UI Frameworks
   pod 'SnapKit'
 
   target 'CoffeeChatTests' do
