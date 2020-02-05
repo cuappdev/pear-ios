@@ -13,6 +13,9 @@ import UIKit
 class LoginViewController: UIViewController {
 
     private let loginButton = GIDSignInButton()
+    private let logoImageView = UIImageView()
+
+    private let logoSize: CGFloat = 150
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,14 +24,26 @@ class LoginViewController: UIViewController {
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
 
+        loginButton.style = .wide
         view.addSubview(loginButton)
+
+        logoImageView.layer.cornerRadius = logoSize/2
+        logoImageView.backgroundColor = .gray
+        view.addSubview(logoImageView)
 
         setupConstraints()
     }
 
     private func setupConstraints() {
         loginButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoImageView.snp.bottom).offset(40)
+        }
+
+        logoImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-100)
+            make.height.width.equalTo(logoSize)
         }
     }
 
@@ -49,6 +64,7 @@ extension LoginViewController: GIDSignInDelegate {
         print(user.userID)
         print(user.authentication.idToken)
         print(user.profile.name)
+        print(user.profile.givenName)
         
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
