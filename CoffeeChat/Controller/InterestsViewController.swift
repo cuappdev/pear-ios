@@ -16,9 +16,17 @@ class InterestsViewController: UIViewController {
     private let nextButton = UIButton()
     private let backButton = UIButton()
     private let dotsView = UIView()
-    private let reuseIdentifier = "interests"
 
     private let nextSize = CGSize(width: 112.5, height: 27)
+
+    private let interestData = [
+        Interest(name: "Aaaa", categories: "..., ..., ..., ..., ...", image: UIImage()),
+        Interest(name: "Bbbbbb", categories: "..., ..., ..., ..., ...", image: UIImage()),
+        Interest(name: "Cccc", categories: "..., ..., ..., ..., ...", image: UIImage()),
+        Interest(name: "Ddddddddd", categories: "..., ..., ..., ..., ...", image: UIImage()),
+        Interest(name: "Eeeeeeee", categories: "..., ..., ..., ..., ...", image: UIImage()),
+        Interest(name: "Ffff", categories: "..., ..., ..., ..., ...", image: UIImage())
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +38,7 @@ class InterestsViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(InterestsTableViewCell.self)
-        tableView.register(InterestsTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(InterestsTableViewCell.self, forCellReuseIdentifier: InterestsTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
         tableView.separatorStyle = .none
@@ -88,7 +95,7 @@ class InterestsViewController: UIViewController {
 
         backButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
-            make.centerX.equalToSuperview
+            make.centerX.equalToSuperview()
             make.top.equalTo(nextButton).offset(nextBackPadding)
         }
     }
@@ -96,10 +103,30 @@ class InterestsViewController: UIViewController {
 }
 
 extension InterestsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 34.5
+    }
 
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 6
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView()
+    }
 }
 
 
 extension InterestsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return interestData.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.cellForRowAt(at: indexPath) as? InterestsTableViewCell else { return UITableViewCell() }
+        let data = interestData[indexPath.section]
+        cell.configure(with: data)
+        return cell
+    }
 
 }
