@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     private let loginButton = GIDSignInButton()
     private let logoImageView = UIImageView()
 
-    private let logoSize: CGFloat = 150
+    private let logoSize = CGSize(width: 150, height: 150)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
         loginButton.style = .wide
         view.addSubview(loginButton)
 
-        logoImageView.layer.cornerRadius = logoSize/2
+        logoImageView.layer.cornerRadius = logoSize.width/2
         logoImageView.backgroundColor = .gray
         view.addSubview(logoImageView)
 
@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-100)
-            make.height.width.equalTo(logoSize)
+            make.size.equalTo(logoSize)
         }
     }
 
@@ -65,7 +65,7 @@ extension LoginViewController: GIDSignInDelegate {
         print(user.authentication.idToken)
         print(user.profile.name)
         print(user.profile.givenName)
-        
+
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
             let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)

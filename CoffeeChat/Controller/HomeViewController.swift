@@ -22,10 +22,6 @@ class HomeViewController: UIViewController {
         logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
         view.addSubview(logoutButton)
 
-        setupConstraints()
-    }
-
-    private func setupConstraints() {
         logoutButton.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
@@ -33,7 +29,7 @@ class HomeViewController: UIViewController {
 
     @objc private func logoutPressed() {
         GIDSignIn.sharedInstance().signOut()
-    
+
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .fullScreen
         present(loginVC, animated: true, completion: nil)
