@@ -11,21 +11,29 @@ import SnapKit
 
 class InterestsViewController: UIViewController {
 
+    // MARK: - Private View Vars
     private let titleLabel = UILabel()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let nextButton = UIButton()
     private let backButton = UIButton()
     private let dotsView = UIView()
 
-    private let nextSize = CGSize(width: 112.5, height: 27)
+    // MARK: - Gradients
+    private let topFade = UIView()
+    private let bottomFade = UIView()
 
     private let interestData = [
-        Interest(name: "Aaaa", categories: "..., ..., ..., ..., ...", image: UIImage()),
-        Interest(name: "Bbbbbb", categories: "..., ..., ..., ..., ...", image: UIImage()),
-        Interest(name: "Cccc", categories: "..., ..., ..., ..., ...", image: UIImage()),
-        Interest(name: "Ddddddddd", categories: "..., ..., ..., ..., ...", image: UIImage()),
-        Interest(name: "Eeeeeeee", categories: "..., ..., ..., ..., ...", image: UIImage()),
-        Interest(name: "Ffff", categories: "..., ..., ..., ..., ...", image: UIImage())
+        Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
+        Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage())
     ]
 
     override func viewDidLoad() {
@@ -33,7 +41,7 @@ class InterestsViewController: UIViewController {
         view.backgroundColor = .backgroundWhite
 
         titleLabel.text = "What are your interests?"
-        titleLabel.font = .systemFont(ofSize: 12, weight: .bold)
+        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
         view.addSubview(titleLabel)
 
         tableView.delegate = self
@@ -41,44 +49,80 @@ class InterestsViewController: UIViewController {
         tableView.register(InterestsTableViewCell.self, forCellReuseIdentifier: InterestsTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
+        tableView.allowsMultipleSelection = true
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         view.addSubview(tableView)
+        tableView.addSubview(topFade)
+        tableView.addSubview(bottomFade)
 
         dotsView.backgroundColor = .backgroundLightGray
         view.addSubview(dotsView)
 
         nextButton.setTitle("Almost there!", for: .normal)
-        nextButton.layer.cornerRadius = nextSize.height * 0.8 // ? guess
+        nextButton.layer.cornerRadius = 27
         nextButton.backgroundColor = .backgroundLightGray
         nextButton.setTitleColor(.textBlack, for: .normal)
+        nextButton.titleLabel?.font = .systemFont(ofSize: 20)
         view.addSubview(nextButton)
 
+        backButton.titleLabel?.font = .systemFont(ofSize: 16)
         backButton.setTitle("Go back", for: .normal)
         backButton.setTitleColor(.textLightGray, for: .normal)
         backButton.backgroundColor = .none
         view.addSubview(backButton)
 
-        setUpConstraints()
+        setupConstraints()
     }
 
-    private func setUpConstraints() {
+    override func viewDidAppear(_ animated: Bool) {
+        let topLayer = CAGradientLayer()
+        topLayer.frame = topFade.frame
+        topLayer.colors = [UIColor.backgroundWhite, UIColor.clear]
+        topLayer.locations = [0.0, 1.0]
+        topFade.layer.addSublayer(topLayer)
+        print(topLayer.frame)
+        let bottomLayer = CAGradientLayer()
+        bottomLayer.frame = bottomFade.frame
+        bottomLayer.colors = [UIColor.clear, UIColor.backgroundWhite]
+        bottomLayer.locations = [0.0, 1.0]
+        bottomFade.layer.addSublayer(bottomLayer)
+        print(bottomLayer.frame)
+    }
+
+    private func setupConstraints() {
+        let titleSpacing: CGFloat = 100
         let titleHeight: CGFloat = 30
-        let tableViewSize = CGSize(width: 147.5, height: 215.5) // height is a guess
+        let tableViewSize = CGSize(width: 295, height: 431)
+        let nextButtonSize = CGSize(width: 225, height: 54)
         let dotsSize = CGSize(width: 14, height: 3) // likely to change
-        let backSize = CGSize(width: 34.5, height: 11.5)
-        let padding: CGFloat = 10
+        let backSize = CGSize(width: 62, height: 20)
+        let padding: CGFloat = 50
         let tableDotsPadding: CGFloat = 14
-        let nextBackPadding: CGFloat = 11
+        let nextBackPadding: CGFloat = 20
+        let fadeHeight: CGFloat = 26
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(titleSpacing)
         }
 
         tableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(tableViewSize)
             make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+        }
+
+        topFade.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(fadeHeight)
+        }
+
+        bottomFade.snp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+            make.height.equalTo(fadeHeight)
         }
 
         dotsView.snp.makeConstraints { make in // Likely changing
@@ -88,7 +132,7 @@ class InterestsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextSize)
+            make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
             make.top.equalTo(dotsView).offset(padding)
         }
@@ -96,7 +140,7 @@ class InterestsViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(nextButton).offset(nextBackPadding)
+            make.top.equalTo(nextButton.snp.bottom).offset(nextBackPadding)
         }
     }
 
@@ -104,11 +148,15 @@ class InterestsViewController: UIViewController {
 
 extension InterestsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 34.5
+        return 64
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 6
+        return 12
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -118,15 +166,19 @@ extension InterestsViewController: UITableViewDelegate {
 
 
 extension InterestsViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return interestData.count
-    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.cellForRowAt(at: indexPath) as? InterestsTableViewCell else { return UITableViewCell() }
+        // guard let cell = tableView.dequeueReusableCell(at: indexPath) as? InterestsTableViewCell else { return UITableViewCell() }
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier:
+            InterestsTableViewCell.reuseIdentifier, for: indexPath) as?
+        InterestsTableViewCell else { return UITableViewCell() }
         let data = interestData[indexPath.section]
         cell.configure(with: data)
         return cell
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return interestData.count
     }
 
 }

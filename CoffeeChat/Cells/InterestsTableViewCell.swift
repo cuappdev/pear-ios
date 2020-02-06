@@ -25,22 +25,22 @@ class InterestsTableViewCell: UITableViewCell {
         self.contentView.backgroundColor = .none
 
         cellBackground.backgroundColor = .backgroundLightGray
-        cellBackground.layer.cornerRadius = 4
+        cellBackground.layer.cornerRadius = 8
         contentView.addSubview(cellBackground)
 
         interestImage.backgroundColor = .backgroundDarkGray
-        interestImage.layer.cornerRadius = 2
-        contentView.addSubview(interestImage)
+        interestImage.layer.cornerRadius = 4
+        cellBackground.addSubview(interestImage)
 
         titleLabel.textColor = .textBlack
-        titleLabel.font = .systemFont(ofSize: 12, weight: .bold)
-        contentView.addSubview(titleLabel)
+        titleLabel.font = .systemFont(ofSize: 20, weight: .regular)
+        cellBackground.addSubview(titleLabel)
 
         categoriesLabel.textColor = .textLightGray
-        categoriesLabel.font = .systemFont(ofSize: 6, weight: .regular)
-        contentView.addSubview(categoriesLabel)
+        categoriesLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        cellBackground.addSubview(categoriesLabel)
 
-        setUpConstraints()
+        setupConstraints()
     }
 
     required init?(coder: NSCoder) {
@@ -51,12 +51,10 @@ class InterestsTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    private func setUpConstraints() {
-        let imageSize = CGSize(width: 16, height: 16)
-        let textHeight: CGFloat = 15
-        let categoriesHeight: CGFloat = 7.5
-        let imagePadding: CGFloat = 6
-        let titlePadding: CGFloat = 4
+    private func setupConstraints() {
+        let imageSize = CGSize(width: 32, height: 32)
+        let sidePadding: CGFloat = 12
+        let textSidePadding: CGFloat = 8
 
         cellBackground.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -64,18 +62,17 @@ class InterestsTableViewCell: UITableViewCell {
 
         interestImage.snp.makeConstraints { make in
             make.size.equalTo(imageSize)
-            make.leading.top.equalToSuperview().inset(imagePadding)
+            make.leading.equalToSuperview().inset(sidePadding)
+            make.centerY.equalToSuperview()
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(interestImage).offset(titlePadding)
-            make.centerY.equalTo(interestImage)
-            make.height.equalTo(textHeight)
+            make.leading.equalTo(interestImage.snp.trailing).offset(textSidePadding)
+            make.top.equalTo(cellBackground).inset(sidePadding)
         }
 
         categoriesLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.height.equalTo(categoriesHeight)
             make.top.equalTo(titleLabel.snp.bottom)
         }
     }
