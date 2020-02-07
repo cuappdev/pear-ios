@@ -21,6 +21,9 @@ class InterestsViewController: UIViewController {
     private let topFade = UIView()
     private let bottomFade = UIView()
 
+    // MARK: - Data
+    private var selectedInterests: [Interest] = []
+
     private let interestData = [
         Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
         Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
@@ -135,8 +138,18 @@ class InterestsViewController: UIViewController {
         }
     }
 
+    /**
+     Updates the enabled state of next button based on the state of selectedInterests.
+     */
+    private func updateNext() {
+        nextButton.isEnabled = selectedInterests.count > 0
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
+        print("\(selectedInterests)")
+    }
+
 }
 
+// MARK: TableViewDelegate
 extension InterestsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
@@ -153,8 +166,19 @@ extension InterestsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return UIView()
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedInterests.append(interestData[indexPath.section])
+        updateNext()
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        selectedInterests.removeAll { $0.name == interestData[indexPath.section].name}
+        updateNext()
+    }
 }
 
+// MARK: TableViewDataSource
 extension InterestsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:

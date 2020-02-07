@@ -16,7 +16,6 @@ class InterestsTableViewCell: UITableViewCell {
     private var titleLabel = UILabel()
     private var categoriesLabel = UILabel()
 
-    // Reuse Identfier
     static let reuseIdentifier = "InterestsTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
