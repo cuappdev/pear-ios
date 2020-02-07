@@ -18,25 +18,12 @@ class InterestsViewController: UIViewController {
     private let backButton = UIButton()
 
     // MARK: - Gradients
+    // Fade out affects on the top and bottom of the tableView
     private let topFade = UIView()
     private let bottomFade = UIView()
 
     // MARK: - Data
     private var selectedInterests: [Interest] = []
-
-    private let interestData = [
-        Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage()),
-        Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: UIImage())
-    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,11 +66,13 @@ class InterestsViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
+
         let topLayer = CAGradientLayer()
         topLayer.frame = topFade.bounds
         topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
         topLayer.locations = [0.0, 1.0]
         topFade.layer.insertSublayer(topLayer, at: 0)
+
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFade.bounds
         bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
@@ -95,11 +84,11 @@ class InterestsViewController: UIViewController {
         let titleSpacing: CGFloat = 100
         let titleHeight: CGFloat = 30
         let tableViewSize = CGSize(width: 295, height: 431)
+        let tableViewTopPadding: CGFloat = 50
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let backSize = CGSize(width: 62, height: 20)
-        let padding: CGFloat = 50
         let nextTopPadding: CGFloat = 56
         let nextBackPadding: CGFloat = 20
+        let backSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
         let topFadeHeight: CGFloat = 10
 
@@ -112,7 +101,7 @@ class InterestsViewController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(tableViewSize)
-            make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+            make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
         }
 
         topFade.snp.makeConstraints { make in
@@ -144,13 +133,13 @@ class InterestsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
-        print("\(selectedInterests)")
     }
 
 }
 
 // MARK: TableViewDelegate
 extension InterestsViewController: UITableViewDelegate {
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
     }
@@ -176,10 +165,12 @@ extension InterestsViewController: UITableViewDelegate {
         selectedInterests.removeAll { $0.name == interestData[indexPath.section].name}
         updateNext()
     }
+
 }
 
 // MARK: TableViewDataSource
 extension InterestsViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             InterestsTableViewCell.reuseIdentifier, for: indexPath) as?
