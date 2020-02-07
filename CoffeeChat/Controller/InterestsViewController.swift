@@ -54,8 +54,8 @@ class InterestsViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         view.addSubview(tableView)
-        tableView.addSubview(topFade)
-        tableView.addSubview(bottomFade)
+        view.addSubview(topFade)
+        view.addSubview(bottomFade)
 
         dotsView.backgroundColor = .backgroundLightGray
         view.addSubview(dotsView)
@@ -73,21 +73,28 @@ class InterestsViewController: UIViewController {
         backButton.backgroundColor = .none
         view.addSubview(backButton)
 
+        // topFade.backgroundColor = .red
+        // bottomFade.backgroundColor = .red
         setupConstraints()
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
         let topLayer = CAGradientLayer()
-        topLayer.frame = topFade.frame
-        topLayer.colors = [UIColor.backgroundWhite, UIColor.clear]
+        topLayer.frame = topFade.bounds
+        topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
+        // topLayer.colors = [UIColor.red.cgColor, UIColor.blue.cgColor]
         topLayer.locations = [0.0, 1.0]
-        topFade.layer.addSublayer(topLayer)
+        // topFade.layer.addSublayer(topLayer)
+        topFade.layer.insertSublayer(topLayer, at: 0)
         print(topLayer.frame)
         let bottomLayer = CAGradientLayer()
-        bottomLayer.frame = bottomFade.frame
-        bottomLayer.colors = [UIColor.clear, UIColor.backgroundWhite]
+        bottomLayer.frame = bottomFade.bounds
+        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
+        // bottomLayer.colors = [UIColor.red.cgColor, UIColor.blue.cgColor]
         bottomLayer.locations = [0.0, 1.0]
-        bottomFade.layer.addSublayer(bottomLayer)
+        // bottomFade.layer.addSublayer(bottomLayer)
+        bottomFade.layer.insertSublayer(bottomLayer, at: 0)
         print(bottomLayer.frame)
     }
 
@@ -116,12 +123,16 @@ class InterestsViewController: UIViewController {
         }
 
         topFade.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.leading.trailing.equalTo(tableView)
+            // make.top.equalToSuperview()
+            // make.width.equalToSuperview()
             make.height.equalTo(fadeHeight)
         }
 
         bottomFade.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview()
+            make.bottom.leading.trailing.equalTo(tableView)
+            // make.bottom.equalToSuperview()
+            // make.width.equalToSuperview()
             make.height.equalTo(fadeHeight)
         }
 
