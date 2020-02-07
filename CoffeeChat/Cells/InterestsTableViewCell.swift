@@ -11,10 +11,10 @@ import UIKit
 class InterestsTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
-    private var cellBackground = UIView()
-    private var interestImage = UIImageView()
-    private var titleLabel = UILabel()
-    private var categoriesLabel = UILabel()
+    private let cellBackground = UIView()
+    private let interestImage = UIImageView()
+    private let titleLabel = UILabel()
+    private let categoriesLabel = UILabel()
 
     static let reuseIdentifier = "InterestsTableViewCell"
 
@@ -44,10 +44,6 @@ class InterestsTableViewCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
     }
 
     private func setupConstraints() {
