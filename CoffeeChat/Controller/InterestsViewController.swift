@@ -16,7 +16,6 @@ class InterestsViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let nextButton = UIButton()
     private let backButton = UIButton()
-    private let dotsView = UIView()
 
     // MARK: - Gradients
     private let topFade = UIView()
@@ -57,9 +56,6 @@ class InterestsViewController: UIViewController {
         view.addSubview(topFade)
         view.addSubview(bottomFade)
 
-        dotsView.backgroundColor = .backgroundLightGray
-        view.addSubview(dotsView)
-
         nextButton.setTitle("Almost there!", for: .normal)
         nextButton.layer.cornerRadius = 27
         nextButton.backgroundColor = .backgroundLightGray
@@ -73,8 +69,6 @@ class InterestsViewController: UIViewController {
         backButton.backgroundColor = .none
         view.addSubview(backButton)
 
-        // topFade.backgroundColor = .red
-        // bottomFade.backgroundColor = .red
         setupConstraints()
     }
 
@@ -83,19 +77,13 @@ class InterestsViewController: UIViewController {
         let topLayer = CAGradientLayer()
         topLayer.frame = topFade.bounds
         topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
-        // topLayer.colors = [UIColor.red.cgColor, UIColor.blue.cgColor]
         topLayer.locations = [0.0, 1.0]
-        // topFade.layer.addSublayer(topLayer)
         topFade.layer.insertSublayer(topLayer, at: 0)
-        print(topLayer.frame)
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFade.bounds
         bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
-        // bottomLayer.colors = [UIColor.red.cgColor, UIColor.blue.cgColor]
         bottomLayer.locations = [0.0, 1.0]
-        // bottomFade.layer.addSublayer(bottomLayer)
         bottomFade.layer.insertSublayer(bottomLayer, at: 0)
-        print(bottomLayer.frame)
     }
 
     private func setupConstraints() {
@@ -103,12 +91,12 @@ class InterestsViewController: UIViewController {
         let titleHeight: CGFloat = 30
         let tableViewSize = CGSize(width: 295, height: 431)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let dotsSize = CGSize(width: 14, height: 3) // likely to change
         let backSize = CGSize(width: 62, height: 20)
         let padding: CGFloat = 50
-        let tableDotsPadding: CGFloat = 14
+        let nextTopPadding: CGFloat = 56
         let nextBackPadding: CGFloat = 20
         let fadeHeight: CGFloat = 26
+        let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -124,28 +112,18 @@ class InterestsViewController: UIViewController {
 
         topFade.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(tableView)
-            // make.top.equalToSuperview()
-            // make.width.equalToSuperview()
-            make.height.equalTo(fadeHeight)
+            make.height.equalTo(topFadeHeight)
         }
 
         bottomFade.snp.makeConstraints { make in
             make.bottom.leading.trailing.equalTo(tableView)
-            // make.bottom.equalToSuperview()
-            // make.width.equalToSuperview()
             make.height.equalTo(fadeHeight)
-        }
-
-        dotsView.snp.makeConstraints { make in // Likely changing
-            make.size.equalTo(dotsSize)
-            make.centerX.equalToSuperview()
-            make.top.equalTo(tableView.snp.bottom).offset(tableDotsPadding)
         }
 
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(dotsView).offset(padding)
+            make.top.equalTo(tableView.snp.bottom).offset(nextTopPadding)
         }
 
         backButton.snp.makeConstraints { make in
