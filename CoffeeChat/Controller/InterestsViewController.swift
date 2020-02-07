@@ -52,6 +52,8 @@ class InterestsViewController: UIViewController {
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
+        let insets = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
+        tableView.contentInset = insets
         view.addSubview(tableView)
         view.addSubview(topFade)
         view.addSubview(bottomFade)
@@ -153,11 +155,8 @@ extension InterestsViewController: UITableViewDelegate {
     }
 }
 
-
 extension InterestsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // guard let cell = tableView.dequeueReusableCell(at: indexPath) as? InterestsTableViewCell else { return UITableViewCell() }
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             InterestsTableViewCell.reuseIdentifier, for: indexPath) as?
         InterestsTableViewCell else { return UITableViewCell() }
