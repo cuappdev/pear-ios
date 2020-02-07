@@ -23,6 +23,7 @@ class InterestsViewController: UIViewController {
     private let bottomFade = UIView()
 
     // MARK: - Data
+    private var interestData: [Interest] = []
     private var selectedInterests: [Interest] = []
 
     override func viewDidLoad() {
