@@ -1,3 +1,9 @@
+# Keys
+CoffeeChat/Supporting/GoogleService-Info.plist
+
+# CocoaPods
+Pods/
+
 .DS_Store
 */.DS_Store
 

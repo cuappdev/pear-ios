@@ -6,15 +6,15 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import GoogleSignIn
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Configure Google sign-in with client ID
+        GIDSignIn.sharedInstance().clientID = Keys.googleClientID
         return true
     }
 
