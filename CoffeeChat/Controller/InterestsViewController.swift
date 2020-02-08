@@ -12,18 +12,18 @@ import SnapKit
 class InterestsViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let titleLabel = UILabel()
-    private let tableView = UITableView(frame: .zero, style: .plain)
-    private let nextButton = UIButton()
     private let backButton = UIButton()
+    private let nextButton = UIButton()
+    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let titleLabel = UILabel()
 
     // MARK: - Gradients
     // Fade out affects on the top and bottom of the tableView
-    private let topFade = UIView()
-    private let bottomFade = UIView()
+    private let bottomFadeView = UIView()
+    private let topFadeView = UIView()
 
     // MARK: - Data
-    private var interestData: [Interest] = []
+    private var interests: [Interest] = []
     private var selectedInterests: [Interest] = []
 
     override func viewDidLoad() {
@@ -43,11 +43,10 @@ class InterestsViewController: UIViewController {
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        let insets = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
-        tableView.contentInset = insets
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         view.addSubview(tableView)
-        view.addSubview(topFade)
-        view.addSubview(bottomFade)
+        view.addSubview(topFadeView)
+        view.addSubview(bottomFadeView)
 
         nextButton.setTitle("Almost there!", for: .normal)
         nextButton.layer.cornerRadius = 27
@@ -69,28 +68,28 @@ class InterestsViewController: UIViewController {
         let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
 
         let topLayer = CAGradientLayer()
-        topLayer.frame = topFade.bounds
+        topLayer.frame = topFadeView.bounds
         topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
         topLayer.locations = [0.0, 1.0]
-        topFade.layer.insertSublayer(topLayer, at: 0)
+        topFadeView.layer.insertSublayer(topLayer, at: 0)
 
         let bottomLayer = CAGradientLayer()
-        bottomLayer.frame = bottomFade.bounds
+        bottomLayer.frame = bottomFadeView.bounds
         bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
         bottomLayer.locations = [0.0, 1.0]
-        bottomFade.layer.insertSublayer(bottomLayer, at: 0)
+        bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
     private func setupConstraints() {
-        let titleSpacing: CGFloat = 100
-        let titleHeight: CGFloat = 30
-        let tableViewSize = CGSize(width: 295, height: 431)
-        let tableViewTopPadding: CGFloat = 50
-        let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextTopPadding: CGFloat = 56
-        let nextBackPadding: CGFloat = 20
         let backSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
+        let nextBackPadding: CGFloat = 20
+        let nextButtonSize = CGSize(width: 225, height: 54)
+        let nextTopPadding: CGFloat = 56
+        let tableViewSize = CGSize(width: 295, height: 431)
+        let tableViewTopPadding: CGFloat = 50
+        let titleHeight: CGFloat = 30
+        let titleSpacing: CGFloat = 100
         let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
@@ -105,12 +104,12 @@ class InterestsViewController: UIViewController {
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
         }
 
-        topFade.snp.makeConstraints { make in
+        topFadeView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(tableView)
             make.height.equalTo(topFadeHeight)
         }
 
-        bottomFade.snp.makeConstraints { make in
+        bottomFadeView.snp.makeConstraints { make in
             make.bottom.leading.trailing.equalTo(tableView)
             make.height.equalTo(fadeHeight)
         }
@@ -158,12 +157,12 @@ extension InterestsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedInterests.append(interestData[indexPath.section])
+        selectedInterests.append(interests[indexPath.section])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterests.removeAll { $0.name == interestData[indexPath.section].name}
+        selectedInterests.removeAll { $0.name == interests[indexPath.section].name}
         updateNext()
     }
 
@@ -176,13 +175,13 @@ extension InterestsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             InterestsTableViewCell.reuseIdentifier, for: indexPath) as?
         InterestsTableViewCell else { return UITableViewCell() }
-        let data = interestData[indexPath.section]
+        let data = interests[indexPath.section]
         cell.configure(with: data)
         return cell
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return interestData.count
+        return interests.count
     }
 
 }

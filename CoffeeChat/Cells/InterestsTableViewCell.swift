@@ -11,33 +11,33 @@ import UIKit
 class InterestsTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
-    private let cellBackground = UIView()
-    private let interestImage = UIImageView()
-    private let titleLabel = UILabel()
     private let categoriesLabel = UILabel()
+    private let cellBackgroundView = UIView()
+    private let interestImageView = UIImageView()
+    private let titleLabel = UILabel()
 
     static let reuseIdentifier = "InterestsTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
-        self.contentView.backgroundColor = .none
+        selectionStyle = .none
+        contentView.backgroundColor = .none
 
-        cellBackground.backgroundColor = .backgroundLightGray
-        cellBackground.layer.cornerRadius = 8
-        contentView.addSubview(cellBackground)
+        cellBackgroundView.backgroundColor = .backgroundLightGray
+        cellBackgroundView.layer.cornerRadius = 8
+        contentView.addSubview(cellBackgroundView)
 
-        interestImage.backgroundColor = .backgroundDarkGray
-        interestImage.layer.cornerRadius = 4
-        cellBackground.addSubview(interestImage)
+        interestImageView.backgroundColor = .backgroundDarkGray
+        interestImageView.layer.cornerRadius = 4
+        cellBackgroundView.addSubview(interestImageView)
 
         titleLabel.textColor = .textBlack
         titleLabel.font = .systemFont(ofSize: 20, weight: .regular)
-        cellBackground.addSubview(titleLabel)
+        cellBackgroundView.addSubview(titleLabel)
 
         categoriesLabel.textColor = .textLightGray
         categoriesLabel.font = .systemFont(ofSize: 12, weight: .regular)
-        cellBackground.addSubview(categoriesLabel)
+        cellBackgroundView.addSubview(categoriesLabel)
 
         setupConstraints()
     }
@@ -51,19 +51,19 @@ class InterestsTableViewCell: UITableViewCell {
         let sidePadding: CGFloat = 12
         let textSidePadding: CGFloat = 8
 
-        cellBackground.snp.makeConstraints { make in
+        cellBackgroundView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        interestImage.snp.makeConstraints { make in
+        interestImageView.snp.makeConstraints { make in
             make.size.equalTo(imageSize)
             make.leading.equalToSuperview().inset(sidePadding)
             make.centerY.equalToSuperview()
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(interestImage.snp.trailing).offset(textSidePadding)
-            make.top.equalTo(cellBackground).inset(sidePadding)
+            make.leading.equalTo(interestImageView.snp.trailing).offset(textSidePadding)
+            make.top.equalTo(cellBackgroundView).inset(sidePadding)
         }
 
         categoriesLabel.snp.makeConstraints { make in
@@ -79,7 +79,7 @@ class InterestsTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackground.backgroundColor = selected ? .backgroundRed : .backgroundLightGray
+        cellBackgroundView.backgroundColor = selected ? .backgroundRed : .backgroundLightGray
     }
 
 }
