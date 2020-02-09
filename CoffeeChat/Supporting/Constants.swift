@@ -11,13 +11,18 @@ import Foundation
 struct Constants {
 
     struct Alerts {
-
         struct LoginFailure {
             static let action = "OK"
             static let message = "Please login with a Cornell email."
             static let title = "Unable to Login"
         }
+    }
 
+    struct UserDefaults {
+        static let userId = "userId"
+        static let userFirstName = "userFirstName"
+        static let userFullName = "userFullName"
+        static let userToken = "userToken"
     }
 
 }
