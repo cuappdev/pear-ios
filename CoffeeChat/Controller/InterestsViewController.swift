@@ -38,7 +38,6 @@ class InterestsViewController: UIViewController {
     ]
     private var selectedInterests: [Interest] = []
 
-    // lucy - come back to this
     private var delegate: OnboardingPageDelegate!
 
     init(delegate: OnboardingPageDelegate) {
@@ -91,7 +90,7 @@ class InterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate.nextPage(index: 3)
+        delegate.nextPage(index: 2)
     }
 
     @objc func backButtonPressed() {
@@ -129,7 +128,7 @@ class InterestsViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
         }
 
         tableView.snp.makeConstraints { make in

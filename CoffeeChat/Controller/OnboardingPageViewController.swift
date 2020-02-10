@@ -16,29 +16,32 @@ protocol OnboardingPageDelegate {
 
 class OnboardingPageViewController: UIPageViewController {
 
-    var onboardingPages = [UIViewController]()
-    let pageControl = UIPageControl()
+    private var demographicsViewController: DemographicsViewController!
+    private var groupsViewController: GroupsViewController!
+    private var interestsViewController: InterestsViewController!
+    private var onboardingPages = [UIViewController]()
+
+    private let pageControl = UIPageControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let demographicsViewController = DemographicsViewController(delegate: self)
-        let interestsViewController = InterestsViewController(delegate: self) // dummy controller
-        let groupsViewController = DemographicsViewController(delegate: self) // dummy controller
-
+        demographicsViewController = DemographicsViewController(delegate: self)
+        interestsViewController = InterestsViewController(delegate: self)
+        groupsViewController = GroupsViewController(delegate: self)
         onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
 
         pageControl.currentPageIndicatorTintColor = .backgroundDarkGray
         pageControl.pageIndicatorTintColor = .backgroundLightGray
-        pageControl.numberOfPages = self.onboardingPages.count
+        pageControl.numberOfPages = onboardingPages.count
         pageControl.currentPage = 0
         view.addSubview(pageControl)
 
         pageControl.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-165)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-165)
         }
     }
 }
@@ -53,5 +56,4 @@ extension OnboardingPageViewController: OnboardingPageDelegate {
         setViewControllers([onboardingPages[index]], direction: .reverse, animated: true, completion: nil)
         self.pageControl.currentPage = index;
     }
-
 }

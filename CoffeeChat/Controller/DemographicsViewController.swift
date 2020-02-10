@@ -10,19 +10,21 @@ import UIKit
 
 class DemographicsViewController: UIViewController {
 
+    // MARK: - Private Data vars
     private var delegate: OnboardingPageDelegate!
     private let userDefaults = UserDefaults.standard
 
-//    private let helloMessage = "Hi \(userDefaults.data(forKey: Constants.UserDefaults.userFirstName))!"
-    private let greetingMessage = "Let's get to know you better."
+    // MARK: - Private View Vars
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
-
     private let classTextField = UITextField()
     private let majorSearchBar = UISearchBar()
     private let hometownSearchBar = UISearchBar()
     private let pronounsTextField = UITextField()
     private let nextButton = UIButton()
+
+    // MARK: - Private Constants
+    private let fieldsCornerRadius: CGFloat = 8
 
     init(delegate: OnboardingPageDelegate) {
         super.init(nibName: nil, bundle: nil)
@@ -36,56 +38,56 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
 
-        // lucy - double check force unwrap
-        helloLabel.text = "Hi \(userDefaults.string(forKey: Constants.UserDefaults.userFirstName)!)!"
+        helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName")!)!"
         helloLabel.textColor = .textBlack
         helloLabel.font = .systemFont(ofSize: 24, weight: .bold)
         view.addSubview(helloLabel)
 
-        greetingLabel.text = greetingMessage
+        greetingLabel.text = "Let's get to know you better."
         greetingLabel.textColor = .textBlack
         greetingLabel.font = .systemFont(ofSize: 24, weight: .bold)
         view.addSubview(greetingLabel)
 
         classTextField.backgroundColor = .backgroundLightGray
-        classTextField.placeholder = "Class of..."
+//        classTextField.placeholder = "Class of..."
+        classTextField.attributedPlaceholder = NSAttributedString(string: "Class of...", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
         classTextField.keyboardType = .decimalPad
-        // lucy - double check placeholders
-        // lucy - double check comment styling and user defaults
         classTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
         classTextField.leftViewMode = .always
-        classTextField.layer.cornerRadius = 8
+        classTextField.layer.cornerRadius = fieldsCornerRadius
         view.addSubview(classTextField)
 
         majorSearchBar.backgroundColor = .backgroundLightGray
-        majorSearchBar.backgroundImage = UIImage() // to get rid of the two lines in search bar
+        majorSearchBar.backgroundImage = UIImage()
+        // majorSearchBar.delegate = self
         let majorTextField = majorSearchBar.value(forKey: "searchField") as? UITextField
         majorTextField?.backgroundColor = .backgroundLightGray
-        majorTextField?.placeholder = "Major"
+        majorTextField?.attributedPlaceholder = NSAttributedString(string: "Major", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
         majorTextField?.clearButtonMode = .never
-        majorSearchBar.setImage(UIImage(), for: .search, state: .normal) // hides the search icon bar
-        majorSearchBar.layer.cornerRadius = 8
-        majorSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: 5, vertical: 0)
+        majorSearchBar.setImage(UIImage(), for: .search, state: .normal)
+        majorSearchBar.layer.cornerRadius = fieldsCornerRadius
+        majorSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
         majorSearchBar.showsCancelButton = false
         view.addSubview(majorSearchBar)
 
         hometownSearchBar.backgroundColor = .backgroundLightGray
-        hometownSearchBar.backgroundImage = UIImage() // to get rid of the two lines in search bar
+        hometownSearchBar.backgroundImage = UIImage()
+        // hometownSearchBar.delegate = self
         let hometownSearchField = hometownSearchBar.value(forKey: "searchField") as? UITextField
         hometownSearchField?.backgroundColor = .backgroundLightGray
-        hometownSearchField?.placeholder = "Hometown"
+        hometownSearchField?.attributedPlaceholder = NSAttributedString(string: "Hometown", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
         hometownSearchField?.clearButtonMode = .never
-        hometownSearchBar.setImage(UIImage(), for: .search, state: .normal) // hides the search icon bar
-        hometownSearchBar.layer.cornerRadius = 8
-        hometownSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: 5, vertical: 0)
+        hometownSearchBar.setImage(UIImage(), for: .search, state: .normal)
+        hometownSearchBar.layer.cornerRadius = fieldsCornerRadius
+        hometownSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
         hometownSearchBar.showsCancelButton = false
         view.addSubview(hometownSearchBar)
 
         pronounsTextField.backgroundColor = .backgroundLightGray
-        pronounsTextField.placeholder = "Pronouns"
+        pronounsTextField.attributedPlaceholder = NSAttributedString(string: "Pronouns", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
         pronounsTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
         pronounsTextField.leftViewMode = .always
-        pronounsTextField.layer.cornerRadius = 8
+        pronounsTextField.layer.cornerRadius = fieldsCornerRadius
         view.addSubview(pronounsTextField)
 
         nextButton.setTitle("Next", for: .normal)
@@ -99,15 +101,19 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        print("Next")
         delegate.nextPage(index: 1)
     }
 
     func setUpConstraints() {
 
+        let helloHeight: CGFloat = 30
+        let helloSpacing: CGFloat = 100
+        let nextButtonSize = CGSize(width: 225, height: 54)
+
         helloLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(98)
+            make.height.equalTo(helloHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloSpacing)
         }
 
         greetingLabel.snp.makeConstraints { make in
@@ -149,9 +155,8 @@ class DemographicsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints{ make in
-            make.bottom.equalToSuperview().offset(-92)
-            make.width.equalTo(225)
-            make.height.equalTo(54)
+            make.bottom.equalToSuperview().offset(-130)
+            make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
         }
     }

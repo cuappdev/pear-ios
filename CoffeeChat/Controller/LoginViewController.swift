@@ -76,12 +76,7 @@ extension LoginViewController: GIDSignInDelegate {
             userDefaults.set(userToken, forKey: Constants.UserDefaults.userToken)
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-//            print(userDefaults.string(forKey: Constants.UserDefaults.userId))
         }
-
-//        let homeVC = HomeViewController()
-//        homeVC.modalPresentationStyle = .fullScreen
-//        present(homeVC, animated: true, completion: nil)
 
         let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
         onboardingVC.modalPresentationStyle = .fullScreen
