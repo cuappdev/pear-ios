@@ -106,58 +106,61 @@ class DemographicsViewController: UIViewController {
 
     func setUpConstraints() {
 
-        let helloHeight: CGFloat = 30
-        let helloSpacing: CGFloat = 100
+        let helloLabelHeight: CGFloat = 30
+        let helloLabelSpacing: CGFloat = 100
+        let nextBottomPadding: CGFloat = 90
         let nextButtonSize = CGSize(width: 225, height: 54)
+        let textFieldSidePadding: CGFloat = 40
+        let textFieldHeight: CGFloat = 49
+        let textFieldTopPadding: CGFloat = 20
 
         helloLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(helloHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloSpacing)
+            make.height.equalTo(helloLabelHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloLabelSpacing)
         }
 
         greetingLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(helloLabel.snp.bottom).offset(10)
-            make.left.equalToSuperview().offset(40)
         }
 
         classTextField.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(greetingLabel.snp.bottom).offset(149)
-            make.left.equalToSuperview().offset(40)
-            make.right.equalToSuperview().offset(-40)
-            make.height.equalTo(49)
+            make.left.equalToSuperview().offset(textFieldSidePadding)
+            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.height.equalTo(textFieldHeight)
         }
 
         majorSearchBar.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(classTextField.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(40)
-            make.right.equalToSuperview().offset(-40)
-            make.height.equalTo(49)
+            make.top.equalTo(classTextField.snp.bottom).offset(textFieldTopPadding)
+            make.left.equalToSuperview().offset(textFieldSidePadding)
+            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.height.equalTo(textFieldHeight)
         }
 
         hometownSearchBar.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(majorSearchBar.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(40)
-            make.right.equalToSuperview().offset(-40)
-            make.height.equalTo(49)
+            make.top.equalTo(majorSearchBar.snp.bottom).offset(textFieldTopPadding)
+            make.left.equalToSuperview().offset(textFieldSidePadding)
+            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.height.equalTo(textFieldHeight)
         }
 
         pronounsTextField.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownSearchBar.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(40)
-            make.right.equalToSuperview().offset(-40)
-            make.height.equalTo(49)
+            make.top.equalTo(hometownSearchBar.snp.bottom).offset(textFieldTopPadding)
+            make.left.equalToSuperview().offset(textFieldSidePadding)
+            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.height.equalTo(textFieldHeight)
         }
 
-        nextButton.snp.makeConstraints{ make in
-            make.bottom.equalToSuperview().offset(-130)
+        nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-nextBottomPadding)
         }
     }
 }
