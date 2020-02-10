@@ -12,7 +12,6 @@ target 'CoffeeChat' do
 
   # UI Frameworks
   pod 'SnapKit'
-  pod 'FLEX'
 
   target 'CoffeeChatTests' do
     inherit! :search_paths
