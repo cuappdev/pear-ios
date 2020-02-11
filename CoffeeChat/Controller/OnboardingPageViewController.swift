@@ -1,5 +1,5 @@
 //
-//  OnboardingViewController.swift
+//  OnboardingPageViewController.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 2/6/20.
@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-protocol OnboardingPageDelegate {
+protocol OnboardingPageDelegate: class {
     func nextPage(index: Int)
     func backPage(index: Int)
 }
@@ -41,7 +41,7 @@ class OnboardingPageViewController: UIPageViewController {
 
         pageControl.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-165)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(165)
         }
     }
 }

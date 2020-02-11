@@ -23,6 +23,7 @@ class InterestsViewController: UIViewController {
     private let topFadeView = UIView()
 
     // MARK: - Data
+    private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
         Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
         Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
@@ -37,8 +38,6 @@ class InterestsViewController: UIViewController {
         Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
     ]
     private var selectedInterests: [Interest] = []
-
-    private var delegate: OnboardingPageDelegate!
 
     init(delegate: OnboardingPageDelegate) {
        super.init(nibName: nil, bundle: nil)
@@ -90,11 +89,11 @@ class InterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate.nextPage(index: 2)
+        delegate?.nextPage(index: 2)
     }
 
     @objc func backButtonPressed() {
-        delegate.backPage(index: 0)
+        delegate?.backPage(index: 0)
     }
 
     override func viewDidAppear(_ animated: Bool) {

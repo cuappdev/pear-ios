@@ -71,7 +71,10 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        if let userId = user.userID, let userToken = user.authentication.idToken, let userFirstName = user.profile.givenName, let userFullName = user.profile.name {
+        if let userId = user.userID,
+            let userToken = user.authentication.idToken,
+            let userFirstName = user.profile.givenName,
+            let userFullName = user.profile.name {
             userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
             userDefaults.set(userToken, forKey: Constants.UserDefaults.userToken)
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)

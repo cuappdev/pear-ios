@@ -12,7 +12,7 @@ import SnapKit
 class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var delegate: OnboardingPageDelegate!
+    private weak var delegate: OnboardingPageDelegate?
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -55,7 +55,7 @@ class GroupsViewController: UIViewController {
         setupConstraints()
     }
 
-    func setupConstraints() {
+    private func setupConstraints() {
 
         let backBottomPadding: CGFloat = 49
         let backButtonSize = CGSize(width: 62, height: 20)
@@ -79,7 +79,7 @@ class GroupsViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.size.equalTo(backButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-backBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(backBottomPadding)
         }
     }
 
@@ -88,7 +88,7 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func backButtonPressed() {
-        delegate.backPage(index: 1)
+        delegate?.backPage(index: 1)
     }
 
 }

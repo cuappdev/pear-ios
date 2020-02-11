@@ -11,17 +11,17 @@ import UIKit
 class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var delegate: OnboardingPageDelegate!
+    private weak var delegate: OnboardingPageDelegate?
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
+    private let classTextField = UITextField()
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
-    private let classTextField = UITextField()
-    private let majorSearchBar = UISearchBar()
     private let hometownSearchBar = UISearchBar()
-    private let pronounsTextField = UITextField()
+    private let majorSearchBar = UISearchBar()
     private let nextButton = UIButton()
+    private let pronounsTextField = UITextField()
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -49,7 +49,6 @@ class DemographicsViewController: UIViewController {
         view.addSubview(greetingLabel)
 
         classTextField.backgroundColor = .backgroundLightGray
-//        classTextField.placeholder = "Class of..."
         classTextField.attributedPlaceholder = NSAttributedString(string: "Class of...", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
         classTextField.keyboardType = .decimalPad
         classTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
@@ -101,10 +100,10 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate.nextPage(index: 1)
+        delegate?.nextPage(index: 1)
     }
 
-    func setUpConstraints() {
+    private func setUpConstraints() {
 
         let helloLabelHeight: CGFloat = 30
         let helloLabelSpacing: CGFloat = 100
@@ -128,39 +127,35 @@ class DemographicsViewController: UIViewController {
         classTextField.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(greetingLabel.snp.bottom).offset(149)
-            make.left.equalToSuperview().offset(textFieldSidePadding)
-            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         majorSearchBar.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(classTextField.snp.bottom).offset(textFieldTopPadding)
-            make.left.equalToSuperview().offset(textFieldSidePadding)
-            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         hometownSearchBar.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(majorSearchBar.snp.bottom).offset(textFieldTopPadding)
-            make.left.equalToSuperview().offset(textFieldSidePadding)
-            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         pronounsTextField.snp.makeConstraints{ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(hometownSearchBar.snp.bottom).offset(textFieldTopPadding)
-            make.left.equalToSuperview().offset(textFieldSidePadding)
-            make.right.equalToSuperview().offset(-textFieldSidePadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
     }
 }
