@@ -18,7 +18,7 @@ class OnboardingPageViewController: UIPageViewController {
 
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
-    private var interestsViewController: InterestsViewController!
+    private var interestsViewController: OnboardingInterestsViewController!
     private var onboardingPages = [UIViewController]()
 
     private let pageControl = UIPageControl()
@@ -27,7 +27,7 @@ class OnboardingPageViewController: UIPageViewController {
         super.viewDidLoad()
 
         demographicsViewController = DemographicsViewController(delegate: self)
-        interestsViewController = InterestsViewController(delegate: self)
+        interestsViewController = OnboardingInterestsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
 

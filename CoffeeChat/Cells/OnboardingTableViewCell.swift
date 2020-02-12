@@ -1,5 +1,5 @@
 //
-//  InterestsTableViewCell.swift
+//  OnboardingTableViewCell.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 2/3/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InterestsTableViewCell: UITableViewCell {
+class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let categoriesLabel = UILabel()
@@ -16,7 +16,7 @@ class InterestsTableViewCell: UITableViewCell {
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
 
-    static let reuseIdentifier = "InterestsTableViewCell"
+    static let reuseIdentifier = "OnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
