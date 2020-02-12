@@ -106,7 +106,6 @@ class DemographicsViewController: UIViewController {
     }
 
     private func setUpConstraints() {
-
         let helloLabelHeight: CGFloat = 30
         let helloLabelSpacing: CGFloat = 100
         let nextBottomPadding: CGFloat = 90

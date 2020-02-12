@@ -73,7 +73,7 @@ class GroupsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(backButton.snp.top).offset(-nextBottomPadding)
+            make.bottom.equalTo(backButton.snp.top).inset(nextBottomPadding)
         }
 
         backButton.snp.makeConstraints { make in
