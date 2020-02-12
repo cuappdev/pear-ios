@@ -23,8 +23,30 @@ class InterestsViewController: UIViewController {
     private let topFadeView = UIView()
 
     // MARK: - Data
-    private var interests: [Interest] = []
+    private weak var delegate: OnboardingPageDelegate?
+    private var interests: [Interest] = [
+        Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+        Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
+    ]
     private var selectedInterests: [Interest] = []
+
+    init(delegate: OnboardingPageDelegate) {
+       super.init(nibName: nil, bundle: nil)
+       self.delegate = delegate
+   }
+
+   required init?(coder: NSCoder) {
+       fatalError("init(coder:) has not been implemented")
+   }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,15 +75,25 @@ class InterestsViewController: UIViewController {
         nextButton.backgroundColor = .backgroundLightGray
         nextButton.setTitleColor(.textBlack, for: .normal)
         nextButton.titleLabel?.font = .systemFont(ofSize: 20)
+        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
         backButton.titleLabel?.font = .systemFont(ofSize: 16)
         backButton.setTitle("Go back", for: .normal)
         backButton.setTitleColor(.textLightGray, for: .normal)
         backButton.backgroundColor = .none
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
         setupConstraints()
+    }
+
+    @objc func nextButtonPressed() {
+        delegate?.nextPage(index: 2)
+    }
+
+    @objc func backButtonPressed() {
+        delegate?.backPage(index: 0)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -95,7 +127,7 @@ class InterestsViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
         }
 
         tableView.snp.makeConstraints { make in

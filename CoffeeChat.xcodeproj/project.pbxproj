@@ -17,6 +17,7 @@
 		4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */; };
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
+		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D480EBFF23E2429600513063 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* Cell.swift */; };
 		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
 		D480EC0823E2483A00513063 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0723E2483A00513063 /* HomeView.swift */; };
@@ -27,6 +28,8 @@
 		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
+		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
+		D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */; };
 		F6684FC13217004C9B598811 /* Pods_CoffeeChat_CoffeeChatUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0F9EB58139A53CDF08D3CA /* Pods_CoffeeChat_CoffeeChatUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +66,7 @@
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 		D480EBFE23E2429600513063 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D480EC0723E2483A00513063 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		D48BB02823DE099900E88129 /* CoffeeChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatUITests.swift; sourceTree = "<group>"; };
 		D48BB02E23DE099900E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemographicsViewController.swift; sourceTree = "<group>"; };
+		D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		FA0F9EB58139A53CDF08D3CA /* Pods_CoffeeChat_CoffeeChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoffeeChat_CoffeeChatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2ACF261DD961E7CFB699AD /* Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,9 +160,12 @@
 		D480EC0023E2434200513063 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
+				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
 				D480EC0523E2470000513063 /* HomeViewController.swift */,
 				4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
+				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -539,9 +548,12 @@
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* InterestsTableViewCell.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
+				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
+				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				4F6CCDAA23E9B4A6003C3179 /* Interest.swift in Sources */,
+				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
 
     private let loginButton = GIDSignInButton()
     private let logoImageView = UIImageView()
+    private let userDefaults = UserDefaults.standard
 
     private let logoSize = CGSize(width: 150, height: 150)
 
@@ -61,11 +62,6 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        print(user.userID)
-        print(user.authentication.idToken)
-        print(user.profile.name)
-        print(user.profile.givenName)
-
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
             let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
@@ -75,9 +71,20 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        let homeVC = HomeViewController()
-        homeVC.modalPresentationStyle = .fullScreen
-        present(homeVC, animated: true, completion: nil)
+        if let userId = user.userID,
+            let userToken = user.authentication.idToken,
+            let userFirstName = user.profile.givenName,
+            let userFullName = user.profile.name {
+            userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
+            userDefaults.set(userToken, forKey: Constants.UserDefaults.userToken)
+            userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
+            userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
+        }
+
+        let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+        onboardingVC.modalPresentationStyle = .fullScreen
+        present(onboardingVC, animated: true, completion: nil)
+
     }
 
 }

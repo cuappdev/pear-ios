@@ -13,6 +13,7 @@ extension UIColor {
     // MARK: - Foreground
     static let textBlack = colorFromCode(0x000000)
     static let textGray = colorFromCode(0x3D3D3D)
+    static let textDarkGray = colorFromCode(0x9E9E9E)
     static let textLightGray = colorFromCode(0xADADAD)
 
     // MARK: - Background
