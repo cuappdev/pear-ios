@@ -11,10 +11,21 @@ import UIKit
 class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
-    private let categoriesLabel = UILabel()
     private let cellBackgroundView = UIView()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
+    private lazy var categoriesLabel: UILabel = {
+        let categoriesLabel = UILabel()
+        categoriesLabel.textColor = .textLightGray
+        categoriesLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        cellBackgroundView.addSubview(categoriesLabel)
+        return categoriesLabel
+    }()
+
+    // True if the cell has layed out views at least once
+    private var initialized = false
+    // Store whether it was showing interests or groups so it doesn't relayout on dequeue
+    private var showingInterests = false
 
     static let reuseIdentifier = "OnboardingTableViewCell"
 
@@ -34,19 +45,13 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.textColor = .textBlack
         titleLabel.font = .systemFont(ofSize: 20, weight: .regular)
         cellBackgroundView.addSubview(titleLabel)
-
-        categoriesLabel.textColor = .textLightGray
-        categoriesLabel.font = .systemFont(ofSize: 12, weight: .regular)
-        cellBackgroundView.addSubview(categoriesLabel)
-
-        setupConstraints()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupConstraints() {
+    private func setupConstraints(showingInterests: Bool) {
         let imageSize = CGSize(width: 32, height: 32)
         let sidePadding: CGFloat = 12
         let textSidePadding: CGFloat = 8
@@ -63,18 +68,42 @@ class OnboardingTableViewCell: UITableViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(interestImageView.snp.trailing).offset(textSidePadding)
-            make.top.equalTo(cellBackgroundView).inset(sidePadding)
+            if showingInterests {
+                make.top.equalTo(cellBackgroundView).inset(sidePadding)
+            } else {
+                make.centerY.equalToSuperview()
+            }
         }
 
-        categoriesLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom)
+        if showingInterests {
+            categoriesLabel.snp.makeConstraints { make in
+                make.leading.equalTo(titleLabel)
+                make.top.equalTo(titleLabel.snp.bottom)
+            }
         }
     }
 
     func configure(with interest: Interest) {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.categories
+        // Determine if a relayout is needed (was showing Group and configured with an Interest)
+        if !initialized || !showingInterests {
+            showingInterests = true
+            initialized = true
+            cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
+            setupConstraints(showingInterests: true)
+        }
+    }
+
+    func configure(with group: Group) {
+        titleLabel.text = group.name
+        // Determine if a relayout is needed (was showing Interest and configured with an Group)
+        if !initialized || showingInterests {
+            showingInterests = false
+            initialized = true
+            cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
+            setupConstraints(showingInterests: false)
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

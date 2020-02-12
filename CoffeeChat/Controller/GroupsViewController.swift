@@ -13,6 +13,31 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
+    //private var selectedGroups: [Interest] = []
+    // private var groups = [
+    //     Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
+    //     Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
+
+    // ]
+
+    private var selectedGroups: [Group] = []
+    private var groups: [Group] = [
+        Group(name: "Cornell", image: ""),
+        Group(name: "Cornell A", image: ""),
+        Group(name: "Cornell Ap", image: ""),
+        Group(name: "Cornell AppD", image: ""),
+        Group(name: "Cornell AppDe", image: ""),
+        Group(name: "Cornell AppDev", image: "")
+    ]
 
     // MARK: - Private View Vars
     private let searchBar = UISearchBar()
@@ -138,6 +163,14 @@ class GroupsViewController: UIViewController {
         }
     }
 
+    /**
+     Updates the enabled state of next button based on the state of selectedInterests.
+     */
+    private func updateNext() {
+        nextButton.isEnabled = selectedGroups.count > 0
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
+    }
+
     @objc func nextButtonPressed() {
         print("Next button pressed.")
     }
@@ -147,7 +180,6 @@ class GroupsViewController: UIViewController {
     }
 
 }
-
 
 // MARK: TableViewDelegate
 extension GroupsViewController: UITableViewDelegate {
@@ -169,13 +201,13 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        selectedInterests.append(interests[indexPath.section])
-//        updateNext()
+        selectedGroups.append(groups[indexPath.section])
+        updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        selectedInterests.removeAll { $0.name == interests[indexPath.section].name}
-//        updateNext()
+        selectedGroups.removeAll { $0.name == groups[indexPath.section].name}
+        updateNext()
     }
 
 }
@@ -184,18 +216,16 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-//            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
-//        OnboardingTableViewCell else { return UITableViewCell() }
-//        let data = interests[indexPath.section]
-//        cell.configure(with: data)
-//        return cell
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier:
+            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        OnboardingTableViewCell else { return UITableViewCell() }
+        let data = groups[indexPath.section]
+        cell.configure(with: data)
+        return cell
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-//        return interests.count
-        return 0
+        return groups.count
     }
 
 }
