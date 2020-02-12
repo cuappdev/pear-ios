@@ -38,7 +38,7 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
 
-        helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName")!)!"
+        helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
         helloLabel.textColor = .textBlack
         helloLabel.font = .systemFont(ofSize: 24, weight: .bold)
         view.addSubview(helloLabel)
@@ -59,10 +59,11 @@ class DemographicsViewController: UIViewController {
         majorSearchBar.backgroundColor = .backgroundLightGray
         majorSearchBar.backgroundImage = UIImage()
         // majorSearchBar.delegate = self
-        let majorTextField = majorSearchBar.value(forKey: "searchField") as? UITextField
-        majorTextField?.backgroundColor = .backgroundLightGray
-        majorTextField?.attributedPlaceholder = NSAttributedString(string: "Major", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
-        majorTextField?.clearButtonMode = .never
+        if let majorTextField = majorSearchBar.value(forKey: "searchField") as? UITextField {
+            majorTextField.backgroundColor = .backgroundLightGray
+            majorTextField.attributedPlaceholder = NSAttributedString(string: "Major", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
+            majorTextField.clearButtonMode = .never
+        }
         majorSearchBar.setImage(UIImage(), for: .search, state: .normal)
         majorSearchBar.layer.cornerRadius = fieldsCornerRadius
         majorSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
@@ -72,10 +73,11 @@ class DemographicsViewController: UIViewController {
         hometownSearchBar.backgroundColor = .backgroundLightGray
         hometownSearchBar.backgroundImage = UIImage()
         // hometownSearchBar.delegate = self
-        let hometownSearchField = hometownSearchBar.value(forKey: "searchField") as? UITextField
-        hometownSearchField?.backgroundColor = .backgroundLightGray
-        hometownSearchField?.attributedPlaceholder = NSAttributedString(string: "Hometown", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
-        hometownSearchField?.clearButtonMode = .never
+        if let hometownSearchField = hometownSearchBar.value(forKey: "searchField") as? UITextField {
+            hometownSearchField.backgroundColor = .backgroundLightGray
+            hometownSearchField.attributedPlaceholder = NSAttributedString(string: "Hometown", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
+            hometownSearchField.clearButtonMode = .never
+        }
         hometownSearchBar.setImage(UIImage(), for: .search, state: .normal)
         hometownSearchBar.layer.cornerRadius = fieldsCornerRadius
         hometownSearchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
