@@ -13,31 +13,15 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    //private var selectedGroups: [Interest] = []
-    // private var groups = [
-    //     Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-    //     Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
-
-    // ]
-
     private var selectedGroups: [Group] = []
     private var groups: [Group] = [
         Group(name: "Cornell", image: ""),
         Group(name: "Cornell A", image: ""),
         Group(name: "Cornell Ap", image: ""),
         Group(name: "Cornell AppD", image: ""),
-        Group(name: "Cornell AppDe", image: ""),
-        Group(name: "Cornell AppDev", image: "")
+        Group(name: "Cornell AppDe", image: "")
     ]
+    private var displayedGroups: [Group] = []
 
     // MARK: - Private View Vars
     private let searchBar = UISearchBar()
@@ -66,6 +50,7 @@ class GroupsViewController: UIViewController {
         view.backgroundColor = .backgroundWhite
 
         searchBar.searchBarStyle = .minimal
+        searchBar.delegate = self
         view.addSubview(searchBar)
 
         tableView.delegate = self
@@ -100,6 +85,8 @@ class GroupsViewController: UIViewController {
         backButton.backgroundColor = .none
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
+
+        displayedGroups = groups
 
         setupConstraints()
     }
@@ -214,12 +201,12 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedGroups.append(groups[indexPath.section])
+        selectedGroups.append(displayedGroups[indexPath.section])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0.name == groups[indexPath.section].name}
+        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.section].name}
         updateNext()
     }
 
@@ -232,13 +219,13 @@ extension GroupsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
         OnboardingTableViewCell else { return UITableViewCell() }
-        let data = groups[indexPath.section]
+        let data = displayedGroups[indexPath.section]
         cell.configure(with: data)
         return cell
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return groups.count
+        return displayedGroups.count
     }
 
 }
@@ -246,6 +233,9 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // ...
+        displayedGroups = searchText.isEmpty ? groups : groups.filter { $0.name.contains(searchText) }
+        tableView.reloadData()
+        print("is this even being called ):")
     }
+
 }
