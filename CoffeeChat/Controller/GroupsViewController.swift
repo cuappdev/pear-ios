@@ -56,7 +56,6 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-
         let backBottomPadding: CGFloat = 49
         let backButtonSize = CGSize(width: 62, height: 20)
         let nextButtonSize = CGSize(width: 225, height: 54)

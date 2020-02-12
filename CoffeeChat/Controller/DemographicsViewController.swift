@@ -75,7 +75,10 @@ class DemographicsViewController: UIViewController {
         // hometownSearchBar.delegate = self
         if let hometownSearchField = hometownSearchBar.value(forKey: "searchField") as? UITextField {
             hometownSearchField.backgroundColor = .backgroundLightGray
-            hometownSearchField.attributedPlaceholder = NSAttributedString(string: "Hometown", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
+            hometownSearchField.attributedPlaceholder = NSAttributedString(
+                string: "Hometown",
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray]
+            )
             hometownSearchField.clearButtonMode = .never
         }
         hometownSearchBar.setImage(UIImage(), for: .search, state: .normal)
@@ -85,7 +88,10 @@ class DemographicsViewController: UIViewController {
         view.addSubview(hometownSearchBar)
 
         pronounsTextField.backgroundColor = .backgroundLightGray
-        pronounsTextField.attributedPlaceholder = NSAttributedString(string: "Pronouns", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
+        pronounsTextField.attributedPlaceholder = NSAttributedString(
+            string: "Pronouns",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray]
+        )
         pronounsTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
         pronounsTextField.leftViewMode = .always
         pronounsTextField.layer.cornerRadius = fieldsCornerRadius
