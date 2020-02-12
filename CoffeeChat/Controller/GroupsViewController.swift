@@ -108,19 +108,16 @@ class GroupsViewController: UIViewController {
 
         let backBottomPadding: CGFloat = 49
         let backButtonSize = CGSize(width: 62, height: 20)
-        let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = 21
-        let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = 100
-
-        let tableViewTopPadding: CGFloat = 24
-        let tableViewSize = CGSize(width: 295, height: 365)
-
-        let topFadeHeight: CGFloat = 10
         let fadeHeight: CGFloat = 26
-
+        let nextBottomPadding: CGFloat = 21
+        let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
         let searchTopPadding: CGFloat = 50
+        let tableViewSize = CGSize(width: 295, height: 365)
+        let tableViewTopPadding: CGFloat = 24
+        let titleHeight: CGFloat = 30
+        let titleSpacing: CGFloat = 100
+        let topFadeHeight: CGFloat = 10
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -161,6 +158,22 @@ class GroupsViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(backBottomPadding)
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
+
+        let topLayer = CAGradientLayer()
+        topLayer.frame = topFadeView.bounds
+        topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
+        topLayer.locations = [0.0, 1.0]
+        topFadeView.layer.insertSublayer(topLayer, at: 0)
+
+        let bottomLayer = CAGradientLayer()
+        bottomLayer.frame = bottomFadeView.bounds
+        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
+        bottomLayer.locations = [0.0, 1.0]
+        bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
     /**
