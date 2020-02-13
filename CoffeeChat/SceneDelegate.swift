@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            window.rootViewController = HomeViewController()
+            window.rootViewController = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
         } else {
             window.rootViewController = LoginViewController()
         }
