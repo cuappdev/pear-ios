@@ -108,7 +108,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackgroundView.backgroundColor = selected ? .backgroundRed : .backgroundLightGray
+        cellBackgroundView.backgroundColor = isSelected ? .backgroundRed : .backgroundLightGray
     }
 
 }

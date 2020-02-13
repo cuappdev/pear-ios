@@ -15,11 +15,14 @@ class GroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     private var selectedGroups: [Group] = []
     private var groups: [Group] = [
-        Group(name: "Cornell", image: ""),
-        Group(name: "Cornell A", image: ""),
-        Group(name: "Cornell Ap", image: ""),
-        Group(name: "Cornell AppD", image: ""),
-        Group(name: "Cornell AppDe", image: "")
+        Group(name: "Apple", image: ""),
+        Group(name: "banana", image: ""),
+        Group(name: "Cornell AppDev", image: ""),
+        Group(name: "dandelion", image: ""),
+        Group(name: "giraffe", image: ""),
+        Group(name: "heap", image: ""),
+        Group(name: "Igloo", image: ""),
+        Group(name: "Jeans", image: "")
     ]
     private var displayedGroups: [Group] = []
 
@@ -221,6 +224,10 @@ extension GroupsViewController: UITableViewDataSource {
         OnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.section]
         cell.configure(with: data)
+        // Keep previous selected cell when reloading tableView
+        if selectedGroups.reduce(false, { $0 || $1.name == data.name }) {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        }
         return cell
     }
 
@@ -233,9 +240,10 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        displayedGroups = searchText.isEmpty ? groups : groups.filter { $0.name.contains(searchText) }
+        displayedGroups = searchText.isEmpty ?
+            groups :
+            groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         tableView.reloadData()
-        print("is this even being called ):")
     }
 
 }
