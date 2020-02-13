@@ -15,6 +15,8 @@
 		30304E1123F4B6E4006DC6C3 /* CircularStd-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 30304E0D23F4B6E3006DC6C3 /* CircularStd-Medium.otf */; };
 		30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 30304E0E23F4B6E4006DC6C3 /* CircularStd-Bold.otf */; };
 		30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */; };
+		30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */; };
+		30304E1823F5B701006DC6C3 /* MatchSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1723F5B701006DC6C3 /* MatchSummary.swift */; };
 		4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */; };
 		4F6CCDAA23E9B4A6003C3179 /* Interest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6CCDA923E9B4A6003C3179 /* Interest.swift */; };
 		4FE2ED2C23E92BD700472355 /* InterestsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */; };
@@ -23,7 +25,6 @@
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
-		D480EBFF23E2429600513063 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* Cell.swift */; };
 		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
 		D480EC0823E2483A00513063 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0723E2483A00513063 /* HomeView.swift */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
@@ -65,9 +66,11 @@
 		30304E0D23F4B6E3006DC6C3 /* CircularStd-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CircularStd-Medium.otf"; sourceTree = "<group>"; };
 		30304E0E23F4B6E4006DC6C3 /* CircularStd-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CircularStd-Bold.otf"; sourceTree = "<group>"; };
 		30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Shared.swift"; sourceTree = "<group>"; };
+		30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchSummaryTableViewCell.swift; sourceTree = "<group>"; };
+		30304E1723F5B701006DC6C3 /* MatchSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MatchSummary.swift; path = CoffeeChat/Model/MatchSummary.swift; sourceTree = SOURCE_ROOT; };
 		480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4F6CCDA923E9B4A6003C3179 /* Interest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Interest.swift; path = CoffeeChat/Cells/Interest.swift; sourceTree = SOURCE_ROOT; };
+		4F6CCDA923E9B4A6003C3179 /* Interest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Interest.swift; path = CoffeeChat/Model/Interest.swift; sourceTree = SOURCE_ROOT; };
 		4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsTableViewCell.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
 		4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
@@ -77,7 +80,6 @@
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
-		D480EBFE23E2429600513063 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D480EC0723E2483A00513063 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,6 +150,15 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		30304E1923F60CC9006DC6C3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4F6CCDA923E9B4A6003C3179 /* Interest.swift */,
+				30304E1723F5B701006DC6C3 /* MatchSummary.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		4FFF3B1F23E9083F00C89C29 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,8 +184,8 @@
 		D480EBFD23E2425C00513063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				D480EBFE23E2429600513063 /* Cell.swift */,
 				4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */,
+				30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -204,7 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				30304E0A23F4B6AC006DC6C3 /* Fonts */,
-				30304E0223E53B02006DC6C3 /* GoogleService-Info.plist */,
 				4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */,
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
 				30304E0823E78228006DC6C3 /* Constants.swift */,
@@ -217,14 +227,6 @@
 			children = (
 			);
 			path = Networking;
-			sourceTree = "<group>";
-		};
-		D480EC0423E243AA00513063 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				4F6CCDA923E9B4A6003C3179 /* Interest.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		D48BAFFE23DE099200E88129 = {
@@ -252,8 +254,8 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
+				30304E1923F60CC9006DC6C3 /* Models */,
 				4FFF3B1F23E9083F00C89C29 /* Extensions */,
-				D480EC0423E243AA00513063 /* Model */,
 				D480EC0323E2439200513063 /* Networking */,
 				D480EC0223E2438200513063 /* Supporting */,
 				D480EC0123E2436F00513063 /* View */,
@@ -401,7 +403,6 @@
 				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */,
 				30304E1023F4B6E4006DC6C3 /* CircularStd-Book.otf in Resources */,
-				30304E0323E53B02006DC6C3 /* GoogleService-Info.plist in Resources */,
 				4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
@@ -573,16 +574,17 @@
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
-				D480EBFF23E2429600513063 /* Cell.swift in Sources */,
 				D480EC0823E2483A00513063 /* HomeView.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* InterestsTableViewCell.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
+				30304E1823F5B701006DC6C3 /* MatchSummary.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				4F6CCDAA23E9B4A6003C3179 /* Interest.swift in Sources */,
+				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
