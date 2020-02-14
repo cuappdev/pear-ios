@@ -166,6 +166,7 @@ class GroupsViewController: UIViewController {
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
+    // MARK: - Search Bar
     /** Updates the search bar text based on currently selected Groups. */
     private func updateSearchBarText() {
         if selectedGroups.isEmpty {
@@ -197,17 +198,28 @@ class GroupsViewController: UIViewController {
     /** Retreives user typed search text from searchBar */
     private func getSearchText(from searchText: String) -> String {
         guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
+        let result: String
         if searchText.contains(lastGroupName) { // Search for text after listing
-            return searchText.components(separatedBy: lastGroupName + ", ").last ?? ""
+            result = searchText.components(separatedBy: lastGroupName + ", ").last ?? ""
         } else if searchText.contains("..., ") { // Search for text after ..., "
-            return searchText.components(separatedBy: "..., ").last ?? ""
+            result = searchText.components(separatedBy: "..., ").last ?? ""
         } else if searchText.contains(", ") { // User backspaced into the previous list item
-            return searchText.components(separatedBy: ", ").last ?? ""
+            result = searchText.components(separatedBy: ", ").last ?? ""
         } else { // User is deleting list, and should show all options
-          return ""
+          result = ""
         }
+        return result.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /** Filters table view results based on text typed in search */
+    private func filterTableView(searchText: String) {
+        displayedGroups = searchText.isEmpty ?
+            groups :
+            groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        tableView.reloadData()
+    }
+
+    // MARK: - Next and Previous Buttons
     /**
      Updates the enabled state of next button based on the state of selectedGroups.
      */
@@ -226,7 +238,7 @@ class GroupsViewController: UIViewController {
 
 }
 
-// MARK: TableViewDelegate
+// MARK: - TableViewDelegate
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -248,18 +260,20 @@ extension GroupsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.section])
         updateSearchBarText()
+        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         selectedGroups.removeAll { $0.name == displayedGroups[indexPath.section].name}
         updateSearchBarText()
+        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
 }
 
-// MARK: TableViewDataSource
+// MARK: - TableViewDataSource
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -269,7 +283,8 @@ extension GroupsViewController: UITableViewDataSource {
         let data = displayedGroups[indexPath.section]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedGroups.reduce(false, { $0 || $1.name == data.name }) {
+        // if selectedGroups.reduce(false, { $0 || $1.name == data.name }) {
+        if selectedGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell
@@ -284,13 +299,7 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let search = getSearchText(from: searchText)
-        print("search text is: \(search)")
-
-        displayedGroups = search.isEmpty ?
-            groups :
-            groups.filter { $0.name.localizedCaseInsensitiveContains(search) }
-        tableView.reloadData()
+        filterTableView(searchText: getSearchText(from: searchText))
     }
 
 }
