@@ -166,8 +166,50 @@ class GroupsViewController: UIViewController {
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
+    /** Updates the search bar text based on currently selected Groups. */
+    private func updateSearchBarText() {
+        if selectedGroups.isEmpty {
+            searchBar.text = ""
+            return
+        }
+
+        /** Number of characters before list is considered "too long" and shortened to "..." */
+        let tooLong = 20
+        let wordLong = 15
+
+        let listString = (selectedGroups.map { $0.name } ).joined(separator: ", ")
+        let lastComma = listString.lastIndex(of: ",")
+
+        if let comma = lastComma {
+            let lastWordLength = listString.count - comma.utf16Offset(in: listString) - 2
+            if listString.count < tooLong {
+                searchBar.text = "\(listString), "
+            } else if listString.count > tooLong && lastWordLength < wordLong { // Last word is short enough to show
+                searchBar.text = "...\(listString.suffix(from: comma)), "
+            } else { // Both the entire string and the last word are too long to display
+                searchBar.text = "..., "
+            }
+        } else if listString.count < tooLong { // listString is one item, and show it if its short
+            searchBar.text = "\(listString), "
+        }
+    }
+
+    /** Retreives user typed search text from searchBar */
+    private func getSearchText(from searchText: String) -> String {
+        guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
+        if searchText.contains(lastGroupName) { // Search for text after listing
+            return searchText.components(separatedBy: lastGroupName + ", ").last ?? ""
+        } else if searchText.contains("..., ") { // Search for text after ..., "
+            return searchText.components(separatedBy: "..., ").last ?? ""
+        } else if searchText.contains(", ") { // User backspaced into the previous list item
+            return searchText.components(separatedBy: ", ").last ?? ""
+        } else { // User is deleting list, and should show all options
+          return ""
+        }
+    }
+
     /**
-     Updates the enabled state of next button based on the state of selectedInterests.
+     Updates the enabled state of next button based on the state of selectedGroups.
      */
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
@@ -205,11 +247,13 @@ extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.section])
+        updateSearchBarText()
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         selectedGroups.removeAll { $0.name == displayedGroups[indexPath.section].name}
+        updateSearchBarText()
         updateNext()
     }
 
@@ -240,9 +284,12 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        displayedGroups = searchText.isEmpty ?
+        let search = getSearchText(from: searchText)
+        print("search text is: \(search)")
+
+        displayedGroups = search.isEmpty ?
             groups :
-            groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            groups.filter { $0.name.localizedCaseInsensitiveContains(search) }
         tableView.reloadData()
     }
 
