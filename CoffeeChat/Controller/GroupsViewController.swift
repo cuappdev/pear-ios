@@ -213,9 +213,9 @@ class GroupsViewController: UIViewController {
 
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
-        displayedGroups = searchText.isEmpty ?
-            groups :
-            groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        displayedGroups = searchText.isEmpty
+            ? groups
+            : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         tableView.reloadData()
     }
 

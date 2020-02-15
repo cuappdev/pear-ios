@@ -88,8 +88,7 @@ class OnboardingTableViewCell: UITableViewCell {
         categoriesLabel.text = interest.categories
         // Determine if a relayout is needed (was showing Group and configured with an Interest)
         if !initialized || !showingInterests {
-            showingInterests = true
-            relayoutSubviews()
+            relayoutSubviews(interests: true)
         }
     }
 
@@ -97,14 +96,16 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.text = group.name
         // Determine if a relayout is needed (was showing Interest and configured with an Group)
         if !initialized || showingInterests {
-            relayoutSubviews()
+            relayoutSubviews(interests: false)
         }
     }
 
-    private func relayoutSubviews() {
+    /// Removes and resets constraints on the cell. Includes categoriesLabel in the layout if `interests` is true
+    private func relayoutSubviews(interests: Bool) {
+        showingInterests = interests
         initialized = true
         cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
-        setupConstraints(showingInterests: false)
+        setupConstraints(showingInterests: showingInterests)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
