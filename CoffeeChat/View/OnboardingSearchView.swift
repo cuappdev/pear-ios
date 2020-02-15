@@ -9,19 +9,19 @@
 import UIKit
 
 protocol OnboardingSearchViewDelegate: class {
-    func bringSearchViewToFront(searchView: OnboardingSearchView)
-    func sendSearchViewToBack(searchView: OnboardingSearchView)
+    func bringSearchViewToFront(searchView: UIView)
+    func sendSearchViewToBack(searchView: UIView)
 }
 
-class OnboardingSearchTableView: UITableView {
+class OnboardingSelectTableView: UITableView {
 
     let maxHeight: CGFloat = 213.0
-    
-      override func reloadData() {
+
+    override func reloadData() {
         super.reloadData()
         self.invalidateIntrinsicContentSize()
         self.layoutIfNeeded()
-      }
+    }
 
     override var intrinsicContentSize: CGSize {
         let height = min(contentSize.height, maxHeight)
@@ -31,25 +31,25 @@ class OnboardingSearchTableView: UITableView {
 
 class OnboardingSearchView: UIView {
 
+    // MARK: - Private View Vars
     private let searchBar = UISearchBar()
-    private let tableView = OnboardingSearchTableView()
-    private var tableData: [String] = [] // lucy
-    private var reuseIdentifier: String! // lucy
-    private var placeholder: String!
+    private let tableView = OnboardingSelectTableView()
+
+    // MARK: - Private Data Vars
     private weak var delegate: OnboardingSearchViewDelegate?
+    private var placeholder: String!
+    private let reuseIdentifier = "OnboardingDropdownCell"
     private var searchedTableData: [String] = []
+    private var tableData: [String]!
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
-    init(tableData: [String], reuseIdentifier: String, placeholder: String, delegate: OnboardingSearchViewDelegate) {
+    init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String]) {
         super.init(frame: .zero)
-
         self.tableData = tableData
-        self.reuseIdentifier = reuseIdentifier
         self.placeholder = placeholder
         self.delegate = delegate
-
         addViews()
         setupConstraints()
     }
@@ -74,22 +74,19 @@ class OnboardingSearchView: UIView {
         searchBar.showsCancelButton = false
         addSubview(searchBar)
 
-        tableView.isHidden = true // LUCY - come back to this
+        tableView.isHidden = true
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
-//        tableView.maxHeight = 200
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
         tableView.layer.zPosition = 1
-//        tableView.estimatedRowHeight = 0
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .darkGray
         tableView.layer.cornerRadius = fieldsCornerRadius
         tableView.bounces = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(OnboardingDropdownTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         addSubview(tableView)
-
     }
 
     func setupConstraints() {
@@ -101,7 +98,6 @@ class OnboardingSearchView: UIView {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(-10)
-//            make.height.equalTo(213)
         }
     }
 }
@@ -112,19 +108,13 @@ extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITabl
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        cell.textLabel?.text = searchedTableData[indexPath.row]
-        cell.backgroundColor = .backgroundDarkGray
-        cell.textLabel?.textColor = .darkGray
-        cell.textLabel?.font = .systemFont(ofSize: 20, weight: .medium)
-        cell.textLabel?.textColor = .black
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! OnboardingDropdownTableViewCell
+        cell.configure(with: searchedTableData[indexPath.row])
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.text = searchedTableData[indexPath.row]
-        print(indexPath.row)
-        print(searchedTableData[indexPath.row])
         tableView.isHidden = true
         delegate?.sendSearchViewToBack(searchView: self)
     }
@@ -135,14 +125,9 @@ extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITabl
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchedTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
         delegate?.bringSearchViewToFront(searchView: self)
         tableView.isHidden = false
-        searchedTableData = searchText.isEmpty ? tableData : tableData.filter { $0.localizedCaseInsensitiveContains(searchText)
-        }
         tableView.reloadData()
-        tableView.invalidateIntrinsicContentSize()
-        tableView.layoutIfNeeded()
     }
-
-
 }

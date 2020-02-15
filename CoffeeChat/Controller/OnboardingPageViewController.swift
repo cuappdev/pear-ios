@@ -16,6 +16,7 @@ protocol OnboardingPageDelegate: class {
 
 class OnboardingPageViewController: UIPageViewController {
 
+    // MARK: - Private View Vars
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: InterestsViewController!

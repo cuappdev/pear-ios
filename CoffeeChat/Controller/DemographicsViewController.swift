@@ -13,26 +13,19 @@ class DemographicsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private let userDefaults = UserDefaults.standard
-    private let pronouns = ["he/his", "she/her", "they/their"]
-    private let years = ["2020", "2021", "2022", "2023", "2024"]
-    private let majors = ["Computer Science", "Economics", "Psychology", "English", "Government"]
-    private let hometowns = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
-    private let pronounCellReuseIdentifier = "pronounCellReuseIdentifier"
-    private let yearCellReuseIdentifier = "yearCellReuseIdentifier"
-    private let majorCellReuseIdentifier = "majorCellReuseIdentifier"
-    private let hometownCellReuseIdentifier = "hometownCellReuseIdentifier"
+    private let classSearchFields = ["2020", "2021", "2022", "2023", "2024"]
+    private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
+    private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
+    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
     // MARK: - Private View Vars
-//    private let classSearchBar = UISearchBar()
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
-//    private let hometownSearchBar = UISearchBar()
-//    private let majorSearchBar = UISearchBar()
-    private var classSearchBar: OnboardingSearchView!
-    private var majorSearchBar: OnboardingSearchView! //lucy
-    private var hometownSearchBar: OnboardingSearchView!
+    private var classDropdownView: OnboardingDropdownView!
+    private var majorSearchView: OnboardingSearchView!
+    private var hometownSearchView: OnboardingSearchView!
     private let nextButton = UIButton()
-    private let pronounsTextField = UITextField()
+    private var pronounsDropdownView: OnboardingDropdownView!
     private let pronounsTableView = UITableView()
 
     // MARK: - Private Constants
@@ -60,41 +53,17 @@ class DemographicsViewController: UIViewController {
         greetingLabel.font = .systemFont(ofSize: 24, weight: .bold)
         view.addSubview(greetingLabel)
 
-        classSearchBar = OnboardingSearchView(tableData: years, reuseIdentifier: yearCellReuseIdentifier, placeholder: "Class of...", delegate: self)
-//        classSearchBar.layer.zPosition = 1
-        classSearchBar.isUserInteractionEnabled = true
-        view.addSubview(classSearchBar)
+        classDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields)
+        view.addSubview(classDropdownView)
 
-        majorSearchBar = OnboardingSearchView(tableData: majors, reuseIdentifier: majorCellReuseIdentifier, placeholder: "Major", delegate: self)
-//        majorSearchBar.layer.zPosition = 1
-        majorSearchBar.isUserInteractionEnabled = true
-        view.addSubview(majorSearchBar)
+        majorSearchView = OnboardingSearchView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        view.addSubview(majorSearchView)
 
-        hometownSearchBar = OnboardingSearchView(tableData: hometowns, reuseIdentifier: hometownCellReuseIdentifier, placeholder: "Hometown", delegate: self)
-//        hometownSearchBar.layer.zPosition = 1
-        hometownSearchBar.isUserInteractionEnabled = true
-        view.addSubview(hometownSearchBar)
+        hometownSearchView = OnboardingSearchView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        view.addSubview(hometownSearchView)
 
-        pronounsTextField.backgroundColor = .backgroundLightGray
-        pronounsTextField.attributedPlaceholder = NSAttributedString(
-            string: "Pronouns",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray]
-        )
-        pronounsTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
-        pronounsTextField.leftViewMode = .always
-        pronounsTextField.layer.cornerRadius = fieldsCornerRadius
-        view.addSubview(pronounsTextField)
-
-        pronounsTableView.isHidden = true // LUCY - come back to this
-        pronounsTableView.layer.zPosition = 1
-        pronounsTableView.isScrollEnabled = false
-        pronounsTableView.separatorStyle = .none
-        pronounsTableView.delegate = self
-        pronounsTableView.dataSource = self
-        pronounsTableView.backgroundColor = .darkGray
-        pronounsTableView.layer.cornerRadius = fieldsCornerRadius
-        pronounsTableView.register(UITableViewCell.self, forCellReuseIdentifier: pronounCellReuseIdentifier)
-        view.addSubview(pronounsTableView)
+        pronounsDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields)
+        view.addSubview(pronounsDropdownView)
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.textBlack, for: .normal)
@@ -115,7 +84,6 @@ class DemographicsViewController: UIViewController {
         let helloLabelSpacing: CGFloat = 100
         let nextBottomPadding: CGFloat = 90
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let tableViewSidePadding: CGFloat = 32
         let textFieldSidePadding: CGFloat = 40
         let textFieldHeight: CGFloat = 49
         let textFieldTopPadding: CGFloat = 20
@@ -131,38 +99,32 @@ class DemographicsViewController: UIViewController {
             make.top.equalTo(helloLabel.snp.bottom).offset(10)
         }
 
-        classSearchBar.snp.makeConstraints { make in
+        classDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(greetingLabel.snp.bottom).offset(149)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
-        majorSearchBar.snp.makeConstraints { make in
+        majorSearchView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(classSearchBar.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(classDropdownView.snp.top).offset(textFieldTopPadding+textFieldHeight)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
-        hometownSearchBar.snp.makeConstraints { make in
+        hometownSearchView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(majorSearchBar.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(majorSearchView.snp.top).offset(textFieldTopPadding+textFieldHeight)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
-        pronounsTextField.snp.makeConstraints { make in
+        pronounsDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownSearchBar.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(hometownSearchView.snp.top).offset(textFieldTopPadding+textFieldHeight)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
-        }
-
-        pronounsTableView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(tableViewSidePadding)
-            make.top.equalTo(pronounsTextField.snp.bottom)
-            make.height.equalTo(150)
         }
 
         nextButton.snp.makeConstraints { make in
@@ -173,51 +135,15 @@ class DemographicsViewController: UIViewController {
     }
 }
 
-// MARK: TableViewDelegate
-extension DemographicsViewController: UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
-    }
-
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//
-//    }
-//
-//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//
-//    }
-
-}
-
-// MARK: TableViewDataSource
-extension DemographicsViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pronouns.count
-    }
-
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: pronounCellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = self.pronouns[indexPath.row]
-        cell.backgroundColor = .backgroundDarkGray
-        cell.textLabel?.textColor = .darkGray
-        cell.textLabel?.font = .systemFont(ofSize: 20, weight: .medium)
-        cell.textLabel?.textColor = .black
-        cell.selectionStyle = .none
-        return cell
-    }
-}
-
 extension DemographicsViewController: OnboardingSearchViewDelegate {
-    func bringSearchViewToFront(searchView: OnboardingSearchView) {
+    func bringSearchViewToFront(searchView: UIView) {
         view.bringSubviewToFront(searchView)
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(49+300)
         }
     }
 
-    func sendSearchViewToBack(searchView: OnboardingSearchView) {
+    func sendSearchViewToBack(searchView: UIView) {
         view.sendSubviewToBack(searchView)
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(49)

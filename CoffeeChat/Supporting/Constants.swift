@@ -25,4 +25,12 @@ struct Constants {
         static let userToken = "userToken"
     }
 
+    /// Cell identifiers
+    struct Cells {
+        static let pronounCellIdentifier = "PronounCell"
+        static let classCellIdentifier = "ClassCell"
+        static let majorCellIdentifier = "MajorCell"
+        static let hometownCellIdentifier = "HometownCell"
+    }
+
 }
