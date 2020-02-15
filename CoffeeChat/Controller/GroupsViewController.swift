@@ -14,6 +14,7 @@ class GroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private var selectedGroups: [Group] = []
+    // TODO: change when networking with backend
     private var groups: [Group] = [
         Group(name: "Apple", image: ""),
         Group(name: "banana", image: ""),
@@ -95,7 +96,6 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-
         let backBottomPadding: CGFloat = 49
         let backButtonSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
@@ -140,7 +140,7 @@ class GroupsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(backButton.snp.top).inset(nextBottomPadding)
+            make.bottom.equalTo(backButton.snp.top).offset(-nextBottomPadding)
         }
 
         backButton.snp.makeConstraints { make in
@@ -283,7 +283,6 @@ extension GroupsViewController: UITableViewDataSource {
         let data = displayedGroups[indexPath.section]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        // if selectedGroups.reduce(false, { $0 || $1.name == data.name }) {
         if selectedGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }

@@ -191,16 +191,12 @@ extension OnboardingInterestsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedInterests.append(interests[indexPath.section])
         updateNext()
-//        guard let cell = tableView.cellForRow(at: indexPath) as? OnboardingTableViewCell else { return }
-//        cell.selectCell(true)
 
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         selectedInterests.removeAll { $0.name == interests[indexPath.section].name}
         updateNext()
-//        guard let cell = tableView.cellForRow(at: indexPath) as? OnboardingTableViewCell else { return }
-//        cell.selectCell(false)
     }
 
 }
