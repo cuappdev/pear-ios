@@ -140,7 +140,7 @@ class GroupsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(backButton.snp.top).offset(-nextBottomPadding)
+            make.bottom.equalTo(backButton.snp.top).inset(nextBottomPadding)
         }
 
         backButton.snp.makeConstraints { make in
@@ -195,7 +195,7 @@ class GroupsViewController: UIViewController {
         }
     }
 
-    /** Retreives user typed search text from searchBar */
+    /** Retrieves user typed search text from searchBar */
     private func getSearchText(from searchText: String) -> String {
         guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
         let result: String
