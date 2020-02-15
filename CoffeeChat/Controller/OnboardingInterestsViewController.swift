@@ -191,7 +191,6 @@ extension OnboardingInterestsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedInterests.append(interests[indexPath.section])
         updateNext()
-
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

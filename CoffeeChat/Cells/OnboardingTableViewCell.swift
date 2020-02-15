@@ -89,9 +89,7 @@ class OnboardingTableViewCell: UITableViewCell {
         // Determine if a relayout is needed (was showing Group and configured with an Interest)
         if !initialized || !showingInterests {
             showingInterests = true
-            initialized = true
-            cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
-            setupConstraints(showingInterests: true)
+            relayoutSubviews()
         }
     }
 
@@ -99,11 +97,14 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.text = group.name
         // Determine if a relayout is needed (was showing Interest and configured with an Group)
         if !initialized || showingInterests {
-            showingInterests = false
-            initialized = true
-            cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
-            setupConstraints(showingInterests: false)
+            relayoutSubviews()
         }
+    }
+
+    private func relayoutSubviews() {
+        initialized = true
+        cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
+        setupConstraints(showingInterests: false)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -28,11 +28,11 @@ class GroupsViewController: UIViewController {
     private var displayedGroups: [Group] = []
 
     // MARK: - Private View Vars
-    private let searchBar = UISearchBar()
     private let backButton = UIButton()
     private let clubLabel = UILabel()
     private let greetingLabel = UILabel()
     private let nextButton = UIButton()
+    private let searchBar = UISearchBar()
     private let tableView = UITableView(frame: .zero, style: .plain)
 
     // MARK: - Gradients
@@ -167,35 +167,35 @@ class GroupsViewController: UIViewController {
     }
 
     // MARK: - Search Bar
-    /** Updates the search bar text based on currently selected Groups. */
+    /// Updates the search bar text based on currently selected Groups.
     private func updateSearchBarText() {
         if selectedGroups.isEmpty {
             searchBar.text = ""
             return
         }
 
-        /** Number of characters before list is considered "too long" and shortened to "..." */
-        let tooLong = 20
+        // Number of characters before list is considered "too long" and shortened to "..."
+        let maxChar = 20
         let wordLong = 15
 
-        let listString = (selectedGroups.map { $0.name } ).joined(separator: ", ")
+        let listString = (selectedGroups.map { $0.name }).joined(separator: ", ")
         let lastComma = listString.lastIndex(of: ",")
 
         if let comma = lastComma {
             let lastWordLength = listString.count - comma.utf16Offset(in: listString) - 2
-            if listString.count < tooLong {
+            if listString.count < maxChar {
                 searchBar.text = "\(listString), "
-            } else if listString.count > tooLong && lastWordLength < wordLong { // Last word is short enough to show
+            } else if listString.count > maxChar && lastWordLength < wordLong { // Last word is short enough to show
                 searchBar.text = "...\(listString.suffix(from: comma)), "
             } else { // Both the entire string and the last word are too long to display
                 searchBar.text = "..., "
             }
-        } else if listString.count < tooLong { // listString is one item, and show it if its short
+        } else if listString.count < maxChar { // listString is one item, and show it if its short
             searchBar.text = "\(listString), "
         }
     }
 
-    /** Retrieves user typed search text from searchBar */
+    /// Retrieves user typed search text from searchBar
     private func getSearchText(from searchText: String) -> String {
         guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
         let result: String
@@ -211,7 +211,7 @@ class GroupsViewController: UIViewController {
         return result.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    /** Filters table view results based on text typed in search */
+    /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
         displayedGroups = searchText.isEmpty ?
             groups :
@@ -220,9 +220,7 @@ class GroupsViewController: UIViewController {
     }
 
     // MARK: - Next and Previous Buttons
-    /**
-     Updates the enabled state of next button based on the state of selectedGroups.
-     */
+    /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
