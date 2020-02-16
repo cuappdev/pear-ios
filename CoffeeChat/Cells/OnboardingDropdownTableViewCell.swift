@@ -16,10 +16,11 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .backgroundLightGrayGreen
+        selectionStyle = .none
+        
         label.textColor = .textGray
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.textColor = .black
-        self.selectionStyle = .none
         addSubview(label)
 
         setupConstraints()

@@ -13,10 +13,11 @@ class DemographicsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private let userDefaults = UserDefaults.standard
-    private let classSearchFields = ["2020", "2021", "2022", "2023", "2024"]
+    private var classSearchFields: [String] = []
+    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
-    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
     // MARK: - Private View Vars
     private let greetingLabel = UILabel()
@@ -27,12 +28,12 @@ class DemographicsViewController: UIViewController {
     private let nextButton = UIButton()
     private var pronounsDropdownView: OnboardingDropdownView!
     private let pronounsTableView = UITableView()
-
     private var onboardingSearchViews: [OnboardingSearchView] = []
     private var onboardingDropdownViews: [OnboardingDropdownView] = []
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
+    private let textFieldHeight: CGFloat = 49
 
     init(delegate: OnboardingPageDelegate) {
         super.init(nibName: nil, bundle: nil)
@@ -48,13 +49,18 @@ class DemographicsViewController: UIViewController {
 
         helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
         helloLabel.textColor = .textBlack
-        helloLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        helloLabel.font = ._24CircularStdMedium
         view.addSubview(helloLabel)
 
         greetingLabel.text = "Let's get to know you better."
         greetingLabel.textColor = .textBlack
-        greetingLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        greetingLabel.font = ._24CircularStdMedium
         view.addSubview(greetingLabel)
+
+        let currentYear = Calendar.current.component(.year, from: Date())
+        for year in currentYear...currentYear+5 {
+            classSearchFields.append("\(year)")
+        }
 
         classDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields)
         view.addSubview(classDropdownView)
@@ -73,7 +79,8 @@ class DemographicsViewController: UIViewController {
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.backgroundColor = .backgroundOrange
+        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.backgroundColor = .backgroundGrayGreen
         nextButton.layer.cornerRadius = 26
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
@@ -81,7 +88,7 @@ class DemographicsViewController: UIViewController {
         setUpConstraints()
     }
 
-    @objc func nextButtonPressed() {
+    @objc private func nextButtonPressed() {
         delegate?.nextPage(index: 1)
     }
 
@@ -91,8 +98,8 @@ class DemographicsViewController: UIViewController {
         let nextBottomPadding: CGFloat = 90
         let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
-        let textFieldHeight: CGFloat = 49
         let textFieldTopPadding: CGFloat = 20
+        let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
 
         helloLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -114,21 +121,21 @@ class DemographicsViewController: UIViewController {
 
         majorSearchView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(classDropdownView.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(classDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         hometownSearchView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(majorSearchView.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(majorSearchView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         pronounsDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownSearchView.snp.top).offset(textFieldTopPadding+textFieldHeight)
+            make.top.equalTo(hometownSearchView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
@@ -153,7 +160,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
                 view.sendSubviewToBack($0)
                 $0.collapseTableView()
                 $0.snp.updateConstraints{ make in
-                    make.height.equalTo(49)
+                    make.height.equalTo(textFieldHeight)
                 }
             }
         }
@@ -163,7 +170,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
                 view.sendSubviewToBack($0)
                 $0.collapseTableView()
                 $0.snp.updateConstraints{ make in
-                    make.height.equalTo(49)
+                    make.height.equalTo(textFieldHeight)
                 }
             }
         }
@@ -172,7 +179,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
     func sendSearchViewToBack(searchView: UIView) {
         view.sendSubviewToBack(searchView)
         searchView.snp.updateConstraints{ make in
-            make.height.equalTo(49)
+            make.height.equalTo(textFieldHeight)
         }
     }
 }
