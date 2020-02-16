@@ -74,6 +74,9 @@ class OnboardingSearchView: UIView {
         searchBar.showsCancelButton = false
         addSubview(searchBar)
 
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissTableView))
+        addGestureRecognizer(tapGestureRecognizer)
+
         tableView.isHidden = true
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
@@ -99,6 +102,11 @@ class OnboardingSearchView: UIView {
             make.top.equalTo(searchBar.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(-10)
         }
+    }
+
+    @objc func dismissTableView() {
+        print("here")
+        tableView.isHidden = true
     }
 }
 

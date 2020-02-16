@@ -19,6 +19,7 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.textColor = .black
+        self.selectionStyle = .none
         addSubview(label)
 
         setupConstraints()

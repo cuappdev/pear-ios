@@ -22,6 +22,8 @@ class OnboardingDropdownView: UIView {
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
+    
+    private let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissTableViews))
 
     init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String]) {
         super.init(frame: .zero)
@@ -77,6 +79,15 @@ class OnboardingDropdownView: UIView {
     @objc func showDropDown() {
         tableView.isHidden = false
         delegate?.bringSearchViewToFront(searchView: self)
+    }
+
+    @objc func dismissTableViews(_ sender: UITapGestureRecognizer? = nil) {
+        print("tapped")
+    }
+
+    @objc func dismissTableView(_ sender: UITapGestureRecognizer? = nil) {
+        print("tapped in small view")
+
     }
 }
 
