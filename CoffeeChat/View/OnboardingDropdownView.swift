@@ -23,8 +23,6 @@ class OnboardingDropdownView: UIView {
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
     
-    private let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissTableViews))
-
     init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String]) {
         super.init(frame: .zero)
         self.tableData = tableData
@@ -38,7 +36,7 @@ class OnboardingDropdownView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func addViews() {
+    private func addViews() {
         dropdownButton.backgroundColor = .backgroundWhite
         dropdownButton.setAttributedTitle(
             NSAttributedString(string: placeholder, attributes: [
@@ -51,6 +49,7 @@ class OnboardingDropdownView: UIView {
         addSubview(dropdownButton)
 
         tableView.isHidden = true
+        tableView.tag = 100
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
         tableView.allowsSelection = true
@@ -64,7 +63,7 @@ class OnboardingDropdownView: UIView {
         addSubview(tableView)
     }
 
-    func setupConstraints() {
+    private func setupConstraints() {
         dropdownButton.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(49)
@@ -81,13 +80,8 @@ class OnboardingDropdownView: UIView {
         delegate?.bringSearchViewToFront(searchView: self)
     }
 
-    @objc func dismissTableViews(_ sender: UITapGestureRecognizer? = nil) {
-        print("tapped")
-    }
-
-    @objc func dismissTableView(_ sender: UITapGestureRecognizer? = nil) {
-        print("tapped in small view")
-
+    func collapseTableView() {
+        tableView.isHidden = true
     }
 }
 

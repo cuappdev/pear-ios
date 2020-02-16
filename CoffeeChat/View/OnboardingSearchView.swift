@@ -75,6 +75,7 @@ class OnboardingSearchView: UIView {
         addSubview(searchBar)
 
         tableView.isHidden = true
+        tableView.tag = 200
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
         tableView.allowsSelection = true
@@ -99,6 +100,10 @@ class OnboardingSearchView: UIView {
             make.top.equalTo(searchBar.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(-10)
         }
+    }
+
+    func collapseTableView() {
+        tableView.isHidden = true
     }
 }
 

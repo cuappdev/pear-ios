@@ -28,7 +28,8 @@ class DemographicsViewController: UIViewController {
     private var pronounsDropdownView: OnboardingDropdownView!
     private let pronounsTableView = UITableView()
 
-//    private var fieldViews: [UIView] = []
+    private var onboardingSearchViews: [OnboardingSearchView] = []
+    private var onboardingDropdownViews: [OnboardingDropdownView] = []
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -56,22 +57,19 @@ class DemographicsViewController: UIViewController {
         view.addSubview(greetingLabel)
 
         classDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields)
-        classDropdownView.isUserInteractionEnabled = true
         view.addSubview(classDropdownView)
 
         majorSearchView = OnboardingSearchView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
-        majorSearchView.isUserInteractionEnabled = true
         view.addSubview(majorSearchView)
 
         hometownSearchView = OnboardingSearchView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
-        hometownSearchView.isUserInteractionEnabled = true
         view.addSubview(hometownSearchView)
 
         pronounsDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields)
-        pronounsDropdownView.isUserInteractionEnabled = true
         view.addSubview(pronounsDropdownView)
 
-//        fieldViews = [classDropdownView, majorSearchView, hometownSearchView, pronounsDropdownView]
+        onboardingSearchViews = [majorSearchView, hometownSearchView]
+        onboardingDropdownViews = [classDropdownView, pronounsDropdownView]
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -80,26 +78,12 @@ class DemographicsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissTableViews))
-//        view.addGestureRecognizer(tapGestureRecognizer)
-
         setUpConstraints()
     }
 
     @objc func nextButtonPressed() {
         delegate?.nextPage(index: 1)
     }
-
-//    @objc func dismissTableViews(_ sender: UITapGestureRecognizer? = nil) {
-//        print("tapped in big view")
-//        fieldViews.forEach {
-//            print($0)
-//            view.sendSubviewToBack($0)
-//            $0.snp.updateConstraints{ make in
-//                make.height.equalTo(49)
-//            }
-//        }
-//    }
 
     private func setUpConstraints() {
         let helloLabelHeight: CGFloat = 30
@@ -162,6 +146,26 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         view.bringSubviewToFront(searchView)
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(49+300)
+        }
+
+        onboardingSearchViews.forEach {
+            if !$0.isEqual(searchView) {
+                view.sendSubviewToBack($0)
+                $0.collapseTableView()
+                $0.snp.updateConstraints{ make in
+                    make.height.equalTo(49)
+                }
+            }
+        }
+
+        onboardingDropdownViews.forEach {
+            if !$0.isEqual(searchView) {
+                view.sendSubviewToBack($0)
+                $0.collapseTableView()
+                $0.snp.updateConstraints{ make in
+                    make.height.equalTo(49)
+                }
+            }
         }
     }
 
