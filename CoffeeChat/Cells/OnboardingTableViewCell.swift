@@ -87,7 +87,9 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.categories
         // Determine if a relayout is needed (was showing Group and configured with an Interest)
-        relayoutSubviews(interests: !initialized || !showingInterests)
+        if !initialized || !showingInterests {
+            relayoutSubviews(interests: true)
+        }
     }
 
     func configure(with group: Group) {
