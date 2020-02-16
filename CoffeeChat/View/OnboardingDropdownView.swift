@@ -39,7 +39,7 @@ class OnboardingDropdownView: UIView {
     }
 
     func addViews() {
-        dropdownButton.backgroundColor = .backgroundLightGray
+        dropdownButton.backgroundColor = .backgroundWhite
         dropdownButton.setAttributedTitle(
             NSAttributedString(string: placeholder, attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.textDarkGray,

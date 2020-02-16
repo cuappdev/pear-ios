@@ -59,11 +59,11 @@ class OnboardingSearchView: UIView {
     }
 
     func addViews() {
-        searchBar.backgroundColor = .backgroundLightGray
+        searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
         searchBar.delegate = self
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.backgroundColor = .backgroundLightGray
+            textField.backgroundColor = .backgroundWhite
             textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
             textField.font = .systemFont(ofSize: 20, weight: .medium)
             textField.clearButtonMode = .never
@@ -73,9 +73,6 @@ class OnboardingSearchView: UIView {
         searchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
         searchBar.showsCancelButton = false
         addSubview(searchBar)
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissTableView))
-        addGestureRecognizer(tapGestureRecognizer)
 
         tableView.isHidden = true
         tableView.isScrollEnabled = true
@@ -102,11 +99,6 @@ class OnboardingSearchView: UIView {
             make.top.equalTo(searchBar.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(-10)
         }
-    }
-
-    @objc func dismissTableView() {
-        print("here")
-        tableView.isHidden = true
     }
 }
 

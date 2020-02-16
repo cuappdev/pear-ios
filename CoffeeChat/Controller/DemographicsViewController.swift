@@ -43,7 +43,7 @@ class DemographicsViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundLightGreen
 
         helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
         helloLabel.textColor = .textBlack
@@ -74,8 +74,8 @@ class DemographicsViewController: UIViewController {
 //        fieldViews = [classDropdownView, majorSearchView, hometownSearchView, pronounsDropdownView]
 
         nextButton.setTitle("Next", for: .normal)
-        nextButton.setTitleColor(.textBlack, for: .normal)
-        nextButton.backgroundColor = .backgroundLightGray
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.backgroundColor = .backgroundOrange
         nextButton.layer.cornerRadius = 26
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
@@ -172,6 +172,3 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         }
     }
 }
-
-
-
