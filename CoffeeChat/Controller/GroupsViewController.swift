@@ -39,7 +39,7 @@ class GroupsViewController: UIViewController {
 
         nextButton.setTitle("Get started!", for: .normal)
         nextButton.layer.cornerRadius = 27
-        nextButton.backgroundColor = .backgroundLightGray
+        nextButton.backgroundColor = .textField
         nextButton.setTitleColor(.textBlack, for: .normal)
         nextButton.titleLabel?.font = .systemFont(ofSize: 20)
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)

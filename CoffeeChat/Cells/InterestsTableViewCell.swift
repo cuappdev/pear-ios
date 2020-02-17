@@ -23,11 +23,11 @@ class InterestsTableViewCell: UITableViewCell {
         selectionStyle = .none
         contentView.backgroundColor = .none
 
-        cellBackgroundView.backgroundColor = .backgroundLightGray
+        cellBackgroundView.backgroundColor = .white
         cellBackgroundView.layer.cornerRadius = 8
         contentView.addSubview(cellBackgroundView)
 
-        interestImageView.backgroundColor = .backgroundDarkGray
+        interestImageView.backgroundColor = .defaultGrey
         interestImageView.layer.cornerRadius = 4
         cellBackgroundView.addSubview(interestImageView)
 
@@ -79,7 +79,7 @@ class InterestsTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackgroundView.backgroundColor = selected ? .backgroundRed : .backgroundLightGray
+        cellBackgroundView.backgroundColor = selected ? .greenGray : .white
     }
 
 }

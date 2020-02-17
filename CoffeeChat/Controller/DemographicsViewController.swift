@@ -19,6 +19,9 @@ class DemographicsViewController: UIViewController {
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
 
+    private var fieldsEntered: [Bool] = [false, false, false, false]
+    private var allFieldsEntered: Bool = false
+
     // MARK: - Private View Vars
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
@@ -58,20 +61,24 @@ class DemographicsViewController: UIViewController {
         view.addSubview(greetingLabel)
 
         let currentYear = Calendar.current.component(.year, from: Date())
-        for year in currentYear...currentYear+5 {
+        for year in currentYear...currentYear+4 {
             classSearchFields.append("\(year)")
         }
 
         classDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields)
+        classDropdownView.tag = 0
         view.addSubview(classDropdownView)
 
         majorSearchView = OnboardingSearchView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        majorSearchView.tag = 1
         view.addSubview(majorSearchView)
 
         hometownSearchView = OnboardingSearchView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        hometownSearchView.tag = 2
         view.addSubview(hometownSearchView)
 
         pronounsDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields)
+        pronounsDropdownView.tag = 3
         view.addSubview(pronounsDropdownView)
 
         onboardingSearchViews = [majorSearchView, hometownSearchView]
@@ -80,7 +87,7 @@ class DemographicsViewController: UIViewController {
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBook
-        nextButton.backgroundColor = .backgroundGrayGreen
+        nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = 26
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
@@ -89,13 +96,30 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        delegate?.nextPage(index: 1)
+        if allFieldsEntered {
+            delegate?.nextPage(index: 1)
+        }
+    }
+
+//    private func setCustomFontSize(size: CGFloat) -> CGFloat {
+//        let width = UIScreen.main.bounds.width
+//        let baseWidth: CGFloat = 375
+//        let fontSize = size * (width / baseWidth)
+//        return fontSize
+//    }
+
+    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
+        let height = UIScreen.main.bounds.height
+        let baseHeight: CGFloat = 812
+        let heightSize = size * (height / baseHeight)
+        return heightSize
     }
 
     private func setUpConstraints() {
+        let fieldTopPadding: CGFloat = setCustomVerticalPadding(size: 60)
         let helloLabelHeight: CGFloat = 30
-        let helloLabelSpacing: CGFloat = 100
-        let nextBottomPadding: CGFloat = 90
+        let helloLabelPadding: CGFloat = setCustomVerticalPadding(size: 100)
+        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
@@ -104,7 +128,7 @@ class DemographicsViewController: UIViewController {
         helloLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(helloLabelHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloLabelSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloLabelPadding)
         }
 
         greetingLabel.snp.makeConstraints { make in
@@ -114,7 +138,7 @@ class DemographicsViewController: UIViewController {
 
         classDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(greetingLabel.snp.bottom).offset(149)
+            make.top.equalTo(greetingLabel.snp.bottom).offset(fieldTopPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
@@ -149,7 +173,31 @@ class DemographicsViewController: UIViewController {
 }
 
 extension DemographicsViewController: OnboardingSearchViewDelegate {
-    func bringSearchViewToFront(searchView: UIView) {
+    func updateSelectedFields(fieldTag: Int, selected: Bool) {
+        fieldsEntered[fieldTag] = selected
+        var count = 0
+        for field in fieldsEntered {
+            if field {
+                count = count + 1
+            }
+        }
+        if (count==4) {
+            allFieldsEntered = true
+            nextButton.backgroundColor = .backgroundOrange
+        } else {
+            allFieldsEntered = false
+            nextButton.backgroundColor = .inactiveGreen
+        }
+    }
+
+    func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
+        view.bringSubviewToFront(searchView)
+        searchView.snp.updateConstraints{ make in
+            make.height.equalTo(textFieldHeight + height)
+        }
+    }
+
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat) {
         view.bringSubviewToFront(searchView)
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(49+300)

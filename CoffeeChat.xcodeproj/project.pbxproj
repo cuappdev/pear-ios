@@ -200,8 +200,8 @@
 			children = (
 				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
 				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
-				D480EC0523E2470000513063 /* HomeViewController.swift */,
 				4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */,
+				D480EC0523E2470000513063 /* HomeViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 			);

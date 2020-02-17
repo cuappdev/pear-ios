@@ -32,7 +32,6 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
 
     func setupConstraints() {
         label.snp.makeConstraints { make in
-            make.height.equalTo(49)
             make.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview().offset(21)
         }

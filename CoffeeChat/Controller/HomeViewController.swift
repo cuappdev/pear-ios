@@ -61,7 +61,7 @@ class HomeViewController: UIViewController {
         matchNameLabel.font = ._24CircularStdMedium
         view.addSubview(matchNameLabel)
 
-        matchProfileImageView.backgroundColor = .backgroundGrayGreen
+        matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         view.addSubview(matchProfileImageView)
 
@@ -72,7 +72,7 @@ class HomeViewController: UIViewController {
         matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: cellReuseId)
         view.addSubview(matchSummaryTableView)
 
-        profileButton.backgroundColor = .backgroundGrayGreen
+        profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
         profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
         view.addSubview(profileButton)

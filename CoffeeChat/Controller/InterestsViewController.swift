@@ -50,10 +50,10 @@ class InterestsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundWhite
+        view.backgroundColor = .backgroundLightGreen
 
         titleLabel.text = "What are your interests?"
-        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
         tableView.delegate = self
@@ -61,7 +61,9 @@ class InterestsViewController: UIViewController {
         tableView.register(InterestsTableViewCell.self, forCellReuseIdentifier: InterestsTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
+        tableView.backgroundColor = .backgroundLightGreen
         tableView.allowsMultipleSelection = true
+//        tableView.bounces = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
@@ -72,9 +74,9 @@ class InterestsViewController: UIViewController {
 
         nextButton.setTitle("Almost there!", for: .normal)
         nextButton.layer.cornerRadius = 27
-        nextButton.backgroundColor = .backgroundLightGray
-        nextButton.setTitleColor(.textBlack, for: .normal)
-        nextButton.titleLabel?.font = .systemFont(ofSize: 20)
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.backgroundColor = .inactiveGreen
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -101,27 +103,35 @@ class InterestsViewController: UIViewController {
 
         let topLayer = CAGradientLayer()
         topLayer.frame = topFadeView.bounds
-        topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
+        topLayer.colors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
         topLayer.locations = [0.0, 1.0]
         topFadeView.layer.insertSublayer(topLayer, at: 0)
 
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
+        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundLightGreen.cgColor]
         bottomLayer.locations = [0.0, 1.0]
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
+    }
+
+    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
+        let height = UIScreen.main.bounds.height
+        let baseHeight: CGFloat = 812
+        let heightSize = size * (height / baseHeight)
+        return heightSize
     }
 
     private func setupConstraints() {
         let backSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
-        let nextBackPadding: CGFloat = 20
+        let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextTopPadding: CGFloat = 56
-        let tableViewSize = CGSize(width: 295, height: 431)
+        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
+        let tableViewWidth: CGFloat = 295
+        let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 50
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = 100
+        let titleSpacing: CGFloat = setCustomVerticalPadding(size: 100)
         let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
@@ -132,8 +142,9 @@ class InterestsViewController: UIViewController {
 
         tableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.size.equalTo(tableViewSize)
+            make.width.equalTo(tableViewWidth)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
+            make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
         }
 
         topFadeView.snp.makeConstraints { make in
@@ -149,13 +160,13 @@ class InterestsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(tableView.snp.bottom).offset(nextTopPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
 
         backButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(nextButton.snp.bottom).offset(nextBackPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
         }
     }
 
@@ -164,7 +175,7 @@ class InterestsViewController: UIViewController {
      */
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .greenGray
     }
 
 }

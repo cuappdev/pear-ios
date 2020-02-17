@@ -20,6 +20,10 @@ class OnboardingDropdownView: UIView {
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var tableData: [String]!
 
+    private var shouldShowFields: Bool = false
+    private var fieldSelected: Bool = false
+
+
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
     
@@ -39,13 +43,21 @@ class OnboardingDropdownView: UIView {
     private func addViews() {
         dropdownButton.backgroundColor = .backgroundWhite
         dropdownButton.setAttributedTitle(
-            NSAttributedString(string: placeholder, attributes: [
-                NSAttributedString.Key.foregroundColor: UIColor.textDarkGray,
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)]), for: .normal)
+            NSAttributedString(
+                string: placeholder,
+                attributes: [
+                    NSAttributedString.Key.foregroundColor: UIColor.metaData,
+                    NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)]),
+            for: .normal
+        )
         dropdownButton.layer.cornerRadius = fieldsCornerRadius
         dropdownButton.contentHorizontalAlignment = .left
         dropdownButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
-        dropdownButton.addTarget(self, action: #selector(showDropDown), for: .touchUpInside)
+        dropdownButton.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        dropdownButton.layer.shadowColor = UIColor.black.cgColor
+        dropdownButton.layer.shadowOpacity = 0.15
+        dropdownButton.layer.shadowRadius = 2
+        dropdownButton.addTarget(self, action: #selector(toggleDropDown), for: .touchUpInside)
         addSubview(dropdownButton)
 
         tableView.isHidden = true
@@ -75,9 +87,15 @@ class OnboardingDropdownView: UIView {
         }
     }
 
-    @objc func showDropDown() {
-        tableView.isHidden = false
-        delegate?.bringSearchViewToFront(searchView: self)
+    @objc func toggleDropDown() {
+        shouldShowFields.toggle()
+        tableView.isHidden = !shouldShowFields
+//        let newHeight = shouldShowFields ? tableView.contentSize.height : 0
+        if shouldShowFields {
+            delegate?.bringSearchViewToFront(searchView: self, height: tableView.contentSize.height)
+        } else {
+            delegate?.sendSearchViewToBack(searchView: self)
+        }
     }
 
     func collapseTableView() {
@@ -101,7 +119,9 @@ extension OnboardingDropdownView: UITableViewDelegate, UITableViewDataSource {
         NSAttributedString(string: tableData[indexPath.row], attributes: [
             NSAttributedString.Key.foregroundColor: UIColor.textBlack,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)]), for: .normal)
+        fieldSelected = true
         tableView.isHidden = true
+        delegate?.updateSelectedFields(fieldTag: self.tag, selected: true)
         delegate?.sendSearchViewToBack(searchView: self)
     }
 }

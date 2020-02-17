@@ -9,13 +9,15 @@
 import UIKit
 
 protocol OnboardingSearchViewDelegate: class {
-    func bringSearchViewToFront(searchView: UIView)
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat)
     func sendSearchViewToBack(searchView: UIView)
+    func updateSearchViewHeight(searchView: UIView, height: CGFloat)
+    func updateSelectedFields(fieldTag: Int, selected: Bool)
 }
 
 class OnboardingSelectTableView: UITableView {
 
-    let maxHeight: CGFloat = 213.0
+    let maxHeight: CGFloat = 230.0
 
     override func reloadData() {
         super.reloadData()
@@ -64,23 +66,25 @@ class OnboardingSearchView: UIView {
         searchBar.delegate = self
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.backgroundColor = .backgroundWhite
-            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.textDarkGray])
+            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.metaData])
             textField.font = .systemFont(ofSize: 20, weight: .medium)
             textField.clearButtonMode = .never
         }
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         searchBar.layer.cornerRadius = fieldsCornerRadius
+        searchBar.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        searchBar.layer.shadowColor = UIColor.black.cgColor
+        searchBar.layer.shadowOpacity = 0.15
+        searchBar.layer.shadowRadius = 2
         searchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
         searchBar.showsCancelButton = false
         addSubview(searchBar)
 
         tableView.isHidden = true
-        tableView.tag = 200
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
-        tableView.layer.zPosition = 1
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .darkGray
@@ -120,6 +124,7 @@ extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITabl
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.text = searchedTableData[indexPath.row]
+        delegate?.updateSelectedFields(fieldTag: self.tag, selected: true)
         tableView.isHidden = true
         delegate?.sendSearchViewToBack(searchView: self)
     }
@@ -131,8 +136,16 @@ extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITabl
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchedTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate?.bringSearchViewToFront(searchView: self)
+//        delegate?.bringSearchViewToFront(searchView: self, height: newHeight)
+        delegate?.updateSelectedFields(fieldTag: self.tag, selected: false)
         tableView.isHidden = false
+        
         tableView.reloadData()
+        let newHeight = tableView.contentSize.height
+        delegate?.updateSearchViewHeight(searchView: self, height: newHeight)
     }
+
+//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+//        return true
+//    }
 }
