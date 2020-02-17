@@ -17,7 +17,7 @@ class OnboardingTableViewCell: UITableViewCell {
     private lazy var categoriesLabel: UILabel = {
         let categoriesLabel = UILabel()
         categoriesLabel.textColor = .textLightGray
-        categoriesLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        categoriesLabel.font = ._12CircularStdBook
         cellBackgroundView.addSubview(categoriesLabel)
         return categoriesLabel
     }()
@@ -56,17 +56,17 @@ class OnboardingTableViewCell: UITableViewCell {
         let sidePadding: CGFloat = 12
         let textSidePadding: CGFloat = 8
 
-        cellBackgroundView.snp.makeConstraints { make in
+        cellBackgroundView.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        interestImageView.snp.makeConstraints { make in
+        interestImageView.snp.remakeConstraints { make in
             make.size.equalTo(imageSize)
             make.leading.equalToSuperview().inset(sidePadding)
             make.centerY.equalToSuperview()
         }
 
-        titleLabel.snp.makeConstraints { make in
+        titleLabel.snp.remakeConstraints { make in
             make.leading.equalTo(interestImageView.snp.trailing).offset(textSidePadding)
             if showingInterests {
                 make.top.equalTo(cellBackgroundView).inset(sidePadding)
@@ -76,7 +76,7 @@ class OnboardingTableViewCell: UITableViewCell {
         }
 
         if showingInterests {
-            categoriesLabel.snp.makeConstraints { make in
+            categoriesLabel.snp.remakeConstraints { make in
                 make.leading.equalTo(titleLabel)
                 make.top.equalTo(titleLabel.snp.bottom)
             }
@@ -104,7 +104,7 @@ class OnboardingTableViewCell: UITableViewCell {
     private func relayoutSubviews(interests: Bool) {
         showingInterests = interests
         initialized = true
-        cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
+        // cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
         setupConstraints(showingInterests: showingInterests)
     }
 
