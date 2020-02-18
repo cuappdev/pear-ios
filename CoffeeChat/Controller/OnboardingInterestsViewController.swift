@@ -1,5 +1,5 @@
 //
-//  InterestsViewController.swift
+//  OnboardingInterestsViewController.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 2/3/20.
@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class InterestsViewController: UIViewController {
+class OnboardingInterestsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -58,7 +58,7 @@ class InterestsViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(InterestsTableViewCell.self, forCellReuseIdentifier: InterestsTableViewCell.reuseIdentifier)
+        tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
         tableView.backgroundColor = .backgroundLightGreen
@@ -181,7 +181,7 @@ class InterestsViewController: UIViewController {
 }
 
 // MARK: TableViewDelegate
-extension InterestsViewController: UITableViewDelegate {
+extension OnboardingInterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
@@ -212,12 +212,12 @@ extension InterestsViewController: UITableViewDelegate {
 }
 
 // MARK: TableViewDataSource
-extension InterestsViewController: UITableViewDataSource {
+extension OnboardingInterestsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
-            InterestsTableViewCell.reuseIdentifier, for: indexPath) as?
-        InterestsTableViewCell else { return UITableViewCell() }
+            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        OnboardingTableViewCell else { return UITableViewCell() }
         let data = interests[indexPath.section]
         cell.configure(with: data)
         return cell

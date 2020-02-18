@@ -6,7 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 struct Interest {
 

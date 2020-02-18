@@ -17,13 +17,14 @@
 		30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */; };
 		30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */; };
 		4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */; };
-		4FE2ED2C23E92BD700472355 /* InterestsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */; };
+		4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F51324E23F3AE6B00DBDE96 /* Group.swift */; };
+		4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152C23F781790095EC17 /* MatchSummary.swift */; };
+		4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152E23F7817B0095EC17 /* Interest.swift */; };
+		4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */; };
 		4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */; };
-		4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */; };
+		4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2223E9189F00C89C29 /* OnboardingInterestsViewController.swift */; };
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
-		D400BE3023F9024B000F1641 /* Interest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D400BE2E23F9024A000F1641 /* Interest.swift */; };
-		D400BE3123F9024B000F1641 /* MatchSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D400BE2F23F9024B000F1641 /* MatchSummary.swift */; };
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingDropdownView.swift */; };
@@ -71,16 +72,17 @@
 		30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsTableViewCell.swift; sourceTree = "<group>"; };
+		4F51324E23F3AE6B00DBDE96 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Group.swift; path = CoffeeChat/Controller/Group.swift; sourceTree = SOURCE_ROOT; };
+		4FD8152C23F781790095EC17 /* MatchSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummary.swift; sourceTree = "<group>"; };
+		4FD8152E23F7817B0095EC17 /* Interest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interest.swift; sourceTree = "<group>"; };
+		4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
-		4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
+		4FFF3B2223E9189F00C89C29 /* OnboardingInterestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInterestsViewController.swift; sourceTree = "<group>"; };
 		593F0F3478D4151754C87BF5 /* Pods-CoffeeChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.debug.xcconfig"; sourceTree = "<group>"; };
 		81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoffeeChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		D400BE2E23F9024A000F1641 /* Interest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interest.swift; sourceTree = "<group>"; };
-		D400BE2F23F9024B000F1641 /* MatchSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummary.swift; sourceTree = "<group>"; };
 		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownView.swift; sourceTree = "<group>"; };
@@ -157,10 +159,18 @@
 		30304E1923F60CC9006DC6C3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				D400BE2F23F9024B000F1641 /* MatchSummary.swift */,
-				D400BE2E23F9024A000F1641 /* Interest.swift */,
+				4FD8152C23F781790095EC17 /* MatchSummary.swift */,
+				4FD8152E23F7817B0095EC17 /* Interest.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		4FD8152B23F780A00095EC17 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				4F51324E23F3AE6B00DBDE96 /* Group.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		4FFF3B1F23E9083F00C89C29 /* Extensions */ = {
@@ -189,7 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */,
-				4FE2ED2B23E92BD700472355 /* InterestsTableViewCell.swift */,
+				4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */,
 				30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */,
 			);
 			path = Cells;
@@ -200,8 +210,8 @@
 			children = (
 				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
 				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
-				4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */,
 				D480EC0523E2470000513063 /* HomeViewController.swift */,
+				4FFF3B2223E9189F00C89C29 /* OnboardingInterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 			);
@@ -244,6 +254,7 @@
 				D48BB00823DE099200E88129 /* Products */,
 				A3B9A34ACF9DD84471DE25AB /* Pods */,
 				2E7D322303D322A182781EBB /* Frameworks */,
+				4FD8152B23F780A00095EC17 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -575,22 +586,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
+				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
+				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingDropdownView.swift in Sources */,
-				D400BE3023F9024B000F1641 /* Interest.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchView.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
+				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
+				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
-				4FE2ED2C23E92BD700472355 /* InterestsTableViewCell.swift in Sources */,
+				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
-				D400BE3123F9024B000F1641 /* MatchSummary.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
