@@ -11,6 +11,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    private let userDefaults = UserDefaults.standard
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -26,8 +27,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            window.rootViewController = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            if onboardingCompleted {
+                window.rootViewController = HomeViewController()
+            } else {
+                window.rootViewController = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+            }
         } else {
+            // Ask user to sign in if they have not signed in before.
             window.rootViewController = LoginViewController()
         }
         self.window = window

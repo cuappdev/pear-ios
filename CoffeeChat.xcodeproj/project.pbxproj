@@ -26,8 +26,8 @@
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
-		D444EB3E23F5E86400406978 /* OnboardingSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchView.swift */; };
-		D444EB4023F7CB6700406978 /* OnboardingDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingDropdownView.swift */; };
+		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
+		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
 		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
@@ -84,8 +84,8 @@
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7402F417895F59156DEDFB0 /* Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
-		D444EB3D23F5E86400406978 /* OnboardingSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchView.swift; sourceTree = "<group>"; };
-		D444EB3F23F7CB6700406978 /* OnboardingDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownView.swift; sourceTree = "<group>"; };
+		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
+		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,8 +221,8 @@
 		D480EC0123E2436F00513063 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D444EB3D23F5E86400406978 /* OnboardingSearchView.swift */,
-				D444EB3F23F7CB6700406978 /* OnboardingDropdownView.swift */,
+				D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */,
+				D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -589,8 +589,8 @@
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
-				D444EB4023F7CB6700406978 /* OnboardingDropdownView.swift in Sources */,
-				D444EB3E23F5E86400406978 /* OnboardingSearchView.swift in Sources */,
+				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
+				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,

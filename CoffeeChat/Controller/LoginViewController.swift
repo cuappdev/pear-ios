@@ -20,7 +20,7 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundLightGreen
 
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
         view.addSubview(loginButton)
 
         logoImageView.layer.cornerRadius = logoSize.width/2
-        logoImageView.backgroundColor = .gray
+        logoImageView.backgroundColor = .inactiveGreen
         view.addSubview(logoImageView)
 
         setupConstraints()

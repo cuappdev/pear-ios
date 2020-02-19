@@ -19,6 +19,7 @@ struct Constants {
     }
 
     struct UserDefaults {
+        static let onboardingCompletion = "onboardingCompletion"
         static let userId = "userId"
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"

@@ -16,7 +16,7 @@ class OnboardingTableViewCell: UITableViewCell {
     private let titleLabel = UILabel()
     private lazy var categoriesLabel: UILabel = {
         let categoriesLabel = UILabel()
-        categoriesLabel.textColor = .textLightGray
+        categoriesLabel.textColor = .greenGray
         categoriesLabel.font = ._12CircularStdBook
         cellBackgroundView.addSubview(categoriesLabel)
         return categoriesLabel
@@ -43,7 +43,7 @@ class OnboardingTableViewCell: UITableViewCell {
         cellBackgroundView.addSubview(interestImageView)
 
         titleLabel.textColor = .textBlack
-        titleLabel.font = .systemFont(ofSize: 20, weight: .regular)
+        titleLabel.font = ._20CircularStdBook
         cellBackgroundView.addSubview(titleLabel)
     }
 
@@ -86,6 +86,7 @@ class OnboardingTableViewCell: UITableViewCell {
     func configure(with interest: Interest) {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.categories
+        interestImageView.image = UIImage(named: interest.image)
         // Determine if a relayout is needed (was showing Group and configured with an Interest)
         if !initialized || !showingInterests {
             relayoutSubviews(interests: true)
@@ -110,7 +111,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackgroundView.backgroundColor = isSelected ? .greenGray : .white
+        cellBackgroundView.backgroundColor = isSelected ? .pearGreen : .white
     }
 
 }

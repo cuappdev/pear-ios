@@ -26,9 +26,10 @@ class GroupsViewController: UIViewController {
         Group(name: "Jeans", image: "")
     ]
     private var displayedGroups: [Group] = []
+    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
-    private let backButton = UIButton()
+    private let skipButton = UIButton()
     private let clubLabel = UILabel()
     private let greetingLabel = UILabel()
     private let nextButton = UIButton()
@@ -53,8 +54,16 @@ class GroupsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
 
-        searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
+        searchBar.backgroundColor = .backgroundWhite
+        searchBar.backgroundImage = UIImage()
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.backgroundColor = .backgroundWhite
+            textField.textColor = UIColor.textBlack
+            textField.font = ._20CircularStdBook
+        }
+        searchBar.layer.cornerRadius = 8
+        searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
         tableView.delegate = self
@@ -72,11 +81,11 @@ class GroupsViewController: UIViewController {
         view.addSubview(topFadeView)
         view.addSubview(bottomFadeView)
 
-        clubLabel.text = "What clubs are you in?"
+        clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Get started!", for: .normal)
+        nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBook
         nextButton.backgroundColor = .inactiveGreen
@@ -84,12 +93,12 @@ class GroupsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        backButton.titleLabel?.font = .systemFont(ofSize: 16)
-        backButton.setTitle("Go back", for: .normal)
-        backButton.setTitleColor(.textLightGray, for: .normal)
-        backButton.backgroundColor = .none
-        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        view.addSubview(backButton)
+        skipButton.titleLabel?.font = .systemFont(ofSize: 16)
+        skipButton.setTitle("I'll add later", for: .normal)
+        skipButton.setTitleColor(.textLightGray, for: .normal)
+        skipButton.backgroundColor = .none
+        skipButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        view.addSubview(skipButton)
 
         displayedGroups = groups
 
@@ -105,8 +114,6 @@ class GroupsViewController: UIViewController {
 
     private func setupConstraints() {
         let backSize = CGSize(width: 62, height: 20)
-        let backBottomPadding: CGFloat = 49
-        let backButtonSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
         let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
         let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
@@ -115,7 +122,6 @@ class GroupsViewController: UIViewController {
         let searchTopPadding: CGFloat = 50
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
-//        let tableViewTopPadding: CGFloat = 50
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
         let titleSpacing: CGFloat = 100
@@ -162,7 +168,7 @@ class GroupsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
 
-        backButton.snp.makeConstraints { make in
+        skipButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
@@ -247,14 +253,11 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         print("Next button pressed.")
+        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         let homeViewController = HomeViewController()
 //        navigationController?.pushViewController(homeViewController, animated: false)
         homeViewController.modalPresentationStyle = .fullScreen
         present(homeViewController, animated: true, completion: nil)
-    }
-
-    @objc func backButtonPressed() {
-        delegate?.backPage(index: 1)
     }
 
 }

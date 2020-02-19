@@ -1,5 +1,5 @@
 //
-//  OnboardingSearchView.swift
+//  OnboardingSearchDropdownView.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 2/13/20.
@@ -8,15 +8,16 @@
 
 import UIKit
 
+
 protocol OnboardingSearchViewDelegate: class {
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat, dropdown: Bool)
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool)
     func sendSearchViewToBack(searchView: UIView)
     func updateSearchViewHeight(searchView: UIView, height: CGFloat)
-    func updateSelectedFields(fieldTag: Int, selected: Bool)
+    func updateSelectedFields(tag: Int, isSelected: Bool)
 }
 
+/// Custom onboarding dropdown tableview that resizes based on content
 class OnboardingSelectTableView: UITableView {
-
     let maxHeight: CGFloat = 230.0
 
     override func reloadData() {
@@ -31,7 +32,7 @@ class OnboardingSelectTableView: UITableView {
     }
 }
 
-class OnboardingSearchView: UIView {
+class OnboardingSearchDropdownView: UIView {
 
     // MARK: - Private View Vars
     private let searchBar = UISearchBar()
@@ -41,7 +42,7 @@ class OnboardingSearchView: UIView {
     private weak var delegate: OnboardingSearchViewDelegate?
     private var placeholder: String!
     private let reuseIdentifier = "OnboardingDropdownCell"
-    private var searchedTableData: [String] = []
+    private var resultsTableData: [String] = []
     private var tableData: [String]!
 
     // MARK: - Private Constants
@@ -49,9 +50,9 @@ class OnboardingSearchView: UIView {
 
     init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String]) {
         super.init(frame: .zero)
-        self.tableData = tableData
-        self.placeholder = placeholder
         self.delegate = delegate
+        self.placeholder = placeholder
+        self.tableData = tableData
         addViews()
         setupConstraints()
     }
@@ -61,32 +62,35 @@ class OnboardingSearchView: UIView {
     }
 
     func addViews() {
+        searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
-        searchBar.delegate = self
+        searchBar.setImage(UIImage(), for: .search, state: .normal) // Remove search icon from search bar.
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.backgroundColor = .backgroundWhite
-            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.metaData])
-            textField.font = .systemFont(ofSize: 20, weight: .medium)
+            textField.attributedPlaceholder = NSAttributedString(
+                string: placeholder,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.metaData]
+            )
+            textField.font = ._20CircularStdBook
             textField.clearButtonMode = .never
         }
-        searchBar.setImage(UIImage(), for: .search, state: .normal)
         searchBar.layer.cornerRadius = fieldsCornerRadius
-        searchBar.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
         searchBar.layer.shadowColor = UIColor.black.cgColor
+        searchBar.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
         searchBar.layer.shadowOpacity = 0.15
         searchBar.layer.shadowRadius = 2
         searchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
         searchBar.showsCancelButton = false
         addSubview(searchBar)
 
-        tableView.isHidden = true
-        tableView.isScrollEnabled = true
-        tableView.separatorStyle = .none
-        tableView.allowsSelection = true
-        tableView.isUserInteractionEnabled = true
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.isHidden = true // Initially hide the field data tableview.
+        tableView.allowsSelection = true
+        tableView.isScrollEnabled = true
+        tableView.separatorStyle = .none
+        tableView.isUserInteractionEnabled = true
         tableView.backgroundColor = .darkGray
         tableView.layer.cornerRadius = fieldsCornerRadius
         tableView.bounces = false
@@ -106,52 +110,45 @@ class OnboardingSearchView: UIView {
         }
     }
 
+    /// Hide search results table view, intended to be called by parent view controller.
     func collapseTableView() {
         tableView.isHidden = true
     }
 }
 
-extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchedTableData.count
+        return resultsTableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! OnboardingDropdownTableViewCell
-        cell.configure(with: searchedTableData[indexPath.row])
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+            as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
+        cell.configure(with: resultsTableData[indexPath.row])
         return cell
     }
 
+    /// Updates searchbar text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        searchBar.text = searchedTableData[indexPath.row]
-        delegate?.updateSelectedFields(fieldTag: self.tag, selected: true)
+        searchBar.text = resultsTableData[indexPath.row]
         tableView.isHidden = true
-        delegate?.sendSearchViewToBack(searchView: self)
-    }
-
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        tableView.isHidden = true
-        delegate?.sendSearchViewToBack(searchView: self)
-        self.resignFirstResponder()
-        self.endEditing(true)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true) // LUCY - Revisit
+        delegate?.sendSearchViewToBack(searchView: self) // LUCY - Revisit
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.becomeFirstResponder()
+        let height = tableView.contentSize.height
+        delegate?.bringSearchViewToFront(searchView: self, height: height, isSelect: false)
     }
 
+    /// Expands and updates search results table view when text is changed in the search bar.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchedTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-//        delegate?.bringSearchViewToFront(searchView: self, height: newHeight)
-        delegate?.updateSelectedFields(fieldTag: self.tag, selected: false)
         tableView.isHidden = false
-        
+        resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
         tableView.reloadData()
+        // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height
         delegate?.updateSearchViewHeight(searchView: self, height: newHeight)
     }
-
-//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-//        return true
-//    }
 }

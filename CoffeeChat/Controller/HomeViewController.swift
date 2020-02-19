@@ -94,7 +94,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let padding = 35
+        let padding = 70
 
         logoutButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(5)

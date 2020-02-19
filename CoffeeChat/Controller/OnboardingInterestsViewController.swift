@@ -25,17 +25,21 @@ class OnboardingInterestsViewController: UIViewController {
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
-        Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
+        Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
+        Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
+        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance"),
+        Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
+        Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
+        Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
+        Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
+        Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
+        Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
+        Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
+        Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
+        Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
+        Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
+        Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
+        Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
 
@@ -52,7 +56,7 @@ class OnboardingInterestsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
 
-        titleLabel.text = "What are your interests?"
+        titleLabel.text = "What do you love?"
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
@@ -72,7 +76,7 @@ class OnboardingInterestsViewController: UIViewController {
         view.addSubview(topFadeView)
         view.addSubview(bottomFadeView)
 
-        nextButton.setTitle("Almost there!", for: .normal)
+        nextButton.setTitle("Almost there", for: .normal)
         nextButton.layer.cornerRadius = 27
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBook
@@ -80,18 +84,20 @@ class OnboardingInterestsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        backButton.titleLabel?.font = .systemFont(ofSize: 16)
-        backButton.setTitle("Go back", for: .normal)
-        backButton.setTitleColor(.textLightGray, for: .normal)
-        backButton.backgroundColor = .none
-        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        view.addSubview(backButton)
+//        backButton.titleLabel?.font = .systemFont(ofSize: 16)
+//        backButton.setTitle("Go back", for: .normal)
+//        backButton.setTitleColor(.textLightGray, for: .normal)
+//        backButton.backgroundColor = .none
+//        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+//        view.addSubview(backButton)
 
         setupConstraints()
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 2)
+        if (selectedInterests.count > 0) {
+            delegate?.nextPage(index: 2)
+        }
     }
 
     @objc func backButtonPressed() {
@@ -163,11 +169,11 @@ class OnboardingInterestsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
 
-        backButton.snp.makeConstraints { make in
-            make.size.equalTo(backSize)
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
-        }
+//        backButton.snp.makeConstraints { make in
+//            make.size.equalTo(backSize)
+//            make.centerX.equalToSuperview()
+//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
+//        }
     }
 
     /**

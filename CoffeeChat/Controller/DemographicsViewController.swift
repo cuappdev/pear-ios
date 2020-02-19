@@ -19,20 +19,20 @@ class DemographicsViewController: UIViewController {
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
 
-    private var fieldsEntered: [Bool] = [false, false, false, false]
+    private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var allFieldsEntered: Bool = false
 
     // MARK: - Private View Vars
+    private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
-    private var classDropdownView: OnboardingDropdownView!
-    private var majorSearchView: OnboardingSearchView!
-    private var hometownSearchView: OnboardingSearchView!
+    private var hometownSearchView: OnboardingSearchDropdownView!
+    private var majorSearchView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
-    private var pronounsDropdownView: OnboardingDropdownView!
+    private var onboardingSearchViews: [OnboardingSearchDropdownView] = []
+    private var onboardingSelectViews: [OnboardingSelectDropdownView] = []
+    private var pronounsDropdownView: OnboardingSelectDropdownView!
     private let pronounsTableView = UITableView()
-    private var onboardingSearchViews: [OnboardingSearchView] = []
-    private var onboardingDropdownViews: [OnboardingDropdownView] = []
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -60,29 +60,30 @@ class DemographicsViewController: UIViewController {
         greetingLabel.font = ._24CircularStdMedium
         view.addSubview(greetingLabel)
 
+        // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         for year in currentYear...currentYear+4 {
             classSearchFields.append("\(year)")
         }
 
-        classDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields)
-        classDropdownView.tag = 0
+        classDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields, textTemplate: "Class of")
+        classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
-        majorSearchView = OnboardingSearchView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
-        majorSearchView.tag = 1
+        majorSearchView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        majorSearchView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorSearchView)
 
-        hometownSearchView = OnboardingSearchView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
-        hometownSearchView.tag = 2
+        hometownSearchView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        hometownSearchView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownSearchView)
 
-        pronounsDropdownView = OnboardingDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields)
-        pronounsDropdownView.tag = 3
+        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
         onboardingSearchViews = [majorSearchView, hometownSearchView]
-        onboardingDropdownViews = [classDropdownView, pronounsDropdownView]
+        onboardingSelectViews = [classDropdownView, pronounsDropdownView]
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -108,9 +109,10 @@ class DemographicsViewController: UIViewController {
 //        return fontSize
 //    }
 
+    /// Returns custom vertical padding based on ration of screen size.
     func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
         let height = UIScreen.main.bounds.height
-        let baseHeight: CGFloat = 812
+        let baseHeight: CGFloat = 812 // Base height used in designs.
         let heightSize = size * (height / baseHeight)
         return heightSize
     }
@@ -170,55 +172,61 @@ class DemographicsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
     }
+
+    private func updateFieldConstraints(fieldView: UIView, height: CGFloat) {
+        fieldView.snp.updateConstraints { make in
+            make.height.equalTo(height)
+        }
+    }
 }
 
 extension DemographicsViewController: OnboardingSearchViewDelegate {
-    func updateSelectedFields(fieldTag: Int, selected: Bool) {
-        fieldsEntered[fieldTag] = selected
+
+    private func numberFieldsSelected() -> Int {
         var count = 0
-        for field in fieldsEntered {
-            if field {
-                count = count + 1
-            }
-        }
-        if (count==4) {
-            allFieldsEntered = true
-            nextButton.backgroundColor = .backgroundOrange
-        } else {
-            allFieldsEntered = false
-            nextButton.backgroundColor = .inactiveGreen
-        }
+        for field in fieldsEntered where field { count+=1 }
+        return count
     }
 
-    func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
-        view.bringSubviewToFront(searchView)
-        searchView.snp.updateConstraints{ make in
-            make.height.equalTo(textFieldHeight + height)
-        }
+    internal func updateSelectedFields(tag: Int, isSelected: Bool) {
+        fieldsEntered[tag] = isSelected
+        allFieldsEntered = (numberFieldsSelected() == 4)
+        nextButton.backgroundColor = allFieldsEntered ? .backgroundOrange : .inactiveGreen
     }
 
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat, dropdown: Bool) {
+    /// Resizes search view based on input to search field
+    internal func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
+        view.bringSubviewToFront(searchView)
+        updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
+    }
+
+    internal func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool) {
         view.bringSubviewToFront(searchView)
 
-        if dropdown {
-            self.view.endEditing(true)
-        }
+        if isSelect { view.endEditing(true) } // Dismiss keyboard when user clicks on select field.
 
-        searchView.snp.updateConstraints{ make in
-            make.height.equalTo(49+300)
-        }
+        updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
 
+//        for searchView in onboardingSearchViews {
+//            if !searchView.isEqual(searchView) {
+//                view.sendSubviewToBack(searchView)
+//                searchView.collapseTableView()
+//                updateFieldConstraints(fieldView: searchView, height: textFieldHeight)
+//            }
+//        }
+
+        // LUCY - Revisit (Some jank code here)
         onboardingSearchViews.forEach {
             if !$0.isEqual(searchView) {
                 view.sendSubviewToBack($0)
                 $0.collapseTableView()
-                $0.snp.updateConstraints{ make in
+                $0.snp.updateConstraints { make in
                     make.height.equalTo(textFieldHeight)
                 }
             }
         }
 
-        onboardingDropdownViews.forEach {
+        onboardingSelectViews.forEach {
             if !$0.isEqual(searchView) {
                 view.sendSubviewToBack($0)
                 $0.collapseTableView()
@@ -229,11 +237,9 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         }
     }
 
-    func sendSearchViewToBack(searchView: UIView) {
+    internal func sendSearchViewToBack(searchView: UIView) {
         view.sendSubviewToBack(searchView)
-        searchView.snp.updateConstraints{ make in
-            make.height.equalTo(textFieldHeight)
-        }
+        updateFieldConstraints(fieldView: searchView, height: textFieldHeight)
         view.endEditing(true)
     }
 }
