@@ -34,11 +34,11 @@ class OnboardingTableViewCell: UITableViewCell {
         selectionStyle = .none
         contentView.backgroundColor = .none
 
-        cellBackgroundView.backgroundColor = .backgroundLightGray
+        cellBackgroundView.backgroundColor = .white
         cellBackgroundView.layer.cornerRadius = 8
         contentView.addSubview(cellBackgroundView)
 
-        interestImageView.backgroundColor = .backgroundDarkGray
+        interestImageView.backgroundColor = .white
         interestImageView.layer.cornerRadius = 4
         cellBackgroundView.addSubview(interestImageView)
 
@@ -110,7 +110,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackgroundView.backgroundColor = isSelected ? .backgroundRed : .backgroundLightGray
+        cellBackgroundView.backgroundColor = isSelected ? .greenGray : .white
     }
 
 }

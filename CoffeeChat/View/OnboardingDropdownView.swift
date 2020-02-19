@@ -90,9 +90,10 @@ class OnboardingDropdownView: UIView {
     @objc func toggleDropDown() {
         shouldShowFields.toggle()
         tableView.isHidden = !shouldShowFields
+//        self.endEditing(true)
 //        let newHeight = shouldShowFields ? tableView.contentSize.height : 0
         if shouldShowFields {
-            delegate?.bringSearchViewToFront(searchView: self, height: tableView.contentSize.height)
+            delegate?.bringSearchViewToFront(searchView: self, height: tableView.contentSize.height, dropdown: true)
         } else {
             delegate?.sendSearchViewToBack(searchView: self)
         }

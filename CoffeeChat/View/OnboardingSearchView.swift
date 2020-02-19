@@ -9,7 +9,7 @@
 import UIKit
 
 protocol OnboardingSearchViewDelegate: class {
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat)
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat, dropdown: Bool)
     func sendSearchViewToBack(searchView: UIView)
     func updateSearchViewHeight(searchView: UIView, height: CGFloat)
     func updateSelectedFields(fieldTag: Int, selected: Bool)
@@ -132,6 +132,12 @@ extension OnboardingSearchView: UISearchBarDelegate, UITableViewDelegate, UITabl
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         tableView.isHidden = true
         delegate?.sendSearchViewToBack(searchView: self)
+        self.resignFirstResponder()
+        self.endEditing(true)
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.becomeFirstResponder()
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

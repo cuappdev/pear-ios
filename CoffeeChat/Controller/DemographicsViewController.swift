@@ -197,8 +197,13 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         }
     }
 
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat) {
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat, dropdown: Bool) {
         view.bringSubviewToFront(searchView)
+
+        if dropdown {
+            self.view.endEditing(true)
+        }
+
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(49+300)
         }
@@ -229,5 +234,6 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         searchView.snp.updateConstraints{ make in
             make.height.equalTo(textFieldHeight)
         }
+        view.endEditing(true)
     }
 }

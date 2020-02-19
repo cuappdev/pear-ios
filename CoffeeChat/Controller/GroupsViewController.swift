@@ -51,7 +51,7 @@ class GroupsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundWhite
+        view.backgroundColor = .backgroundLightGreen
 
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
@@ -59,6 +59,7 @@ class GroupsViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = .clear
         tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
@@ -72,14 +73,14 @@ class GroupsViewController: UIViewController {
         view.addSubview(bottomFadeView)
 
         clubLabel.text = "What clubs are you in?"
-        clubLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
         nextButton.setTitle("Get started!", for: .normal)
-        nextButton.layer.cornerRadius = 27
-        nextButton.backgroundColor = .textField
-        nextButton.setTitleColor(.textBlack, for: .normal)
-        nextButton.titleLabel?.font = .systemFont(ofSize: 20)
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.backgroundColor = .inactiveGreen
+        nextButton.layer.cornerRadius = 26
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -95,15 +96,26 @@ class GroupsViewController: UIViewController {
         setupConstraints()
     }
 
+    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
+        let height = UIScreen.main.bounds.height
+        let baseHeight: CGFloat = 812
+        let heightSize = size * (height / baseHeight)
+        return heightSize
+    }
+
     private func setupConstraints() {
+        let backSize = CGSize(width: 62, height: 20)
         let backBottomPadding: CGFloat = 49
         let backButtonSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
-        let nextBottomPadding: CGFloat = 21
+        let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
+        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
         let searchTopPadding: CGFloat = 50
-        let tableViewSize = CGSize(width: 295, height: 365)
+        let tableViewWidth: CGFloat = 295
+        let tableViewBottomPadding: CGFloat = 57
+//        let tableViewTopPadding: CGFloat = 50
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
         let titleSpacing: CGFloat = 100
@@ -123,9 +135,16 @@ class GroupsViewController: UIViewController {
 
         tableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.size.equalTo(tableViewSize)
+            make.width.equalTo(tableViewWidth)
             make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
+            make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
         }
+
+//        tableView.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.size.equalTo(tableViewSize)
+//            make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
+//        }
 
         topFadeView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(tableView)
@@ -140,13 +159,13 @@ class GroupsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(backButton.snp.top).offset(-nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
 
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(backButtonSize)
+            make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(backBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
         }
     }
 
@@ -155,13 +174,13 @@ class GroupsViewController: UIViewController {
 
         let topLayer = CAGradientLayer()
         topLayer.frame = topFadeView.bounds
-        topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
+        topLayer.colors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
         topLayer.locations = [0.0, 1.0]
         topFadeView.layer.insertSublayer(topLayer, at: 0)
 
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
+        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundLightGreen.cgColor]
         bottomLayer.locations = [0.0, 1.0]
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
@@ -223,11 +242,15 @@ class GroupsViewController: UIViewController {
     /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
+        nextButton.backgroundColor = nextButton.isEnabled ? .greenGray : .white
     }
 
     @objc func nextButtonPressed() {
         print("Next button pressed.")
+        let homeViewController = HomeViewController()
+//        navigationController?.pushViewController(homeViewController, animated: false)
+        homeViewController.modalPresentationStyle = .fullScreen
+        present(homeViewController, animated: true, completion: nil)
     }
 
     @objc func backButtonPressed() {
