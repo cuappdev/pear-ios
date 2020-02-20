@@ -87,17 +87,18 @@ class GroupsViewController: UIViewController {
 
         nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = 26
+        nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        skipButton.titleLabel?.font = .systemFont(ofSize: 16)
+        skipButton.titleLabel?.font = ._16CircularStdMedium
         skipButton.setTitle("I'll add later", for: .normal)
-        skipButton.setTitleColor(.textLightGray, for: .normal)
+        skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
-        skipButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
         displayedGroups = groups
@@ -113,7 +114,7 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backSize = CGSize(width: 62, height: 20)
+        let backSize = CGSize(width: 86, height: 20)
         let fadeHeight: CGFloat = 26
         let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
         let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
@@ -145,12 +146,6 @@ class GroupsViewController: UIViewController {
             make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
         }
-
-//        tableView.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.size.equalTo(tableViewSize)
-//            make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
-//        }
 
         topFadeView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(tableView)
@@ -248,16 +243,19 @@ class GroupsViewController: UIViewController {
     /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .greenGray : .white
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
     @objc func nextButtonPressed() {
-        print("Next button pressed.")
         userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeViewController = HomeViewController()
-//        navigationController?.pushViewController(homeViewController, animated: false)
-        homeViewController.modalPresentationStyle = .fullScreen
-        present(homeViewController, animated: true, completion: nil)
+        let homeVC = HomeViewController()
+        navigationController?.pushViewController(homeVC, animated: true)
+    }
+
+    @objc func skipButtonPressed() {
+        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        let homeVC = HomeViewController()
+        navigationController?.pushViewController(homeVC, animated: true)
     }
 
 }

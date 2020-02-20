@@ -20,7 +20,6 @@ class DemographicsViewController: UIViewController {
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
 
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
-    private var allFieldsEntered: Bool = false
 
     // MARK: - Private View Vars
     private var classDropdownView: OnboardingSelectDropdownView!
@@ -49,6 +48,7 @@ class DemographicsViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
         helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
         helloLabel.textColor = .textBlack
@@ -87,9 +87,14 @@ class DemographicsViewController: UIViewController {
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
+        nextButton.isEnabled = false
         nextButton.layer.cornerRadius = 26
+        nextButton.layer.shadowColor = .none
+        nextButton.layer.shadowOffset = CGSize(width: 0.0 , height: 0.0)
+        nextButton.layer.shadowOpacity = 0
+        nextButton.layer.shadowRadius = 0
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -97,31 +102,14 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        if allFieldsEntered {
-            delegate?.nextPage(index: 1)
-        }
-    }
-
-//    private func setCustomFontSize(size: CGFloat) -> CGFloat {
-//        let width = UIScreen.main.bounds.width
-//        let baseWidth: CGFloat = 375
-//        let fontSize = size * (width / baseWidth)
-//        return fontSize
-//    }
-
-    /// Returns custom vertical padding based on ration of screen size.
-    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
-        let height = UIScreen.main.bounds.height
-        let baseHeight: CGFloat = 812 // Base height used in designs.
-        let heightSize = size * (height / baseHeight)
-        return heightSize
+        delegate?.nextPage(index: 1)
     }
 
     private func setUpConstraints() {
-        let fieldTopPadding: CGFloat = setCustomVerticalPadding(size: 60)
+        let fieldTopPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 60)
         let helloLabelHeight: CGFloat = 30
-        let helloLabelPadding: CGFloat = setCustomVerticalPadding(size: 100)
-        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
+        let helloLabelPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 100)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
@@ -190,8 +178,12 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
 
     internal func updateSelectedFields(tag: Int, isSelected: Bool) {
         fieldsEntered[tag] = isSelected
-        allFieldsEntered = (numberFieldsSelected() == 4)
-        nextButton.backgroundColor = allFieldsEntered ? .backgroundOrange : .inactiveGreen
+        nextButton.isEnabled = numberFieldsSelected() == 4
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        nextButton.layer.shadowColor = nextButton.isEnabled ? UIColor.black.cgColor : .none
+        nextButton.layer.shadowOffset = nextButton.isEnabled ? CGSize(width: 0.0, height: 2.0) : CGSize(width: 0.0, height: 0.0)
+        nextButton.layer.shadowOpacity = nextButton.isEnabled ? 0.15 : 0
+        nextButton.layer.shadowRadius = nextButton.isEnabled ? 2 : 0
     }
 
     /// Resizes search view based on input to search field
@@ -207,15 +199,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
 
         updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
 
-//        for searchView in onboardingSearchViews {
-//            if !searchView.isEqual(searchView) {
-//                view.sendSubviewToBack(searchView)
-//                searchView.collapseTableView()
-//                updateFieldConstraints(fieldView: searchView, height: textFieldHeight)
-//            }
-//        }
-
-        // LUCY - Revisit (Some jank code here)
+        // TODO: Some jank code here
         onboardingSearchViews.forEach {
             if !$0.isEqual(searchView) {
                 view.sendSubviewToBack($0)

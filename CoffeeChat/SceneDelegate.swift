@@ -22,20 +22,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: scene)
         guard let signIn = GIDSignIn.sharedInstance() else {
-            window.rootViewController = LoginViewController()
+            let navigationController = UINavigationController(rootViewController: LoginViewController())
+            window.rootViewController = navigationController
             return
         }
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            if onboardingCompleted {
-                window.rootViewController = HomeViewController()
-            } else {
-                window.rootViewController = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-            }
+            // Onboard user if they haven't done so yet, otherwise bring to home.
+//            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let onboardingCompleted = false
+            let homeVC = HomeViewController()
+            let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+            let rootVC = onboardingCompleted ? homeVC : onboardingVC
+            let navigationController = UINavigationController(rootViewController: rootVC)
+            window.rootViewController = navigationController
         } else {
             // Ask user to sign in if they have not signed in before.
-            window.rootViewController = LoginViewController()
+            let navigationController = UINavigationController(rootViewController: LoginViewController())
+            window.rootViewController = navigationController
         }
         self.window = window
         window.makeKeyAndVisible()

@@ -24,6 +24,7 @@ class OnboardingPageViewController: UIPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = OnboardingInterestsViewController(delegate: self)

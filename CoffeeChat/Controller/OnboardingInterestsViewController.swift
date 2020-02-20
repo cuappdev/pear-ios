@@ -55,6 +55,7 @@ class OnboardingInterestsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
         titleLabel.text = "What do you love?"
         titleLabel.font = ._24CircularStdMedium
@@ -78,26 +79,18 @@ class OnboardingInterestsViewController: UIViewController {
 
         nextButton.setTitle("Almost there", for: .normal)
         nextButton.layer.cornerRadius = 27
+        nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.titleLabel?.font = ._20CircularStdBook
+        nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
-
-//        backButton.titleLabel?.font = .systemFont(ofSize: 16)
-//        backButton.setTitle("Go back", for: .normal)
-//        backButton.setTitleColor(.textLightGray, for: .normal)
-//        backButton.backgroundColor = .none
-//        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-//        view.addSubview(backButton)
 
         setupConstraints()
     }
 
     @objc func nextButtonPressed() {
-        if (selectedInterests.count > 0) {
-            delegate?.nextPage(index: 2)
-        }
+        delegate?.nextPage(index: 2)
     }
 
     @objc func backButtonPressed() {
@@ -120,24 +113,15 @@ class OnboardingInterestsViewController: UIViewController {
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
-    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
-        let height = UIScreen.main.bounds.height
-        let baseHeight: CGFloat = 812
-        let heightSize = size * (height / baseHeight)
-        return heightSize
-    }
-
     private func setupConstraints() {
-        let backSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
-        let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 90)
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 50
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = setCustomVerticalPadding(size: 100)
+        let titleSpacing: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 100)
         let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
@@ -168,12 +152,6 @@ class OnboardingInterestsViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
-
-//        backButton.snp.makeConstraints { make in
-//            make.size.equalTo(backSize)
-//            make.centerX.equalToSuperview()
-//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
-//        }
     }
 
     /**
@@ -181,7 +159,11 @@ class OnboardingInterestsViewController: UIViewController {
      */
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .greenGray
+        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        nextButton.layer.shadowColor = nextButton.isEnabled ? UIColor.black.cgColor : .none
+        nextButton.layer.shadowOffset = nextButton.isEnabled ? CGSize(width: 0.0, height: 2.0) : CGSize(width: 0.0, height: 0.0)
+        nextButton.layer.shadowOpacity = nextButton.isEnabled ? 0.15 : 0
+        nextButton.layer.shadowRadius = nextButton.isEnabled ? 2 : 0
     }
 
 }

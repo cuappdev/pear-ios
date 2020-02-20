@@ -41,14 +41,9 @@ class OnboardingSelectDropdownView: UIView {
 
     private func addViews() {
         dropdownButton.backgroundColor = .backgroundWhite
-        dropdownButton.setAttributedTitle(
-            NSAttributedString(
-                string: placeholder,
-                attributes: [
-                    NSAttributedString.Key.foregroundColor: UIColor.metaData,
-                    NSAttributedString.Key.font: UIFont._20CircularStdBook]), // LUCY - Revisit
-            for: .normal
-        )
+        dropdownButton.setTitle(placeholder, for: .normal)
+        dropdownButton.setTitleColor(.metaData, for: .normal)
+        dropdownButton.titleLabel?.font = ._20CircularStdBook
         dropdownButton.layer.cornerRadius = fieldsCornerRadius
         dropdownButton.contentHorizontalAlignment = .left
         dropdownButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0) // Shift placeholder into place.
@@ -118,13 +113,9 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
 
     /// Updates dropdown text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dropdownButton.setAttributedTitle(
-            NSAttributedString(
-                string: "\(textTemplate) \(tableData[indexPath.row])", attributes: [
-                    NSAttributedString.Key.foregroundColor: UIColor.textBlack,
-                    NSAttributedString.Key.font: UIFont._20CircularStdBook]), // LUCY - Revisit
-            for: .normal)
         tableView.isHidden = true
+        dropdownButton.setTitle("\(textTemplate) \(tableData[indexPath.row])", for: .normal)
+        dropdownButton.setTitleColor(.textBlack, for: .normal)
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
         delegate?.sendSearchViewToBack(searchView: self)
     }

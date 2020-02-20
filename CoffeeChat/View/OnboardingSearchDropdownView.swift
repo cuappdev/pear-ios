@@ -65,13 +65,11 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
+        searchBar.placeholder = placeholder
         searchBar.setImage(UIImage(), for: .search, state: .normal) // Remove search icon from search bar.
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.backgroundColor = .backgroundWhite
-            textField.attributedPlaceholder = NSAttributedString(
-                string: placeholder,
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.metaData]
-            )
+            textField.textColor = .black
             textField.font = ._20CircularStdBook
             textField.clearButtonMode = .never
         }
@@ -137,6 +135,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//        searchBar.searchTextField.placeholder = ""
         let height = tableView.contentSize.height
         delegate?.bringSearchViewToFront(searchView: self, height: height, isSelect: false)
     }
