@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
 //            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let onboardingCompleted = false
+            let onboardingCompleted = false // Manually set onboardingCompleted to false to pull up onboarding.
             let homeVC = HomeViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
             let rootVC = onboardingCompleted ? homeVC : onboardingVC

@@ -95,7 +95,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let padding: CGFloat = 70
+        let padding: CGFloat = 35 // TODO: Not sure about dimensions.
         let logoutPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
         let reachOutPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
 

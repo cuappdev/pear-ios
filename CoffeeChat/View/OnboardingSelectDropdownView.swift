@@ -94,7 +94,7 @@ class OnboardingSelectDropdownView: UIView {
     }
 
     /// Hide search results table view, intended to be called by parent view controller.
-    func collapseTableView() {
+    func hideTableView() {
         tableView.isHidden = true
     }
 }

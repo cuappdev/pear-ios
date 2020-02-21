@@ -35,6 +35,7 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let tableView = UITableView(frame: .zero, style: .plain)
+//    private var tap: UITapGestureRecognizer!
 
     // MARK: - Gradients
     // Fade out affects on the top and bottom of the tableView

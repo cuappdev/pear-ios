@@ -159,11 +159,19 @@ class OnboardingInterestsViewController: UIViewController {
      */
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        nextButton.layer.shadowColor = nextButton.isEnabled ? UIColor.black.cgColor : .none
-        nextButton.layer.shadowOffset = nextButton.isEnabled ? CGSize(width: 0.0, height: 2.0) : CGSize(width: 0.0, height: 0.0)
-        nextButton.layer.shadowOpacity = nextButton.isEnabled ? 0.15 : 0
-        nextButton.layer.shadowRadius = nextButton.isEnabled ? 2 : 0
+        if nextButton.isEnabled {
+            nextButton.backgroundColor = .backgroundOrange
+            nextButton.layer.shadowColor = UIColor.black.cgColor
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            nextButton.layer.shadowOpacity = 0.15
+            nextButton.layer.shadowRadius = 2
+        } else {
+            nextButton.backgroundColor = .inactiveGreen
+            nextButton.layer.shadowColor = .none
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            nextButton.layer.shadowOpacity = 0
+            nextButton.layer.shadowRadius = 0
+        }
     }
 
 }

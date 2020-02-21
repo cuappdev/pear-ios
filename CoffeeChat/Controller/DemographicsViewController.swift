@@ -62,9 +62,8 @@ class DemographicsViewController: UIViewController {
 
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
-        for year in currentYear...currentYear+4 {
-            classSearchFields.append("\(year)")
-        }
+        let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
+        classSearchFields = (currentYear...gradYear).map { "\($0)" }
 
         classDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields, textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
@@ -91,10 +90,6 @@ class DemographicsViewController: UIViewController {
         nextButton.backgroundColor = .inactiveGreen
         nextButton.isEnabled = false
         nextButton.layer.cornerRadius = 26
-        nextButton.layer.shadowColor = .none
-        nextButton.layer.shadowOffset = CGSize(width: 0.0 , height: 0.0)
-        nextButton.layer.shadowOpacity = 0
-        nextButton.layer.shadowRadius = 0
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -170,29 +165,32 @@ class DemographicsViewController: UIViewController {
 
 extension DemographicsViewController: OnboardingSearchViewDelegate {
 
-    private func numberFieldsSelected() -> Int {
-        var count = 0
-        for field in fieldsEntered where field { count+=1 }
-        return count
-    }
-
-    internal func updateSelectedFields(tag: Int, isSelected: Bool) {
+    func updateSelectedFields(tag: Int, isSelected: Bool) {
         fieldsEntered[tag] = isSelected
-        nextButton.isEnabled = numberFieldsSelected() == 4
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        nextButton.layer.shadowColor = nextButton.isEnabled ? UIColor.black.cgColor : .none
-        nextButton.layer.shadowOffset = nextButton.isEnabled ? CGSize(width: 0.0, height: 2.0) : CGSize(width: 0.0, height: 0.0)
-        nextButton.layer.shadowOpacity = nextButton.isEnabled ? 0.15 : 0
-        nextButton.layer.shadowRadius = nextButton.isEnabled ? 2 : 0
+        let allFieldsEntered = !fieldsEntered.contains(false)
+        nextButton.isEnabled = allFieldsEntered
+        if nextButton.isEnabled {
+            nextButton.backgroundColor = .backgroundOrange
+            nextButton.layer.shadowColor = UIColor.black.cgColor
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            nextButton.layer.shadowOpacity = 0.15
+            nextButton.layer.shadowRadius = 2
+        } else {
+            nextButton.backgroundColor = .inactiveGreen
+            nextButton.layer.shadowColor = .none
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            nextButton.layer.shadowOpacity = 0
+            nextButton.layer.shadowRadius = 0
+        }
     }
 
     /// Resizes search view based on input to search field
-    internal func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
+    func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
         view.bringSubviewToFront(searchView)
         updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
     }
 
-    internal func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool) {
+    func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool) {
         view.bringSubviewToFront(searchView)
 
         if isSelect { view.endEditing(true) } // Dismiss keyboard when user clicks on select field.
@@ -203,7 +201,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         onboardingSearchViews.forEach {
             if !$0.isEqual(searchView) {
                 view.sendSubviewToBack($0)
-                $0.collapseTableView()
+                $0.hideTableView()
                 $0.snp.updateConstraints { make in
                     make.height.equalTo(textFieldHeight)
                 }
@@ -213,7 +211,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         onboardingSelectViews.forEach {
             if !$0.isEqual(searchView) {
                 view.sendSubviewToBack($0)
-                $0.collapseTableView()
+                $0.hideTableView()
                 $0.snp.updateConstraints{ make in
                     make.height.equalTo(textFieldHeight)
                 }
@@ -221,7 +219,7 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
         }
     }
 
-    internal func sendSearchViewToBack(searchView: UIView) {
+    func sendSearchViewToBack(searchView: UIView) {
         view.sendSubviewToBack(searchView)
         updateFieldConstraints(fieldView: searchView, height: textFieldHeight)
         view.endEditing(true)
