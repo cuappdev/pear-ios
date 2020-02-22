@@ -17,7 +17,7 @@ class DemographicsViewController: UIViewController {
     // MARK: - Private Data vars
     private var activeDropdownViewType: DropdownView?
     private var classSearchFields: [String] = []
-    private weak var delegate: OnboardingPageDelegate?
+    private weak var delegate: OnboardingPageDelegate!
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
@@ -99,7 +99,7 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        delegate?.nextPage(index: 1)
+        delegate.nextPage(index: 1)
     }
 
     private func setUpConstraints() {

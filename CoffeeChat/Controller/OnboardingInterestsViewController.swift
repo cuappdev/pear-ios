@@ -23,7 +23,7 @@ class OnboardingInterestsViewController: UIViewController {
     private let topFadeView = UIView()
 
     // MARK: - Data
-    private weak var delegate: OnboardingPageDelegate?
+    private weak var delegate: OnboardingPageDelegate!
     private var interests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
@@ -66,7 +66,7 @@ class OnboardingInterestsViewController: UIViewController {
         tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
-        tableView.backgroundColor = .backgroundLightGreen
+        tableView.backgroundColor = .none
         tableView.allowsMultipleSelection = true
 //        tableView.bounces = false
         tableView.showsHorizontalScrollIndicator = false
@@ -90,11 +90,7 @@ class OnboardingInterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 2)
-    }
-
-    @objc func backButtonPressed() {
-        delegate?.backPage(index: 0)
+        delegate.nextPage(index: 2)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -154,9 +150,8 @@ class OnboardingInterestsViewController: UIViewController {
         }
     }
 
-    /**
-     Updates the enabled state of next button based on the state of selectedInterests.
-     */
+
+    /// Updates the enabled state of next button based on the state of selectedInterests.
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
         if nextButton.isEnabled {

@@ -134,7 +134,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         let height = tableView.contentSize.height
-        delegate?.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .search)
+        delegate.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .search)
     }
 
     /// Expands and updates search results table view when text is changed in the search bar.

@@ -12,7 +12,7 @@ import SnapKit
 class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private weak var delegate: OnboardingPageDelegate?
+    private weak var delegate: OnboardingPageDelegate!
     private var selectedGroups: [Group] = []
     // TODO: change when networking with backend
     private var groups: [Group] = [
@@ -68,7 +68,7 @@ class GroupsViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = .none
         tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
