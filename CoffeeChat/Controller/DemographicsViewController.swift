@@ -83,9 +83,6 @@ class DemographicsViewController: UIViewController {
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
-//        onboardingdropdownViews = [majordropdownView, hometowndropdownView]
-//        onboardingSelectViews = [classDropdownView, pronounsDropdownView]
-
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold

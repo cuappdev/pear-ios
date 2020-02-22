@@ -10,19 +10,18 @@ import UIKit
 
 extension UIColor {
 
-    static let greenGray = colorFromCode(0x5B7E58)
-    static let darkGreen = colorFromCode(0x176027)
-    static let wash = colorFromCode(0xf5f5f5)
-
     // MARK: - Foreground
+    static let darkGreen = colorFromCode(0x176027)
+    static let greenGray = colorFromCode(0x5B7E58)
+    static let metaData = colorFromCode(0x9E9E9E)
+    static let primaryText = colorFromCode(0x212121)
+    static let secondaryText = colorFromCode(0x616161)
     static let textBlack = colorFromCode(0x000000)
     static let textGray = colorFromCode(0x3D3D3D)
-    static let metaData = colorFromCode(0x9E9E9E)
     static let textLightGray = colorFromCode(0xADADAD)
     static let textGreen = colorFromCode(0x789F74)
     static let textRed = colorFromCode(0xD62C2C)
-    static let primaryText = colorFromCode(0x212121)
-    static let secondaryText = colorFromCode(0x616161)
+    static let wash = colorFromCode(0xf5f5f5)
 
     // MARK: - Background
     static let backgroundWhite = colorFromCode(0xFFFFFF)

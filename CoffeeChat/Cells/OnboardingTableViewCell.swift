@@ -11,7 +11,6 @@ import UIKit
 class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
-//    private let cellBackgroundView = UIView()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
     private lazy var categoriesLabel: UILabel = {
@@ -33,8 +32,7 @@ class OnboardingTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
 
-        layer.cornerRadius = 100
-
+        layer.cornerRadius = 8
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
 
