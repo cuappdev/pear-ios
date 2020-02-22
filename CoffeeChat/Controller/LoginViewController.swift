@@ -88,7 +88,10 @@ extension LoginViewController: GIDSignInDelegate {
             let homeVC = HomeViewController()
             navigationController?.pushViewController(homeVC, animated: false)
         } else {
-            let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+            let onboardingVC = OnboardingPageViewController(
+                transitionStyle: UIPageViewController.TransitionStyle.scroll,
+                navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
+            )
             navigationController?.pushViewController(onboardingVC, animated: false)
         }
     }

@@ -9,10 +9,10 @@
 import UIKit
 
 
-protocol OnboardingSearchViewDelegate: class {
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool)
-    func sendSearchViewToBack(searchView: UIView)
-    func updateSearchViewHeight(searchView: UIView, height: CGFloat)
+protocol OnboardingDropdownViewDelegate: class {
+    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, dropdownViewType: DropdownView)
+    func sendDropdownViewToBack(dropdownView: UIView)
+    func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat)
     func updateSelectedFields(tag: Int, isSelected: Bool)
 }
 
@@ -39,7 +39,7 @@ class OnboardingSearchDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private weak var delegate: OnboardingSearchViewDelegate?
+    private weak var delegate: OnboardingDropdownViewDelegate!
     private var placeholder: String!
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
@@ -48,12 +48,12 @@ class OnboardingSearchDropdownView: UIView {
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
-    init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String]) {
+    init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String]) {
         super.init(frame: .zero)
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
-        addViews()
+        setupViews()
         setupConstraints()
     }
 
@@ -61,7 +61,7 @@ class OnboardingSearchDropdownView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func addViews() {
+    private func setupViews() {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
@@ -130,24 +130,23 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.text = resultsTableData[indexPath.row]
         tableView.isHidden = true
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: true) // LUCY - Revisit
-        delegate?.sendSearchViewToBack(searchView: self) // LUCY - Revisit
+        delegate.updateSelectedFields(tag: self.tag, isSelected: true)
+        delegate.sendDropdownViewToBack(dropdownView: self)
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        searchBar.searchTextField.placeholder = ""
         let height = tableView.contentSize.height
-        delegate?.bringSearchViewToFront(searchView: self, height: height, isSelect: false)
+        delegate?.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .search)
     }
 
     /// Expands and updates search results table view when text is changed in the search bar.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
         resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
+        delegate.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height
-        delegate?.updateSearchViewHeight(searchView: self, height: newHeight)
+        delegate.updateDropdownViewHeight(dropdownView: self, height: newHeight)
     }
 }

@@ -15,7 +15,7 @@ class OnboardingSelectDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private weak var delegate: OnboardingSearchViewDelegate?
+    private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String!
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var tableData: [String]!
@@ -25,13 +25,13 @@ class OnboardingSelectDropdownView: UIView {
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
     
-    init(delegate: OnboardingSearchViewDelegate, placeholder: String, tableData: [String], textTemplate: String) {
+    init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String], textTemplate: String) {
         super.init(frame: .zero)
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
         self.textTemplate = textTemplate
-        addViews()
+        setupViews()
         setupConstraints()
     }
 
@@ -39,7 +39,7 @@ class OnboardingSelectDropdownView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func addViews() {
+    private func setupViews() {
         dropdownButton.backgroundColor = .backgroundWhite
         dropdownButton.setTitle(placeholder, for: .normal)
         dropdownButton.setTitleColor(.metaData, for: .normal)
@@ -86,10 +86,10 @@ class OnboardingSelectDropdownView: UIView {
         if shouldShowFields {
             // Show dropdown table view when user taps on bar.
             let height = tableView.contentSize.height
-            delegate?.bringSearchViewToFront(searchView: self, height: height, isSelect: true)
+            delegate?.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .select)
         } else {
             // Dismiss table view if user taps on bar again.
-            delegate?.sendSearchViewToBack(searchView: self)
+            delegate?.sendDropdownViewToBack(dropdownView: self)
         }
     }
 
@@ -117,6 +117,6 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
         dropdownButton.setTitle("\(textTemplate) \(tableData[indexPath.row])", for: .normal)
         dropdownButton.setTitleColor(.textBlack, for: .normal)
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
-        delegate?.sendSearchViewToBack(searchView: self)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 }

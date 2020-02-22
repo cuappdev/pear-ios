@@ -8,30 +8,33 @@
 
 import UIKit
 
+enum DropdownView {
+    case search
+    case select
+}
+
 class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private weak var delegate: OnboardingPageDelegate?
-    private let userDefaults = UserDefaults.standard
+    private var activeDropdownViewType: DropdownView?
     private var classSearchFields: [String] = []
-    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private weak var delegate: OnboardingPageDelegate?
+    private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
-
-    private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
+    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
+    private var activeDropdownView: UIView?
     private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
-    private var hometownSearchView: OnboardingSearchDropdownView!
-    private var majorSearchView: OnboardingSearchDropdownView!
+    private var hometownDropdownView: OnboardingSearchDropdownView!
+    private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
-    private var onboardingSearchViews: [OnboardingSearchDropdownView] = []
-    private var onboardingSelectViews: [OnboardingSelectDropdownView] = []
     private var pronounsDropdownView: OnboardingSelectDropdownView!
-    private let pronounsTableView = UITableView()
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -69,20 +72,20 @@ class DemographicsViewController: UIViewController {
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
-        majorSearchView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
-        majorSearchView.tag = 1 // Set tag to keep track of field selection status.
-        view.addSubview(majorSearchView)
+        majorDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
+        view.addSubview(majorDropdownView)
 
-        hometownSearchView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
-        hometownSearchView.tag = 2 // Set tag to keep track of field selection status.
-        view.addSubview(hometownSearchView)
+        hometownDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
+        view.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
-        onboardingSearchViews = [majorSearchView, hometownSearchView]
-        onboardingSelectViews = [classDropdownView, pronounsDropdownView]
+//        onboardingdropdownViews = [majordropdownView, hometowndropdownView]
+//        onboardingSelectViews = [classDropdownView, pronounsDropdownView]
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -128,23 +131,23 @@ class DemographicsViewController: UIViewController {
             make.height.equalTo(textFieldHeight)
         }
 
-        majorSearchView.snp.makeConstraints { make in
+        majorDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(classDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
-        hometownSearchView.snp.makeConstraints { make in
+        hometownDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(majorSearchView.snp.top).offset(textFieldTotalPadding)
+            make.top.equalTo(majorDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
 
         pronounsDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownSearchView.snp.top).offset(textFieldTotalPadding)
+            make.top.equalTo(hometownDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }
@@ -163,7 +166,7 @@ class DemographicsViewController: UIViewController {
     }
 }
 
-extension DemographicsViewController: OnboardingSearchViewDelegate {
+extension DemographicsViewController: OnboardingDropdownViewDelegate {
 
     func updateSelectedFields(tag: Int, isSelected: Bool) {
         fieldsEntered[tag] = isSelected
@@ -185,43 +188,41 @@ extension DemographicsViewController: OnboardingSearchViewDelegate {
     }
 
     /// Resizes search view based on input to search field
-    func updateSearchViewHeight(searchView: UIView, height: CGFloat) {
-        view.bringSubviewToFront(searchView)
-        updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
+    func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat) {
+        view.bringSubviewToFront(dropdownView)
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    func bringSearchViewToFront(searchView: UIView, height: CGFloat, isSelect: Bool) {
-        view.bringSubviewToFront(searchView)
-
-        if isSelect { view.endEditing(true) } // Dismiss keyboard when user clicks on select field.
-
-        updateFieldConstraints(fieldView: searchView, height: textFieldHeight + height)
-
-        // TODO: Some jank code here
-        onboardingSearchViews.forEach {
-            if !$0.isEqual(searchView) {
-                view.sendSubviewToBack($0)
-                $0.hideTableView()
-                $0.snp.updateConstraints { make in
-                    make.height.equalTo(textFieldHeight)
-                }
-            }
+    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, dropdownViewType: DropdownView) {
+        view.bringSubviewToFront(dropdownView)
+        switch activeDropdownViewType {
+        case .search:
+            let dropdownView = activeDropdownView as! OnboardingSearchDropdownView
+            view.sendSubviewToBack(dropdownView)
+            updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
+            dropdownView.hideTableView()
+        case .select:
+            let dropdownView = activeDropdownView as! OnboardingSelectDropdownView
+            view.sendSubviewToBack(dropdownView)
+            updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
+            dropdownView.hideTableView()
+        case .none:
+            break
         }
-
-        onboardingSelectViews.forEach {
-            if !$0.isEqual(searchView) {
-                view.sendSubviewToBack($0)
-                $0.hideTableView()
-                $0.snp.updateConstraints{ make in
-                    make.height.equalTo(textFieldHeight)
-                }
-            }
+        switch dropdownViewType {
+        case .select:
+            view.endEditing(true)
+        default:
+            break
         }
+        activeDropdownViewType = dropdownViewType
+        activeDropdownView = dropdownView
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    func sendSearchViewToBack(searchView: UIView) {
-        view.sendSubviewToBack(searchView)
-        updateFieldConstraints(fieldView: searchView, height: textFieldHeight)
+    func sendDropdownViewToBack(dropdownView: UIView) {
+        view.sendSubviewToBack(dropdownView)
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
         view.endEditing(true)
     }
 }
