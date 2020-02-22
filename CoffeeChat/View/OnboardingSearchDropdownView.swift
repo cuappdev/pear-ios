@@ -67,12 +67,10 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.backgroundImage = UIImage()
         searchBar.placeholder = placeholder
         searchBar.setImage(UIImage(), for: .search, state: .normal) // Remove search icon from search bar.
-        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.backgroundColor = .backgroundWhite
-            textField.textColor = .black
-            textField.font = ._20CircularStdBook
-            textField.clearButtonMode = .never
-        }
+        searchBar.searchTextField.backgroundColor = .backgroundWhite
+        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.font = ._20CircularStdBook
+        searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = fieldsCornerRadius
         searchBar.layer.shadowColor = UIColor.black.cgColor
         searchBar.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)

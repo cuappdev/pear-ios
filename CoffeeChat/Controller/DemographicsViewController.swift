@@ -9,8 +9,7 @@
 import UIKit
 
 enum DropdownView {
-    case search
-    case select
+    case search, select
 }
 
 class DemographicsViewController: UIViewController {

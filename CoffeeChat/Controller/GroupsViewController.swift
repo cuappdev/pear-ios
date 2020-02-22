@@ -58,11 +58,10 @@ class GroupsViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
-        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.backgroundColor = .backgroundWhite
-            textField.textColor = UIColor.textBlack
-            textField.font = ._20CircularStdBook
-        }
+        searchBar.searchTextField.backgroundColor = .backgroundWhite
+        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.font = ._20CircularStdBook
+        searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
