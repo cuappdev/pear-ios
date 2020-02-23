@@ -15,7 +15,7 @@ class OnboardingSelectDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private var delegate: OnboardingDropdownViewDelegate
+    private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var tableData: [String]
@@ -86,10 +86,10 @@ class OnboardingSelectDropdownView: UIView {
         if shouldShowFields {
             // Show dropdown table view when user taps on bar.
             let height = tableView.contentSize.height
-            delegate.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: true)
+            delegate?.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: true)
         } else {
             // Dismiss table view if user taps on bar again.
-            delegate.sendDropdownViewToBack(dropdownView: self)
+            delegate?.sendDropdownViewToBack(dropdownView: self)
         }
     }
 
@@ -120,7 +120,7 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
         tableView.isHidden = true
         dropdownButton.setTitle("\(textTemplate) \(tableData[indexPath.row])", for: .normal)
         dropdownButton.setTitleColor(.textBlack, for: .normal)
-        delegate.updateSelectedFields(tag: self.tag, isSelected: true)
-        delegate.sendDropdownViewToBack(dropdownView: self)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 }

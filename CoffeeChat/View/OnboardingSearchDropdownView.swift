@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 protocol OnboardingDropdownViewDelegate: class {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
     func sendDropdownViewToBack(dropdownView: UIView)
@@ -39,7 +38,7 @@ class OnboardingSearchDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private var delegate: OnboardingDropdownViewDelegate
+    private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
@@ -116,7 +115,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsTableData.count
     }
@@ -132,23 +131,23 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.text = resultsTableData[indexPath.row]
         tableView.isHidden = true
-        delegate.updateSelectedFields(tag: self.tag, isSelected: true)
-        delegate.sendDropdownViewToBack(dropdownView: self)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         let height = tableView.contentSize.height
-        delegate.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: false)
+        delegate?.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: false)
     }
 
     /// Expands and updates search results table view when text is changed in the search bar.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
         resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height
-        delegate.updateDropdownViewHeight(dropdownView: self, height: newHeight)
+        delegate?.updateDropdownViewHeight(dropdownView: self, height: newHeight)
     }
 }
