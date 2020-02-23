@@ -20,7 +20,8 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
@@ -29,7 +30,7 @@ class LoginViewController: UIViewController {
         view.addSubview(loginButton)
 
         logoImageView.layer.cornerRadius = logoSize.width/2
-        logoImageView.backgroundColor = .gray
+        logoImageView.backgroundColor = .inactiveGreen
         view.addSubview(logoImageView)
 
         setupConstraints()
@@ -81,10 +82,18 @@ extension LoginViewController: GIDSignInDelegate {
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
         }
 
-        let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-        onboardingVC.modalPresentationStyle = .fullScreen
-        present(onboardingVC, animated: true, completion: nil)
+        let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
 
+        if onboardingCompleted {
+            let homeVC = HomeViewController()
+            navigationController?.pushViewController(homeVC, animated: false)
+        } else {
+            let onboardingVC = OnboardingPageViewController(
+                transitionStyle: UIPageViewController.TransitionStyle.scroll,
+                navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
+            )
+            navigationController?.pushViewController(onboardingVC, animated: false)
+        }
     }
 
 }

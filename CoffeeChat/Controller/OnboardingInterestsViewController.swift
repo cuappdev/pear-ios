@@ -23,25 +23,29 @@ class OnboardingInterestsViewController: UIViewController {
     private let topFadeView = UIView()
 
     // MARK: - Data
-    private weak var delegate: OnboardingPageDelegate?
+    private var delegate: OnboardingPageDelegate
     private var interests: [Interest] = [
-        Interest(name: "Aaaa", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Bbbbbb", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Cccc", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Ddddddddd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Eeeeeeee", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "Ffff", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "GGGG", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "HHHH", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "IIII", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "KKdd", categories: "lorem, lorem, lorem, lorem, lorem", image: ""),
-        Interest(name: "????", categories: "lorem, lorem, lorem, lorem, lorem", image: "")
+        Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
+        Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
+        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance"),
+        Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
+        Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
+        Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
+        Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
+        Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
+        Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
+        Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
+        Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
+        Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
+        Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
+        Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
+        Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
 
     init(delegate: OnboardingPageDelegate) {
-       super.init(nibName: nil, bundle: nil)
-       self.delegate = delegate
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
    }
 
    required init?(coder: NSCoder) {
@@ -50,10 +54,11 @@ class OnboardingInterestsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundWhite
+        view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
-        titleLabel.text = "What are your interests?"
-        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        titleLabel.text = "What do you love?"
+        titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
         tableView.delegate = self
@@ -61,7 +66,9 @@ class OnboardingInterestsViewController: UIViewController {
         tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         tableView.isScrollEnabled = true
         tableView.clipsToBounds = true
+        tableView.backgroundColor = .none
         tableView.allowsMultipleSelection = true
+        tableView.bounces = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
@@ -70,30 +77,20 @@ class OnboardingInterestsViewController: UIViewController {
         view.addSubview(topFadeView)
         view.addSubview(bottomFadeView)
 
-        nextButton.setTitle("Almost there!", for: .normal)
+        nextButton.setTitle("Almost there", for: .normal)
         nextButton.layer.cornerRadius = 27
-        nextButton.backgroundColor = .backgroundLightGray
-        nextButton.setTitleColor(.textBlack, for: .normal)
-        nextButton.titleLabel?.font = .systemFont(ofSize: 20)
+        nextButton.isEnabled = false
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.titleLabel?.font = ._20CircularStdBold
+        nextButton.backgroundColor = .inactiveGreen
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
-
-        backButton.titleLabel?.font = .systemFont(ofSize: 16)
-        backButton.setTitle("Go back", for: .normal)
-        backButton.setTitleColor(.textLightGray, for: .normal)
-        backButton.backgroundColor = .none
-        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        view.addSubview(backButton)
 
         setupConstraints()
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 2)
-    }
-
-    @objc func backButtonPressed() {
-        delegate?.backPage(index: 0)
+        delegate.nextPage(index: 2)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -101,27 +98,26 @@ class OnboardingInterestsViewController: UIViewController {
 
         let topLayer = CAGradientLayer()
         topLayer.frame = topFadeView.bounds
-        topLayer.colors = [UIColor.backgroundWhite.cgColor, clearColor.cgColor]
+        topLayer.colors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
         topLayer.locations = [0.0, 1.0]
         topFadeView.layer.insertSublayer(topLayer, at: 0)
 
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundWhite.cgColor]
+        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundLightGreen.cgColor]
         bottomLayer.locations = [0.0, 1.0]
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
     private func setupConstraints() {
-        let backSize = CGSize(width: 62, height: 20)
         let fadeHeight: CGFloat = 26
-        let nextBackPadding: CGFloat = 20
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextTopPadding: CGFloat = 56
-        let tableViewSize = CGSize(width: 295, height: 431)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
+        let tableViewWidth: CGFloat = 295
+        let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 50
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = 100
+        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
         let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
@@ -132,8 +128,9 @@ class OnboardingInterestsViewController: UIViewController {
 
         tableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.size.equalTo(tableViewSize)
+            make.width.equalTo(tableViewWidth)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
+            make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
         }
 
         topFadeView.snp.makeConstraints { make in
@@ -149,22 +146,27 @@ class OnboardingInterestsViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(tableView.snp.bottom).offset(nextTopPadding)
-        }
-
-        backButton.snp.makeConstraints { make in
-            make.size.equalTo(backSize)
-            make.centerX.equalToSuperview()
-            make.top.equalTo(nextButton.snp.bottom).offset(nextBackPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
         }
     }
 
-    /**
-     Updates the enabled state of next button based on the state of selectedInterests.
-     */
+
+    /// Updates the enabled state of next button based on the state of selectedInterests.
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundRed : .backgroundLightGray
+        if nextButton.isEnabled {
+            nextButton.backgroundColor = .backgroundOrange
+            nextButton.layer.shadowColor = UIColor.black.cgColor
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            nextButton.layer.shadowOpacity = 0.15
+            nextButton.layer.shadowRadius = 2
+        } else {
+            nextButton.backgroundColor = .inactiveGreen
+            nextButton.layer.shadowColor = .none
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            nextButton.layer.shadowOpacity = 0
+            nextButton.layer.shadowRadius = 0
+        }
     }
 
 }

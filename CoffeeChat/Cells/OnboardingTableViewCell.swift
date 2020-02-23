@@ -11,14 +11,13 @@ import UIKit
 class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
-    private let cellBackgroundView = UIView()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
     private lazy var categoriesLabel: UILabel = {
         let categoriesLabel = UILabel()
-        categoriesLabel.textColor = .textLightGray
+        categoriesLabel.textColor = .greenGray
         categoriesLabel.font = ._12CircularStdBook
-        cellBackgroundView.addSubview(categoriesLabel)
+        contentView.addSubview(categoriesLabel)
         return categoriesLabel
     }()
 
@@ -32,19 +31,17 @@ class OnboardingTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.backgroundColor = .none
 
-        cellBackgroundView.backgroundColor = .backgroundLightGray
-        cellBackgroundView.layer.cornerRadius = 8
-        contentView.addSubview(cellBackgroundView)
+        layer.cornerRadius = 8
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
 
-        interestImageView.backgroundColor = .backgroundDarkGray
         interestImageView.layer.cornerRadius = 4
-        cellBackgroundView.addSubview(interestImageView)
+        contentView.addSubview(interestImageView)
 
         titleLabel.textColor = .textBlack
-        titleLabel.font = .systemFont(ofSize: 20, weight: .regular)
-        cellBackgroundView.addSubview(titleLabel)
+        titleLabel.font = ._20CircularStdBook
+        contentView.addSubview(titleLabel)
     }
 
     required init?(coder: NSCoder) {
@@ -56,10 +53,6 @@ class OnboardingTableViewCell: UITableViewCell {
         let sidePadding: CGFloat = 12
         let textSidePadding: CGFloat = 8
 
-        cellBackgroundView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
         interestImageView.snp.remakeConstraints { make in
             make.size.equalTo(imageSize)
             make.leading.equalToSuperview().inset(sidePadding)
@@ -69,7 +62,7 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.snp.remakeConstraints { make in
             make.leading.equalTo(interestImageView.snp.trailing).offset(textSidePadding)
             if showingInterests {
-                make.top.equalTo(cellBackgroundView).inset(sidePadding)
+                make.top.equalToSuperview().inset(sidePadding)
             } else {
                 make.centerY.equalToSuperview()
             }
@@ -86,6 +79,7 @@ class OnboardingTableViewCell: UITableViewCell {
     func configure(with interest: Interest) {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.categories
+        interestImageView.image = UIImage(named: interest.image)
         // Determine if a relayout is needed (was showing Group and configured with an Interest)
         if !initialized || !showingInterests {
             relayoutSubviews(interests: true)
@@ -104,13 +98,12 @@ class OnboardingTableViewCell: UITableViewCell {
     private func relayoutSubviews(interests: Bool) {
         showingInterests = interests
         initialized = true
-        // cellBackgroundView.subviews.forEach { $0.removeConstraints($0.constraints)}
         setupConstraints(showingInterests: showingInterests)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        cellBackgroundView.backgroundColor = isSelected ? .backgroundRed : .backgroundLightGray
+        contentView.backgroundColor = isSelected ? .pearGreen : .white
     }
 
 }
