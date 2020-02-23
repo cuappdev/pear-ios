@@ -100,6 +100,10 @@ class OnboardingSelectDropdownView: UIView {
 }
 
 extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData.count
     }

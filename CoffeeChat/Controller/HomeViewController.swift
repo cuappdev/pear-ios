@@ -96,8 +96,8 @@ class HomeViewController: UIViewController {
 
     private func setupConstraints() {
         let padding: CGFloat = 35 // TODO: Not sure about dimensions.
-        let logoutPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
-        let reachOutPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
+        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
+        let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
 
         logoutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

@@ -21,10 +21,10 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
         label.textColor = .textGray
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.textColor = .black
-        addSubview(label)
+        contentView.addSubview(label)
 
         label.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
+            make.top.bottom.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(21)
         }
     }

@@ -12,7 +12,7 @@ class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private var classSearchFields: [String] = []
-    private var delegate: OnboardingPageDelegate
+    private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
@@ -91,14 +91,14 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        delegate.nextPage(index: 1)
+        delegate?.nextPage(index: 1)
     }
 
     private func setUpConstraints() {
-        let fieldTopPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 60)
+        let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 60)
         let helloLabelHeight: CGFloat = 30
-        let helloLabelPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 100)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 90)
+        let helloLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20

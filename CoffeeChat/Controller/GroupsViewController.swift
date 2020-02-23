@@ -12,7 +12,7 @@ import SnapKit
 class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var delegate: OnboardingPageDelegate
+    private weak var delegate: OnboardingPageDelegate?
     private var selectedGroups: [Group] = []
     // TODO: change when networking with backend
     private var groups: [Group] = [
@@ -105,18 +105,11 @@ class GroupsViewController: UIViewController {
         setupConstraints()
     }
 
-    func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
-        let height = UIScreen.main.bounds.height
-        let baseHeight: CGFloat = 812
-        let heightSize = size * (height / baseHeight)
-        return heightSize
-    }
-
     private func setupConstraints() {
         let backSize = CGSize(width: 86, height: 20)
         let fadeHeight: CGFloat = 26
-        let nextBackPadding: CGFloat = setCustomVerticalPadding(size: 49)
-        let nextBottomPadding: CGFloat = setCustomVerticalPadding(size: 90)
+        let nextBackPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 49)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
         let searchTopPadding: CGFloat = 50

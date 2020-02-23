@@ -112,12 +112,12 @@ class OnboardingInterestsViewController: UIViewController {
     private func setupConstraints() {
         let fadeHeight: CGFloat = 26
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 90)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 50
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = LayoutHelper.shared.setCustomVerticalPadding(size: 100)
+        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
         let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
