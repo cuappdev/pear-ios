@@ -23,7 +23,7 @@ class OnboardingInterestsViewController: UIViewController {
     private let topFadeView = UIView()
 
     // MARK: - Data
-    private weak var delegate: OnboardingPageDelegate!
+    private var delegate: OnboardingPageDelegate
     private var interests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
@@ -44,8 +44,8 @@ class OnboardingInterestsViewController: UIViewController {
     private var selectedInterests: [Interest] = []
 
     init(delegate: OnboardingPageDelegate) {
-       super.init(nibName: nil, bundle: nil)
-       self.delegate = delegate
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
    }
 
    required init?(coder: NSCoder) {
@@ -68,7 +68,7 @@ class OnboardingInterestsViewController: UIViewController {
         tableView.clipsToBounds = true
         tableView.backgroundColor = .none
         tableView.allowsMultipleSelection = true
-//        tableView.bounces = false
+        tableView.bounces = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none

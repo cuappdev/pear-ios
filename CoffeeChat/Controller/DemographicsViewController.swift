@@ -8,16 +8,11 @@
 
 import UIKit
 
-enum DropdownView {
-    case search, select
-}
-
 class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var activeDropdownViewType: DropdownView?
     private var classSearchFields: [String] = []
-    private weak var delegate: OnboardingPageDelegate!
+    private var delegate: OnboardingPageDelegate
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
@@ -40,8 +35,8 @@ class DemographicsViewController: UIViewController {
     private let textFieldHeight: CGFloat = 49
 
     init(delegate: OnboardingPageDelegate) {
-        super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -189,29 +184,20 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, dropdownViewType: DropdownView) {
+    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
         view.bringSubviewToFront(dropdownView)
-        switch activeDropdownViewType {
-        case .search:
-            let dropdownView = activeDropdownView as! OnboardingSearchDropdownView
-            view.sendSubviewToBack(dropdownView)
-            updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
-            dropdownView.hideTableView()
-        case .select:
-            let dropdownView = activeDropdownView as! OnboardingSelectDropdownView
-            view.sendSubviewToBack(dropdownView)
-            updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
-            dropdownView.hideTableView()
-        case .none:
-            break
+        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
+             view.sendSubviewToBack(activeDropdownView)
+             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            activeDropdownView.hideTableView()
+        } else if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
+            view.sendSubviewToBack(activeDropdownView)
+             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            activeDropdownView.hideTableView()
         }
-        switch dropdownViewType {
-        case .select:
+        if isSelect {
             view.endEditing(true)
-        default:
-            break
         }
-        activeDropdownViewType = dropdownViewType
         activeDropdownView = dropdownView
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }

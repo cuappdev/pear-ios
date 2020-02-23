@@ -23,18 +23,14 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
         label.textColor = .black
         addSubview(label)
 
-        setupConstraints()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func setupConstraints() {
         label.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(21)
         }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configure(with labelText: String) {

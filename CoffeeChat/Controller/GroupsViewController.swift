@@ -12,7 +12,7 @@ import SnapKit
 class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private weak var delegate: OnboardingPageDelegate!
+    private var delegate: OnboardingPageDelegate
     private var selectedGroups: [Group] = []
     // TODO: change when networking with backend
     private var groups: [Group] = [
@@ -43,8 +43,8 @@ class GroupsViewController: UIViewController {
     private let topFadeView = UIView()
 
     init(delegate: OnboardingPageDelegate) {
-        super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {

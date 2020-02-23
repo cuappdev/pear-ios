@@ -15,10 +15,10 @@ class OnboardingSelectDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private weak var delegate: OnboardingDropdownViewDelegate!
-    private var placeholder: String!
+    private var delegate: OnboardingDropdownViewDelegate
+    private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
-    private var tableData: [String]!
+    private var tableData: [String]
     private var textTemplate: String = ""
     private var shouldShowFields: Bool = false
 
@@ -26,11 +26,11 @@ class OnboardingSelectDropdownView: UIView {
     private let fieldsCornerRadius: CGFloat = 8
     
     init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String], textTemplate: String) {
-        super.init(frame: .zero)
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
         self.textTemplate = textTemplate
+        super.init(frame: .zero)
         setupViews()
         setupConstraints()
     }
@@ -86,7 +86,7 @@ class OnboardingSelectDropdownView: UIView {
         if shouldShowFields {
             // Show dropdown table view when user taps on bar.
             let height = tableView.contentSize.height
-            delegate.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .select)
+            delegate.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: true)
         } else {
             // Dismiss table view if user taps on bar again.
             delegate.sendDropdownViewToBack(dropdownView: self)

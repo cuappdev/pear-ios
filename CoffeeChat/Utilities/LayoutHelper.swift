@@ -13,6 +13,8 @@ class LayoutHelper {
 
     static let shared = LayoutHelper()
 
+    private init() {}
+
     /// Returns custom vertical padding based on ration of screen size.
     func setCustomVerticalPadding(size: CGFloat) -> CGFloat {
         let height = UIScreen.main.bounds.height

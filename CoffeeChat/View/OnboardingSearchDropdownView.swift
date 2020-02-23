@@ -10,7 +10,7 @@ import UIKit
 
 
 protocol OnboardingDropdownViewDelegate: class {
-    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, dropdownViewType: DropdownView)
+    func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
     func sendDropdownViewToBack(dropdownView: UIView)
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat)
     func updateSelectedFields(tag: Int, isSelected: Bool)
@@ -39,20 +39,20 @@ class OnboardingSearchDropdownView: UIView {
     private let tableView = OnboardingSelectTableView()
 
     // MARK: - Private Data Vars
-    private weak var delegate: OnboardingDropdownViewDelegate!
-    private var placeholder: String!
+    private var delegate: OnboardingDropdownViewDelegate
+    private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
-    private var tableData: [String]!
+    private var tableData: [String]
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
     init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String]) {
-        super.init(frame: .zero)
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
+        super.init(frame: .zero)
         setupViews()
         setupConstraints()
     }
@@ -134,7 +134,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         let height = tableView.contentSize.height
-        delegate.bringDropdownViewToFront(dropdownView: self, height: height, dropdownViewType: .search)
+        delegate.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: false)
     }
 
     /// Expands and updates search results table view when text is changed in the search bar.
