@@ -29,13 +29,12 @@ class GroupsViewController: UIViewController {
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
-    private let skipButton = UIButton()
     private let clubLabel = UILabel()
     private let greetingLabel = UILabel()
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
+    private let skipButton = UIButton()
     private let tableView = UITableView(frame: .zero, style: .plain)
-//    private var tap: UITapGestureRecognizer!
 
     // MARK: - Gradients
     // Fade out affects on the top and bottom of the tableView
@@ -281,6 +280,7 @@ extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.section])
+        view.endEditing(true)
         updateSearchBarText()
         filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
