@@ -16,15 +16,15 @@ protocol OnboardingPageDelegate: class {
 
 class OnboardingPageViewController: UIPageViewController {
 
+    // MARK: - Private View Vars
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: OnboardingInterestsViewController!
     private var onboardingPages = [UIViewController]()
 
-    private let pageControl = UIPageControl()
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = OnboardingInterestsViewController(delegate: self)
@@ -32,28 +32,15 @@ class OnboardingPageViewController: UIPageViewController {
         onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
-
-        pageControl.currentPageIndicatorTintColor = .backgroundDarkGray
-        pageControl.pageIndicatorTintColor = .backgroundLightGray
-        pageControl.numberOfPages = onboardingPages.count
-        pageControl.currentPage = 0
-        view.addSubview(pageControl)
-
-        pageControl.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(165)
-        }
     }
 }
 
 extension OnboardingPageViewController: OnboardingPageDelegate {
     func nextPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .forward, animated: true, completion: nil)
-        self.pageControl.currentPage = index;
     }
 
     func backPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .reverse, animated: true, completion: nil)
-        self.pageControl.currentPage = index;
     }
 }

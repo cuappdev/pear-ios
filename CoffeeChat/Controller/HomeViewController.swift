@@ -36,6 +36,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
         // TODO: Remove after connecting to backend. These are temp values.
         let firstName = "Ezra"
@@ -61,7 +62,7 @@ class HomeViewController: UIViewController {
         matchNameLabel.font = ._24CircularStdMedium
         view.addSubview(matchNameLabel)
 
-        matchProfileImageView.backgroundColor = .backgroundGrayGreen
+        matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         view.addSubview(matchProfileImageView)
 
@@ -72,7 +73,7 @@ class HomeViewController: UIViewController {
         matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: cellReuseId)
         view.addSubview(matchSummaryTableView)
 
-        profileButton.backgroundColor = .backgroundGrayGreen
+        profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
         profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
         view.addSubview(profileButton)
@@ -94,11 +95,13 @@ class HomeViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let padding = 35
+        let padding: CGFloat = 35 // TODO: Not sure about dimensions.
+        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
+        let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
 
         logoutButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(5)
             make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
         }
 
         matchDemographicsLabel.snp.makeConstraints { make in
@@ -131,7 +134,7 @@ class HomeViewController: UIViewController {
         }
 
         reachOutButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(padding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(reachOutButtonSize)
         }
@@ -140,11 +143,10 @@ class HomeViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
         }
-
     }
 
     @objc private func profilePressed() {
-        print("profile pressed")
+        print("Profile pressed.")
     }
 
     @objc private func logoutPressed() {
@@ -156,9 +158,8 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        print("reach out pressed")
+        print("Reach out pressed.")
     }
-
 }
 
 extension HomeViewController: UITableViewDataSource {
