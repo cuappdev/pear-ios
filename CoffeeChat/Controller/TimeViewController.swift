@@ -200,12 +200,12 @@ extension TimeViewController: UICollectionViewDataSource {
         } else {
             let section = timeSections[section]
             switch section.type {
-            case .morning:
-                return morningTimes.count
             case .afternoon:
-                return afternoonTimes.count
+                return afternoonItems.count
             case .evening:
-                return eveningTimes.count
+                return eveningItems.count
+            case .morning:
+                return morningItems.count
             }
         }
     }
@@ -234,12 +234,12 @@ extension TimeViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? TimeCollectionViewCell else { return UICollectionViewCell() }
             let item: ItemType
             switch section.type {
-            case .morning:
-                item = morningItems[indexPath.item]
             case .afternoon:
                 item = afternoonItems[indexPath.item]
             case .evening:
                 item = eveningItems[indexPath.item]
+            case .morning:
+                item = morningItems[indexPath.item]
             }
             switch item {
             case .header(let header):
@@ -271,12 +271,12 @@ extension TimeViewController: UICollectionViewDelegate {
             let section = timeSections[indexPath.section]
             let item : ItemType
             switch section.type {
-            case .morning:
-                item = morningItems[indexPath.item]
             case .afternoon:
                 item = afternoonItems[indexPath.item]
             case .evening:
                 item = eveningItems[indexPath.item]
+            case .morning:
+                item = morningItems[indexPath.item]
             }
             guard let time = item.getTime() else { return }
             guard let day = daysDict[selectedDay] else { return }
@@ -297,12 +297,12 @@ extension TimeViewController: UICollectionViewDelegate {
             let section = timeSections[indexPath.section]
             let item : ItemType
             switch section.type {
-            case .morning:
-                item = morningItems[indexPath.item]
             case .afternoon:
                 item = afternoonItems[indexPath.item]
             case .evening:
                 item = eveningItems[indexPath.item]
+            case .morning:
+                item = morningItems[indexPath.item]
             }
             guard let time = item.getTime() else { return }
             guard let day = daysDict[selectedDay] else { return }
@@ -323,7 +323,7 @@ extension TimeViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: 36, height: 48)
         } else {
             let itemWidth = timeCollectionView.frame.width/3 - sectionInsets.left - sectionInsets.right
-            let itemHeight = (timeCollectionView.frame.height)/8 - interitemSpacing
+            let itemHeight = (timeCollectionView.frame.height)/9 - interitemSpacing
             return itemHeight > 36
                 ? CGSize(width: itemWidth, height: 36)
                 : CGSize(width: itemWidth, height: itemHeight)
