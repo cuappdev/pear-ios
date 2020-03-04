@@ -17,13 +17,32 @@ protocol OnboardingPageDelegate: class {
 class OnboardingPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
+    private let backgroundImage = UIImageView()
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: OnboardingInterestsViewController!
     private var onboardingPages = [UIViewController]()
 
+    // MARK: - Private Data Vars
+    private var backgroundXPosition: CGFloat = 0
+    private let screenWidth = UIScreen.main.bounds.width
+    private let screenHeight = UIScreen.main.bounds.height
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        for subview in view.subviews {
+            if let scrollView = subview as? UIScrollView {
+                scrollView.delegate = self
+            }
+        }
+
+        backgroundImage.image = UIImage(named: "onboardingBackground")
+        backgroundImage.contentMode =  UIView.ContentMode.scaleAspectFill
+        view.insertSubview(backgroundImage, at: 0)
+
+        backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
+
         navigationController?.navigationBar.isHidden = true
 
         demographicsViewController = DemographicsViewController(delegate: self)
@@ -35,12 +54,19 @@ class OnboardingPageViewController: UIPageViewController {
     }
 }
 
-extension OnboardingPageViewController: OnboardingPageDelegate {
+extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDelegate {
     func nextPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .forward, animated: true, completion: nil)
     }
 
     func backPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .reverse, animated: true, completion: nil)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let point = scrollView.contentOffset
+        let percentComplete = abs(point.x - view.frame.size.width)/view.frame.size.width
+        backgroundXPosition -= percentComplete * 20.0
+        backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
     }
 }

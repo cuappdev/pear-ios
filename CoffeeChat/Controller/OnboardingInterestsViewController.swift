@@ -54,7 +54,7 @@ class OnboardingInterestsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundLightGreen
+//        view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
         titleLabel.text = "What do you love?"
