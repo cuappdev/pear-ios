@@ -15,15 +15,14 @@
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImage = UIImageView()
 
-     // MARK: - Private Constants
-    private let buttonSize = CGSize(width: 225, height: 54)
-    private let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 102)
-    private let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
-    private let imageWidth = (UIScreen.main.bounds.width / 375) * 176
-    private let subtitleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
-    private let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
-
      override func viewDidLoad() {
+        let buttonSize = CGSize(width: 225, height: 54)
+        let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 102)
+        let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
+        let imageWidth = (UIScreen.main.bounds.width / 375) * 176
+        let subtitleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
+        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
+
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
@@ -51,7 +50,6 @@
         availabilityButton.setTitleColor(.white, for: .normal)
         availabilityButton.titleLabel?.font = ._20CircularStdBold
         availabilityButton.backgroundColor = .backgroundOrange
-        availabilityButton.isEnabled = false
         availabilityButton.layer.cornerRadius = 26
         availabilityButton.addTarget(self, action: #selector(availabilityButtonPressed), for: .touchUpInside)
         view.addSubview(availabilityButton)
@@ -77,7 +75,6 @@
            make.centerX.equalToSuperview()
            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
        }
-
      }
 
      @objc private func availabilityButtonPressed() {
