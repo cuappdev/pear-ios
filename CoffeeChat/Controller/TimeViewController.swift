@@ -11,6 +11,7 @@ import UIKit
 class TimeViewController: UIViewController {
 
     // MARK: - Views
+    private var cancelButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
     private let finishButton = UIButton()
@@ -68,6 +69,7 @@ class TimeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
 
         morningItems = [ItemType.header("Morning")] + morningTimes.map{ItemType.time($0)}
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map{ItemType.time($0)}
@@ -96,14 +98,6 @@ class TimeViewController: UIViewController {
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
 
-        finishButton.setTitle("Finish", for: .normal)
-        finishButton.setTitleColor(.white, for: .normal)
-        finishButton.titleLabel?.font = ._20CircularStdBold
-        finishButton.backgroundColor = .inactiveGreen
-        finishButton.isEnabled = false
-        finishButton.layer.cornerRadius = finishButtonSize.height/2
-        view.addSubview(finishButton)
-
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
         timeCollectionViewLayout.sectionInset = sectionInsets
@@ -117,21 +111,36 @@ class TimeViewController: UIViewController {
         timeCollectionView.register(TimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         view.addSubview(timeCollectionView)
 
+        finishButton.setTitle("Finish", for: .normal)
+        finishButton.setTitleColor(.white, for: .normal)
+        finishButton.titleLabel?.font = ._20CircularStdBold
+        finishButton.backgroundColor = .inactiveGreen
+        finishButton.isEnabled = false
+        finishButton.layer.cornerRadius = finishButtonSize.height/2
+        finishButton.addTarget(self, action: #selector(finishButtonPressed), for: .touchUpInside)
+        view.addSubview(finishButton)
+
+        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitleColor(.greenGray, for: .normal)
+        cancelButton.titleLabel?.font = ._16CircularStdMedium
+        cancelButton.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
+        view.addSubview(cancelButton)
+
         setupConstraints()
         setupTimeSections()
     }
 
     private func setupTimeSections() {
-        let morningSection = Section(type: .morning, items: morningItems)
         let afternoonSection = Section(type: .afternoon, items: afternoonItems)
         let eveningSection = Section(type: .evening, items: eveningItems)
-        
+        let morningSection = Section(type: .morning, items: morningItems)
+
         timeSections = [morningSection, afternoonSection, eveningSection]
     }
 
     private func setupConstraints() {
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
-        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 20)
 
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
@@ -150,17 +159,22 @@ class TimeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
-        finishButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
-            make.centerX.equalToSuperview()
-            make.size.equalTo(finishButtonSize)
-        }
-
         timeCollectionView.snp.makeConstraints { make in
             make.top.equalTo(dayLabel.snp.bottom).offset(16)
             make.bottom.equalTo(finishButton.snp.top).offset(-30)
             make.centerX.equalToSuperview()
             make.width.equalTo(315)
+        }
+
+        finishButton.snp.makeConstraints { make in
+            make.bottom.equalTo(cancelButton.snp.top).offset(-15)
+            make.centerX.equalToSuperview()
+            make.size.equalTo(finishButtonSize)
+        }
+
+        cancelButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
+            make.centerX.equalToSuperview()
         }
     }
 
@@ -182,6 +196,14 @@ class TimeViewController: UIViewController {
         }
     }
 
+    @objc private func finishButtonPressed() {
+        print("Finish pressed")
+    }
+
+    @objc private func cancelButtonPressed() {
+        print("Cancel pressed")
+    }
+
 }
 
 extension TimeViewController: UICollectionViewDataSource {
@@ -199,17 +221,10 @@ extension TimeViewController: UICollectionViewDataSource {
             return days.count
         } else {
             let section = timeSections[section]
-            switch section.type {
-            case .afternoon:
-                return afternoonItems.count
-            case .evening:
-                return eveningItems.count
-            case .morning:
-                return morningItems.count
-            }
+            return section.items.count
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? DayCollectionViewCell else { return UICollectionViewCell() }
@@ -231,16 +246,8 @@ extension TimeViewController: UICollectionViewDataSource {
             return cell
         } else {
             let section = timeSections[indexPath.section]
+            let item = section.items[indexPath.item]
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? TimeCollectionViewCell else { return UICollectionViewCell() }
-            let item: ItemType
-            switch section.type {
-            case .afternoon:
-                item = afternoonItems[indexPath.item]
-            case .evening:
-                item = eveningItems[indexPath.item]
-            case .morning:
-                item = morningItems[indexPath.item]
-            }
             switch item {
             case .header(let header):
                 cell.configure(for: header, isHeader: true)
@@ -269,15 +276,7 @@ extension TimeViewController: UICollectionViewDelegate {
             timeCollectionView.reloadData()
         } else {
             let section = timeSections[indexPath.section]
-            let item : ItemType
-            switch section.type {
-            case .afternoon:
-                item = afternoonItems[indexPath.item]
-            case .evening:
-                item = eveningItems[indexPath.item]
-            case .morning:
-                item = morningItems[indexPath.item]
-            }
+            let item = section.items[indexPath.item]
             guard let time = item.getTime() else { return }
             guard let day = daysDict[selectedDay] else { return }
             if availabilities[day] == nil {
@@ -295,15 +294,7 @@ extension TimeViewController: UICollectionViewDelegate {
             return
         } else {
             let section = timeSections[indexPath.section]
-            let item : ItemType
-            switch section.type {
-            case .afternoon:
-                item = afternoonItems[indexPath.item]
-            case .evening:
-                item = eveningItems[indexPath.item]
-            case .morning:
-                item = morningItems[indexPath.item]
-            }
+            let item = section.items[indexPath.item]
             guard let time = item.getTime() else { return }
             guard let day = daysDict[selectedDay] else { return }
             availabilities[day]?.removeAll { $0 == time }
