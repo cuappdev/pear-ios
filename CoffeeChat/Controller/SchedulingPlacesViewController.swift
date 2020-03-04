@@ -162,8 +162,27 @@ class SchedulingPlacesViewController: UIViewController {
         }
     }
 
+    private func updateNext() {
+        let enable = selectedCtownLocations.count + selectedCampusLocations.count > 2
+        nextButton.isEnabled = enable
+        if enable {
+            nextButton.backgroundColor = .backgroundOrange
+            nextButton.layer.shadowColor = UIColor.black.cgColor
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            nextButton.layer.shadowOpacity = 0.15
+            nextButton.layer.shadowRadius = 2
+        } else {
+            nextButton.backgroundColor = .inactiveGreen
+            nextButton.layer.shadowColor = .none
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            nextButton.layer.shadowOpacity = 0
+            nextButton.layer.shadowRadius = 0
+        }
+    }
+
     @objc private func nextButtonPressed() {
-        print("TODO: implement")
+        print("campus: \(selectedCampusLocations)")
+        print("ctown: \(selectedCtownLocations)")
     }
 
 }
@@ -171,30 +190,29 @@ class SchedulingPlacesViewController: UIViewController {
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("didSelect")
         if collectionView == campusCollectionView {
             selectedCampusLocations.append(campusLocations[indexPath.row])
         } else {
             selectedCtownLocations.append(ctownLocations[indexPath.row])
         }
-        print( (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell))
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: true)
+        updateNext()
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("didDeselectItemAt")
         if collectionView == campusCollectionView {
             selectedCampusLocations.removeAll { $0 == campusLocations[indexPath.row] }
         } else {
             selectedCtownLocations.removeAll { $0 == ctownLocations[indexPath.row] }
         }
-        print( (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell))
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: false)
+        updateNext()
     }
 
 }
 
 extension SchedulingPlacesViewController: UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionView == campusCollectionView ? campusLocations.count : ctownLocations.count
     }
@@ -203,12 +221,11 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         let isCampus = collectionView == campusCollectionView
         let collection = isCampus ? campusCollectionView : ctownCollectionView
         let reuseID = isCampus ? campusReuseIdentifier : ctownReuseIdentiifier
-        let location = (isCampus ? campusLocations : ctownLocations)[indexPath.row] // TODO check this
+        let location = (isCampus ? campusLocations : ctownLocations)[indexPath.row]
         guard let cell = collection.dequeueReusableCell(withReuseIdentifier: reuseID, for: indexPath) as?
             SchedulingCollectionViewCell else { return UICollectionViewCell() }
         cell.configure(with: location)
         return cell
-
     }
 
 }
