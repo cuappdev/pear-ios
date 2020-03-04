@@ -9,25 +9,14 @@
 import UIKit
 
 class TimeViewController: UIViewController {
-    
+
     // MARK: - Views
-    private let titleLabel = UILabel()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
-    private var timeCollectionView:UICollectionView!
     private let finishButton = UIButton()
-    
-    // MARK: - Data
-    private let finishButtonSize = CGSize(width: 175, height: 50)
-    
-    private let days = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-    private var selectedDay: String = "Su"
-    private var availabilities: [String: [String]] = [:]
-    
-    private let dayCellReuseId = "dayCellReuseIdentifier"
-    private let timeCellReuseId = "timeCellReuseIdentifier"
-    private let timeHeaderReuseId = "timeHeaderReuseIdentifier"
-    
+    private var timeCollectionView:UICollectionView!
+    private let titleLabel = UILabel()
+
     // MARK: - Section
     struct Section {
         let type: SectionType
@@ -35,9 +24,9 @@ class TimeViewController: UIViewController {
     }
 
     enum SectionType: String {
-        case morning = "Morning"
         case afternoon = "Afternoon"
         case evening = "Evening"
+        case morning = "Morning"
     }
     
     enum ItemType {
@@ -53,36 +42,46 @@ class TimeViewController: UIViewController {
             }
         }
     }
-    
-    private let morningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
-    private var morningItems: [ItemType] = []
-    private let afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",]
-    private var afternoonItems: [ItemType] = []
-    private let eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-    private var eveningItems: [ItemType] = []
-    
+
     private var timeSections: [Section] = []
-    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+
+    // MARK: - Data
+    private let finishButtonSize = CGSize(width: 175, height: 50)
     private let interitemSpacing: CGFloat = 4
+    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+
+    private let dayCellReuseId = "dayCellReuseIdentifier"
+    private let timeCellReuseId = "timeCellReuseIdentifier"
+
+    private var availabilities: [String: [String]] = [:]
+    private let days = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+    private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
+    private var selectedDay: String = "Su"
+
+    private var afternoonItems: [ItemType] = []
+    private let afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",]
+    private var eveningItems: [ItemType] = []
+    private let eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
+    private var morningItems: [ItemType] = []
+    private let morningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
-        let day = "Monday"
-        
+
         morningItems = [ItemType.header("Morning")] + morningTimes.map{ItemType.time($0)}
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map{ItemType.time($0)}
         eveningItems = [ItemType.header("Evening")] + eveningTimes.map{ItemType.time($0)}
-        
+
         titleLabel.text = "When are you free?"
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
-        
+
         let dayCollectionViewLayout = UICollectionViewFlowLayout()
         dayCollectionViewLayout.minimumInteritemSpacing = 4
         dayCollectionViewLayout.scrollDirection = .horizontal
-        
+
         dayCollectionView = UICollectionView(frame: .zero, collectionViewLayout: dayCollectionViewLayout)
         dayCollectionView.allowsSelection = true
         dayCollectionView.backgroundColor = .clear
@@ -92,28 +91,24 @@ class TimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        dayLabel.text  = "Every \(day)"
+        dayLabel.text  = "Every \(daysDict[selectedDay] ?? "")"
         dayLabel.textColor = .textBlack
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
-        
+
         finishButton.setTitle("Finish", for: .normal)
         finishButton.setTitleColor(.white, for: .normal)
         finishButton.titleLabel?.font = ._20CircularStdBold
         finishButton.backgroundColor = .inactiveGreen
         finishButton.isEnabled = false
         finishButton.layer.cornerRadius = finishButtonSize.height/2
-//        finishButton.layer.shadowColor = UIColor.black.cgColor
-//        finishButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-//        finishButton.layer.shadowOpacity = 0.15
-//        finishButton.layer.shadowRadius = 2
         view.addSubview(finishButton)
 
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
         timeCollectionViewLayout.sectionInset = sectionInsets
         timeCollectionViewLayout.scrollDirection = .horizontal
-        
+
         timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
         timeCollectionView.allowsMultipleSelection = true
         timeCollectionView.backgroundColor = .clear
@@ -121,11 +116,11 @@ class TimeViewController: UIViewController {
         timeCollectionView.delegate = self
         timeCollectionView.register(TimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         view.addSubview(timeCollectionView)
-        
+
         setupConstraints()
         setupTimeSections()
     }
-    
+
     private func setupTimeSections() {
         let morningSection = Section(type: .morning, items: morningItems)
         let afternoonSection = Section(type: .afternoon, items: afternoonItems)
@@ -133,10 +128,13 @@ class TimeViewController: UIViewController {
         
         timeSections = [morningSection, afternoonSection, eveningSection]
     }
-    
+
     private func setupConstraints() {
+        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
+        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
             make.centerX.equalToSuperview()
         }
 
@@ -153,7 +151,7 @@ class TimeViewController: UIViewController {
         }
 
         finishButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(finishButtonSize)
         }
@@ -165,7 +163,7 @@ class TimeViewController: UIViewController {
             make.width.equalTo(315)
         }
     }
-    
+
     private func updateFinishButton() {
         let timeCount = availabilities.map({$0.value.count}).reduce(0, +)
         finishButton.isEnabled = availabilities.count != 0 && timeCount > 0
@@ -218,10 +216,12 @@ extension TimeViewController: UICollectionViewDataSource {
             let day = days[indexPath.item]
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
-            if availabilities[day] == nil || availabilities[day] == [] {
-                cell.updateBackgroundColor(isAvailable: false)
-            } else {
-                cell.updateBackgroundColor(isAvailable: true)
+            if let day = daysDict[day] {
+                if availabilities[day] == nil || availabilities[day] == [] {
+                    cell.updateBackgroundColor(isAvailable: false)
+                } else {
+                    cell.updateBackgroundColor(isAvailable: true)
+                }
             }
             // Select item if day is the selected day
             if day == selectedDay {
@@ -248,8 +248,10 @@ extension TimeViewController: UICollectionViewDataSource {
             case .time(let time):
                 cell.configure(for: time, isHeader: false)
                 cell.isUserInteractionEnabled = true
-                // Select times that are previously selected for a day
-                if let dayAvailability = availabilities[selectedDay], dayAvailability.contains(time) {
+                // Select times that were previously selected for a day
+                if let day = daysDict[selectedDay],
+                    let dayAvailability = availabilities[day],
+                    dayAvailability.contains(time) {
                     timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                     cell.isSelected = true
                 }
@@ -263,6 +265,7 @@ extension TimeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = days[indexPath.item]
+            dayLabel.text  = "Every \(daysDict[selectedDay] ?? "")"
             timeCollectionView.reloadData()
         } else {
             let section = timeSections[indexPath.section]
@@ -276,14 +279,14 @@ extension TimeViewController: UICollectionViewDelegate {
                 item = eveningItems[indexPath.item]
             }
             guard let time = item.getTime() else { return }
-            if availabilities[selectedDay] == nil {
-                availabilities[selectedDay] = [time]
+            guard let day = daysDict[selectedDay] else { return }
+            if availabilities[day] == nil {
+                availabilities[day] = [time]
             } else {
-                availabilities[selectedDay]?.append(time)
+                availabilities[day]?.append(time)
             }
             dayCollectionView.reloadData()
             updateFinishButton()
-            print(availabilities)
         }
     }
     
@@ -302,13 +305,13 @@ extension TimeViewController: UICollectionViewDelegate {
                 item = eveningItems[indexPath.item]
             }
             guard let time = item.getTime() else { return }
-            availabilities[selectedDay]?.removeAll { $0 == time }
-            if let dayAvailability = availabilities[selectedDay], dayAvailability.isEmpty {
-                availabilities.removeValue(forKey: selectedDay)
+            guard let day = daysDict[selectedDay] else { return }
+            availabilities[day]?.removeAll { $0 == time }
+            if let dayAvailability = availabilities[day], dayAvailability.isEmpty {
+                availabilities.removeValue(forKey: day)
             }
             dayCollectionView.reloadData()
             updateFinishButton()
-            print(availabilities)
         }
     }
 }
@@ -321,7 +324,6 @@ extension TimeViewController: UICollectionViewDelegateFlowLayout {
         } else {
             let itemWidth = timeCollectionView.frame.width/3 - sectionInsets.left - sectionInsets.right
             let itemHeight = (timeCollectionView.frame.height)/8 - interitemSpacing
-//            print(itemHeight)
             return itemHeight > 36
                 ? CGSize(width: itemWidth, height: 36)
                 : CGSize(width: itemWidth, height: itemHeight)
