@@ -27,6 +27,11 @@ class TimeCollectionViewCell: UICollectionViewCell {
         label.text = text
         if isHeader {
             label.textColor = .greenGray
+            contentView.backgroundColor = .clear
+            layer.shadowColor = .none
+            layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            layer.shadowOpacity = 0
+            layer.shadowRadius = 0
         }
         else {
             label.textColor = .textBlack
@@ -41,7 +46,6 @@ class TimeCollectionViewCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            // make sure first cell can't select
             super.isSelected = isSelected
             if isSelected {
                 contentView.backgroundColor = .pearGreen

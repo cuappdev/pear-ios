@@ -217,13 +217,13 @@ extension TimeViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? DayCollectionViewCell else { return UICollectionViewCell() }
             let day = days[indexPath.item]
             cell.configure(for: day)
-            // update cell color based on whether there's availability for a day
+            // Update cell color based on whether there's availability for a day
             if availabilities[day] == nil || availabilities[day] == [] {
                 cell.updateBackgroundColor(isAvailable: false)
             } else {
                 cell.updateBackgroundColor(isAvailable: true)
             }
-            // select item if day is the selected day
+            // Select item if day is the selected day
             if day == selectedDay {
                 dayCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 cell.isSelected = true
@@ -248,6 +248,7 @@ extension TimeViewController: UICollectionViewDataSource {
             case .time(let time):
                 cell.configure(for: time, isHeader: false)
                 cell.isUserInteractionEnabled = true
+                // Select times that are previously selected for a day
                 if let dayAvailability = availabilities[selectedDay], dayAvailability.contains(time) {
                     timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                     cell.isSelected = true
@@ -302,6 +303,9 @@ extension TimeViewController: UICollectionViewDelegate {
             }
             guard let time = item.getTime() else { return }
             availabilities[selectedDay]?.removeAll { $0 == time }
+            if let dayAvailability = availabilities[selectedDay], dayAvailability.isEmpty {
+                availabilities.removeValue(forKey: selectedDay)
+            }
             dayCollectionView.reloadData()
             updateFinishButton()
             print(availabilities)
@@ -316,8 +320,8 @@ extension TimeViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: 36, height: 48)
         } else {
             let itemWidth = timeCollectionView.frame.width/3 - sectionInsets.left - sectionInsets.right
-            let itemHeight = (timeCollectionView.frame.height - 30)/8 - interitemSpacing
-            print(itemHeight)
+            let itemHeight = (timeCollectionView.frame.height)/8 - interitemSpacing
+//            print(itemHeight)
             return itemHeight > 36
                 ? CGSize(width: itemWidth, height: 36)
                 : CGSize(width: itemWidth, height: itemHeight)
