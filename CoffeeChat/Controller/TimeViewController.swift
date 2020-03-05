@@ -60,7 +60,7 @@ class TimeViewController: UIViewController {
     private var selectedDay: String = "Su"
 
     private var afternoonItems: [ItemType] = []
-    private let afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",]
+    private let afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
     private var eveningItems: [ItemType] = []
     private let eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
     private var morningItems: [ItemType] = []
@@ -71,9 +71,9 @@ class TimeViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
-        morningItems = [ItemType.header("Morning")] + morningTimes.map{ItemType.time($0)}
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map{ItemType.time($0)}
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map{ItemType.time($0)}
+        morningItems = [ItemType.header("Morning")] + morningTimes.map{ ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map{ ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map{ ItemType.time($0) }
 
         titleLabel.text = "When are you free?"
         titleLabel.textColor = .textBlack
@@ -190,7 +190,7 @@ class TimeViewController: UIViewController {
         } else {
             finishButton.backgroundColor = .inactiveGreen
             finishButton.layer.shadowColor = .none
-            finishButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            finishButton.layer.shadowOffset = .zero
             finishButton.layer.shadowOpacity = 0
             finishButton.layer.shadowRadius = 0
         }
@@ -209,20 +209,11 @@ class TimeViewController: UIViewController {
 extension TimeViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if collectionView == dayCollectionView {
-            return 1
-        } else {
-            return timeSections.count
-        }
+        return collectionView == dayCollectionView ? 1 : timeSections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == dayCollectionView {
-            return days.count
-        } else {
-            let section = timeSections[section]
-            return section.items.count
-        }
+        return collectionView == dayCollectionView ? days.count : timeSections[section].items.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -232,11 +223,7 @@ extension TimeViewController: UICollectionViewDataSource {
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
             if let day = daysDict[day] {
-                if availabilities[day] == nil || availabilities[day] == [] {
-                    cell.updateBackgroundColor(isAvailable: false)
-                } else {
-                    cell.updateBackgroundColor(isAvailable: true)
-                }
+                cell.updateBackgroundColor(isAvailable: availabilities[day] != nil)
             }
             // Select item if day is the selected day
             if day == selectedDay {
@@ -290,13 +277,10 @@ extension TimeViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if collectionView == dayCollectionView {
-            return
-        } else {
+        if collectionView == timeCollectionView {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let time = item.getTime() else { return }
-            guard let day = daysDict[selectedDay] else { return }
+            guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
             availabilities[day]?.removeAll { $0 == time }
             if let dayAvailability = availabilities[day], dayAvailability.isEmpty {
                 availabilities.removeValue(forKey: day)

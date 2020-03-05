@@ -9,31 +9,36 @@
 import UIKit
 
 class TimeCollectionViewCell: UICollectionViewCell {
-    
+
     private let label = UILabel()
-    
+
+    override var isSelected: Bool {
+        didSet {
+            contentView.backgroundColor = isSelected ? .pearGreen : .white
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         label.font = ._16CircularStdBook
         contentView.addSubview(label)
-        
+    
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
-    
+
     func configure(for text: String, isHeader: Bool) {
         label.text = text
         if isHeader {
             label.textColor = .greenGray
             contentView.backgroundColor = .clear
             layer.shadowColor = .none
-            layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            layer.shadowOffset = .zero
             layer.shadowOpacity = 0
             layer.shadowRadius = 0
-        }
-        else {
+        } else {
             label.textColor = .textBlack
             contentView.layer.cornerRadius = 10
             contentView.backgroundColor = .white
@@ -43,20 +48,9 @@ class TimeCollectionViewCell: UICollectionViewCell {
             layer.shadowRadius = 2
         }
     }
-    
-    override var isSelected: Bool {
-        didSet {
-            super.isSelected = isSelected
-            if isSelected {
-                contentView.backgroundColor = .pearGreen
-            } else {
-                contentView.backgroundColor = .white
-            }
-        }
-    }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
