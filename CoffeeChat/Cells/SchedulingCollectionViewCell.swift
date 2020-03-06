@@ -13,8 +13,6 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     // MARK: Private view vars
     private let button = UIButton()
 
-    private var text = "undefined"
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
@@ -23,6 +21,7 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
         button.isUserInteractionEnabled = false
         button.setTitleColor(.textBlack, for: .normal)
         button.contentHorizontalAlignment = .left
+        button.titleLabel?.font = UIFont._16CircularStdBook
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0);
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = false
@@ -43,7 +42,11 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         button.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(CGSize(width: 150, height: 43))
+            make.size.equalTo(
+              CGSize(
+                width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 150),
+                height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
+            ))
         }
     }
 

@@ -12,11 +12,13 @@ import SnapKit
 private class ScheduleFlowLayout: UICollectionViewFlowLayout {
 
     override func prepare() {
-        itemSize = CGSize(width: 150, height: 43)
-        minimumLineSpacing = 12
+        itemSize = CGSize(
+            width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 150),
+            height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
+        )
+        minimumLineSpacing = LayoutHelper.shared.getCustomHoriztonalPadding(size: 12)
         let width = collectionView?.superview?.bounds.width ?? 0
-        print(width)
-        headerReferenceSize = .init(width: width, height: 56)
+        headerReferenceSize = .init(width: width, height: LayoutHelper.shared.getCustomVerticalPadding(size: 56))
     }
 
 }
@@ -117,7 +119,7 @@ class SchedulingPlacesViewController: UIViewController {
         view.addSubview(locationsCollectionView)
 
         nextButton.setTitle("Finish", for: .normal)
-        nextButton.layer.cornerRadius = 27
+        nextButton.layer.cornerRadius = LayoutHelper.shared.getCustomVerticalPadding(size: 27)
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
@@ -142,13 +144,20 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let topPadding = 92
+        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
+        // let topPadding = 36
         let infoPadding = 3
-        let titlePadding = 20
-        let collectionViewSize = CGSize(width: 312, height: 469)
-        let nextButtonSize = CGSize(width: 175, height: 53)
-        let nextPadding = 38
-        let backPadding = 24
+        let titlePadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 20)
+        let collectionViewSize = CGSize(
+            width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 312),
+            height: LayoutHelper.shared.getCustomVerticalPadding(size: 469)
+        )
+        let nextButtonSize = CGSize(
+            width: LayoutHelper.shared.getCustomVerticalPadding(size:175),
+            height: LayoutHelper.shared.getCustomVerticalPadding(size: 53)
+        )
+        let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
+        let backPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -260,7 +269,6 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        print(indexPath)
         let header = indexPath.row == 0
         ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
         : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
