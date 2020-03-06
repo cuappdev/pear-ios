@@ -48,6 +48,7 @@ class SchedulingPlacesViewController: UIViewController {
     private let locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
+    private let backButton = UIButton()
     private let titleLabel = UILabel()
 
     private let campusReuseIdentifier = "campus"
@@ -124,6 +125,13 @@ class SchedulingPlacesViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        backButton.setTitle("Go back", for: .normal)
+        backButton.backgroundColor = .clear
+        backButton.setTitleColor(.secondaryOlive, for: .normal)
+        backButton.titleLabel?.font = ._16CircularStdBook
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+
         // Create Datasource for CollectionView
         locationSections = [
             .campus(campusLocations),
@@ -137,9 +145,10 @@ class SchedulingPlacesViewController: UIViewController {
         let topPadding = 92
         let infoPadding = 3
         let titlePadding = 20
-        let collectionViewSize = CGSize(width: 312, height: 453)
+        let collectionViewSize = CGSize(width: 312, height: 469)
         let nextButtonSize = CGSize(width: 175, height: 53)
         let nextPadding = 38
+        let backPadding = 24
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -162,6 +171,11 @@ class SchedulingPlacesViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(locationsCollectionView.snp.bottom).offset(nextPadding)
         }
+
+        backButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(nextButton.snp.bottom).offset(backPadding)
+        }
     }
 
     private func updateNext() {
@@ -183,9 +197,17 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
+        // TODO implement
         print("campus: \(selectedCampusLocations)")
         print("ctown: \(selectedCtownLocations)")
     }
+
+    @objc private func backButtonPressed() {
+        // TODO implement
+        print("campus: \(selectedCampusLocations)")
+        print("ctown: \(selectedCtownLocations)")
+    }
+
 
 }
 
