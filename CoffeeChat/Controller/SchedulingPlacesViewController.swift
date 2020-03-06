@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 
+// MARK: - UICollectionViewFlowLayout
 private class ScheduleFlowLayout: UICollectionViewFlowLayout {
 
     override func prepare() {
@@ -23,6 +24,7 @@ private class ScheduleFlowLayout: UICollectionViewFlowLayout {
 
 }
 
+// MARK: - UICollectionView Header
 private class HeaderLabel: UICollectionReusableView {
 
     private let label = UILabel()
@@ -54,9 +56,9 @@ class SchedulingPlacesViewController: UIViewController {
     private let titleLabel = UILabel()
 
     private let campusReuseIdentifier = "campus"
-    private let campusHeaderIdentifier = "campusHead"
+    private let campusHeaderIdentifier = "campusHeader"
     private let ctownReuseIdentiifier = "ctown"
-    private let ctownHeaderIdentifier = "campusHead"
+    private let ctownHeaderIdentifier = "ctownHeader"
 
     // MARK: - Collection View Sections
     private enum Section {
@@ -64,29 +66,8 @@ class SchedulingPlacesViewController: UIViewController {
         case ctown([String])
     }
 
+    // MARK: - Data Vars
     private var locationSections: [Section] = []
-
-    // MARK: - Data
-    // TODO: Replace with networking when available
-    private let campusLocations = [
-      "Atrium Cafe",
-      "Cafe Jennie",
-      "Gimme Coffee",
-      "Goldie's Cafe",
-      "Green Dragon",
-      "Libe Cafe",
-      "Mac's Cafe",
-      "Martha's Cafe",
-      "Mattin's Cafe",
-      "Temple of Zues"
-    ]
-    private let ctownLocations = [
-      "Kung Fu Tea",
-      "Starbucks",
-      "Mango Mango",
-      "U Tea"
-    ]
-
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
@@ -133,6 +114,26 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.titleLabel?.font = ._16CircularStdBook
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
+
+        // TODO: Replace with networking when available
+        let campusLocations = [
+          "Atrium Cafe",
+          "Cafe Jennie",
+          "Gimme Coffee",
+          "Goldie's Cafe",
+          "Green Dragon",
+          "Libe Cafe",
+          "Mac's Cafe",
+          "Martha's Cafe",
+          "Mattin's Cafe",
+          "Temple of Zues"
+        ]
+        let ctownLocations = [
+          "Kung Fu Tea",
+          "Starbucks",
+          "Mango Mango",
+          "U Tea"
+        ]
 
         // Create Datasource for CollectionView
         locationSections = [
@@ -187,6 +188,7 @@ class SchedulingPlacesViewController: UIViewController {
         }
     }
 
+    // MARK: Button Action
     private func updateNext() {
         let enable = selectedCtownLocations.count + selectedCampusLocations.count > 2
         nextButton.isEnabled = enable
@@ -207,19 +209,16 @@ class SchedulingPlacesViewController: UIViewController {
 
     @objc private func nextButtonPressed() {
         // TODO implement
-        print("campus: \(selectedCampusLocations)")
-        print("ctown: \(selectedCtownLocations)")
     }
 
     @objc private func backButtonPressed() {
         // TODO implement
-        print("campus: \(selectedCampusLocations)")
-        print("ctown: \(selectedCtownLocations)")
     }
 
 
 }
 
+// MARK: - UICollectionViewDelegate
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -248,6 +247,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
 }
 
+// MARK: - UICollectionViewDataSource
 extension SchedulingPlacesViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -279,4 +279,3 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
     }
 
 }
-
