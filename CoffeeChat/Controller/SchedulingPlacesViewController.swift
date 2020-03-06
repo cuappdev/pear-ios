@@ -14,23 +14,61 @@ private class ScheduleFlowLayout: UICollectionViewFlowLayout {
     override func prepare() {
         itemSize = CGSize(width: 150, height: 43)
         minimumLineSpacing = 12
+        let width = collectionView?.superview?.bounds.width ?? 0
+        print(width)
+        headerReferenceSize = .init(width: width, height: 56)
     }
 
+}
+
+private class HeaderLabel: UICollectionReusableView {
+
+    private let label = UILabel()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.font = ._16CircularStdBook
+        self.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func configure(with text: String) { label.text = text }
+
+}
+
+private struct Section {
+    let type: SectionType
+    var items: [ItemType]
+}
+
+private enum SectionType {
+    case campus
+    case ctown
+}
+
+private enum ItemType {
+    case campus(String)
+    case ctown(String)
 }
 
 class SchedulingPlacesViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let campusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
-    private let campusLabel = UILabel()
-    private let ctownCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
-    private let ctownLabel = UILabel()
+    private let locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let titleLabel = UILabel()
 
     private let campusReuseIdentifier = "campus"
+    private let campusHeaderIdentifier = "campusHead"
     private let ctownReuseIdentiifier = "ctown"
+    private let ctownHeaderIdentifier = "campusHead"
 
     // MARK: - Data
     private let campusLocations = [
@@ -57,49 +95,30 @@ class SchedulingPlacesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
-        navigationController?.navigationBar.isHidden = true // TODO" Remove this
-
+        navigationController?.navigationBar.isHidden = true // TODO Remove this
 
         titleLabel.font = UIFont._24CircularStdMedium
         titleLabel.text = "Where do you prefer?"
         titleLabel.textColor = .textBlack
         view.addSubview(titleLabel)
 
-        infoLabel.font = UIFont._16CircularStdMedium
+        infoLabel.font = UIFont._16CircularStdBook
         infoLabel.text = "Pick three"
         infoLabel.textColor = .textLightGray
         view.addSubview(infoLabel)
 
-        campusLabel.font = UIFont._16CircularStdMedium
-        campusLabel.text = "Campus"
-        campusLabel.textColor = .textBlack
-        view.addSubview(campusLabel)
-
-        campusCollectionView.allowsMultipleSelection = true
-        campusCollectionView.showsVerticalScrollIndicator = false
-        campusCollectionView.showsHorizontalScrollIndicator = false
-        campusCollectionView.delegate = self
-        campusCollectionView.dataSource = self
-        campusCollectionView.backgroundColor = .clear
-        campusCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
-        campusCollectionView.layer.masksToBounds = false
-        view.addSubview(campusCollectionView)
-
-        ctownLabel.font = UIFont._16CircularStdMedium
-        ctownLabel.text = "Collegetown"
-        ctownLabel.textColor = .textBlack
-        view.addSubview(ctownLabel)
-
-        ctownCollectionView.allowsMultipleSelection = true
-        ctownCollectionView.showsVerticalScrollIndicator = false
-        ctownCollectionView.showsHorizontalScrollIndicator = false
-        ctownCollectionView.delegate = self
-        ctownCollectionView.dataSource = self
-        ctownCollectionView.backgroundColor = .clear
-        ctownCollectionView.backgroundColor = .clear
-        ctownCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
-        ctownCollectionView.layer.masksToBounds = false
-        view.addSubview(ctownCollectionView)
+        locationsCollectionView.allowsMultipleSelection = true
+        locationsCollectionView.showsVerticalScrollIndicator = false
+        locationsCollectionView.showsHorizontalScrollIndicator = false
+        locationsCollectionView.delegate = self
+        locationsCollectionView.dataSource = self
+        locationsCollectionView.backgroundColor = .clear
+        locationsCollectionView.layer.masksToBounds = false
+        locationsCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
+        locationsCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
+        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier)
+        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier)
+        view.addSubview(locationsCollectionView)
 
         nextButton.setTitle("Finish", for: .normal)
         nextButton.layer.cornerRadius = 27
@@ -116,10 +135,8 @@ class SchedulingPlacesViewController: UIViewController {
     private func setupConstraints() {
         let topPadding = 92
         let infoPadding = 3
-        let campusPadding = 20
-        let collectionViewPadding = 16
-        let campusCollectionViewSize = CGSize(width: 312, height: 263) // do i need more spacing ?
-        let ctownCollectionViewSize = CGSize(width: 312, height: 98) // do i need more spacing ?
+        let titlePadding = 20
+        let collectionViewSize = CGSize(width: 312, height: 453)
         let nextButtonSize = CGSize(width: 175, height: 53)
         let nextPadding = 38
 
@@ -133,32 +150,32 @@ class SchedulingPlacesViewController: UIViewController {
             make.top.equalTo(titleLabel.snp.bottom).offset(infoPadding)
         }
 
-        campusLabel.snp.makeConstraints { make in
+//        campusLabel.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.top.equalTo(infoLabel.snp.bottom).offset(campusPadding)
+//        }
+
+        locationsCollectionView.snp.makeConstraints { make in
+            make.size.equalTo(collectionViewSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(infoLabel.snp.bottom).offset(campusPadding)
+            make.top.equalTo(infoLabel.snp.bottom).offset(titlePadding)
         }
 
-        campusCollectionView.snp.makeConstraints { make in
-            make.size.equalTo(campusCollectionViewSize)
-            make.centerX.equalToSuperview()
-            make.top.equalTo(campusLabel.snp.bottom).offset(collectionViewPadding)
-        }
+//        ctownLabel.snp.makeConstraints { make in
+//          make.centerX.equalToSuperview()
+//          make.top.equalTo(campusCollectionView.snp.bottom).offset(campusPadding)
+//        }
 
-        ctownLabel.snp.makeConstraints { make in
-          make.centerX.equalToSuperview()
-          make.top.equalTo(campusCollectionView.snp.bottom).offset(campusPadding)
-        }
-
-        ctownCollectionView.snp.makeConstraints { make in
-            make.size.equalTo(ctownCollectionViewSize)
-            make.centerX.equalToSuperview()
-            make.top.equalTo(ctownLabel.snp.bottom).offset(collectionViewPadding)
-        }
+//        ctownCollectionView.snp.makeConstraints { make in
+//            make.size.equalTo(ctownCollectionViewSize)
+//            make.centerX.equalToSuperview()
+//            make.top.equalTo(ctownLabel.snp.bottom).offset(collectionViewPadding)
+//        }
 
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(ctownCollectionView.snp.bottom).offset(nextPadding)
+            make.top.equalTo(locationsCollectionView.snp.bottom).offset(nextPadding)
         }
     }
 
@@ -190,20 +207,26 @@ class SchedulingPlacesViewController: UIViewController {
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == campusCollectionView {
+        switch indexPath.section {
+        case 0:
             selectedCampusLocations.append(campusLocations[indexPath.row])
-        } else {
+        case 1:
             selectedCtownLocations.append(ctownLocations[indexPath.row])
+        default:
+            print("read the bible")
         }
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: true)
         updateNext()
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if collectionView == campusCollectionView {
-            selectedCampusLocations.removeAll { $0 == campusLocations[indexPath.row] }
-        } else {
-            selectedCtownLocations.removeAll { $0 == ctownLocations[indexPath.row] }
+        switch indexPath.section {
+        case 0:
+            selectedCampusLocations.append(campusLocations[indexPath.row])
+        case 1:
+            selectedCtownLocations.append(ctownLocations[indexPath.row])
+        default:
+            print("read the bible")
         }
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: false)
         updateNext()
@@ -213,19 +236,34 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
 extension SchedulingPlacesViewController: UICollectionViewDataSource {
 
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        2
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionView == campusCollectionView ? campusLocations.count : ctownLocations.count
+        return section == 0 ? campusLocations.count : ctownLocations.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let isCampus = collectionView == campusCollectionView
-        let collection = isCampus ? campusCollectionView : ctownCollectionView
+        let isCampus = indexPath.section == 0
         let reuseID = isCampus ? campusReuseIdentifier : ctownReuseIdentiifier
         let location = (isCampus ? campusLocations : ctownLocations)[indexPath.row]
-        guard let cell = collection.dequeueReusableCell(withReuseIdentifier: reuseID, for: indexPath) as?
+        guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: reuseID, for: indexPath) as?
             SchedulingCollectionViewCell else { return UICollectionViewCell() }
         cell.configure(with: location)
         return cell
     }
 
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        print(indexPath)
+        let header = indexPath.row == 0
+        ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
+        : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
+
+        guard let headerView = header as? HeaderLabel else { return header }
+        headerView.configure(with: indexPath.row == 0 ? "Campus" : "Collegetown")
+        return headerView
+    }
+
 }
+
