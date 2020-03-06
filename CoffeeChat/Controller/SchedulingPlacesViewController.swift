@@ -145,10 +145,12 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
-        // let topPadding = 36
+        let backPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         let infoPadding = 3
+        let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
         let titlePadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 20)
+        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
+
         let collectionViewSize = CGSize(
             width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 312),
             height: LayoutHelper.shared.getCustomVerticalPadding(size: 469)
@@ -157,8 +159,6 @@ class SchedulingPlacesViewController: UIViewController {
             width: LayoutHelper.shared.getCustomVerticalPadding(size:175),
             height: LayoutHelper.shared.getCustomVerticalPadding(size: 53)
         )
-        let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
-        let backPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -255,17 +255,25 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? campusLocations.count : ctownLocations.count
+        switch locationSections[section] {
+        case .campus(let locations): return locations.count
+        case .ctown(let locations): return locations.count
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let isCampus = indexPath.section == 0
-        let reuseID = isCampus ? campusReuseIdentifier : ctownReuseIdentiifier
-        let location = (isCampus ? campusLocations : ctownLocations)[indexPath.row]
-        guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: reuseID, for: indexPath) as?
+        switch locationSections[indexPath.section] {
+        case .campus(let locations):
+            guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(with: location)
-        return cell
+            cell.configure(with: locations[indexPath.row])
+            return cell
+        case .ctown(let locations):
+            guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
+            SchedulingCollectionViewCell else { return UICollectionViewCell() }
+            cell.configure(with: locations[indexPath.row])
+            return cell
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

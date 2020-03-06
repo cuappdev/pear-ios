@@ -28,10 +28,6 @@ class LayoutHelper {
 
     /// Returns custom vertical padding based using cubic ratio of screen size.
     func getShortenedCustomVertPadding(size: CGFloat) -> CGFloat {
-        print("screen vert is: \(UIScreen.main.bounds.height)")
-        print("screen horiz is: \(UIScreen.main.bounds.width)")
-        print("mockup thinks its height is... : \(LayoutHelper.baseSize.height)")
-        print("mockup thinks its width is... : \(LayoutHelper.baseSize.width)")
         let quadHeight = pow(UIScreen.main.bounds.height, 3)
         let quadBase = pow(LayoutHelper.baseSize.height, 3)
         let ratio =  min(1, (quadHeight / quadBase))
