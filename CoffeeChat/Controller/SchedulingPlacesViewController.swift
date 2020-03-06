@@ -42,21 +42,6 @@ private class HeaderLabel: UICollectionReusableView {
 
 }
 
-private struct Section {
-    let type: SectionType
-    var items: [ItemType]
-}
-
-private enum SectionType {
-    case campus
-    case ctown
-}
-
-private enum ItemType {
-    case campus(String)
-    case ctown(String)
-}
-
 class SchedulingPlacesViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -70,7 +55,16 @@ class SchedulingPlacesViewController: UIViewController {
     private let ctownReuseIdentiifier = "ctown"
     private let ctownHeaderIdentifier = "campusHead"
 
+    // MARK: - Collection View Sections
+    private enum Section {
+        case campus([String])
+        case ctown([String])
+    }
+
+    private var locationSections: [Section] = []
+
     // MARK: - Data
+    // TODO: Replace with networking when available
     private let campusLocations = [
       "Atrium Cafe",
       "Cafe Jennie",
@@ -89,6 +83,7 @@ class SchedulingPlacesViewController: UIViewController {
       "Mango Mango",
       "U Tea"
     ]
+
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
@@ -129,6 +124,12 @@ class SchedulingPlacesViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        // Create Datasource for CollectionView
+        locationSections = [
+            .campus(campusLocations),
+            .ctown(ctownLocations)
+        ]
+
         setupConstraints()
     }
 
@@ -150,27 +151,11 @@ class SchedulingPlacesViewController: UIViewController {
             make.top.equalTo(titleLabel.snp.bottom).offset(infoPadding)
         }
 
-//        campusLabel.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(infoLabel.snp.bottom).offset(campusPadding)
-//        }
-
         locationsCollectionView.snp.makeConstraints { make in
             make.size.equalTo(collectionViewSize)
             make.centerX.equalToSuperview()
             make.top.equalTo(infoLabel.snp.bottom).offset(titlePadding)
         }
-
-//        ctownLabel.snp.makeConstraints { make in
-//          make.centerX.equalToSuperview()
-//          make.top.equalTo(campusCollectionView.snp.bottom).offset(campusPadding)
-//        }
-
-//        ctownCollectionView.snp.makeConstraints { make in
-//            make.size.equalTo(ctownCollectionViewSize)
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(ctownLabel.snp.bottom).offset(collectionViewPadding)
-//        }
 
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
@@ -207,26 +192,24 @@ class SchedulingPlacesViewController: UIViewController {
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            selectedCampusLocations.append(campusLocations[indexPath.row])
-        case 1:
-            selectedCtownLocations.append(ctownLocations[indexPath.row])
-        default:
-            print("read the bible")
+        let section = locationSections[indexPath.section]
+        switch section {
+        case .campus(let locations):
+            selectedCampusLocations.append(locations[indexPath.row])
+        case .ctown(let locations):
+            selectedCtownLocations.append(locations[indexPath.row])
         }
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: true)
         updateNext()
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            selectedCampusLocations.append(campusLocations[indexPath.row])
-        case 1:
-            selectedCtownLocations.append(ctownLocations[indexPath.row])
-        default:
-            print("read the bible")
+        let section = locationSections[indexPath.section]
+        switch section {
+        case .campus(let locations):
+            selectedCampusLocations.removeAll { $0 == locations[indexPath.row] }
+        case .ctown(let locations):
+            selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
         }
         (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: false)
         updateNext()
