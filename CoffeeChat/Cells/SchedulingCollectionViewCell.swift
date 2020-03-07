@@ -44,11 +44,12 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         backView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(
-              CGSize(
-                width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 150),
-                height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
-            ))
+            make.size.equalToSuperview()
+            // make.size.equalTo(
+            //   CGSize(
+            //     width: LayoutHelper.shared.getCustomHorizontalPadding(size: 150),
+            //     height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
+            // ))
         }
 
         titleLabel.snp.makeConstraints { make in

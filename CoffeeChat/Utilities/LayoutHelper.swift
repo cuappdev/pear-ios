@@ -21,7 +21,7 @@ class LayoutHelper {
     /// Returns custom vertical padding based on ratio of screen size.
     func getCustomVerticalPadding(size: CGFloat) -> CGFloat {
         let height = UIScreen.main.bounds.height
-        let ratio = min(1, (height / LayoutHelper.baseSize.height))
+        let ratio = height / LayoutHelper.baseSize.height
         let heightSize = size * ratio
         return heightSize
     }
@@ -36,9 +36,10 @@ class LayoutHelper {
     }
 
     /// Returns custom horizontal padding based on ratio of screen size.
-    func getCustomHoriztonalPadding(size: CGFloat) -> CGFloat {
+    func getCustomHorizontalPadding(size: CGFloat) -> CGFloat {
         let width = UIScreen.main.bounds.width
-        let ratio = min(1, (width / LayoutHelper.baseSize.width))
+        let ratio = width / LayoutHelper.baseSize.width
+        print("ratio was \(ratio)!")
         let widthSize = size * ratio
         return widthSize
     }

@@ -13,13 +13,30 @@ import SnapKit
 private class ScheduleFlowLayout: UICollectionViewFlowLayout {
 
     override func prepare() {
-        itemSize = CGSize(
-            width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 150),
-            height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
-        )
-        minimumLineSpacing = LayoutHelper.shared.getCustomHoriztonalPadding(size: 12)
-        let width = collectionView?.superview?.bounds.width ?? 0
-        headerReferenceSize = .init(width: width, height: LayoutHelper.shared.getCustomVerticalPadding(size: 56))
+        // Columns and Rows of entire screen
+        let numberColumns: CGFloat = 2
+        let numberRows: CGFloat = 7
+        // itemSize = CGSize(width: 150, height: 43)
+
+        // minimumLineSpacing = LayoutHelper.shared.getCustomHoriztonalPadding(size: 12)
+        guard let collectionView = collectionView else {  return }
+        minimumLineSpacing = 12
+        minimumInteritemSpacing = 12
+        let headerWidth = collectionView.superview?.bounds.width ?? 0
+        let headerHeight: CGFloat = 56
+        headerReferenceSize = CGSize(width: headerWidth, height: headerHeight)
+        let itemWidth = (collectionView.bounds.size.width - minimumLineSpacing) / CGFloat(numberColumns)
+
+        let headersSize = 2 * headerHeight
+        let lineSpacings = minimumLineSpacing * CGFloat(numberRows - 2)
+        let itemHeight = (collectionView.bounds.size.height - headersSize - lineSpacings) / numberRows
+        itemSize = CGSize(width: itemWidth, height: itemHeight)
+
+//        itemSize = CGSize(
+//            width: LayoutHelper.shared.getCustomHorizontalPadding(size: 150),
+//            height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
+//        )
+
     }
 
 }
@@ -145,14 +162,19 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
+        print("screen is \(UIScreen.main.bounds)")
+        print("layout is \(CGSize(width: 375, height: 812))")
         let backPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         let infoPadding = 3
-        let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
-        let titlePadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 20)
+        // let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
+        let nextPadding = 38
+        // let titlePadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 20)
+        // let titlePadding = LayoutHelper.shared.getCustomVerticalPadding(size: 20)
+        let titlePadding = 20
         let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
 
         let collectionViewSize = CGSize(
-            width: LayoutHelper.shared.getCustomHoriztonalPadding(size: 312),
+            width: LayoutHelper.shared.getCustomHorizontalPadding(size: 312),
             height: LayoutHelper.shared.getCustomVerticalPadding(size: 469)
         )
         let nextButtonSize = CGSize(
@@ -162,7 +184,7 @@ class SchedulingPlacesViewController: UIViewController {
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(topPadding)
+            make.top.equalToSuperview().inset(topPadding)
         }
 
         infoLabel.snp.makeConstraints { make in
@@ -171,9 +193,15 @@ class SchedulingPlacesViewController: UIViewController {
         }
 
         locationsCollectionView.snp.makeConstraints { make in
-            make.size.equalTo(collectionViewSize)
+            make.top.equalTo(infoLabel.snp.bottom)
+            // make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomHorizontalPadding(size: 32))
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(32)
+            //make.width.equalTo(LayoutHelper.shared.getCustomHorizontalPadding(size: 311))
+            //make.width.equalTo(311)
             make.centerX.equalToSuperview()
-            make.top.equalTo(infoLabel.snp.bottom).offset(titlePadding)
+            make.bottom.equalToSuperview().inset(194)
+            // make.size.equalTo(collectionViewSize)
+            // make.centerX.equalToSuperview()
         }
 
         nextButton.snp.makeConstraints { make in
@@ -184,7 +212,8 @@ class SchedulingPlacesViewController: UIViewController {
 
         backButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nextButton.snp.bottom).offset(backPadding)
+            make.bottom.equalToSuperview().inset(59)
+            // make.top.equalTo(nextButton.snp.bottom).offset(backPadding)
         }
     }
 
