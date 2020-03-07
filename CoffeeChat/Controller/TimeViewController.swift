@@ -15,7 +15,7 @@ class TimeViewController: UIViewController {
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
     private let finishButton = UIButton()
-    private var timeCollectionView:UICollectionView!
+    private var timeCollectionView: UICollectionView!
     private let titleLabel = UILabel()
 
     // MARK: - Section
@@ -207,7 +207,7 @@ class TimeViewController: UIViewController {
 }
 
 extension TimeViewController: UICollectionViewDataSource {
-    
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return collectionView == dayCollectionView ? 1 : timeSections.count
     }
@@ -253,9 +253,11 @@ extension TimeViewController: UICollectionViewDataSource {
             return cell
         }
     }
+
 }
 
 extension TimeViewController: UICollectionViewDelegate {
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = days[indexPath.item]
@@ -289,6 +291,7 @@ extension TimeViewController: UICollectionViewDelegate {
             updateFinishButton()
         }
     }
+
 }
 
 extension TimeViewController: UICollectionViewDelegateFlowLayout {
@@ -304,4 +307,5 @@ extension TimeViewController: UICollectionViewDelegateFlowLayout {
                 : CGSize(width: itemWidth, height: itemHeight)
         }
     }
+
 }

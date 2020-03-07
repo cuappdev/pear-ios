@@ -65,16 +65,11 @@ class DayCollectionViewCell: UICollectionViewCell {
     }
 
     func updateBackgroundColor(isAvailable: Bool) {
-        if isAvailable {
-            dayBackgroundView.backgroundColor = .pearGreen
-        }
-        else {
-            dayBackgroundView.backgroundColor = .backgroundLightGrayGreen
-        }
+        dayBackgroundView.backgroundColor = isAvailable ? .pearGreen : .backgroundLightGrayGreen
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
