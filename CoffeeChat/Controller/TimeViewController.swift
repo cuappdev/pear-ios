@@ -19,18 +19,18 @@ class TimeViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Section
-    struct Section {
+    private struct Section {
         let type: SectionType
         var items: [ItemType]
     }
 
-    enum SectionType: String {
+    private enum SectionType: String {
         case afternoon = "Afternoon"
         case evening = "Evening"
         case morning = "Morning"
     }
     
-    enum ItemType {
+    private enum ItemType {
         case header(String)
         case time(String)
         
@@ -71,9 +71,9 @@ class TimeViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
-        morningItems = [ItemType.header("Morning")] + morningTimes.map{ ItemType.time($0) }
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map{ ItemType.time($0) }
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map{ ItemType.time($0) }
+        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
 
         titleLabel.text = "When are you free?"
         titleLabel.textColor = .textBlack
@@ -116,7 +116,7 @@ class TimeViewController: UIViewController {
         finishButton.titleLabel?.font = ._20CircularStdBold
         finishButton.backgroundColor = .inactiveGreen
         finishButton.isEnabled = false
-        finishButton.layer.cornerRadius = finishButtonSize.height/2
+        finishButton.layer.cornerRadius = finishButtonSize.height / 2
         finishButton.addTarget(self, action: #selector(finishButtonPressed), for: .touchUpInside)
         view.addSubview(finishButton)
 
@@ -179,7 +179,7 @@ class TimeViewController: UIViewController {
     }
 
     private func updateFinishButton() {
-        let timeCount = availabilities.map({$0.value.count}).reduce(0, +)
+        let timeCount = availabilities.map({ $0.value.count }).reduce(0, +)
         finishButton.isEnabled = availabilities.count != 0 && timeCount > 0
         if finishButton.isEnabled {
             finishButton.backgroundColor = .backgroundOrange
@@ -266,8 +266,7 @@ extension TimeViewController: UICollectionViewDelegate {
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let time = item.getTime() else { return }
-            guard let day = daysDict[selectedDay] else { return }
+            guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
             if availabilities[day] == nil {
                 availabilities[day] = [time]
             } else {

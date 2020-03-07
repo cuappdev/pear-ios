@@ -27,7 +27,7 @@ class DayCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         dayBackgroundView.backgroundColor = .backgroundLightGrayGreen
-        dayBackgroundView.layer.cornerRadius = backgroundViewSize.width/2
+        dayBackgroundView.layer.cornerRadius = backgroundViewSize.width / 2
         contentView.addSubview(dayBackgroundView)
 
         dayLabel.textColor = .textBlack
@@ -35,7 +35,7 @@ class DayCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(dayLabel)
 
         indicatorView.backgroundColor = .pearGreen
-        indicatorView.layer.cornerRadius = indicatorViewSize.width/2
+        indicatorView.layer.cornerRadius = indicatorViewSize.width / 2
         indicatorView.isHidden = true
         contentView.addSubview(indicatorView)
 
