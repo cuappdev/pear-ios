@@ -33,7 +33,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let onboardingCompleted = false // Manually set onboardingCompleted to false to pull up onboarding.
             let homeVC = HomeViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-            let rootVC = onboardingCompleted ? homeVC : onboardingVC
+            // let rootVC = onboardingCompleted ? homeVC : onboardingVC
+            let rootVC = SchedulingPlacesViewController()
             let navigationController = UINavigationController(rootViewController: rootVC)
             window.rootViewController = navigationController
         } else {

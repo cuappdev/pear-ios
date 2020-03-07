@@ -11,26 +11,28 @@ import UIKit
 class SchedulingCollectionViewCell: UICollectionViewCell {
 
     // MARK: Private view vars
-    private let button = UIButton()
+    private let titleLabel = UILabel()
+    private let backView = UIView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
         self.layer.masksToBounds = false
 
-        button.isUserInteractionEnabled = false
-        button.setTitleColor(.textBlack, for: .normal)
-        button.contentHorizontalAlignment = .left
-        button.titleLabel?.font = UIFont._16CircularStdBook
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0);
-        button.layer.cornerRadius = 8
-        button.layer.masksToBounds = false
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        button.layer.shadowOpacity = 0.15
-        button.layer.shadowRadius = 2
+        backView.layer.cornerRadius = 8
+        backView.layer.masksToBounds = false
+        backView.layer.shadowColor = UIColor.black.cgColor
+        backView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        backView.layer.shadowOpacity = 0.15
+        backView.layer.shadowRadius = 2
         changeSelection(selected: false)
-        contentView.addSubview(button)
+        contentView.addSubview(backView)
+
+        titleLabel.text = ""
+        titleLabel.textColor = .textBlack
+        titleLabel.font = UIFont._16CircularStdBook
+//        titleLabel.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0);
+        backView.addSubview(titleLabel)
 
         setupConstraints()
     }
@@ -40,7 +42,7 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        button.snp.makeConstraints { make in
+        backView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.size.equalTo(
               CGSize(
@@ -48,14 +50,19 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
                 height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
             ))
         }
+
+        titleLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().inset(12)
+        }
     }
 
     func configure(with title: String) {
-        button.setTitle(title, for: .normal)
+        titleLabel.text = title
     }
 
     func changeSelection(selected: Bool) {
-        button.backgroundColor = selected ? .pearGreen : .backgroundWhite
+        backView.backgroundColor = selected ? .pearGreen : .backgroundWhite
     }
 
 }

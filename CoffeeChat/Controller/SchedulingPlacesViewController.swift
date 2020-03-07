@@ -55,10 +55,10 @@ class SchedulingPlacesViewController: UIViewController {
     private let backButton = UIButton()
     private let titleLabel = UILabel()
 
-    private let campusReuseIdentifier = "campus"
-    private let campusHeaderIdentifier = "campusHeader"
-    private let ctownReuseIdentiifier = "ctown"
-    private let ctownHeaderIdentifier = "ctownHeader"
+    private let campusReuseIdentifier = "campusReuseIdentifier"
+    private let campusHeaderIdentifier = "campusHeaderIdentifier"
+    private let ctownReuseIdentiifier = "ctownReuseIdentiifier"
+    private let ctownHeaderIdentifier = "ctownHeaderIdentifier"
 
     // MARK: - Collection View Sections
     private enum Section {
@@ -76,12 +76,12 @@ class SchedulingPlacesViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true // TODO Remove this
 
-        titleLabel.font = UIFont._24CircularStdMedium
+        titleLabel.font = ._24CircularStdMedium
         titleLabel.text = "Where do you prefer?"
         titleLabel.textColor = .textBlack
         view.addSubview(titleLabel)
 
-        infoLabel.font = UIFont._16CircularStdBook
+        infoLabel.font = ._16CircularStdBook
         infoLabel.text = "Pick three"
         infoLabel.textColor = .textLightGray
         view.addSubview(infoLabel)
@@ -110,7 +110,7 @@ class SchedulingPlacesViewController: UIViewController {
 
         backButton.setTitle("Go back", for: .normal)
         backButton.backgroundColor = .clear
-        backButton.setTitleColor(.secondaryOlive, for: .normal)
+        backButton.setTitleColor(.greenGray, for: .normal)
         backButton.titleLabel?.font = ._16CircularStdBook
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
@@ -201,7 +201,7 @@ class SchedulingPlacesViewController: UIViewController {
         } else {
             nextButton.backgroundColor = .inactiveGreen
             nextButton.layer.shadowColor = .none
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            nextButton.layer.shadowOffset = .zero
             nextButton.layer.shadowOpacity = 0
             nextButton.layer.shadowRadius = 0
         }
@@ -209,10 +209,15 @@ class SchedulingPlacesViewController: UIViewController {
 
     @objc private func nextButtonPressed() {
         // TODO implement
+        print("selectedCampusLocations: \(selectedCampusLocations)")
+        print("selectedCtownLocations: \(selectedCtownLocations)")
     }
 
     @objc private func backButtonPressed() {
         // TODO implement
+        print("selectedCampusLocations: \(selectedCampusLocations)")
+        print("selectedCtownLocations: \(selectedCtownLocations)")
+
     }
 
 
@@ -229,7 +234,9 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
         case .ctown(let locations):
             selectedCtownLocations.append(locations[indexPath.row])
         }
-        (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: true)
+        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell {
+            cell.changeSelection(selected: true)
+        }
         updateNext()
     }
 
@@ -241,7 +248,9 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
         case .ctown(let locations):
             selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
         }
-        (collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell)?.changeSelection(selected: false)
+        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell {
+         cell.changeSelection(selected: false)
+        }
         updateNext()
     }
 
@@ -264,12 +273,12 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch locationSections[indexPath.section] {
         case .campus(let locations):
-            guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingCollectionViewCell else { return UICollectionViewCell() }
             cell.configure(with: locations[indexPath.row])
             return cell
         case .ctown(let locations):
-            guard let cell = locationsCollectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingCollectionViewCell else { return UICollectionViewCell() }
             cell.configure(with: locations[indexPath.row])
             return cell
