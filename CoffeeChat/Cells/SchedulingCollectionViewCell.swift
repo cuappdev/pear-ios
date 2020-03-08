@@ -31,7 +31,6 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
         titleLabel.text = ""
         titleLabel.textColor = .textBlack
         titleLabel.font = UIFont._16CircularStdBook
-//        titleLabel.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0);
         backView.addSubview(titleLabel)
 
         setupConstraints()
@@ -45,11 +44,6 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
         backView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.size.equalToSuperview()
-            // make.size.equalTo(
-            //   CGSize(
-            //     width: LayoutHelper.shared.getCustomHorizontalPadding(size: 150),
-            //     height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
-            // ))
         }
 
         titleLabel.snp.makeConstraints { make in
