@@ -24,12 +24,13 @@ class OnboardingPageViewController: UIPageViewController {
     private var onboardingPages = [UIViewController]()
 
     // MARK: - Private Data Vars
-    private var backgroundXPosition: CGFloat = 0
+    private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
     private let screenWidth = UIScreen.main.bounds.width
     private let screenHeight = UIScreen.main.bounds.height
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
 
         for subview in view.subviews {
             if let scrollView = subview as? UIScrollView {
@@ -38,12 +39,10 @@ class OnboardingPageViewController: UIPageViewController {
         }
 
         backgroundImage.image = UIImage(named: "onboardingBackground")
-        backgroundImage.contentMode =  UIView.ContentMode.scaleAspectFill
+        backgroundImage.contentMode =  .scaleAspectFill
         view.insertSubview(backgroundImage, at: 0)
-
+        print(backgroundXPosition)
         backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
-
-        navigationController?.navigationBar.isHidden = true
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = OnboardingInterestsViewController(delegate: self)
@@ -64,9 +63,7 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let point = scrollView.contentOffset
-        let percentComplete = abs(point.x - view.frame.size.width)/view.frame.size.width
-        backgroundXPosition -= percentComplete * 20.0
-        backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
+        backgroundXPosition -= 0.04 * screenWidth
+        backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }
 }
