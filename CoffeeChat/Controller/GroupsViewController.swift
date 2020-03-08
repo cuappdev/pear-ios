@@ -52,7 +52,6 @@ class GroupsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .backgroundLightGreen
 
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite

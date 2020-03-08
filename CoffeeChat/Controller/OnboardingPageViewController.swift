@@ -63,6 +63,7 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Update x position based on screen size when page scrolls
         backgroundXPosition -= 0.04 * screenWidth
         backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }

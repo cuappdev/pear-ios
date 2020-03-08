@@ -44,7 +44,6 @@ class DemographicsViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-//        view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
         helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
