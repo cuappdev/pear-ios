@@ -16,6 +16,9 @@ private class ScheduleFlowLayout: UICollectionViewFlowLayout {
         // Columns and Rows of entire screen
         let numberColumns: CGFloat = 2
         let numberRows: CGFloat = 7
+        let maxWidth: CGFloat = 150
+        let maxHeight: CGFloat = 43
+
         // itemSize = CGSize(width: 150, height: 43)
 
         // minimumLineSpacing = LayoutHelper.shared.getCustomHoriztonalPadding(size: 12)
@@ -30,7 +33,7 @@ private class ScheduleFlowLayout: UICollectionViewFlowLayout {
         let headersSize = 2 * headerHeight
         let lineSpacings = minimumLineSpacing * CGFloat(numberRows - 2)
         let itemHeight = (collectionView.bounds.size.height - headersSize - lineSpacings) / numberRows
-        itemSize = CGSize(width: itemWidth, height: itemHeight)
+        itemSize = CGSize(width: itemWidth, height: min(maxHeight, itemHeight))
 
 //        itemSize = CGSize(
 //            width: LayoutHelper.shared.getCustomHorizontalPadding(size: 150),
@@ -143,7 +146,7 @@ class SchedulingPlacesViewController: UIViewController {
           "Mac's Cafe",
           "Martha's Cafe",
           "Mattin's Cafe",
-          "Temple of Zues"
+          "Temple of Zeus"
         ]
         let ctownLocations = [
           "Kung Fu Tea",
@@ -199,7 +202,8 @@ class SchedulingPlacesViewController: UIViewController {
             //make.width.equalTo(LayoutHelper.shared.getCustomHorizontalPadding(size: 311))
             //make.width.equalTo(311)
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(194)
+//            make.bottom.equalToSuperview().inset(194)
+            make.bottom.equalTo(nextButton.snp.top).offset(-38)
             // make.size.equalTo(collectionViewSize)
             // make.centerX.equalToSuperview()
         }
@@ -207,12 +211,15 @@ class SchedulingPlacesViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-            make.top.equalTo(locationsCollectionView.snp.bottom).offset(nextPadding)
+//            make.top.equalTo(locationsCollectionView.snp.bottom).offset(nextPadding)
+            make.bottom.equalTo(backButton.snp.top).offset(-20)
         }
 
         backButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(59)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(59)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomVerticalPadding(size: 20))
+
             // make.top.equalTo(nextButton.snp.bottom).offset(backPadding)
         }
     }
