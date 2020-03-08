@@ -13,33 +13,25 @@ import SnapKit
 private class ScheduleFlowLayout: UICollectionViewFlowLayout {
 
     override func prepare() {
+        guard let collectionView = collectionView else { return }
         // Columns and Rows of entire screen
         let numberColumns: CGFloat = 2
         let numberRows: CGFloat = 7
-        let maxWidth: CGFloat = 150
         let maxHeight: CGFloat = 43
-
-        // itemSize = CGSize(width: 150, height: 43)
-
-        // minimumLineSpacing = LayoutHelper.shared.getCustomHoriztonalPadding(size: 12)
-        guard let collectionView = collectionView else {  return }
-        minimumLineSpacing = 12
-        minimumInteritemSpacing = 12
+        // Header
         let headerWidth = collectionView.superview?.bounds.width ?? 0
         let headerHeight: CGFloat = 56
         headerReferenceSize = CGSize(width: headerWidth, height: headerHeight)
-        let itemWidth = (collectionView.bounds.size.width - minimumLineSpacing) / CGFloat(numberColumns)
-
+        // Cell Spacing
+        minimumLineSpacing = 12
+        minimumInteritemSpacing = 12
+        // Cell Resizing
         let headersSize = 2 * headerHeight
         let lineSpacings = minimumLineSpacing * CGFloat(numberRows - 2)
+        let itemWidth = (collectionView.bounds.size.width - minimumLineSpacing) / CGFloat(numberColumns)
         let itemHeight = (collectionView.bounds.size.height - headersSize - lineSpacings) / numberRows
+
         itemSize = CGSize(width: itemWidth, height: min(maxHeight, itemHeight))
-
-//        itemSize = CGSize(
-//            width: LayoutHelper.shared.getCustomHorizontalPadding(size: 150),
-//            height: LayoutHelper.shared.getCustomVerticalPadding(size: 43)
-//        )
-
     }
 
 }
@@ -58,9 +50,7 @@ private class HeaderLabel: UICollectionReusableView {
         }
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func configure(with text: String) { label.text = text }
 
@@ -75,6 +65,7 @@ class SchedulingPlacesViewController: UIViewController {
     private let backButton = UIButton()
     private let titleLabel = UILabel()
 
+    // Reuse Identifiers
     private let campusReuseIdentifier = "campusReuseIdentifier"
     private let campusHeaderIdentifier = "campusHeaderIdentifier"
     private let ctownReuseIdentiifier = "ctownReuseIdentiifier"
@@ -165,23 +156,13 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        print("screen is \(UIScreen.main.bounds)")
-        print("layout is \(CGSize(width: 375, height: 812))")
-        let backPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         let infoPadding = 3
-        // let nextPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 38)
-        let nextPadding = 38
-        // let titlePadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 20)
-        // let titlePadding = LayoutHelper.shared.getCustomVerticalPadding(size: 20)
-        let titlePadding = 20
         let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
-
-        let collectionViewSize = CGSize(
-            width: LayoutHelper.shared.getCustomHorizontalPadding(size: 312),
-            height: LayoutHelper.shared.getCustomVerticalPadding(size: 469)
-        )
+        let buttonPadding: CGFloat = 20
+        let collectionViewPadding = 38
+        let collectionViewSidePadding = 32
         let nextButtonSize = CGSize(
-            width: LayoutHelper.shared.getCustomVerticalPadding(size:175),
+            width: LayoutHelper.shared.getCustomVerticalPadding(size: 175),
             height: LayoutHelper.shared.getCustomVerticalPadding(size: 53)
         )
 
@@ -197,30 +178,20 @@ class SchedulingPlacesViewController: UIViewController {
 
         locationsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(infoLabel.snp.bottom)
-            // make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomHorizontalPadding(size: 32))
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(32)
-            //make.width.equalTo(LayoutHelper.shared.getCustomHorizontalPadding(size: 311))
-            //make.width.equalTo(311)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(collectionViewSidePadding)
             make.centerX.equalToSuperview()
-//            make.bottom.equalToSuperview().inset(194)
-            make.bottom.equalTo(nextButton.snp.top).offset(-38)
-            // make.size.equalTo(collectionViewSize)
-            // make.centerX.equalToSuperview()
+            make.bottom.equalTo(nextButton.snp.top).offset(-collectionViewPadding)
         }
 
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(nextButtonSize)
             make.centerX.equalToSuperview()
-//            make.top.equalTo(locationsCollectionView.snp.bottom).offset(nextPadding)
-            make.bottom.equalTo(backButton.snp.top).offset(-20)
+            make.bottom.equalTo(backButton.snp.top).offset(-buttonPadding)
         }
 
         backButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(59)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomVerticalPadding(size: 20))
-
-            // make.top.equalTo(nextButton.snp.bottom).offset(backPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomVerticalPadding(size: buttonPadding))
         }
     }
 
@@ -245,15 +216,10 @@ class SchedulingPlacesViewController: UIViewController {
 
     @objc private func nextButtonPressed() {
         // TODO implement
-        print("selectedCampusLocations: \(selectedCampusLocations)")
-        print("selectedCtownLocations: \(selectedCtownLocations)")
     }
 
     @objc private func backButtonPressed() {
         // TODO implement
-        print("selectedCampusLocations: \(selectedCampusLocations)")
-        print("selectedCtownLocations: \(selectedCtownLocations)")
-
     }
 
 
