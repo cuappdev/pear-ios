@@ -39,7 +39,6 @@ class LayoutHelper {
     func getCustomHorizontalPadding(size: CGFloat) -> CGFloat {
         let width = UIScreen.main.bounds.width
         let ratio = width / LayoutHelper.baseSize.width
-        print("ratio was \(ratio)!")
         let widthSize = size * ratio
         return widthSize
     }
