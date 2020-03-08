@@ -156,15 +156,15 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let infoPadding = 3
-        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
         let buttonPadding: CGFloat = 20
         let collectionViewPadding = 38
         let collectionViewSidePadding = 32
+        let infoPadding = 3
         let nextButtonSize = CGSize(
             width: LayoutHelper.shared.getCustomVerticalPadding(size: 175),
             height: LayoutHelper.shared.getCustomVerticalPadding(size: 53)
         )
+        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
