@@ -11,7 +11,7 @@ import UIKit
 class TimeViewController: UIViewController {
 
     // MARK: - Views
-    private var cancelButton = UIButton()
+    private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
     private let finishButton = UIButton()
@@ -75,6 +75,10 @@ class TimeViewController: UIViewController {
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
         eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
 
+        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+
         titleLabel.text = "When are you free?"
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
@@ -120,12 +124,6 @@ class TimeViewController: UIViewController {
         finishButton.addTarget(self, action: #selector(finishButtonPressed), for: .touchUpInside)
         view.addSubview(finishButton)
 
-        cancelButton.setTitle("Cancel", for: .normal)
-        cancelButton.setTitleColor(.greenGray, for: .normal)
-        cancelButton.titleLabel?.font = ._16CircularStdMedium
-        cancelButton.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
-        view.addSubview(cancelButton)
-
         setupConstraints()
         setupTimeSections()
     }
@@ -140,7 +138,14 @@ class TimeViewController: UIViewController {
 
     private func setupConstraints() {
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
-        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 20)
+        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel.snp.centerY)
+            make.trailing.equalTo(titleLabel.snp.leading).offset(-30)
+            make.width.equalTo(14)
+            make.height.equalTo(24)
+        }
 
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
@@ -167,14 +172,9 @@ class TimeViewController: UIViewController {
         }
 
         finishButton.snp.makeConstraints { make in
-            make.bottom.equalTo(cancelButton.snp.top).offset(-15)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(finishButtonSize)
-        }
-
-        cancelButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
-            make.centerX.equalToSuperview()
         }
     }
 
@@ -299,8 +299,9 @@ extension TimeViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == dayCollectionView {
             return CGSize(width: 36, height: 48)
         } else {
+            let itemCount = CGFloat(timeSections[indexPath.section].items.count)
             let itemWidth = timeCollectionView.frame.width/3 - sectionInsets.left - sectionInsets.right
-            let itemHeight = (timeCollectionView.frame.height)/9 - interitemSpacing
+            let itemHeight = (timeCollectionView.frame.height)/itemCount - interitemSpacing
             return itemHeight > 36
                 ? CGSize(width: itemWidth, height: 36)
                 : CGSize(width: itemWidth, height: itemHeight)
