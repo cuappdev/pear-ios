@@ -28,13 +28,15 @@
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
+		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
+		D44625042415B5B800714167 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625032415B5B800714167 /* Endpoint.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
 		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
 		D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00C23DE099200E88129 /* SceneDelegate.swift */; };
 		D48BB01223DE099200E88129 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01023DE099200E88129 /* Main.storyboard */; };
 		D48BB01423DE099800E88129 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01323DE099800E88129 /* Assets.xcassets */; };
-        D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
+		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
 		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
@@ -88,6 +90,8 @@
 		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
+		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
+		D44625032415B5B800714167 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoint.swift; path = CoffeeChat/Controller/Endpoint.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +99,7 @@
 		D48BB00C23DE099200E88129 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D48BB01123DE099200E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D48BB01323DE099800E88129 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-        D48BB01623DE099800E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D48BB01623DE099800E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D48BB01823DE099800E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D48BB01D23DE099900E88129 /* CoffeeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02123DE099900E88129 /* CoffeeChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatTests.swift; sourceTree = "<group>"; };
@@ -246,6 +250,8 @@
 		D480EC0323E2439200513063 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				D44625012415B3D700714167 /* NetworkManager.swift */,
+				D44625032415B5B800714167 /* Endpoint.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -288,7 +294,7 @@
 				D48BB00C23DE099200E88129 /* SceneDelegate.swift */,
 				D48BB01023DE099200E88129 /* Main.storyboard */,
 				D48BB01323DE099800E88129 /* Assets.xcassets */,
-                D48BB01523DE099800E88129 /* LaunchScreen.storyboard */,
+				D48BB01523DE099800E88129 /* LaunchScreen.storyboard */,
 				D48BB01823DE099800E88129 /* Info.plist */,
 			);
 			path = CoffeeChat;
@@ -433,7 +439,7 @@
 			files = (
 				30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */,
 				30304E1023F4B6E4006DC6C3 /* CircularStd-Book.otf in Resources */,
-                D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
+				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
@@ -600,6 +606,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
@@ -609,6 +616,7 @@
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
+				D44625042415B5B800714167 /* Endpoint.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
@@ -665,14 +673,14 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-               D48BB01523DE099800E88129 /* LaunchScreen.storyboard */ = {
-                   isa = PBXVariantGroup;
-                   children = (
-                       D48BB01623DE099800E88129 /* Base */,
-                   );
-                   name = LaunchScreen.storyboard;
-                   sourceTree = "<group>";
-               };
+		D48BB01523DE099800E88129 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D48BB01623DE099800E88129 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */

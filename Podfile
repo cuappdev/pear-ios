@@ -2,16 +2,19 @@
 # platform :ios, '13.0'
 
 target 'CoffeeChat' do
-  # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+# Comment the next line if you don't want to use dynamic frameworks
+use_frameworks!
 
-  # Pods for CoffeeChat
+# Pods for CoffeeChat
+    # User Data
+    pod 'GoogleSignIn'
 
-  # User Data
-  pod 'GoogleSignIn'
+    # UI Frameworks
+    pod 'SnapKit'
 
-  # UI Frameworks
-  pod 'SnapKit'
+    # Networking
+    pod 'SwiftyJSON'
+    pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'
 
   target 'CoffeeChatTests' do
     inherit! :search_paths
