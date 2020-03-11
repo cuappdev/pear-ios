@@ -12,26 +12,24 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
 
     // MARK: Private view vars
     private let titleLabel = UILabel()
-    private let backView = UIView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
         self.layer.masksToBounds = false
 
-        backView.layer.cornerRadius = 8
-        backView.layer.masksToBounds = false
-        backView.layer.shadowColor = UIColor.black.cgColor
-        backView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        backView.layer.shadowOpacity = 0.15
-        backView.layer.shadowRadius = 2
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = false
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        contentView.layer.shadowOpacity = 0.15
+        contentView.layer.shadowRadius = 2
         changeSelection(selected: false)
-        contentView.addSubview(backView)
 
         titleLabel.text = ""
         titleLabel.textColor = .textBlack
-        titleLabel.font = UIFont._16CircularStdBook
-        backView.addSubview(titleLabel)
+        titleLabel.font = ._16CircularStdBook
+        contentView.addSubview(titleLabel)
 
         setupConstraints()
     }
@@ -41,14 +39,10 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        backView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalToSuperview()
-        }
-
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().inset(12)
+            make.trailing.equalToSuperview().inset(6)
         }
     }
 
@@ -57,7 +51,7 @@ class SchedulingCollectionViewCell: UICollectionViewCell {
     }
 
     func changeSelection(selected: Bool) {
-        backView.backgroundColor = selected ? .pearGreen : .backgroundWhite
+        contentView.backgroundColor = selected ? .pearGreen : .backgroundWhite
     }
 
 }

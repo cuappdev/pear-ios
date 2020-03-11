@@ -59,10 +59,10 @@ private class HeaderLabel: UICollectionReusableView {
 class SchedulingPlacesViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
-    private let infoLabel = UILabel()
-    private let nextButton = UIButton()
     private let backButton = UIButton()
+    private let infoLabel = UILabel()
+    private let locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
+    private let nextButton = UIButton()
     private let titleLabel = UILabel()
 
     // Reuse Identifiers
@@ -168,7 +168,7 @@ class SchedulingPlacesViewController: UIViewController {
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(topPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(topPadding)
         }
 
         infoLabel.snp.makeConstraints { make in
