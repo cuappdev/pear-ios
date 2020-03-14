@@ -41,7 +41,6 @@ class OnboardingPageViewController: UIPageViewController {
         backgroundImage.image = UIImage(named: "onboardingBackground")
         backgroundImage.contentMode =  .scaleAspectFill
         view.insertSubview(backgroundImage, at: 0)
-        print(backgroundXPosition)
         backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
 
         demographicsViewController = DemographicsViewController(delegate: self)
