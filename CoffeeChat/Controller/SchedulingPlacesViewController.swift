@@ -104,14 +104,14 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionView.dataSource = self
         locationsCollectionView.backgroundColor = .clear
         locationsCollectionView.layer.masksToBounds = false
-        locationsCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
-        locationsCollectionView.register(SchedulingCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
         locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier)
         locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier)
         view.addSubview(locationsCollectionView)
 
         nextButton.setTitle("Finish", for: .normal)
-        nextButton.layer.cornerRadius = LayoutHelper.shared.getCustomVerticalPadding(size: 27)
+        nextButton.layer.cornerRadius = 25
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
@@ -119,10 +119,7 @@ class SchedulingPlacesViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        backButton.setTitle("Go back", for: .normal)
-        backButton.backgroundColor = .clear
-        backButton.setTitleColor(.greenGray, for: .normal)
-        backButton.titleLabel?.font = ._16CircularStdBook
+        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
@@ -156,15 +153,12 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let buttonPadding: CGFloat = 20
+        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
         let collectionViewPadding = 38
         let collectionViewSidePadding = 32
         let infoPadding = 3
-        let nextButtonSize = CGSize(
-            width: LayoutHelper.shared.getCustomVerticalPadding(size: 175),
-            height: LayoutHelper.shared.getCustomVerticalPadding(size: 53)
-        )
-        let topPadding = LayoutHelper.shared.getShortenedCustomVertPadding(size: 92)
+        let nextButtonSize = CGSize(width: 175, height: 50)
+        let topPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -184,15 +178,18 @@ class SchedulingPlacesViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(backButton.snp.top).offset(-buttonPadding)
+            make.size.equalTo(nextButtonSize)
         }
 
         backButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(LayoutHelper.shared.getCustomVerticalPadding(size: buttonPadding))
+            make.centerY.equalTo(titleLabel.snp.centerY)
+            make.leading.equalToSuperview().inset(30)
+            make.width.equalTo(14)
+            make.height.equalTo(24)
         }
+
     }
 
     // MARK: Button Action
@@ -219,9 +216,8 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func backButtonPressed() {
-        // TODO implement
+        navigationController?.popViewController(animated: false)
     }
-
 
 }
 
@@ -236,7 +232,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
         case .ctown(let locations):
             selectedCtownLocations.append(locations[indexPath.row])
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
             cell.changeSelection(selected: true)
         }
         updateNext()
@@ -250,7 +246,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
         case .ctown(let locations):
             selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingCollectionViewCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
          cell.changeSelection(selected: false)
         }
         updateNext()
@@ -276,12 +272,12 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         switch locationSections[indexPath.section] {
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
-            SchedulingCollectionViewCell else { return UICollectionViewCell() }
+            SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
             cell.configure(with: locations[indexPath.row])
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
-            SchedulingCollectionViewCell else { return UICollectionViewCell() }
+            SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
             cell.configure(with: locations[indexPath.row])
             return cell
         }
