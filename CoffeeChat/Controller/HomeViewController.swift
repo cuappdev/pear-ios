@@ -7,6 +7,7 @@
 //
 
 import GoogleSignIn
+import SideMenu
 import UIKit
 
 class HomeViewController: UIViewController {
@@ -75,6 +76,10 @@ class HomeViewController: UIViewController {
 
         profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
+        profileButton.layer.shadowColor = UIColor.black.cgColor
+        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        profileButton.layer.shadowOpacity = 0.15
+        profileButton.layer.shadowRadius = 2
         profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
         view.addSubview(profileButton)
 
@@ -129,7 +134,7 @@ class HomeViewController: UIViewController {
 
         profileButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            make.trailing.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(20)
             make.size.equalTo(profileButtonSize)
         }
 
@@ -146,7 +151,14 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
-        print("Profile pressed.")
+        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())
+        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuIn
+        presentationStyle.presentingEndAlpha = 0.85
+        menu.presentationStyle = presentationStyle
+        menu.leftSide = true
+        menu.statusBarEndAlpha = 0
+        menu.menuWidth = view.frame.width * 0.8
+        present(menu, animated: true, completion: nil)
     }
 
     @objc private func logoutPressed() {

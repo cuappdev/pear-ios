@@ -15,7 +15,7 @@
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImage = UIImageView()
 
-     override func viewDidLoad() {
+    override func viewDidLoad() {
         let buttonSize = CGSize(width: 225, height: 54)
         let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 102)
         let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
