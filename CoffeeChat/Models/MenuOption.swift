@@ -9,10 +9,10 @@
 import Foundation
 
 class MenuOption {
-    
+
     let image: String
     let text: String
-    
+
     init(image: String, text: String) {
         self.image = image
         self.text = text
