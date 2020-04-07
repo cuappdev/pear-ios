@@ -153,7 +153,8 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
         let collectionViewPadding = 38
         let collectionViewSidePadding = 32
         let infoPadding = 3
@@ -185,7 +186,7 @@ class SchedulingPlacesViewController: UIViewController {
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
-            make.leading.equalToSuperview().inset(30)
+            make.leading.equalToSuperview().inset(backButtonPadding)
             make.width.equalTo(14)
             make.height.equalTo(24)
         }

@@ -137,12 +137,13 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
-        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
-            make.leading.equalToSuperview().inset(30)
+            make.leading.equalToSuperview().inset(backButtonPadding)
             make.width.equalTo(14)
             make.height.equalTo(24)
         }
