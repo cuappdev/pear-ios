@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MenuOption.swift
 //  CoffeeChat
 //
 //  Created by HAIYING WENG on 4/4/20.
