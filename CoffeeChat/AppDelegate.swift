@@ -7,7 +7,6 @@
 //
 
 import GoogleSignIn
-import SideMenu
 import UIKit
 
 @UIApplicationMain
