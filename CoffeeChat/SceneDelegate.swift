@@ -36,11 +36,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // let rootVC = onboardingCompleted ? homeVC : onboardingVC
             let rootVC = SchedulingPlacesViewController()
             let navigationController = UINavigationController(rootViewController: rootVC)
-            window.rootViewController = navigationController
+            // window.rootViewController = navigationController
+            window.rootViewController = EditInterestViewController()
         } else {
             // Ask user to sign in if they have not signed in before.
             let navigationController = UINavigationController(rootViewController: LoginViewController())
-            window.rootViewController = navigationController
+            window.rootViewController = EditInterestViewController()
         }
         self.window = window
         window.makeKeyAndVisible()
