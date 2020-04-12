@@ -201,7 +201,7 @@ class TimeViewController: UIViewController {
     }
 
     @objc private func cancelButtonPressed() {
-        print("Cancel pressed")
+        navigationController?.popViewController(animated: true)
     }
 
 }

@@ -147,6 +147,7 @@ class HomeViewController: UIViewController {
 
     @objc private func profilePressed() {
         print("Profile pressed.")
+        
     }
 
     @objc private func logoutPressed() {
