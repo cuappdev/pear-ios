@@ -29,11 +29,12 @@ class EditDemographicsViewController: UIViewController {
     private let saveButton = UIButton()
     private let profileImageView = UIImageView()
     private let uploadPhotoButton = UIButton()
+    private let nameTextField = UITextField()
     private var classDropdownView: OnboardingSelectDropdownView!
     private var hometownDropdownView: OnboardingSearchDropdownView!
     private var majorDropdownView: OnboardingSearchDropdownView!
     private var pronounsDropdownView: OnboardingSelectDropdownView!
-
+    private let imagePickerController = UIImagePickerController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,17 +54,39 @@ class EditDemographicsViewController: UIViewController {
         view.addSubview(saveButton)
 
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
-        profileImageView.contentMode = .scaleAspectFit
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = 62.5
         view.addSubview(profileImageView)
 
         uploadPhotoButton.setTitle("Upload New Picture", for: .normal)
         uploadPhotoButton.setTitleColor(.backgroundOrange, for: .normal)
+        uploadPhotoButton.titleLabel?.font = ._12CircularStdMedium
         uploadPhotoButton.addTarget(self, action: #selector(uploadPhotoPressed), for: .touchUpInside)
         uploadPhotoButton.backgroundColor = .white
-        uploadPhotoButton.layer.cornerRadius = 20
+        uploadPhotoButton.layer.cornerRadius = 16
+        uploadPhotoButton.layer.shadowColor = UIColor.black.cgColor
+        uploadPhotoButton.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        uploadPhotoButton.layer.shadowOpacity = 0.15
+        uploadPhotoButton.layer.shadowRadius = 2
         view.addSubview(uploadPhotoButton)
 
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+
+        nameTextField.backgroundColor = .backgroundWhite
+        nameTextField.textColor = .textBlack
+        nameTextField.font = ._20CircularStdBook
+        nameTextField.text = userName
+        nameTextField.clearButtonMode = .never
+        nameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        nameTextField.leftViewMode = .always
+        nameTextField.layer.cornerRadius = 8
+        nameTextField.layer.shadowColor = UIColor.black.cgColor
+        nameTextField.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        nameTextField.layer.shadowOpacity = 0.15
+        nameTextField.layer.shadowRadius = 2
+        view.addSubview(nameTextField)
 
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -125,9 +148,16 @@ class EditDemographicsViewController: UIViewController {
             make.height.equalTo(31)
         }
 
-        classDropdownView.snp.makeConstraints { make in
+        nameTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(profileImageView.snp.bottom).offset(63)
+            make.leading.trailing.equalToSuperview().inset(40)
+            make.height.equalTo(49)
+        }
+
+        classDropdownView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(nameTextField.snp.top).offset(20+49)
             make.leading.trailing.equalToSuperview().inset(40)
             make.height.equalTo(49)
         }
@@ -165,6 +195,7 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func uploadPhotoPressed() {
         print("upload photo pressed")
+        self.present(imagePickerController, animated: true, completion: nil)
     }
 
 }
@@ -221,3 +252,19 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
     }
 }
 
+extension EditDemographicsViewController:  UIImagePickerControllerDelegate {
+
+//    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        self.imagePickerController(picker, didSelect: nil)
+//    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        profileImageView.image = image
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+extension EditDemographicsViewController: UINavigationControllerDelegate {
+
+}
