@@ -152,7 +152,7 @@ class HomeViewController: UIViewController {
 
     @objc private func profilePressed() {
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())
-        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuIn
+        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
         menu.presentationStyle = presentationStyle
         menu.leftSide = true
