@@ -13,6 +13,8 @@ target 'CoffeeChat' do
   # UI Frameworks
   pod 'SnapKit'
 
+  pod 'SideMenu'
+
   target 'CoffeeChatTests' do
     inherit! :search_paths
     # Pods for testing
