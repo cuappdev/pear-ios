@@ -1,5 +1,5 @@
 //
-//  DayCollectionViewCell.swift
+//  SchedulingDayCollectionViewCell.swift
 //  CoffeeChat
 //
 //  Created by HAIYING WENG on 2/24/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DayCollectionViewCell: UICollectionViewCell {
+class SchedulingDayCollectionViewCell: UICollectionViewCell {
 
     private let dayBackgroundView = UIView()
     private let dayLabel = UILabel()

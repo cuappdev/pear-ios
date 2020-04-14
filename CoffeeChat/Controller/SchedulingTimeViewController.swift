@@ -1,5 +1,5 @@
 //
-//  TimeViewController.swift
+//  SchedulingTimeViewController.swift
 //  CoffeeChat
 //
 //  Created by HAIYING WENG on 2/19/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimeViewController: UIViewController {
+class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
     private var backButton = UIButton()
@@ -76,7 +76,7 @@ class TimeViewController: UIViewController {
         eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
 
         backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
         titleLabel.text = "When are you free?"
@@ -93,7 +93,7 @@ class TimeViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(DayCollectionViewCell.self, forCellWithReuseIdentifier: dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: dayCellReuseId)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -112,7 +112,7 @@ class TimeViewController: UIViewController {
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
-        timeCollectionView.register(TimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         view.addSubview(timeCollectionView)
 
         finishButton.setTitle("Finish", for: .normal)
@@ -137,12 +137,13 @@ class TimeViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
-        let bottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
-            make.trailing.equalTo(titleLabel.snp.leading).offset(-30)
+            make.leading.equalToSuperview().inset(backButtonPadding)
             make.width.equalTo(14)
             make.height.equalTo(24)
         }
@@ -197,16 +198,17 @@ class TimeViewController: UIViewController {
     }
 
     @objc private func finishButtonPressed() {
-        print("Finish pressed")
+        let placesVC = SchedulingPlacesViewController()
+        navigationController?.pushViewController(placesVC, animated: false)
     }
 
-    @objc private func cancelButtonPressed() {
-        print("Cancel pressed")
+    @objc private func backButtonPressed() {
+        navigationController?.popViewController(animated: false)
     }
 
 }
 
-extension TimeViewController: UICollectionViewDataSource {
+extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return collectionView == dayCollectionView ? 1 : timeSections.count
@@ -218,7 +220,7 @@ extension TimeViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? DayCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = days[indexPath.item]
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
@@ -234,7 +236,7 @@ extension TimeViewController: UICollectionViewDataSource {
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? TimeCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return UICollectionViewCell() }
             switch item {
             case .header(let header):
                 cell.configure(for: header, isHeader: true)
@@ -256,7 +258,7 @@ extension TimeViewController: UICollectionViewDataSource {
 
 }
 
-extension TimeViewController: UICollectionViewDelegate {
+extension SchedulingTimeViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
@@ -293,7 +295,7 @@ extension TimeViewController: UICollectionViewDelegate {
 
 }
 
-extension TimeViewController: UICollectionViewDelegateFlowLayout {
+extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == dayCollectionView {

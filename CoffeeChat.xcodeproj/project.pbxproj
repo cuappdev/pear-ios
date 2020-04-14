@@ -16,12 +16,12 @@
 		30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 30304E0E23F4B6E4006DC6C3 /* CircularStd-Bold.otf */; };
 		30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */; };
 		30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */; };
-		30304E1B23FDF336006DC6C3 /* TimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1A23FDF336006DC6C3 /* TimeViewController.swift */; };
-		305064532403960F00C5E491 /* DayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064522403960F00C5E491 /* DayCollectionViewCell.swift */; };
-		305064552403961D00C5E491 /* TimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064542403961D00C5E491 /* TimeCollectionViewCell.swift */; };
+		30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */; };
+		305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */; };
+		305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */; };
 		4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */; };
 		4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F51324E23F3AE6B00DBDE96 /* Group.swift */; };
-		4F753C15240F6F4100DEE686 /* SchedulingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F753C14240F6F4100DEE686 /* SchedulingCollectionViewCell.swift */; };
+		4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */; };
 		4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */; };
 		4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152C23F781790095EC17 /* MatchSummary.swift */; };
 		4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152E23F7817B0095EC17 /* Interest.swift */; };
@@ -39,7 +39,7 @@
 		D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00C23DE099200E88129 /* SceneDelegate.swift */; };
 		D48BB01223DE099200E88129 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01023DE099200E88129 /* Main.storyboard */; };
 		D48BB01423DE099800E88129 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01323DE099800E88129 /* Assets.xcassets */; };
-        D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
+		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
 		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
@@ -77,13 +77,13 @@
 		30304E0E23F4B6E4006DC6C3 /* CircularStd-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CircularStd-Bold.otf"; sourceTree = "<group>"; };
 		30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Shared.swift"; sourceTree = "<group>"; };
 		30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchSummaryTableViewCell.swift; sourceTree = "<group>"; };
-		30304E1A23FDF336006DC6C3 /* TimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeViewController.swift; sourceTree = "<group>"; };
-		305064522403960F00C5E491 /* DayCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCollectionViewCell.swift; sourceTree = "<group>"; };
-		305064542403961D00C5E491 /* TimeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCollectionViewCell.swift; sourceTree = "<group>"; };
+		30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingTimeViewController.swift; sourceTree = "<group>"; };
+		305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingDayCollectionViewCell.swift; sourceTree = "<group>"; };
+		305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingTimeCollectionViewCell.swift; sourceTree = "<group>"; };
 		480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4F51324E23F3AE6B00DBDE96 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Group.swift; path = CoffeeChat/Controller/Group.swift; sourceTree = SOURCE_ROOT; };
-		4F753C14240F6F4100DEE686 /* SchedulingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingCollectionViewCell.swift; sourceTree = "<group>"; };
+		4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlaceCollectionViewCell.swift; sourceTree = "<group>"; };
 		4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlacesViewController.swift; sourceTree = "<group>"; };
 		4FD8152C23F781790095EC17 /* MatchSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummary.swift; sourceTree = "<group>"; };
 		4FD8152E23F7817B0095EC17 /* Interest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interest.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 		D48BB00C23DE099200E88129 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D48BB01123DE099200E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D48BB01323DE099800E88129 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-        D48BB01623DE099800E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D48BB01623DE099800E88129 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D48BB01823DE099800E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D48BB01D23DE099900E88129 /* CoffeeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02123DE099900E88129 /* CoffeeChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatTests.swift; sourceTree = "<group>"; };
@@ -215,9 +215,9 @@
 				D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */,
 				4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */,
 				30304E1523F5B499006DC6C3 /* MatchSummaryTableViewCell.swift */,
-				305064522403960F00C5E491 /* DayCollectionViewCell.swift */,
-				305064542403961D00C5E491 /* TimeCollectionViewCell.swift */,
-				4F753C14240F6F4100DEE686 /* SchedulingCollectionViewCell.swift */,
+				305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */,
+				305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */,
+				4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -232,7 +232,7 @@
 				4FFF3B2223E9189F00C89C29 /* OnboardingInterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
-				30304E1A23FDF336006DC6C3 /* TimeViewController.swift */,
+				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
 				D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */,
 			);
 			path = Controller;
@@ -303,7 +303,7 @@
 				D48BB00C23DE099200E88129 /* SceneDelegate.swift */,
 				D48BB01023DE099200E88129 /* Main.storyboard */,
 				D48BB01323DE099800E88129 /* Assets.xcassets */,
-                D48BB01523DE099800E88129 /* LaunchScreen.storyboard */,
+				D48BB01523DE099800E88129 /* LaunchScreen.storyboard */,
 				D48BB01823DE099800E88129 /* Info.plist */,
 			);
 			path = CoffeeChat;
@@ -448,7 +448,7 @@
 			files = (
 				30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */,
 				30304E1023F4B6E4006DC6C3 /* CircularStd-Book.otf in Resources */,
-                D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
+				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
@@ -615,19 +615,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30304E1B23FDF336006DC6C3 /* TimeViewController.swift in Sources */,
+				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
-				305064552403961D00C5E491 /* TimeCollectionViewCell.swift in Sources */,
+				305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */,
 				4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
-				305064532403960F00C5E491 /* DayCollectionViewCell.swift in Sources */,
+				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
@@ -635,7 +635,7 @@
 				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,
 				D4D3EFF223FE546B00229587 /* LayoutHelper.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
-				4F753C15240F6F4100DEE686 /* SchedulingCollectionViewCell.swift in Sources */,
+				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
@@ -685,14 +685,14 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-               D48BB01523DE099800E88129 /* LaunchScreen.storyboard */ = {
-                   isa = PBXVariantGroup;
-                   children = (
-                       D48BB01623DE099800E88129 /* Base */,
-                   );
-                   name = LaunchScreen.storyboard;
-                   sourceTree = "<group>";
-               };
+		D48BB01523DE099800E88129 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D48BB01623DE099800E88129 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
