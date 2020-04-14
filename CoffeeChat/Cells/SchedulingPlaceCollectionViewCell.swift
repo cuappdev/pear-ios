@@ -1,5 +1,5 @@
 //
-//  SchedulingCollectionViewCell.swift
+//  SchedulingPlaceCollectionViewCell.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 3/4/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SchedulingCollectionViewCell: UICollectionViewCell {
+class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
 
     // MARK: Private view vars
     private let titleLabel = UILabel()
