@@ -179,7 +179,7 @@ class SchedulingPlacesViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(nextButtonSize)
         }
