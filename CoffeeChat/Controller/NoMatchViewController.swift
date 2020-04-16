@@ -18,6 +18,11 @@
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        title = "" // To get rid of the "back" text on navigation bar
+        view.backgroundColor = .backgroundLightGreen
+        navigationController?.navigationBar.isHidden = true
+
         let buttonSize = CGSize(width: 225, height: 54)
         let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 102)
         let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
@@ -25,9 +30,6 @@
         let profileButtonSize = CGSize(width: 35, height: 35)
         let subtitleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
-
-        view.backgroundColor = .backgroundLightGreen
-        navigationController?.navigationBar.isHidden = true
 
         profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
@@ -101,6 +103,10 @@
         print("Profile button pressed")
         let editDemographicsVC = EditDemographicsViewController()
         navigationController?.pushViewController(editDemographicsVC, animated: true)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
     }
 
  }

@@ -109,6 +109,10 @@ class OnboardingSearchDropdownView: UIView {
     func hideTableView() {
         tableView.isHidden = true
     }
+
+    func setSelectValue(value: String) {
+        searchBar.text = value
+    }
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -127,7 +131,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         return cell
     }
 
-    /// Updates searchbar text when a cell is selected in the table view and hides the table view.
+    /// Updates searchbar text when a cell is selected in the table view and bhides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.text = resultsTableData[indexPath.row]
         tableView.isHidden = true

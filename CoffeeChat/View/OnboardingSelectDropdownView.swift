@@ -21,6 +21,7 @@ class OnboardingSelectDropdownView: UIView {
     private var tableData: [String]
     private var textTemplate: String = ""
     private var shouldShowFields: Bool = false
+    var isFilled: Bool = false
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -96,6 +97,11 @@ class OnboardingSelectDropdownView: UIView {
     /// Hide search results table view, intended to be called by parent view controller.
     func hideTableView() {
         tableView.isHidden = true
+    }
+
+    func setSelectValue(value: String) {
+        dropdownButton.setTitle(value, for: .normal)
+        dropdownButton.setTitleColor(.textBlack, for: .normal)
     }
 }
 

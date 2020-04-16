@@ -25,8 +25,9 @@ class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
+    private var backButtonItem: UIBarButtonItem!
     private let titleLabel = UILabel()
-    private let saveButton = UIButton()
+    private let saveButton = UIBarButtonItem()
     private let profileImageView = UIImageView()
     private let uploadPhotoButton = UIButton()
     private let nameTextField = UITextField()
@@ -39,19 +40,33 @@ class EditDemographicsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
+        self.title = "Edit info"
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.view.backgroundColor = .clear
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont._24CircularStdMedium,
+//            NSAttributedString.Key.backgroundColor: UIColor.yellow
+        ]
 
         backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        view.addSubview(backButton)
+        backButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonItem
+
+        saveButton.title = "Save"
+        saveButton.tintColor = .backgroundOrange
+        saveButton.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont._20CircularStdMedium
+        ], for: .normal)
+        navigationItem.rightBarButtonItem = saveButton
 
         titleLabel.text = "Edit info"
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
-
-        saveButton.setTitle("Save", for: .normal)
-        saveButton.addTarget(self, action: #selector(savePressed), for: .touchUpInside)
-        saveButton.setTitleColor(.backgroundOrange, for: .normal)
-        view.addSubview(saveButton)
 
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
         profileImageView.contentMode = .scaleAspectFill
@@ -95,18 +110,22 @@ class EditDemographicsViewController: UIViewController {
 
         classDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields, textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
+        classDropdownView.setSelectValue(value: year)
         view.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
+        majorDropdownView.setSelectValue(value: major)
         view.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
+        hometownDropdownView.setSelectValue(value: hometown)
         view.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
+        pronounsDropdownView.setSelectValue(value: pronouns)
         view.addSubview(pronounsDropdownView)
 
         setupConstraints()
@@ -115,30 +134,14 @@ class EditDemographicsViewController: UIViewController {
 
     func setupConstraints() {
         backButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-            make.leading.equalToSuperview().offset(21)
             make.width.equalTo(14)
             make.height.equalTo(24)
-        }
-
-        titleLabel.snp.makeConstraints{ make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(backButton)
-            make.width.equalTo(92)
-            make.height.equalTo(30)
-        }
-
-        saveButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(21)
-            make.centerY.equalTo(backButton)
-            make.width.equalTo(44)
-            make.height.equalTo(25)
         }
 
         profileImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.width.equalTo(125)
-            make.top.equalTo(titleLabel.snp.bottom).offset(48)
+            make.top.equalToSuperview().offset(121)
         }
 
         uploadPhotoButton.snp.makeConstraints { make in
