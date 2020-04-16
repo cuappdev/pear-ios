@@ -7,6 +7,7 @@
 //
 
 import GoogleSignIn
+import IQKeyboardManagerSwift
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -19,6 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = scene as? UIWindowScene else { return }
+
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
 
         let window = UIWindow(windowScene: scene)
         guard let signIn = GIDSignIn.sharedInstance() else {

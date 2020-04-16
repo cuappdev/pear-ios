@@ -24,6 +24,7 @@ class EditDemographicsViewController: UIViewController {
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
     // MARK: - Private View Vars
+    private var activeDropdownView: UIView?
     private let backButton = UIButton()
     private var backButtonItem: UIBarButtonItem!
     private let titleLabel = UILabel()
@@ -37,6 +38,9 @@ class EditDemographicsViewController: UIViewController {
     private var pronounsDropdownView: OnboardingSelectDropdownView!
     private let imagePickerController = UIImagePickerController()
 
+    // MARK: - Private Constants
+    private let textFieldHeight: CGFloat = 49
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -48,7 +52,7 @@ class EditDemographicsViewController: UIViewController {
         navigationController?.view.backgroundColor = .clear
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont._24CircularStdMedium,
+            .font: UIFont.getFont(.medium, size: 24),
 //            NSAttributedString.Key.backgroundColor: UIColor.yellow
         ]
 
@@ -60,7 +64,7 @@ class EditDemographicsViewController: UIViewController {
         saveButton.title = "Save"
         saveButton.tintColor = .backgroundOrange
         saveButton.setTitleTextAttributes([
-            NSAttributedString.Key.font: UIFont._20CircularStdMedium
+            .font: UIFont.getFont(.medium, size: 20)
         ], for: .normal)
         navigationItem.rightBarButtonItem = saveButton
 
@@ -133,9 +137,13 @@ class EditDemographicsViewController: UIViewController {
     }
 
     func setupConstraints() {
+        let textFieldSidePadding: CGFloat = 40
+        let textFieldTopPadding: CGFloat = 20
+        let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
+
         backButton.snp.makeConstraints { make in
-            make.width.equalTo(14)
-            make.height.equalTo(24)
+            make.width.equalTo(12)
+            make.height.equalTo(22)
         }
 
         profileImageView.snp.makeConstraints { make in
@@ -154,35 +162,35 @@ class EditDemographicsViewController: UIViewController {
         nameTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(profileImageView.snp.bottom).offset(63)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(49)
         }
 
         classDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nameTextField.snp.top).offset(20+49)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(nameTextField.snp.top).offset(textFieldTotalPadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(49)
         }
 
         majorDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(classDropdownView.snp.top).offset(20+49)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(classDropdownView.snp.top).offset(textFieldTotalPadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(49)
         }
 
         hometownDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(majorDropdownView.snp.top).offset(20+49)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(majorDropdownView.snp.top).offset(textFieldTotalPadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(49)
         }
 
         pronounsDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownDropdownView.snp.top).offset(20+49)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(hometownDropdownView.snp.top).offset(textFieldTotalPadding)
+            make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(49)
         }
     }
@@ -201,6 +209,12 @@ class EditDemographicsViewController: UIViewController {
         self.present(imagePickerController, animated: true, completion: nil)
     }
 
+    private func updateFieldConstraints(fieldView: UIView, height: CGFloat) {
+        fieldView.snp.updateConstraints { make in
+            make.height.equalTo(height)
+        }
+    }
+
 }
 
 extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
@@ -208,58 +222,41 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
     func updateSelectedFields(tag: Int, isSelected: Bool) {
 //        fieldsEntered[tag] = isSelected
 //        let allFieldsEntered = !fieldsEntered.contains(false)
-//        nextButton.isEnabled = allFieldsEntered
-//        if nextButton.isEnabled {
-//            nextButton.backgroundColor = .backgroundOrange
-//            nextButton.layer.shadowColor = UIColor.black.cgColor
-//            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-//            nextButton.layer.shadowOpacity = 0.15
-//            nextButton.layer.shadowRadius = 2
-//        } else {
-//            nextButton.backgroundColor = .inactiveGreen
-//            nextButton.layer.shadowColor = .none
-//            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-//            nextButton.layer.shadowOpacity = 0
-//            nextButton.layer.shadowRadius = 0
-//        }
+
     }
 
     /// Resizes search view based on input to search field
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat) {
         view.bringSubviewToFront(dropdownView)
-//        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
         view.bringSubviewToFront(dropdownView)
-//        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
-//             view.sendSubviewToBack(activeDropdownView)
-//             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-//            activeDropdownView.hideTableView()
-//        } else if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
-//            view.sendSubviewToBack(activeDropdownView)
-//             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-//            activeDropdownView.hideTableView()
-//        }
-//        if isSelect {
-//            view.endEditing(true)
-//        }
-//        activeDropdownView = dropdownView
-//        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
+        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
+             view.sendSubviewToBack(activeDropdownView)
+             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            activeDropdownView.hideTableView()
+        } else if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
+            view.sendSubviewToBack(activeDropdownView)
+             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            activeDropdownView.hideTableView()
+        }
+        if isSelect {
+            view.endEditing(true)
+        }
+        activeDropdownView = dropdownView
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
     func sendDropdownViewToBack(dropdownView: UIView) {
-//        view.sendSubviewToBack(dropdownView)
-//        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
-//        view.endEditing(true)
+        view.sendSubviewToBack(dropdownView)
+        updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
+        view.endEditing(true)
     }
 }
 
 extension EditDemographicsViewController:  UIImagePickerControllerDelegate {
-
-//    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//        self.imagePickerController(picker, didSelect: nil)
-//    }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
