@@ -1,5 +1,5 @@
 //
-//  TimeCollectionViewCell.swift
+//  SchedulingTimeCollectionViewCell.swift
 //  CoffeeChat
 //
 //  Created by HAIYING WENG on 2/24/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimeCollectionViewCell: UICollectionViewCell {
+class SchedulingTimeCollectionViewCell: UICollectionViewCell {
 
     private let label = UILabel()
 

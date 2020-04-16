@@ -14,6 +14,8 @@ target 'CoffeeChat' do
   pod 'SnapKit'
   pod 'IQKeyboardManagerSwift'
 
+  pod 'SideMenu'
+
   target 'CoffeeChatTests' do
     inherit! :search_paths
     # Pods for testing
