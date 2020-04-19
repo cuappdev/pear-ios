@@ -42,6 +42,13 @@ class OnboardingTableViewCell: UITableViewCell {
         titleLabel.textColor = .textBlack
         titleLabel.font = ._20CircularStdBook
         contentView.addSubview(titleLabel)
+
+        contentView.clipsToBounds = false
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        contentView.layer.shadowOpacity = 0.1
+        contentView.layer.shadowRadius = 2
+
     }
 
     required init?(coder: NSCoder) {
