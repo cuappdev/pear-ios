@@ -75,19 +75,31 @@ class EditInterestViewController: UIViewController {
         }
     }
 
+    // MARK: - Data Management
+    private func getInterestFromIndexPath(_ indexPath: IndexPath) -> Interest {
+        return indexPath.section < yourInterests.count
+            ? yourInterests[indexPath.section]
+            : moreInterests[indexPath.section - yourInterests.count]
+    }
+
 }
 
 // MARK: - UITableViewDelegate
 extension EditInterestViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected")
+        let interest = getInterestFromIndexPath(indexPath)
+        if indexPath.section < yourInterests.count { // From Top Section
+            yourInterests.removeAll(where: { $0.name == interest.name })
+            moreInterests.append(interest)
+            moreInterests.sort(by: {$0.name > $1.name })
+        } else { // Bottom Section
+            moreInterests.removeAll(where: { $0.name == interest.name })
+            yourInterests.append(interest)
+            yourInterests.sort(by: {$0.name > $1.name })
+        }
+        tableView.reloadData()
     }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("deselect")
-    }
-
 }
 
 // MARK: - UITableViewDataSource
@@ -102,13 +114,12 @@ extension EditInterestViewController: UITableViewDataSource {
             OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
             OnboardingTableViewCell else { return UITableViewCell() }
 
-        print("index path: \(indexPath.row) ,  \(indexPath.section)")
-        print("sizeof yours: \(yourInterests.count)")
-        print("sizeof more: \(moreInterests.count)")
-        let data = indexPath.section < yourInterests.count
-            ? yourInterests[indexPath.section]
-            : moreInterests[indexPath.section - yourInterests.count]
+        let data = getInterestFromIndexPath(indexPath)
         cell.configure(with: data)
+        cell.selectionChangesAppearence(false)
+        print("your: \(yourInterests.count)")
+        print("sextion: \(indexPath.section)")
+        cell.contentView.backgroundColor = indexPath.section < yourInterests.count ? .pearGreen : .white
         return cell
     }
 
@@ -123,14 +134,18 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // Location of where header should be
-        let headerLocations = [0, yourInterests.count]
-        // Header
         let headerView: UIView
-        if headerLocations.contains(section) { // Section Header
+
+        if section == yourInterests.count { // Lower Section
             headerView = InterestHeaderView()
             if let headerView = headerView as? InterestHeaderView {
-                headerView.configure(with: "HEADER", info: "Is this working?")
+                headerView.configure(with: "More Interests", info: "Tap to select")
+                headerView.backgroundColor = .none
+            }
+        } else if section == 0 { // Upper Section
+            headerView = InterestHeaderView()
+            if let headerView = headerView as? InterestHeaderView {
+                headerView.configure(with: "Your Interests", info: "Tap to deselect")
                 headerView.backgroundColor = .none
             }
         } else { // Filler Space
@@ -172,7 +187,7 @@ private class InterestHeaderView: UIView {
         style.lineSpacing = 0.0
         style.alignment = .center
         let primaryAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont._20CircularStdBold as Any,
+            .font: UIFont._20CircularStdMedium as Any,
             .paragraphStyle: style,
             .foregroundColor: UIColor.textBlack
         ]
