@@ -26,14 +26,13 @@ extension UIColor {
     // MARK: - Background
     static let backgroundWhite = colorFromCode(0xFFFFFF)
     static let backgroundRed = colorFromCode(0xFFDEDE)
-    static let textField = colorFromCode(0xEEEEEE)
-    static let defaultGrey = colorFromCode(0xC4C4C4)
-    static let backgroundLightGreen = colorFromCode(0xF2F8E8)
+    static let backgroundDarkGreen = colorFromCode(0xACC5AC)
     static let backgroundGreen = colorFromCode(0xD2F2D1)
     static let backgroundLightGrayGreen = colorFromCode(0xE0ECE2)
-    static let backgroundDarkGreen = colorFromCode(0xACC5AC)
-    static let inactiveGreen = colorFromCode(0x99A899)
+     static let backgroundLightGreen = colorFromCode(0xF2F8E8)
     static let backgroundOrange = colorFromCode(0xFFAC5F)
+    static let defaultGrey = colorFromCode(0xC4C4C4)
+    static let inactiveGreen = colorFromCode(0x99A899)
     static let pearGreen = colorFromCode(0xABDD5B)
     static let pearYellow = colorFromCode(0xF0F9B3)
 
