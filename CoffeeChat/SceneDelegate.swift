@@ -29,18 +29,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
-//            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let onboardingCompleted = false // Manually set onboardingCompleted to false to pull up onboarding.
+            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let homeVC = HomeViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-            // let rootVC = onboardingCompleted ? homeVC : onboardingVC
+//            let rootVC = onboardingCompleted ? homeVC : onboardingVC
             let rootVC = SchedulingPlacesViewController()
-            let navigationController = UINavigationController(rootViewController: EditInterestViewController())
-            // window.rootViewController = navigationController
+            let navigationController = UINavigationController(rootViewController: rootVC)
             window.rootViewController = navigationController
         } else {
             // Ask user to sign in if they have not signed in before.
-            let navigationController = UINavigationController(rootViewController: EditInterestViewController())
+            let navigationController = UINavigationController(rootViewController: LoginViewController())
             window.rootViewController = navigationController
         }
         self.window = window
