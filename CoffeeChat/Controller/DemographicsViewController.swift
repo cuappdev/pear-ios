@@ -189,8 +189,6 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
             activeDropdownView.hideTableView()
             activeDropdownView.endEditing(true)
-//            activeDropdownView.resignFirstResponder()
-//            view.endEditing(true)
         } else if let activeDropdownView = activeDropdownView as? OnboardingSelectDropdownView {
             if activeDropdownView != dropdownView {
                 view.sendSubviewToBack(activeDropdownView)
@@ -203,9 +201,9 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    func sendDropdownViewToBack(dropdownView: UIView, isSearch: Bool) {
-        if isSearch { view.endEditing(true) }
+    func sendDropdownViewToBack(dropdownView: UIView) {
         view.sendSubviewToBack(dropdownView)
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
+        view.endEditing(true)
     }
 }

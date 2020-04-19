@@ -10,7 +10,7 @@ import UIKit
 
 protocol OnboardingDropdownViewDelegate: class {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
-    func sendDropdownViewToBack(dropdownView: UIView, isSearch: Bool)
+    func sendDropdownViewToBack(dropdownView: UIView)
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat)
     func updateSelectedFields(tag: Int, isSelected: Bool)
 }
@@ -136,7 +136,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         searchBar.text = resultsTableData[indexPath.row]
         tableView.isHidden = true
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
-        delegate?.sendDropdownViewToBack(dropdownView: self, isSearch: true)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

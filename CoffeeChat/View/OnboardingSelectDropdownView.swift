@@ -91,7 +91,7 @@ class OnboardingSelectDropdownView: UIView {
         } else {
             // Dismiss table view if user taps on bar again.
             tableView.isHidden = true
-            delegate?.sendDropdownViewToBack(dropdownView: self, isSearch: false)
+            delegate?.sendDropdownViewToBack(dropdownView: self)
             shouldShowFields = true
         }
     }
@@ -130,6 +130,6 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
         dropdownButton.setTitleColor(.textBlack, for: .normal)
         hideTableView()
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
-        delegate?.sendDropdownViewToBack(dropdownView: self, isSearch: false)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 }

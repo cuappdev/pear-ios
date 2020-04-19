@@ -41,13 +41,13 @@ class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Constants
     private let textFieldHeight: CGFloat = 49
-    private var isPageScrolled: Bool = false
-    private var scrollContentOffset: CGFloat = 0
+    private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         self.title = "Edit info"
+
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
@@ -70,7 +70,6 @@ class EditDemographicsViewController: UIViewController {
         editScrollView.isScrollEnabled = false
         editScrollView.showsVerticalScrollIndicator = false
         editScrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
-        editScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         view.addSubview(editScrollView)
 
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
@@ -212,7 +211,6 @@ class EditDemographicsViewController: UIViewController {
     }
 
     @objc private func uploadPhotoPressed() {
-        print("upload photo pressed")
         self.present(imagePickerController, animated: true, completion: nil)
     }
 
@@ -256,14 +254,13 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         let newFieldHeight = textFieldHeight + height
         updateFieldConstraints(fieldView: dropdownView, height: newFieldHeight)
         if dropdownView.frame.origin.y + newFieldHeight > view.bounds.height - 50 {
-            scrollContentOffset = editScrollView.contentOffset.y
             isPageScrolled = true
             editScrollView.setContentOffset(CGPoint(x: 0, y: height), animated: true)
         }
     }
 
-    func sendDropdownViewToBack(dropdownView: UIView, isSearch: Bool) {
-        if isSearch { view.endEditing(true) }
+    func sendDropdownViewToBack(dropdownView: UIView) {
+        view.endEditing(true)
         editScrollView.sendSubviewToBack(dropdownView)
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
         if isPageScrolled {
