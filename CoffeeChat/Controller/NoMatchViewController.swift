@@ -5,9 +5,11 @@
 //  Created by Lucy Xu on 2/29/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
- import UIKit
 
- class NoMatchViewController: UIViewController {
+import SideMenu
+import UIKit
+
+class NoMatchViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let availabilityButton = UIButton()
@@ -33,6 +35,10 @@
 
         profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
+        profileButton.layer.shadowColor = UIColor.black.cgColor
+        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        profileButton.layer.shadowOpacity = 0.15
+        profileButton.layer.shadowRadius = 2
         profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
         view.addSubview(profileButton)
 
@@ -66,7 +72,7 @@
 
         profileButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            make.trailing.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(20)
             make.size.equalTo(profileButtonSize)
         }
 
@@ -95,18 +101,23 @@
 
      @objc private func availabilityButtonPressed() {
         print("Available button pressed.")
-        let timeVC = TimeViewController()
+        let timeVC = SchedulingTimeViewController()
         navigationController?.pushViewController(timeVC, animated: true)
     }
 
     @objc private func profilePressed() {
-        print("Profile button pressed")
-        let editDemographicsVC = EditDemographicsViewController()
-        navigationController?.pushViewController(editDemographicsVC, animated: true)
+        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())
+        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
+        presentationStyle.presentingEndAlpha = 0.85
+        menu.presentationStyle = presentationStyle
+        menu.leftSide = true
+        menu.statusBarEndAlpha = 0
+        menu.menuWidth = view.frame.width * 0.8
+        present(menu, animated: true, completion: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
 
- }
+}

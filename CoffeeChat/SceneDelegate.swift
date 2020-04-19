@@ -22,8 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
 
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
-        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
 
         let window = UIWindow(windowScene: scene)
         guard let signIn = GIDSignIn.sharedInstance() else {
@@ -35,12 +34,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
             let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let assignedMatch = false
             let homeVC = HomeViewController()
             let noMatchVC = NoMatchViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-//            let rootVC = onboardingCompleted ? homeVC : onboardingVC
-            let rootVC = SchedulingPlacesViewController()
-            let navigationController = UINavigationController(rootViewController: noMatchVC)
+            let matchVC = assignedMatch ? homeVC : noMatchVC
+            let rootVC = onboardingCompleted ? matchVC : onboardingVC
+            let navigationController = UINavigationController(rootViewController: EditDemographicsViewController())
             window.rootViewController = navigationController
         } else {
             // Ask user to sign in if they have not signed in before.

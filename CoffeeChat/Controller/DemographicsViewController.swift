@@ -21,7 +21,7 @@ class DemographicsViewController: UIViewController {
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
-    private var activeDropdownView: UIView?
+    private var activeDropdownView: UIView? // Keep track of currently active field
     private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
     private let helloLabel = UILabel()
@@ -184,26 +184,28 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
     }
 
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
-        view.bringSubviewToFront(dropdownView)
         if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
-             view.sendSubviewToBack(activeDropdownView)
-             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-            activeDropdownView.hideTableView()
-        } else if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
             view.sendSubviewToBack(activeDropdownView)
-             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
             activeDropdownView.hideTableView()
+            activeDropdownView.endEditing(true)
+//            activeDropdownView.resignFirstResponder()
+//            view.endEditing(true)
+        } else if let activeDropdownView = activeDropdownView as? OnboardingSelectDropdownView {
+            if activeDropdownView != dropdownView {
+                view.sendSubviewToBack(activeDropdownView)
+                updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+                activeDropdownView.hideTableView()
+            }
         }
-        if isSelect {
-            view.endEditing(true)
-        }
+        view.bringSubviewToFront(dropdownView)
         activeDropdownView = dropdownView
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    func sendDropdownViewToBack(dropdownView: UIView) {
+    func sendDropdownViewToBack(dropdownView: UIView, isSearch: Bool) {
+        if isSearch { view.endEditing(true) }
         view.sendSubviewToBack(dropdownView)
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
-        view.endEditing(true)
     }
 }
