@@ -22,13 +22,13 @@ class EditInterestViewController: UIViewController {
     }
 
     // MARK: - Data Vars
-    private var yourInterests: [Interest] = []
-    private var moreInterests: [Interest] = []
-
-    private var interests: [Interest] = [
+    // TODO replace with actual data
+    private var yourInterests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
-        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance"),
+        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance")
+    ]
+    private var moreInterests: [Interest] = [
         Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
         Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
         Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
@@ -47,13 +47,6 @@ class EditInterestViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
 
-        // TODO Example
-        let split = 3 // interests.count / 2
-        yourInterests = Array(interests[0..<split])
-        moreInterests = Array(interests[split..<interests.count])
-        print(yourInterests)
-        print(moreInterests)
-
         interestsTableView.delegate = self
         interestsTableView.dataSource = self
         interestsTableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
@@ -66,7 +59,6 @@ class EditInterestViewController: UIViewController {
         interestsTableView.showsVerticalScrollIndicator = false
         interestsTableView.separatorStyle = .none
         interestsTableView.sectionFooterHeight = 0
-        //interestsTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         view.addSubview(interestsTableView)
 
         interestsTableView.snp.makeConstraints { make in
@@ -117,20 +109,14 @@ extension EditInterestViewController: UITableViewDataSource {
         let data = getInterestFromIndexPath(indexPath)
         cell.configure(with: data)
         cell.selectionChangesAppearence(false)
-        print("your: \(yourInterests.count)")
-        print("sextion: \(indexPath.section)")
         cell.contentView.backgroundColor = indexPath.section < yourInterests.count ? .pearGreen : .white
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        // Spacing
         let cellSpacing: CGFloat = 12
         let headerSpacing: CGFloat = 88
-        // Location of where header should be
-        let headerLocations = [0, yourInterests.count]
-        // Header
-        return headerLocations.contains(section) ? headerSpacing : cellSpacing
+        return [0, yourInterests.count].contains(section) ? headerSpacing : cellSpacing
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -174,7 +160,8 @@ private class InterestHeaderView: UIView {
         label.numberOfLines = 0
         addSubview(label)
         label.snp.makeConstraints { make in
-          make.center.equalToSuperview().offset(12)
+          make.centerY.equalToSuperview().offset(12)
+          make.centerX.equalToSuperview()
         }
     }
 
