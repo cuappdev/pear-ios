@@ -84,11 +84,11 @@ extension EditInterestViewController: UITableViewDelegate {
         if indexPath.section < yourInterests.count { // From Top Section
             yourInterests.removeAll(where: { $0.name == interest.name })
             moreInterests.append(interest)
-            moreInterests.sort(by: {$0.name > $1.name })
+            moreInterests.sort(by: {$0.name < $1.name })
         } else { // Bottom Section
             moreInterests.removeAll(where: { $0.name == interest.name })
             yourInterests.append(interest)
-            yourInterests.sort(by: {$0.name > $1.name })
+            yourInterests.sort(by: {$0.name < $1.name })
         }
         tableView.reloadData()
     }
