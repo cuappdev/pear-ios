@@ -11,6 +11,7 @@ target 'CoffeeChat' do
   pod 'GoogleSignIn'
 
   # UI Frameworks
+  pod 'IQKeyboardManagerSwift'
   pod 'SnapKit'
 
   pod 'SideMenu'
