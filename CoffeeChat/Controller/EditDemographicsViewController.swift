@@ -11,7 +11,7 @@ import UIKit
 class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Vars
-    // TODO: Get values from backend? Or store in UserDefaults?
+    // TODO: Retrieve values from UserDefaults after saving from backend
     private let name = "Lucy Xu"
     private let year = "2021"
     private let major = "Computer Science"
@@ -19,7 +19,7 @@ class EditDemographicsViewController: UIViewController {
     private let pronouns = "She/Her/Hers"
     // TODO: Update with networking values from backend
     private var classSearchFields: [String] = []
-    private var fieldsEntered: [Bool] = [true, true, true, true, true]
+    private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
@@ -206,14 +206,17 @@ class EditDemographicsViewController: UIViewController {
     }
 
     @objc private func savePressed() {
+        // TODO: Save values to backend.
         print("save pressed")
 
     }
 
     @objc private func uploadPhotoPressed() {
+        // TODO: Save image to backend.
         self.present(imagePickerController, animated: true, completion: nil)
     }
 
+    /// Update height constraint of field inputs to show dropdown menus.
     private func updateFieldConstraints(fieldView: UIView, height: CGFloat) {
         fieldView.snp.updateConstraints { make in
             make.height.equalTo(height)
@@ -228,24 +231,25 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         fieldsEntered[tag] = isSelected
     }
 
-    /// Resizes search view based on input to search field
+    /// Resizes search view based on input to search field.
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat) {
         editScrollView.bringSubviewToFront(dropdownView)
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
+    /// Brings field view to the front of the screen and handles keyboard interactions when switching from select dropdowns to search.
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
-        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView {
+        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView,
+            activeDropdownView != dropdownView {
             editScrollView.sendSubviewToBack(activeDropdownView)
             updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
             activeDropdownView.hideTableView()
             activeDropdownView.endEditing(true)
-        } else if let activeDropdownView = activeDropdownView as? OnboardingSelectDropdownView {
-            if activeDropdownView != dropdownView {
-                editScrollView.sendSubviewToBack(activeDropdownView)
-                updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-                activeDropdownView.hideTableView()
-            }
+        } else if let activeDropdownView = activeDropdownView as? OnboardingSelectDropdownView,
+            activeDropdownView != dropdownView {
+            editScrollView.sendSubviewToBack(activeDropdownView)
+            updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+            activeDropdownView.hideTableView()
         } else if let activeDropdownView = activeDropdownView as? UITextField {
             activeDropdownView.endEditing(true)
         }
@@ -253,12 +257,14 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         activeDropdownView = dropdownView
         let newFieldHeight = textFieldHeight + height
         updateFieldConstraints(fieldView: dropdownView, height: newFieldHeight)
+        // Scroll screen up if dropdown field extends past bottom of screen
         if dropdownView.frame.origin.y + newFieldHeight > view.bounds.height - 50 {
             isPageScrolled = true
             editScrollView.setContentOffset(CGPoint(x: 0, y: height), animated: true)
         }
     }
 
+    /// Send field view to the back of the screen to allow interactions with other field views.
     func sendDropdownViewToBack(dropdownView: UIView) {
         view.endEditing(true)
         editScrollView.sendSubviewToBack(dropdownView)

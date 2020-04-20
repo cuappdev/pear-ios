@@ -102,6 +102,7 @@ class OnboardingSelectDropdownView: UIView {
         shouldShowFields = true
     }
 
+    /// Set text of field if value already exists
     func setSelectValue(value: String) {
         dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
         dropdownButton.setTitleColor(.textBlack, for: .normal)
