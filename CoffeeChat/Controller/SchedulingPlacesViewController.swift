@@ -9,33 +9,6 @@
 import UIKit
 import SnapKit
 
-// MARK: - UICollectionViewFlowLayout
-private class ScheduleFlowLayout: UICollectionViewFlowLayout {
-
-    override func prepare() {
-        guard let collectionView = collectionView else { return }
-        // Columns and Rows of entire screen
-        let numberColumns: CGFloat = 2
-        let numberRows: CGFloat = 7
-        let maxHeight: CGFloat = 43
-        // Header
-        let headerWidth = collectionView.superview?.bounds.width ?? 0
-        let headerHeight: CGFloat = 56
-        headerReferenceSize = CGSize(width: headerWidth, height: headerHeight)
-        // Cell Spacing
-        minimumLineSpacing = 12
-        minimumInteritemSpacing = 12
-        // Cell Resizing
-        let headersSize = 2 * headerHeight
-        let lineSpacings = minimumLineSpacing * CGFloat(numberRows - 2)
-        let itemWidth = (collectionView.bounds.size.width - minimumLineSpacing) / CGFloat(numberColumns)
-        let itemHeight = (collectionView.bounds.size.height - headersSize - lineSpacings) / numberRows
-
-        itemSize = CGSize(width: itemWidth, height: min(maxHeight, itemHeight))
-    }
-
-}
-
 // MARK: - UICollectionView Header
 private class HeaderLabel: UICollectionReusableView {
 
@@ -61,7 +34,7 @@ class SchedulingPlacesViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let infoLabel = UILabel()
-    private let locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: ScheduleFlowLayout())
+    private var locationsCollectionView: UICollectionView!
     private let nextButton = UIButton()
     private let titleLabel = UILabel()
 
@@ -82,6 +55,47 @@ class SchedulingPlacesViewController: UIViewController {
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
+    private var isOtherSide: Bool
+    private var confirmedLocation: String!
+    
+    private let interitemSpacing: CGFloat = 12
+    private let lineSpacing: CGFloat = 12
+    private let headerHeight: CGFloat = 50
+
+    // TODO: Replace with networking when available
+    private var campusLocations = [
+        "Atrium Cafe",
+        "Cafe Jennie",
+        "Gimme Coffee",
+        "Goldie's Cafe",
+        "Green Dragon",
+        "Libe Cafe",
+        "Mac's Cafe",
+        "Martha's Cafe",
+        "Mattin's Cafe",
+        "Temple of Zeus"
+    ]
+    private var ctownLocations = [
+        "Kung Fu Tea",
+        "Starbucks",
+        "Mango Mango",
+        "U Tea"
+    ]
+    private let matchLocations = [
+        "Goldie's Cafe",
+        "Green Dragon",
+        "Kung Fu Tea"
+    ]
+
+    init(isOtherSide: Bool) {
+        self.isOtherSide = isOtherSide
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -94,10 +108,15 @@ class SchedulingPlacesViewController: UIViewController {
 
         infoLabel.font = ._16CircularStdBook
         infoLabel.text = "Pick three"
-        infoLabel.textColor = .textLightGray
+        infoLabel.textColor = .greenGray
         view.addSubview(infoLabel)
 
-        locationsCollectionView.allowsMultipleSelection = true
+        let locationsCollectionViewLayout = UICollectionViewFlowLayout()
+        locationsCollectionViewLayout.minimumLineSpacing = lineSpacing
+        locationsCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
+
+        locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: locationsCollectionViewLayout)
+        locationsCollectionView.allowsMultipleSelection = !isOtherSide
         locationsCollectionView.showsVerticalScrollIndicator = false
         locationsCollectionView.showsHorizontalScrollIndicator = false
         locationsCollectionView.delegate = self
@@ -123,25 +142,10 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        // TODO: Replace with networking when available
-        let campusLocations = [
-          "Atrium Cafe",
-          "Cafe Jennie",
-          "Gimme Coffee",
-          "Goldie's Cafe",
-          "Green Dragon",
-          "Libe Cafe",
-          "Mac's Cafe",
-          "Martha's Cafe",
-          "Mattin's Cafe",
-          "Temple of Zeus"
-        ]
-        let ctownLocations = [
-          "Kung Fu Tea",
-          "Starbucks",
-          "Mango Mango",
-          "U Tea"
-        ]
+        if isOtherSide {
+            campusLocations = campusLocations.filter { matchLocations.contains($0) }
+            ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
+        }
 
         // Create Datasource for CollectionView
         locationSections = [
@@ -155,8 +159,8 @@ class SchedulingPlacesViewController: UIViewController {
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
         let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
-        let collectionViewPadding = 38
-        let collectionViewSidePadding = 32
+        let collectionViewPadding = 30
+        let collectionViewSidePadding = isOtherSide ? 80 : 32
         let infoPadding = 3
         let nextButtonSize = CGSize(width: 175, height: 50)
         let topPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
@@ -195,7 +199,7 @@ class SchedulingPlacesViewController: UIViewController {
 
     // MARK: Button Action
     private func updateNext() {
-        let enable = selectedCtownLocations.count + selectedCampusLocations.count > 2
+        let enable = selectedCtownLocations.count + selectedCampusLocations.count > 2 || confirmedLocation != nil
         nextButton.isEnabled = enable
         if enable {
             nextButton.backgroundColor = .backgroundOrange
@@ -226,17 +230,28 @@ class SchedulingPlacesViewController: UIViewController {
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let section = locationSections[indexPath.section]
-        switch section {
-        case .campus(let locations):
-            selectedCampusLocations.append(locations[indexPath.row])
-        case .ctown(let locations):
-            selectedCtownLocations.append(locations[indexPath.row])
+        // Only three locations can be selected
+        if selectedCampusLocations.count + selectedCtownLocations.count < 3 {
+            let section = locationSections[indexPath.section]
+            switch section {
+            case .campus(let locations):
+                if isOtherSide {
+                    confirmedLocation = locations[indexPath.row]
+                } else {
+                    selectedCampusLocations.append(locations[indexPath.row])
+                }
+            case .ctown(let locations):
+                if isOtherSide {
+                    confirmedLocation = locations[indexPath.row]
+                } else {
+                    selectedCtownLocations.append(locations[indexPath.row])
+                }
+            }
+            if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
+                cell.changeSelection(selected: true)
+            }
+            updateNext()
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-            cell.changeSelection(selected: true)
-        }
-        updateNext()
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -248,7 +263,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
             selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
         }
         if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-         cell.changeSelection(selected: false)
+            cell.changeSelection(selected: false)
         }
         updateNext()
     }
@@ -274,24 +289,47 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row])
+            cell.configure(with: locations[indexPath.row], isOtherSide: isOtherSide)
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row])
+            cell.configure(with: locations[indexPath.row], isOtherSide: isOtherSide)
             return cell
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = indexPath.row == 0
+        let header = indexPath.section == 0
         ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
         : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
 
         guard let headerView = header as? HeaderLabel else { return header }
-        headerView.configure(with: indexPath.row == 0 ? "Campus" : "Collegetown")
+        headerView.configure(with: indexPath.section == 0 ? "Campus" : "Collegetown")
         return headerView
+    }
+
+}
+
+extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let headersSize = 2 * headerHeight
+        let numberColumns: CGFloat = isOtherSide ? 1 : 2
+        var numberRows: CGFloat!
+        if isOtherSide {
+            numberRows = CGFloat(campusLocations.count + ctownLocations.count)
+        } else {
+            let rowCount = Float(campusLocations.count/2).rounded() + Float(ctownLocations.count/2).rounded()
+            numberRows = CGFloat(rowCount)
+        }
+        let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
+        let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
+        return CGSize(width: itemWidth, height: min(isOtherSide ? 50 : 43, itemHeight))
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
     }
 
 }
