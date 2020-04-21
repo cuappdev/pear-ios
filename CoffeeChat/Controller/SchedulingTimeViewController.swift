@@ -68,7 +68,7 @@ class SchedulingTimeViewController: UIViewController {
     private var morningItems: [ItemType] = []
     private var morningTimes: [String] = []
     private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
-    
+
     private var isOtherSide: Bool
     // TODO: Remove after connecting to backend
     private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
@@ -78,11 +78,11 @@ class SchedulingTimeViewController: UIViewController {
         self.isOtherSide = isOtherSide
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -258,7 +258,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func finishButtonPressed() {
-        let placesVC = SchedulingPlacesViewController()
+        let placesVC = SchedulingPlacesViewController(isOtherSide: isOtherSide)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
