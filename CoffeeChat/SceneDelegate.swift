@@ -30,23 +30,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = navigationController
             return
         }
-        if signIn.hasPreviousSignIn() {
-            signIn.restorePreviousSignIn()
-            // Onboard user if they haven't done so yet, otherwise bring to home.
-            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let assignedMatch = false
-            let homeVC = HomeViewController()
-            let noMatchVC = NoMatchViewController()
-            let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-            let matchVC = assignedMatch ? homeVC : noMatchVC
-            let rootVC = onboardingCompleted ? matchVC : onboardingVC
-            let navigationController = UINavigationController(rootViewController: rootVC)
-            window.rootViewController = navigationController
-        } else {
-            // Ask user to sign in if they have not signed in before.
-            let navigationController = UINavigationController(rootViewController: LoginViewController())
-            window.rootViewController = navigationController
-        }
+        let navigationController = UINavigationController(rootViewController: LoginViewController())
+        window.rootViewController = navigationController
+//        if signIn.hasPreviousSignIn() {
+//            signIn.restorePreviousSignIn()
+//            // Onboard user if they haven't done so yet, otherwise bring to home.
+//            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+//            let assignedMatch = false
+//            let homeVC = HomeViewController()
+//            let noMatchVC = NoMatchViewController()
+//            let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+//            let matchVC = assignedMatch ? homeVC : noMatchVC
+//            let rootVC = onboardingCompleted ? matchVC : onboardingVC
+//            let navigationController = UINavigationController(rootViewController: rootVC)
+//            window.rootViewController = navigationController
+//        } else {
+//            // Ask user to sign in if they have not signed in before.
+//            let navigationController = UINavigationController(rootViewController: LoginViewController())
+//            window.rootViewController = navigationController
+//        }
         self.window = window
         window.makeKeyAndVisible()
     }

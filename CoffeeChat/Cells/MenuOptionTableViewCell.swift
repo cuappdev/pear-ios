@@ -19,7 +19,7 @@ class MenuOptionTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
 
-        arrowImageView.image = UIImage(named: "right_arrow")
+        arrowImageView.image = UIImage(named: "rightArrow")
         contentView.addSubview(arrowImageView)
 
         optionImageView.clipsToBounds = true

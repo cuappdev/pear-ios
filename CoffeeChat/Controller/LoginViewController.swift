@@ -12,11 +12,31 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    // MARK: - Private View Vars
     private let loginButton = GIDSignInButton()
     private let logoImageView = UIImageView()
+    private let welcomeLabel = UILabel()
+
+    private lazy var signInErrorAlertView: AlertView = {
+        let view = AlertView()
+        view.layer.cornerRadius = 36
+        view.delegate = self
+        return view
+    }()
+
+    let visualEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    // MARK: - Private Data Vars
     private let userDefaults = UserDefaults.standard
 
-    private let logoSize = CGSize(width: 150, height: 150)
+    // MARK: - Private Constants
+    private let logoSize = CGSize(width: 146, height: 146)
+    private let loginButtonSize = CGSize(width: 202, height: 50)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,32 +46,65 @@ class LoginViewController: UIViewController {
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
 
-        loginButton.style = .wide
-        view.addSubview(loginButton)
+        welcomeLabel.text = "Welcome to Pear"
+        welcomeLabel.textColor = .textBlack
+        welcomeLabel.font = ._24CircularStdMedium
+        view.addSubview(welcomeLabel)
 
         logoImageView.layer.cornerRadius = logoSize.width/2
-        logoImageView.backgroundColor = .inactiveGreen
+        logoImageView.image = UIImage(named: "happyPear")
         view.addSubview(logoImageView)
+
+        loginButton.style = .wide
+        view.addSubview(loginButton)
 
         setupConstraints()
     }
 
     private func setupConstraints() {
-        loginButton.snp.makeConstraints { make in
+        let welcomeLabelHeight: CGFloat = 30
+        let welcomeLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
+
+        welcomeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(40)
+            make.height.equalTo(welcomeLabelHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(welcomeLabelPadding)
         }
 
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-100)
+            make.top.equalTo(welcomeLabel.snp.bottom).offset(97)
             make.size.equalTo(logoSize)
+        }
+
+        loginButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoImageView.snp.bottom).offset(52)
+            make.size.equalTo(loginButtonSize)
         }
     }
 
+    private func setUpPopUpConstraints() {
+
+        view.addSubview(signInErrorAlertView)
+
+        signInErrorAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(280)
+            make.width.equalTo(292)
+        }
+
+        signInErrorAlertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        signInErrorAlertView.alpha = 0
+        UIView.animate(withDuration: 0.25, animations: {
+            self.visualEffectView.alpha = 1
+            self.signInErrorAlertView.alpha = 1
+            self.signInErrorAlertView.transform = CGAffineTransform.identity
+        })
+    }
 }
 
-extension LoginViewController: GIDSignInDelegate {
+extension LoginViewController: GIDSignInDelegate, AlertViewDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -65,10 +118,11 @@ extension LoginViewController: GIDSignInDelegate {
 
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
-            let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
-            let action = UIAlertAction(title: Constants.Alerts.LoginFailure.action, style: .cancel, handler: nil)
-            alertController.addAction(action)
-            present(alertController, animated: true, completion: nil)
+            self.setUpPopUpConstraints()
+//            let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
+//            let action = UIAlertAction(title: Constants.Alerts.LoginFailure.action, style: .cancel, handler: nil)
+//            alertController.addAction(action)
+//            present(alertController, animated: true, completion: nil)
             return
         }
 
@@ -93,6 +147,16 @@ extension LoginViewController: GIDSignInDelegate {
                 navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
             )
             navigationController?.pushViewController(onboardingVC, animated: false)
+        }
+    }
+
+    func dismissAlertView() {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.visualEffectView.alpha = 0
+            self.signInErrorAlertView.alpha = 0
+            self.signInErrorAlertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { (_) in
+            self.signInErrorAlertView.removeFromSuperview()
         }
     }
 
