@@ -61,18 +61,17 @@ class SchedulingTimeViewController: UIViewController {
 
     private var afternoonItems: [ItemType] = []
     private var afternoonTimes: [String] = []
-//    private var afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
+    private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
     private var eveningItems: [ItemType] = []
     private var eveningTimes: [String] = []
-//    private var eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
+    private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
     private var morningItems: [ItemType] = []
     private var morningTimes: [String] = []
-//    private var morningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
+    private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
     
     private var isOtherSide: Bool
     // TODO: Remove after connecting to backend
-    private var matchAvailableDays = ["M", "W", "Sa"]
-    private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Saturday": []]
+    private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
     private var confirmedTime: [String: String] = [:]
 
     init(isOtherSide: Bool) {
@@ -88,21 +87,21 @@ class SchedulingTimeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
-        
+
+        afternoonTimes = allAfternoonTimes
+        eveningTimes = allEveningTimes
+        morningTimes = allMorningTimes
+
         if isOtherSide {
-            days = matchAvailableDays
-            afternoonTimes = ["2:30", "3:00"]
-//            eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-            morningTimes = ["10:30", "11:00", "11:30", "12:00", "12:30"]
-        } else {
-            afternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
-            eveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-            morningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
+            days = days.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
+            if let firstDayShort = days.first {
+                selectedDay = firstDayShort
+            }
         }
-        
-        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
+
+        if let firstDay = daysDict[selectedDay] {
+            setupTimes(for: firstDay, isFirstTime: true)
+        }
 
         backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -114,7 +113,7 @@ class SchedulingTimeViewController: UIViewController {
         view.addSubview(titleLabel)
 
         let dayCollectionViewLayout = UICollectionViewFlowLayout()
-//        dayCollectionViewLayout.minimumInteritemSpacing = 4
+        dayCollectionViewLayout.minimumInteritemSpacing = 4
         dayCollectionViewLayout.scrollDirection = .horizontal
 
         dayCollectionView = UICollectionView(frame: .zero, collectionViewLayout: dayCollectionViewLayout)
@@ -157,6 +156,22 @@ class SchedulingTimeViewController: UIViewController {
         setupConstraints()
     }
 
+    func setupTimes(for day: String, isFirstTime: Bool) {
+        if isOtherSide, let times = matchAvailabilities[day] {
+            afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
+            eveningTimes = allEveningTimes.filter { times.contains($0) }
+            morningTimes = allMorningTimes.filter { times.contains($0) }
+        }
+        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
+        // Reset timeSections and timeCollectionView's constraints if it's not the first time `setupTimes` is called
+        if !isFirstTime {
+            setupTimeSections()
+            setupTimeCollectionViewConstraints()
+        }
+    }
+
     private func setupTimeSections() {
         let afternoonSection = Section(type: .afternoon, items: afternoonItems)
         let eveningSection = Section(type: .evening, items: eveningItems)
@@ -172,7 +187,6 @@ class SchedulingTimeViewController: UIViewController {
         if !eveningTimes.isEmpty {
             timeSections.append(eveningSection)
         }
-//        timeSections = [morningSection, afternoonSection, eveningSection]
     }
 
     private func setupConstraints() {
@@ -180,7 +194,6 @@ class SchedulingTimeViewController: UIViewController {
         let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
         let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
         let dayCollectionViewWidth = days.count * (45)
-        let timeCollectionViewWidth = timeSections.count * (105)
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
@@ -206,17 +219,23 @@ class SchedulingTimeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
-        timeCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dayLabel.snp.bottom).offset(16)
-            make.bottom.equalTo(finishButton.snp.top).offset(-30)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(timeCollectionViewWidth)
-        }
-
         finishButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(finishButtonSize)
+        }
+        
+        setupTimeCollectionViewConstraints()
+    }
+    
+    private func setupTimeCollectionViewConstraints() {
+        let timeCollectionViewWidth = timeSections.count * (105)
+        
+        timeCollectionView.snp.updateConstraints { update in
+            update.top.equalTo(dayLabel.snp.bottom).offset(16)
+            update.bottom.equalTo(finishButton.snp.top).offset(-30)
+            update.centerX.equalToSuperview()
+            update.width.equalTo(timeCollectionViewWidth)
         }
     }
 
@@ -312,6 +331,9 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
         if collectionView == dayCollectionView {
             selectedDay = days[indexPath.item]
             dayLabel.text  = "Every \(daysDict[selectedDay] ?? "")"
+            if isOtherSide, let day = daysDict[selectedDay] {
+                setupTimes(for: day, isFirstTime: false)
+            }
             timeCollectionView.reloadData()
         } else {
             let section = timeSections[indexPath.section]
