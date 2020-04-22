@@ -272,7 +272,6 @@ extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.section])
-        view.endEditing(true)
         updateSearchBarText()
         filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()

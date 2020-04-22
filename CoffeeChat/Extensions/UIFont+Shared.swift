@@ -8,6 +8,20 @@
 
 import UIKit
 
+enum Fonts {
+
+    case book, medium, bold
+
+    enum Circular {
+
+        struct Standard {
+            static let book = "CircularStd-Book"
+            static let medium = "CircularStd-Medium"
+            static let bold = "CircularStd-Bold"
+        }
+    }
+}
+
 extension UIFont {
 
     static let _12CircularStdBook = UIFont(name: "CircularStd-Book", size: 12)
@@ -22,5 +36,18 @@ extension UIFont {
 
     static let _20CircularStdBold = UIFont(name: "CircularStd-Bold", size: 20)
 
+    /// Generate fonts for app usage
+    static func getFont(_ name: Fonts, size: CGFloat) -> UIFont {
+        var fontString: String
+        switch name {
+        case .book:
+            fontString = Fonts.Circular.Standard.book
+        case .medium:
+            fontString = Fonts.Circular.Standard.medium
+        case .bold:
+            fontString = Fonts.Circular.Standard.bold
+        }
+        return UIFont(name: fontString, size: size)!
+    }
 }
 

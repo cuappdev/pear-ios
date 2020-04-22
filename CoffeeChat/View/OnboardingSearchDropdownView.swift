@@ -109,6 +109,11 @@ class OnboardingSearchDropdownView: UIView {
     func hideTableView() {
         tableView.isHidden = true
     }
+
+    /// Set text of field if value already exists.
+    func setSelectValue(value: String) {
+        searchBar.text = value
+    }
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
