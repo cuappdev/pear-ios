@@ -82,11 +82,15 @@ extension EditInterestViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let interest = getInterestFromIndexPath(indexPath)
         if indexPath.section < yourInterests.count { // From Top Section
-            yourInterests.removeAll(where: { $0.name == interest.name })
+            if let location = yourInterests.firstIndex(where: { $0.name == interest.name }) {
+                yourInterests.remove(at: location)
+            }
             moreInterests.append(interest)
             moreInterests.sort(by: {$0.name < $1.name })
         } else { // Bottom Section
-            moreInterests.removeAll(where: { $0.name == interest.name })
+            if let location = moreInterests.firstIndex(where: { $0.name == interest.name }) {
+                moreInterests.remove(at: location)
+            }
             yourInterests.append(interest)
             yourInterests.sort(by: {$0.name < $1.name })
         }
@@ -124,16 +128,12 @@ extension EditInterestViewController: UITableViewDataSource {
 
         if section == yourInterests.count { // Lower Section
             headerView = InterestHeaderView()
-            if let headerView = headerView as? InterestHeaderView {
-                headerView.configure(with: "More Interests", info: "Tap to select")
-                headerView.backgroundColor = .none
-            }
+            (headerView as? InterestHeaderView)?.configure(with: "More Interests", info: "Tap to select")
+            headerView.backgroundColor = .none
         } else if section == 0 { // Upper Section
             headerView = InterestHeaderView()
-            if let headerView = headerView as? InterestHeaderView {
-                headerView.configure(with: "Your Interests", info: "Tap to deselect")
-                headerView.backgroundColor = .none
-            }
+            (headerView as? InterestHeaderView)?.configure(with: "Your Interests", info: "Tap to deselect")
+            headerView.backgroundColor = .none
         } else { // Filler Space
             headerView = UIView()
         }
