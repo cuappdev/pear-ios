@@ -14,7 +14,9 @@ class SchedulingTimeViewController: UIViewController {
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
-    private let finishButton = UIButton()
+    private let infoLabel = UILabel()
+    private let nextButton = UIButton()
+    private let noTimesWorkButton = UIButton()
     private var timeCollectionView: UICollectionView!
     private let titleLabel = UILabel()
 
@@ -47,7 +49,7 @@ class SchedulingTimeViewController: UIViewController {
     private var timeSections: [Section] = []
 
     // MARK: - Data
-    private let finishButtonSize = CGSize(width: 175, height: 50)
+    private let nextButtonSize = CGSize(width: 175, height: 50)
     private let interitemSpacing: CGFloat = 4
     private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
@@ -71,7 +73,8 @@ class SchedulingTimeViewController: UIViewController {
 
     private var isOtherSide: Bool
     // TODO: Remove after connecting to backend
-    private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private let matchFirstName: String = "Ezra"
     private var confirmedTime: [String: String] = [:]
 
     init(isOtherSide: Bool) {
@@ -107,7 +110,7 @@ class SchedulingTimeViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        titleLabel.text = "When are you free?"
+        titleLabel.text = isOtherSide ? "Pick a time to meet" : "When are you free?"
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -125,10 +128,16 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        dayLabel.text  = "Every \(daysDict[selectedDay] ?? "")"
+        dayLabel.text = isOtherSide ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
         dayLabel.textColor = .textBlack
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
+
+        infoLabel.font = ._16CircularStdMedium
+        infoLabel.text = "Here's when \(matchFirstName) is free"
+        infoLabel.textAlignment = .center
+        infoLabel.textColor = .greenGray
+        view.addSubview(infoLabel)
 
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
@@ -143,14 +152,20 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         view.addSubview(timeCollectionView)
 
-        finishButton.setTitle("Finish", for: .normal)
-        finishButton.setTitleColor(.white, for: .normal)
-        finishButton.titleLabel?.font = ._20CircularStdBold
-        finishButton.backgroundColor = .inactiveGreen
-        finishButton.isEnabled = false
-        finishButton.layer.cornerRadius = finishButtonSize.height / 2
-        finishButton.addTarget(self, action: #selector(finishButtonPressed), for: .touchUpInside)
-        view.addSubview(finishButton)
+        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.titleLabel?.font = ._20CircularStdBold
+        nextButton.backgroundColor = .inactiveGreen
+        nextButton.isEnabled = false
+        nextButton.layer.cornerRadius = nextButtonSize.height / 2
+        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        view.addSubview(nextButton)
+        
+        noTimesWorkButton.setTitle("No times work", for: .normal)
+        noTimesWorkButton.setTitleColor(.darkGreen, for: .normal)
+        noTimesWorkButton.titleLabel?.font = ._16CircularStdMedium
+        noTimesWorkButton.addTarget(self, action: #selector(noTimesWorkPressed), for: .touchUpInside)
+        view.addSubview(noTimesWorkButton)
 
         setupTimeSections()
         setupConstraints()
@@ -191,7 +206,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isOtherSide ? 60 : 30)
         let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
         let dayCollectionViewWidth = days.count * (45)
 
@@ -208,21 +223,40 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         dayCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(25)
+            if isOtherSide {
+                make.top.equalTo(infoLabel.snp.bottom).offset(15)
+            } else {
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            }
+
             make.centerX.equalToSuperview()
             make.height.equalTo(50)
             make.width.equalTo(dayCollectionViewWidth)
         }
 
         dayLabel.snp.makeConstraints { make in
-            make.top.equalTo(dayCollectionView.snp.bottom).offset(10)
+            make.top.equalTo(dayCollectionView.snp.bottom).offset(5)
             make.centerX.equalToSuperview()
         }
 
-        finishButton.snp.makeConstraints { make in
+        nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
             make.centerX.equalToSuperview()
-            make.size.equalTo(finishButtonSize)
+            make.size.equalTo(nextButtonSize)
+        }
+        
+        if isOtherSide {
+            infoLabel.snp.makeConstraints { make in
+                make.top.equalTo(titleLabel.snp.bottom).offset(5)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(20)
+            }
+            
+            noTimesWorkButton.snp.makeConstraints { make in
+                make.top.equalTo(nextButton.snp.bottom).offset(10)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(20)
+            }
         }
         
         setupTimeCollectionViewConstraints()
@@ -232,38 +266,42 @@ class SchedulingTimeViewController: UIViewController {
         let timeCollectionViewWidth = timeSections.count * (105)
         
         timeCollectionView.snp.updateConstraints { update in
-            update.top.equalTo(dayLabel.snp.bottom).offset(16)
-            update.bottom.equalTo(finishButton.snp.top).offset(-30)
+            update.top.equalTo(dayLabel.snp.bottom).offset(8)
+            update.bottom.equalTo(nextButton.snp.top).offset(-20)
             update.centerX.equalToSuperview()
             update.width.equalTo(timeCollectionViewWidth)
         }
     }
 
-    private func updateFinishButton() {
+    private func updateNextButton() {
         let timeCount = availabilities.map({ $0.value.count }).reduce(0, +)
-        finishButton.isEnabled = availabilities.count != 0 && timeCount > 0 || !confirmedTime.isEmpty
-        if finishButton.isEnabled {
-            finishButton.backgroundColor = .backgroundOrange
-            finishButton.layer.shadowColor = UIColor.black.cgColor
-            finishButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            finishButton.layer.shadowOpacity = 0.15
-            finishButton.layer.shadowRadius = 2
+        nextButton.isEnabled = availabilities.count != 0 && timeCount > 0 || !confirmedTime.isEmpty
+        if nextButton.isEnabled {
+            nextButton.backgroundColor = .backgroundOrange
+            nextButton.layer.shadowColor = UIColor.black.cgColor
+            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            nextButton.layer.shadowOpacity = 0.15
+            nextButton.layer.shadowRadius = 2
         } else {
-            finishButton.backgroundColor = .inactiveGreen
-            finishButton.layer.shadowColor = .none
-            finishButton.layer.shadowOffset = .zero
-            finishButton.layer.shadowOpacity = 0
-            finishButton.layer.shadowRadius = 0
+            nextButton.backgroundColor = .inactiveGreen
+            nextButton.layer.shadowColor = .none
+            nextButton.layer.shadowOffset = .zero
+            nextButton.layer.shadowOpacity = 0
+            nextButton.layer.shadowRadius = 0
         }
     }
 
-    @objc private func finishButtonPressed() {
-        let placesVC = SchedulingPlacesViewController(isOtherSide: isOtherSide)
+    @objc private func nextButtonPressed() {
+        let placesVC = SchedulingPlacesViewController(isOtherSide: isOtherSide, availabilities: availabilities, confirmedTime: confirmedTime)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
     @objc private func backButtonPressed() {
         navigationController?.popViewController(animated: false)
+    }
+
+    @objc private func noTimesWorkPressed() {
+        // TODO: Show alert asking for confirmation
     }
 
 }
@@ -330,7 +368,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = days[indexPath.item]
-            dayLabel.text  = "Every \(daysDict[selectedDay] ?? "")"
+            dayLabel.text  = isOtherSide ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
             if isOtherSide, let day = daysDict[selectedDay] {
                 setupTimes(for: day, isFirstTime: false)
             }
@@ -349,7 +387,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
                 }
             }
             dayCollectionView.reloadData()
-            updateFinishButton()
+            updateNextButton()
         }
     }
     
@@ -363,7 +401,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
                 availabilities.removeValue(forKey: day)
             }
             dayCollectionView.reloadData()
-            updateFinishButton()
+            updateNextButton()
         }
     }
 
@@ -373,14 +411,12 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == dayCollectionView {
-            return CGSize(width: 36, height: 50)
+            return CGSize(width: 36, height: 48)
         } else {
             let itemCount = CGFloat(timeSections[indexPath.section].items.count)
             let itemWidth = timeCollectionView.frame.width/CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
             let itemHeight = timeCollectionView.frame.height/itemCount - interitemSpacing
-            return itemHeight > 36
-                ? CGSize(width: itemWidth, height: 36)
-                : CGSize(width: itemWidth, height: itemHeight)
+            return CGSize(width: itemWidth, height: min(36, itemHeight))
         }
     }
 
