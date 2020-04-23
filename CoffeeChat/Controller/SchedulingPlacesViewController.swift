@@ -62,6 +62,9 @@ class SchedulingPlacesViewController: UIViewController {
     private let lineSpacing: CGFloat = 12
     private let headerHeight: CGFloat = 50
 
+    private var availabilities: [String: [String]] = [:]
+    private var confirmedTime: [String: String] = [:]
+
     // TODO: Replace with networking when available
     private var campusLocations = [
         "Atrium Cafe",
@@ -87,8 +90,13 @@ class SchedulingPlacesViewController: UIViewController {
         "Kung Fu Tea"
     ]
 
-    init(isOtherSide: Bool) {
+    init(isOtherSide: Bool, availabilities: [String: [String]], confirmedTime: [String: String]) {
         self.isOtherSide = isOtherSide
+        if isOtherSide {
+            self.confirmedTime = confirmedTime
+        } else {
+            self.availabilities = availabilities
+        }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -106,8 +114,20 @@ class SchedulingPlacesViewController: UIViewController {
         titleLabel.textColor = .textBlack
         view.addSubview(titleLabel)
 
-        infoLabel.font = ._16CircularStdBook
-        infoLabel.text = "Pick three"
+        var scheduledTime = ""
+        if let confirmedTime = confirmedTime.first {
+            let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
+            let pmTimes = ["12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
+            var amPm = ""
+            if amTimes.contains(confirmedTime.value) {
+                amPm = "AM"
+            } else if pmTimes.contains(confirmedTime.value) {
+                amPm = "PM"
+            }
+            scheduledTime = "Meeting at \(confirmedTime.value) \(amPm) on \(confirmedTime.key)"
+        }
+        infoLabel.font = ._16CircularStdMedium
+        infoLabel.text = isOtherSide ? scheduledTime :  "Pick three"
         infoLabel.textColor = .greenGray
         view.addSubview(infoLabel)
 
@@ -158,7 +178,7 @@ class SchedulingPlacesViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isOtherSide ? 60 : 30)
         let collectionViewPadding = 30
         let collectionViewSidePadding = isOtherSide ? 80 : 32
         let infoPadding = 3
