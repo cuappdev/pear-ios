@@ -57,13 +57,13 @@ class SchedulingPlacesViewController: UIViewController {
 
     private var isOtherSide: Bool
     private var confirmedLocation: String!
-    
-    private let interitemSpacing: CGFloat = 12
-    private let lineSpacing: CGFloat = 12
-    private let headerHeight: CGFloat = 50
 
     private var availabilities: [String: [String]] = [:]
     private var confirmedTime: [String: String] = [:]
+
+    private let headerHeight: CGFloat = 50
+    private let interitemSpacing: CGFloat = 12
+    private let lineSpacing: CGFloat = 12
 
     // TODO: Replace with networking when available
     private var campusLocations = [
@@ -255,16 +255,18 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
             let section = locationSections[indexPath.section]
             switch section {
             case .campus(let locations):
+                let location = locations[indexPath.row]
                 if isOtherSide {
-                    confirmedLocation = locations[indexPath.row]
+                    confirmedLocation = location
                 } else {
-                    selectedCampusLocations.append(locations[indexPath.row])
+                    selectedCampusLocations.append(location)
                 }
             case .ctown(let locations):
+                let location = locations[indexPath.row]
                 if isOtherSide {
-                    confirmedLocation = locations[indexPath.row]
+                    confirmedLocation = location
                 } else {
-                    selectedCtownLocations.append(locations[indexPath.row])
+                    selectedCtownLocations.append(location)
                 }
             }
             if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
@@ -336,13 +338,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let headersSize = 2 * headerHeight
         let numberColumns: CGFloat = isOtherSide ? 1 : 2
-        var numberRows: CGFloat!
-        if isOtherSide {
-            numberRows = CGFloat(campusLocations.count + ctownLocations.count)
-        } else {
-            let rowCount = Float(campusLocations.count/2).rounded() + Float(ctownLocations.count/2).rounded()
-            numberRows = CGFloat(rowCount)
-        }
+        let numberRows = isOtherSide ? CGFloat(campusLocations.count + ctownLocations.count) : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
         return CGSize(width: itemWidth, height: min(isOtherSide ? 50 : 43, itemHeight))

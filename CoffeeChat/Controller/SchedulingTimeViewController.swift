@@ -56,26 +56,27 @@ class SchedulingTimeViewController: UIViewController {
     private let dayCellReuseId = "dayCellReuseIdentifier"
     private let timeCellReuseId = "timeCellReuseIdentifier"
 
+    private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
+    private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
+    private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
+    private var afternoonItems: [ItemType] = []
+    private var afternoonTimes: [String] = []
+    private var eveningItems: [ItemType] = []
+    private var eveningTimes: [String] = []
+    private var morningItems: [ItemType] = []
+    private var morningTimes: [String] = []
+
     private var availabilities: [String: [String]] = [:]
     private var days = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
     private var selectedDay: String = "Su"
 
-    private var afternoonItems: [ItemType] = []
-    private var afternoonTimes: [String] = []
-    private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
-    private var eveningItems: [ItemType] = []
-    private var eveningTimes: [String] = []
-    private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-    private var morningItems: [ItemType] = []
-    private var morningTimes: [String] = []
-    private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
-
+    // Data for other side of scheduling
+    private var confirmedTime: [String: String] = [:]
     private var isOtherSide: Bool
     // TODO: Remove after connecting to backend
     private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
     private let matchFirstName: String = "Ezra"
-    private var confirmedTime: [String: String] = [:]
 
     init(isOtherSide: Bool) {
         self.isOtherSide = isOtherSide
@@ -228,7 +229,6 @@ class SchedulingTimeViewController: UIViewController {
             } else {
                 make.top.equalTo(titleLabel.snp.bottom).offset(20)
             }
-
             make.centerX.equalToSuperview()
             make.height.equalTo(50)
             make.width.equalTo(dayCollectionViewWidth)
@@ -240,7 +240,7 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-bottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(nextButtonSize)
         }
@@ -275,7 +275,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private func updateNextButton() {
         let timeCount = availabilities.map({ $0.value.count }).reduce(0, +)
-        nextButton.isEnabled = availabilities.count != 0 && timeCount > 0 || !confirmedTime.isEmpty
+        nextButton.isEnabled = !availabilities.isEmpty && timeCount > 0 || !confirmedTime.isEmpty
         if nextButton.isEnabled {
             nextButton.backgroundColor = .backgroundOrange
             nextButton.layer.shadowColor = UIColor.black.cgColor
