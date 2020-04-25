@@ -41,8 +41,7 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().inset(10)
-            make.trailing.equalToSuperview().inset(10)
+            make.leading.trailing.equalToSuperview().inset(10)
         }
     }
 
