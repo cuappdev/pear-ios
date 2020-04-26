@@ -1,14 +1,3 @@
-
-// TODO <--
-// Make cells use padding to enforce itercell spacing
-// Reconstruct this so its by sectinos, queing different cell types for things
-// Header is the select thing (has search bar for groups)
-// Footer for top section is the button with vieweing more or less
-// IDEALLY dequeing is easy as its all same cell, headers displat even id seciont is empty, footer doesn't show if its
-// empty
-
-
-
 //
 //  EditInterestVireController.swift
 //  CoffeeChat
@@ -24,6 +13,10 @@ class EditInterestViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let interestsTableView = UITableView(frame: .zero, style: .grouped)
+
+    // MARK: - Display Settings
+    private var showingLess = true
+    private var hideAfter = 3 // DOesn't display more [hideAfter] categories if showingLess is true
 
     // MARK: - Collection View Sections
     private enum Section {
@@ -77,13 +70,6 @@ class EditInterestViewController: UIViewController {
         }
     }
 
-    // MARK: - Data Management
-    // private func getInterestFromIndexPath(_ indexPath: IndexPath) -> Interest {
-    //     return indexPath.section < yourInterests.count
-    //         ? yourInterests[indexPath.section]
-    //         : moreInterests[indexPath.section - yourInterests.count]
-    // }
-
 }
 
 // MARK: - UITableViewDelegate
@@ -116,12 +102,12 @@ extension EditInterestViewController: UITableViewDelegate {
 extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? yourInterests.count : moreInterests.count
+        return section == 0
+            ? (showingLess && yourInterests.count > hideAfter ? 3 : yourInterests.count)
+            : moreInterests.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //cell.configure(with: "Your Interests", info: "Select at least one interest so that we can better help you find a Pear!")
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
         let data = (indexPath.section == 0 ? yourInterests : moreInterests)[indexPath.row]
         cell.configure(with: data)
@@ -130,46 +116,30 @@ extension EditInterestViewController: UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        // let cellSpacing: CGFloat = 12
-        // let headerSpacing: CGFloat = 88
-        // if yourInterests.isEmpty {
-        //     return section == 1 ? headerSpacing : cellSpacing
-        // } else {
-        //     return [0, yourInterests.count].contains(section) ? headerSpacing : cellSpacing
-        // }
-        return 88
-    }
-
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // if yourInterests.isEmpty { // Empty Your Interests section
-        //     if section == 0 { // Empty Your Interests section
-        //         // headerView = InterestHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
-        //         headerView = UIView()
-        //     } else if section == 1 { // More Interests section
-        //         headerView = InterestHeaderView(with: "More Interests", info: "Tap to select")
-        //     } else { // Filler Spacing
-        //         headerView = UIView()
-        //     }
-        // } else { // Normal Display
-        //     if section == 0 { // Upper Section
-        //         headerView = InterestHeaderView(with: "Your Interests", info: "Tap to deselect")
-        //     } else if section == yourInterests.count { // Lower Section
-        //         headerView = InterestHeaderView(with: "More Interests", info: "Tap to select")
-        //     } else { // Filler Spacing
-        //         headerView = UIView()
-        //     }
-        // }
         let headerView: UIView
         if section == 0 && yourInterests.isEmpty {
-            headerView = InterestHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
+            headerView = EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
         } else if section == 0 { // Upper Section
-            headerView = InterestHeaderView(with: "Your Interests", info: "Tap to deselect")
+            headerView = EditHeaderView(with: "Your Interests", info: "Tap to deselect")
         } else { // Lower Section
-            headerView = InterestHeaderView(with: "More Interests", info: "Tap to select")
+            headerView = EditHeaderView(with: "More Interests", info: "Tap to select")
         }
-        headerView.backgroundColor = .none
         return headerView
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if section == 0 && yourInterests.count > hideAfter {
+            let footerView = EditFooterView(with: "View your other interests")
+            footerView.changeViewState(less: showingLess)
+            footerView.delegate = {
+                self.showingLess = $0
+                self.interestsTableView.reloadData()
+            }
+            return footerView
+        } else {
+            return UIView()
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -180,10 +150,18 @@ extension EditInterestViewController: UITableViewDataSource {
         return 64 + 12
     }
 
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 64
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return yourInterests.count > hideAfter && section == 0 ? 64 : 0
+    }
+
 }
 
 // MARK: - UITableView Header
-private class InterestHeaderView: UIView {
+private class EditHeaderView: UIButton {
 
     private let label = UILabel()
 
@@ -232,30 +210,77 @@ private class InterestHeaderView: UIView {
 
 }
 
-// MARK: EmptyTableViewCell
-private class EmptyTableViewCell: UITableViewCell {
+// MARK: UITableViewFooter
+private class EditFooterView: UIButton {
 
-    private let headerView = InterestHeaderView()
-    static let reuseIdentifier = "EmptyEditTableViewCell"
+    private var showingLess = false
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+    private let label = UILabel()
+    private let arrowView = UIImageView()
 
-        contentView.addSubview(headerView)
-        headerView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalToSuperview()
+    var delegate: ((Bool) -> Void)?
+
+    convenience init(with text: String) {
+        self.init(frame: .zero)
+        label.font = UIFont._16CircularStdMedium
+        label.textColor = .greenGray
+        configure(with: text)
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        label.numberOfLines = 0
+        label.isUserInteractionEnabled = false
+        addSubview(label)
+
+        arrowView.image = UIImage(named: "right_arrow")
+        arrowView.isUserInteractionEnabled = false
+        arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+        arrowView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 9, height: 18))
         }
+
+        let stack = UIStackView()
+        stack.isUserInteractionEnabled = false
+        stack.alignment = .center
+        stack.axis = .horizontal
+        stack.spacing = 12
+        stack.distribution = .fillProportionally
+        stack.insertArrangedSubview(arrowView, at: 0)
+        stack.insertArrangedSubview(label, at: 1)
+        addSubview(stack)
+        stack.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().inset(44)
+        }
+
+        addTarget(self, action: #selector(buttonAction), for: .touchDown)
+    }
+
+    func changeViewState(less: Bool) {
+        print("b4 less: \(showingLess)")
+        showingLess = less
+        print("showing less: \(showingLess)")
+        label.text = less ? "View your other interests" : "View fewer interests"
+        arrowView.transform = less
+            ? CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
+            : CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+        delegate?(showingLess)
+        print("on exit less: \(showingLess)")
+    }
+
+    @objc private func buttonAction() {
+        print("?")
+        changeViewState(less: !showingLess)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with title: String, info: String) {
-        contentView.subviews.forEach { $0.removeFromSuperview() }
-        headerView.configure(with: title, info: info)
+    func configure(with title: String) {
+        label.text = title
     }
 
 }
