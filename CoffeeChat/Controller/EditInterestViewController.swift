@@ -13,6 +13,8 @@ class EditInterestViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let interestsTableView = UITableView(frame: .zero, style: .grouped)
+    private let backButton = UIButton()
+    private let saveBarButtonItem = UIBarButtonItem()
 
     // MARK: - Display Settings
     private var showingLess = true
@@ -48,6 +50,7 @@ class EditInterestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Edit Groups"
         view.backgroundColor = .backgroundLightGreen
 
         interestsTableView.delegate = self
@@ -68,6 +71,36 @@ class EditInterestViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+
+        setupNavigationBar()
+    }
+
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.barTintColor = .backgroundLightGreen
+        navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
+        navigationController?.navigationBar.titleTextAttributes = [
+            .font: UIFont.getFont(.medium, size: 24)
+        ]
+
+        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.imageView?.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 10, height: 20))
+        }
+        backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backBarButtonItem
+
+        saveBarButtonItem.title = "Save"
+        saveBarButtonItem.tintColor = .darkGreen
+        saveBarButtonItem.setTitleTextAttributes([
+            .font: UIFont.getFont(.medium, size: 20)
+        ], for: .normal)
+        navigationItem.rightBarButtonItem = saveBarButtonItem
+    }
+
+    @objc private func backPressed() {
+        navigationController?.popViewController(animated: true)
     }
 
 }
