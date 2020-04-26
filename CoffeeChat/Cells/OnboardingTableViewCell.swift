@@ -11,6 +11,7 @@ import UIKit
 class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
+    private let backdropView = UIView()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
     private lazy var categoriesLabel: UILabel = {
@@ -34,22 +35,25 @@ class OnboardingTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
 
-        layer.cornerRadius = 8
-        contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = true
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        backdropView.layer.cornerRadius = 8
+        backdropView.layer.cornerRadius = 8
+        backdropView.layer.masksToBounds = true
 
         interestImageView.layer.cornerRadius = 4
-        contentView.addSubview(interestImageView)
+        backdropView.addSubview(interestImageView)
 
         titleLabel.textColor = .textBlack
         titleLabel.font = ._20CircularStdBook
-        contentView.addSubview(titleLabel)
+        backdropView.addSubview(titleLabel)
 
-        contentView.clipsToBounds = false
-        contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        contentView.layer.shadowOpacity = 0.1
-        contentView.layer.shadowRadius = 2
+        backdropView.clipsToBounds = false
+        backdropView.layer.shadowColor = UIColor.black.cgColor
+        backdropView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        backdropView.layer.shadowOpacity = 0.1
+        backdropView.layer.shadowRadius = 2
+        contentView.addSubview(backdropView)
     }
 
     required init?(coder: NSCoder) {
@@ -57,9 +61,15 @@ class OnboardingTableViewCell: UITableViewCell {
     }
 
     private func setupConstraints(showingInterests: Bool) {
+        let cellSize = CGSize(width: 290, height: 64)
         let imageSize = CGSize(width: 32, height: 32)
         let sidePadding: CGFloat = 12
         let textSidePadding: CGFloat = 8
+
+        backdropView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(cellSize)
+        }
 
         interestImageView.snp.remakeConstraints { make in
             make.size.equalTo(imageSize)
@@ -102,6 +112,10 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
+    func changeColor(isSelected: Bool) {
+        backdropView.backgroundColor = isSelected ? .pearGreen : .white
+    }
+
     /// Changes whether the cell changes its appearence on selection
     func selectionChangesAppearence(_ changes: Bool) {
         selectionChangesAppearence = changes
@@ -117,7 +131,7 @@ class OnboardingTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selectionChangesAppearence {
-            contentView.backgroundColor = isSelected ? .pearGreen : .white
+            changeColor(isSelected: isSelected)
         }
     }
 
