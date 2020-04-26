@@ -14,17 +14,18 @@ protocol MessageAlertViewDelegate: class {
 
 class MessageAlertView: UIView {
 
-    private weak var delegate: MessageAlertViewDelegate?
-
+    // MARK: - Private View Vars
     private let alertImageView = UIImageView()
     private let messageLabel = UILabel()
     private let actionButton = UIButton()
     private let dismissButton = UIButton()
 
+    // MARK: - Private Data Vars
     private var actionMessage: String = ""
-    private var mainMessage: String = ""
+    private weak var delegate: MessageAlertViewDelegate?
     private var dismissMessage: String = ""
     private var hasDismissOption: Bool = false
+    private var mainMessage: String = ""
 
     init(delegate: MessageAlertViewDelegate, mainMessage: String, actionMessage: String, dismissMessage: String) {
         super.init(frame: .zero)
