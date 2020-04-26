@@ -13,30 +13,19 @@ import UIKit
 class LoginViewController: UIViewController {
 
     // MARK: - Private View Vars
+    private var errorBlurEffect: UIBlurEffect!
+    private var errorMessageAlertView: MessageAlertView!
+    private var errorMessageVisualEffectView: UIVisualEffectView!
     private let loginButton = GIDSignInButton()
     private let logoImageView = UIImageView()
     private let welcomeLabel = UILabel()
-
-    private lazy var signInErrorAlertView: AlertView = {
-        let view = AlertView()
-        view.layer.cornerRadius = 36
-        view.delegate = self
-        return view
-    }()
-
-    let visualEffectView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let view = UIVisualEffectView(effect: blurEffect)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
 
     // MARK: - Private Data Vars
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private Constants
-    private let logoSize = CGSize(width: 146, height: 146)
     private let loginButtonSize = CGSize(width: 202, height: 50)
+    private let logoSize = CGSize(width: 146, height: 146)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +47,7 @@ class LoginViewController: UIViewController {
         loginButton.style = .wide
         view.addSubview(loginButton)
 
+        setupErrorMessageAlert()
         setupConstraints()
     }
 
@@ -84,27 +74,38 @@ class LoginViewController: UIViewController {
         }
     }
 
-    private func setUpPopUpConstraints() {
+    private func setupErrorMessageAlert() {
+        errorMessageAlertView = MessageAlertView(
+            delegate: self,
+            mainMessage: Constants.Alerts.LoginFailure.message,
+            actionMessage: "Try Again",
+            dismissMessage: "" // Empty string because there is no dismiss option for alert.
+        )
+        errorBlurEffect = UIBlurEffect(style: .light)
+        errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
+    }
 
-        view.addSubview(signInErrorAlertView)
+    private func showErrorMessageAlertView() {
+        view.addSubview(errorMessageAlertView)
 
-        signInErrorAlertView.snp.makeConstraints { make in
+        errorMessageAlertView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(280)
+            make.height.equalTo(250)
             make.width.equalTo(292)
         }
 
-        signInErrorAlertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        signInErrorAlertView.alpha = 0
+        // Animate the pop up of error alert view in 0.25 seconds
         UIView.animate(withDuration: 0.25, animations: {
-            self.visualEffectView.alpha = 1
-            self.signInErrorAlertView.alpha = 1
-            self.signInErrorAlertView.transform = CGAffineTransform.identity
+            self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.errorMessageVisualEffectView.alpha = 1
+            self.errorMessageAlertView.alpha = 1
+            self.errorMessageAlertView.transform = .identity
         })
     }
+    
 }
 
-extension LoginViewController: GIDSignInDelegate, AlertViewDelegate {
+extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -118,11 +119,7 @@ extension LoginViewController: GIDSignInDelegate, AlertViewDelegate {
 
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
-            self.setUpPopUpConstraints()
-//            let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
-//            let action = UIAlertAction(title: Constants.Alerts.LoginFailure.action, style: .cancel, handler: nil)
-//            alertController.addAction(action)
-//            present(alertController, animated: true, completion: nil)
+            self.showErrorMessageAlertView()
             return
         }
 
@@ -150,14 +147,15 @@ extension LoginViewController: GIDSignInDelegate, AlertViewDelegate {
         }
     }
 
-    func dismissAlertView() {
-        UIView.animate(withDuration: 0.25, animations: {
-            self.visualEffectView.alpha = 0
-            self.signInErrorAlertView.alpha = 0
-            self.signInErrorAlertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+    // Animate error alert view pop up dismissal in 0.15 seconds
+    func removeAlertView(isDismiss: Bool) {
+        UIView.animate(withDuration: 0.15, animations: {
+            self.errorMessageVisualEffectView.alpha = 0
+            self.errorMessageAlertView.alpha = 0
+            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         }) { (_) in
-            self.signInErrorAlertView.removeFromSuperview()
+            self.errorMessageAlertView.removeFromSuperview()
         }
-    }
 
+    }
 }
