@@ -123,10 +123,6 @@ extension EditInterestViewController: UITableViewDelegate {
             yourInterests.append(data)
             yourInterests.sort(by: {$0.name < $1.name })
         }
-        print("your: \(yourInterests)")
-        print("your count: \(yourInterests.count)")
-        print("more: \(moreInterests)")
-        print("more count: \(moreInterests.count)")
         tableView.reloadData()
     }
 }
@@ -180,7 +176,7 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64 + 12
+        return 76
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -292,19 +288,15 @@ private class EditFooterView: UIButton {
     }
 
     func changeViewState(less: Bool) {
-        print("b4 less: \(showingLess)")
         showingLess = less
-        print("showing less: \(showingLess)")
         label.text = less ? "View your other interests" : "View fewer interests"
         arrowView.transform = less
             ? CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
             : CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
         delegate?(showingLess)
-        print("on exit less: \(showingLess)")
     }
 
     @objc private func buttonAction() {
-        print("?")
         changeViewState(less: !showingLess)
     }
 

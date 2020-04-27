@@ -40,11 +40,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
             let matchVC = assignedMatch ? homeVC : noMatchVC
             let rootVC = onboardingCompleted ? matchVC : onboardingVC
-            let navigationController = UINavigationController(rootViewController: EditInterestViewController())
+            let navigationController = UINavigationController(rootViewController: rootVC)
             window.rootViewController = navigationController
         } else {
             // Ask user to sign in if they have not signed in before.
-            let navigationController = UINavigationController(rootViewController: EditInterestViewController())
+            let navigationController = UINavigationController(rootViewController: LoginViewController())
             window.rootViewController = navigationController
         }
         self.window = window

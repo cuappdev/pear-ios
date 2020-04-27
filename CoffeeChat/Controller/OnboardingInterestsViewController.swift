@@ -174,7 +174,7 @@ class OnboardingInterestsViewController: UIViewController {
 extension OnboardingInterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64 + 12
+        return 76
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
