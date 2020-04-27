@@ -93,7 +93,7 @@ class OnboardingSearchDropdownView: UIView {
         addSubview(tableView)
     }
 
-    func setupConstraints() {
+    private func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(49)
