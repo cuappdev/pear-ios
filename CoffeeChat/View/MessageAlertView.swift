@@ -33,7 +33,7 @@ class MessageAlertView: UIView {
         self.mainMessage = mainMessage
         self.actionMessage = actionMessage
         self.dismissMessage = dismissMessage
-        self.hasDismissOption = (self.dismissMessage != "")
+        self.hasDismissOption = dismissMessage != ""
         setupViews()
         setupConstraints()
     }

@@ -30,8 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = navigationController
             return
         }
-        let navigationController = UINavigationController(rootViewController: LoginViewController())
-        window.rootViewController = navigationController
         if signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
