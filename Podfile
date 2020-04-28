@@ -16,6 +16,13 @@ use_frameworks!
     pod 'SwiftyJSON'
     pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'
 
+
+    # UI Frameworks
+    pod 'IQKeyboardManagerSwift'
+    pod 'SnapKit'
+
+    pod 'SideMenu'
+
   target 'CoffeeChatTests' do
     inherit! :search_paths
     # Pods for testing

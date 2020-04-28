@@ -7,6 +7,7 @@
 //
 
 import GoogleSignIn
+import IQKeyboardManagerSwift
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -20,6 +21,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = scene as? UIWindowScene else { return }
 
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
+
         let window = UIWindow(windowScene: scene)
         guard let signIn = GIDSignIn.sharedInstance() else {
             let navigationController = UINavigationController(rootViewController: LoginViewController())
@@ -30,10 +34,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
             let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let assignedMatch = false
             let homeVC = HomeViewController()
-//            let noMatchVC = NoMatchViewController()
+            let noMatchVC = NoMatchViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
-            let rootVC = onboardingCompleted ? homeVC : onboardingVC
+            let matchVC = assignedMatch ? homeVC : noMatchVC
+            let rootVC = onboardingCompleted ? matchVC : onboardingVC
             let navigationController = UINavigationController(rootViewController: rootVC)
             window.rootViewController = navigationController
         } else {

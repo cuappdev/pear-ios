@@ -20,7 +20,8 @@ class OnboardingSelectDropdownView: UIView {
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var tableData: [String]
     private var textTemplate: String = ""
-    private var shouldShowFields: Bool = false
+    private var shouldShowFields: Bool = true
+    var isFilled: Bool = false
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -81,21 +82,30 @@ class OnboardingSelectDropdownView: UIView {
 
     /// Toggles the view to show or hide dropdown table view.
     @objc func toggleDropDown() {
-        shouldShowFields.toggle()
-        tableView.isHidden = !shouldShowFields
         if shouldShowFields {
             // Show dropdown table view when user taps on bar.
+            tableView.isHidden = false
             let height = tableView.contentSize.height
             delegate?.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: true)
+            shouldShowFields = false
         } else {
             // Dismiss table view if user taps on bar again.
+            tableView.isHidden = true
             delegate?.sendDropdownViewToBack(dropdownView: self)
+            shouldShowFields = true
         }
     }
 
     /// Hide search results table view, intended to be called by parent view controller.
     func hideTableView() {
         tableView.isHidden = true
+        shouldShowFields = true
+    }
+
+    /// Set text of field if value already exists
+    func setSelectValue(value: String) {
+        dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
+        dropdownButton.setTitleColor(.textBlack, for: .normal)
     }
 }
 
@@ -117,9 +127,9 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
 
     /// Updates dropdown text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.isHidden = true
         dropdownButton.setTitle("\(textTemplate) \(tableData[indexPath.row])", for: .normal)
         dropdownButton.setTitleColor(.textBlack, for: .normal)
+        hideTableView()
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
         delegate?.sendDropdownViewToBack(dropdownView: self)
     }

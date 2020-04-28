@@ -17,14 +17,31 @@ protocol OnboardingPageDelegate: class {
 class OnboardingPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
+    private let backgroundImage = UIImageView()
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: OnboardingInterestsViewController!
     private var onboardingPages = [UIViewController]()
 
+    // MARK: - Private Data Vars
+    private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
+    private let screenWidth = UIScreen.main.bounds.width
+    private let screenHeight = UIScreen.main.bounds.height
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
+
+        for subview in view.subviews {
+            if let scrollView = subview as? UIScrollView {
+                scrollView.delegate = self
+            }
+        }
+
+        backgroundImage.image = UIImage(named: "onboardingBackground")
+        backgroundImage.contentMode =  .scaleAspectFill
+        view.insertSubview(backgroundImage, at: 0)
+        backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = OnboardingInterestsViewController(delegate: self)
@@ -35,12 +52,18 @@ class OnboardingPageViewController: UIPageViewController {
     }
 }
 
-extension OnboardingPageViewController: OnboardingPageDelegate {
+extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDelegate {
     func nextPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .forward, animated: true, completion: nil)
     }
 
     func backPage(index: Int) {
         setViewControllers([onboardingPages[index]], direction: .reverse, animated: true, completion: nil)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Update x position based on screen size when page scrolls
+        backgroundXPosition -= 0.04 * screenWidth
+        backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }
 }
