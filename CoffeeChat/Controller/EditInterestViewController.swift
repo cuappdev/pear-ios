@@ -8,6 +8,29 @@
 
 import UIKit
 
+// MARK: - TableView Sections
+enum ItemType {
+    case interest(Interest)
+    case group(Group)
+
+    func getName() -> String {
+        switch self {
+        case .interest(let interest):
+            return interest.name
+        case .group(let group):
+            return group.name
+        }
+    }
+}
+enum SectionType {
+    case yours
+    case more
+}
+struct Section {
+    let type: SectionType
+    var items: [ItemType]
+}
+
 // MARK: - UIViewController
 class EditInterestViewController: UIViewController {
 
@@ -18,35 +41,33 @@ class EditInterestViewController: UIViewController {
 
     // MARK: - Display Settings
     private var showingLess = true
-    private var hideAfter = 3 // DOesn't display more [hideAfter] categories if showingLess is true
+    private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
 
-    // MARK: - Collection View Sections
-    private enum Section {
-        case yourInterests([Interest])
-        case moreInterests([Interest])
+    private var sections: [Section] = []
+    private var moreSection: Section? {
+        get {
+            if let loc = sections.firstIndex(where: { $0.type == .more }) {
+                return sections[loc]
+            } else { return nil }
+        }
     }
-
-    // MARK: - Data Vars
-    // TODO replace with actual data
-    private var yourInterests: [Interest] = [
-        Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
-        Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
-        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance")
-    ]
-    private var moreInterests: [Interest] = [
-        Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
-        Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
-        Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
-        Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
-        Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
-        Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
-        Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
-        Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
-        Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
-        Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
-        Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
-        Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
-    ]
+    private var moreCount: Int {
+        get {
+            return moreSection?.items.count ?? 0
+        }
+    }
+    private var yourSection: Section? {
+        get {
+            if let loc = sections.firstIndex(where: { $0.type == .yours }) {
+                return sections[loc]
+            } else { return nil }
+        }
+    }
+    private var yourCount: Int {
+        get {
+            return yourSection?.items.count ?? 0
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +92,33 @@ class EditInterestViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+
+        // Setup Sections
+        // TODO replace with actual data
+        let yourInterests: [Interest] = [
+            Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
+            Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
+            Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance")
+        ]
+        let moreInterests: [Interest] = [
+            Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
+            Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
+            Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
+            Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
+            Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
+            Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
+            Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
+            Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
+            Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
+            Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
+            Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
+            Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
+        ]
+
+
+        let yourSection = Section(type: .yours, items: yourInterests.map { ItemType.interest($0) })
+        let moreSection = Section(type: .more, items: moreInterests.map { ItemType.interest($0) })
+        sections = [yourSection, moreSection]
 
         setupNavigationBar()
     }
@@ -103,26 +151,50 @@ class EditInterestViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
+    // MARK: - Section Manipulation
+    /// Moves an interest or group with name identifier from a source section to the target section
+    private func moveData(named name: String, from source: SectionType, to target: SectionType) {
+        if
+            let sourceIndx = sections.firstIndex(where: { $0.type == source }),
+            let targetIndx = sections.firstIndex(where: { $0.type == target }) {
+            var sourceSection = sections[sourceIndx]
+            var targetSection = sections[targetIndx]
+            if let loc = sourceSection.items.firstIndex(where: { $0.getName() == name }) {
+                targetSection.items.append(sourceSection.items[loc])
+                sourceSection.items.remove(at: loc)
+                sections[sourceIndx] = sourceSection
+                sections[sourceIndx].items.sort(by: { $0.getName() < $1.getName() })
+                sections[targetIndx] = targetSection
+                sections[targetIndx].items.sort(by: { $0.getName() < $1.getName() })
+            }
+        }
+    }
+
 }
 
 // MARK: - UITableViewDelegate
 extension EditInterestViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = (indexPath.section == 0 ? yourInterests : moreInterests)[indexPath.row]
-        if indexPath.section == 0 { // From Top Section
-            if let location = yourInterests.firstIndex(where: { $0.name == data.name }) {
-                yourInterests.remove(at: location)
+        let section = sections[indexPath.section]
+        let item = section.items[indexPath.row]
+
+        switch item {
+        case .interest(let interest):
+            let name = interest.name
+            print(name)
+            switch section.type {
+            case .yours:
+                moveData(named: name, from: .yours, to: .more)
+            case .more:
+                moveData(named: name, from: .more, to: .yours)
             }
-            moreInterests.append(data)
-            moreInterests.sort(by: {$0.name < $1.name })
-        } else { // Bottom Section
-            if let location = moreInterests.firstIndex(where: { $0.name == data.name }) {
-                moreInterests.remove(at: location)
-            }
-            yourInterests.append(data)
-            yourInterests.sort(by: {$0.name < $1.name })
+
+        case .group(let group):
+            // TODO
+            break
         }
+
         tableView.reloadData()
     }
 }
@@ -132,22 +204,31 @@ extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0
-            ? (showingLess && yourInterests.count > hideAfter ? 3 : yourInterests.count)
-            : moreInterests.count
+            ? (showingLess && yourCount > hideAfter ? 3 : yourCount)
+            : moreCount
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
-        let data = (indexPath.section == 0 ? yourInterests : moreInterests)[indexPath.row]
-        cell.configure(with: data)
-        cell.changeColor(isSelected: indexPath.section == 0)
-        cell.selectionChangesAppearence(false)
-        return cell
+        let section = sections[indexPath.section]
+        let itemType = section.items[indexPath.row]
+
+        switch itemType {
+        case .interest(let interest):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
+            cell.configure(with: interest)
+            cell.changeColor(isSelected: section.type == .yours)
+            cell.selectionChangesAppearence(false)
+            return cell
+
+        case .group(let group):
+            // TODO
+            return UITableViewCell()
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView: UIView
-        if section == 0 && yourInterests.isEmpty {
+        if section == 0 && yourCount == 0 {
             headerView = EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
         } else if section == 0 { // Upper Section
             headerView = EditHeaderView(with: "Your Interests", info: "Tap to deselect")
@@ -158,7 +239,7 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 && yourInterests.count > hideAfter {
+        if section == 0 && yourCount > hideAfter {
             let footerView = EditFooterView(with: "View your other interests")
             footerView.changeViewState(less: showingLess)
             footerView.delegate = {
@@ -184,7 +265,7 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return yourInterests.count > hideAfter && section == 0 ? 64 : 0
+        return (yourSection?.items.count ?? 0) > hideAfter && section == 0 ? 64 : 0
     }
 
 }
