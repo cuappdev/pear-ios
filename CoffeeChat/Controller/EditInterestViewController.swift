@@ -182,7 +182,6 @@ extension EditInterestViewController: UITableViewDelegate {
         switch item {
         case .interest(let interest):
             let name = interest.name
-            print(name)
             switch section.type {
             case .yours:
                 moveData(named: name, from: .yours, to: .more)
