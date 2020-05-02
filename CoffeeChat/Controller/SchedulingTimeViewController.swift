@@ -14,6 +14,9 @@ class SchedulingTimeViewController: UIViewController {
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
+    private var errorBlurEffect: UIBlurEffect!
+    private var errorMessageAlertView: MessageAlertView!
+    private var errorMessageVisualEffectView: UIVisualEffectView!
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
@@ -74,15 +77,16 @@ class SchedulingTimeViewController: UIViewController {
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
     private var selectedDay: String = "Su"
 
-    private var confirmedTime: (day: String, time: String)!
-    // Whether user is confirming a time from match's availabilities
-    private var isConfirmingTime: Bool
+    // Whether user is picking a time from match's availabilities
+    private var isPicking: Bool
+    // Time user picked from match's availabilities
+    private var pickedTime: (day: String, time: String) = (day: "", time: "")
     // TODO: Remove after connecting to backend
     private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
     private let matchFirstName: String = "Ezra"
 
-    init(isConfirmingTime: Bool) {
-        self.isConfirmingTime = isConfirmingTime
+    init(isPicking: Bool) {
+        self.isPicking = isPicking
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -99,7 +103,7 @@ class SchedulingTimeViewController: UIViewController {
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
 
-        if isConfirmingTime {
+        if isPicking {
             daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
             if let firstDayShort = daysAbbrev.first {
                 selectedDay = firstDayShort
@@ -114,7 +118,7 @@ class SchedulingTimeViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        titleLabel.text = isConfirmingTime ? "Pick a time to meet" : "When are you free?"
+        titleLabel.text = isPicking ? "Pick a time to meet" : "When are you free?"
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -132,7 +136,7 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        dayLabel.text = isConfirmingTime ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
+        dayLabel.text = isPicking ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
         dayLabel.textColor = .textBlack
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
@@ -149,7 +153,7 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionViewLayout.scrollDirection = .horizontal
 
         timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
-        timeCollectionView.allowsMultipleSelection = !isConfirmingTime
+        timeCollectionView.allowsMultipleSelection = !isPicking
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
@@ -171,12 +175,13 @@ class SchedulingTimeViewController: UIViewController {
         noTimesWorkButton.addTarget(self, action: #selector(noTimesWorkPressed), for: .touchUpInside)
         view.addSubview(noTimesWorkButton)
 
+        setupErrorMessageAlert()
         setupTimeSections()
         setupConstraints()
     }
 
     func setupTimes(for day: String, isFirstTime: Bool) {
-        if isConfirmingTime, let times = matchAvailabilities[day] {
+        if isPicking, let times = matchAvailabilities[day] {
             afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
             eveningTimes = allEveningTimes.filter { times.contains($0) }
             morningTimes = allMorningTimes.filter { times.contains($0) }
@@ -210,7 +215,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isConfirmingTime ? 60 : 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isPicking ? 60 : 30)
         let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
         let dayCollectionViewWidth = daysAbbrev.count * 45
 
@@ -227,7 +232,7 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         dayCollectionView.snp.makeConstraints { make in
-            if isConfirmingTime {
+            if isPicking {
                 make.top.equalTo(infoLabel.snp.bottom).offset(15)
             } else {
                 make.top.equalTo(titleLabel.snp.bottom).offset(20)
@@ -248,7 +253,7 @@ class SchedulingTimeViewController: UIViewController {
             make.size.equalTo(nextButtonSize)
         }
         
-        if isConfirmingTime {
+        if isPicking {
             infoLabel.snp.makeConstraints { make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(5)
                 make.leading.trailing.equalToSuperview()
@@ -275,10 +280,38 @@ class SchedulingTimeViewController: UIViewController {
             update.width.equalTo(timeCollectionViewWidth)
         }
     }
+    
+    private func setupErrorMessageAlert() {
+        errorMessageAlertView = MessageAlertView(
+            delegate: self,
+            mainMessage: Constants.Alerts.NoTimesWork.message,
+            actionMessage: Constants.Alerts.NoTimesWork.action,
+            dismissMessage: Constants.Alerts.NoTimesWork.dismiss
+        )
+        errorBlurEffect = UIBlurEffect(style: .light)
+        errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
+    }
+
+    private func showErrorMessageAlertView() {
+        view.addSubview(errorMessageAlertView)
+
+        errorMessageAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(281)
+            make.width.equalTo(292)
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.errorMessageVisualEffectView.alpha = 1
+            self.errorMessageAlertView.alpha = 1
+            self.errorMessageAlertView.transform = .identity
+        })
+    }
 
     private func updateNextButton() {
         let timeCount = availabilities.map({ $0.value.count }).reduce(0, +)
-        nextButton.isEnabled = !availabilities.isEmpty && timeCount > 0 || confirmedTime != nil
+        nextButton.isEnabled = !availabilities.isEmpty && timeCount > 0 || pickedTime.day != "" && pickedTime.time != ""
         if nextButton.isEnabled {
             nextButton.backgroundColor = .backgroundOrange
             nextButton.layer.shadowColor = UIColor.black.cgColor
@@ -295,7 +328,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        let placesVC = SchedulingPlacesViewController(isConfirmingTime: isConfirmingTime, availabilities: availabilities, confirmedTime: confirmedTime)
+        let placesVC = SchedulingPlacesViewController(isPicking: isPicking, availabilities: availabilities, pickedTime: pickedTime)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
@@ -304,7 +337,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func noTimesWorkPressed() {
-        // TODO: Show alert asking for confirmation
+        showErrorMessageAlertView()
     }
 
 }
@@ -325,8 +358,8 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
             let day = daysAbbrev[indexPath.item]
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
-            if let day = daysDict[day], confirmedTime != nil {
-                let isAvailable = isConfirmingTime ? confirmedTime.day == day : availabilities[day] != nil
+            if let day = daysDict[day] {
+                let isAvailable = isPicking ? pickedTime.day == day : availabilities[day] != nil
                 cell.updateBackgroundColor(isAvailable: isAvailable)
             }
             // Select item if day is the selected day
@@ -348,8 +381,8 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
                 cell.isUserInteractionEnabled = true
                 // Select time(s) that was previously selected for a day
                 if let day = daysDict[selectedDay] {
-                    if isConfirmingTime,
-                        confirmedTime != nil && confirmedTime.time == time && confirmedTime.day == day {
+                    if isPicking,
+                        pickedTime.time == time && pickedTime.day == day {
                         timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     } else if let dayAvailability = availabilities[day],
@@ -370,8 +403,8 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = daysAbbrev[indexPath.item]
-            dayLabel.text  = isConfirmingTime ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
-            if isConfirmingTime, let day = daysDict[selectedDay] {
+            dayLabel.text  = isPicking ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
+            if isPicking, let day = daysDict[selectedDay] {
                 setupTimes(for: day, isFirstTime: false)
             }
             timeCollectionView.reloadData()
@@ -379,8 +412,8 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
             guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
-            if isConfirmingTime {
-                confirmedTime = (day: day, time: time)
+            if isPicking {
+                pickedTime = (day: day, time: time)
             } else {
                 if availabilities[day] == nil {
                     availabilities[day] = [time]
@@ -419,6 +452,23 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
             let itemWidth = timeCollectionView.frame.width / CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
             let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
             return CGSize(width: itemWidth, height: min(36, itemHeight))
+        }
+    }
+
+}
+
+extension SchedulingTimeViewController: MessageAlertViewDelegate {
+
+    func removeAlertView(isDismiss: Bool) {
+        if isDismiss {
+            navigationController?.popViewController(animated: true)
+        }
+        UIView.animate(withDuration: 0.15, animations: {
+            self.errorMessageVisualEffectView.alpha = 0
+            self.errorMessageAlertView.alpha = 0
+            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { (_) in
+            self.errorMessageAlertView.removeFromSuperview()
         }
     }
 
