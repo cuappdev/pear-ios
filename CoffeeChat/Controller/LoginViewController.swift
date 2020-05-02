@@ -156,6 +156,6 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         }) { (_) in
             self.errorMessageAlertView.removeFromSuperview()
         }
-
     }
+
 }
