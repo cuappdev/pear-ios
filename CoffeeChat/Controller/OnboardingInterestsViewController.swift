@@ -174,28 +174,20 @@ class OnboardingInterestsViewController: UIViewController {
 extension OnboardingInterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 12
+        return 76
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+        return interests.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedInterests.append(interests[indexPath.section])
+        selectedInterests.append(interests[indexPath.row])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterests.removeAll { $0.name == interests[indexPath.section].name}
+        selectedInterests.removeAll { $0.name == interests[indexPath.row].name}
         updateNext()
     }
 
@@ -208,7 +200,7 @@ extension OnboardingInterestsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
         OnboardingTableViewCell else { return UITableViewCell() }
-        let data = interests[indexPath.section]
+        let data = interests[indexPath.row]
         cell.configure(with: data)
         return cell
     }

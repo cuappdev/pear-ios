@@ -93,7 +93,7 @@ class OnboardingSearchDropdownView: UIView {
         addSubview(tableView)
     }
 
-    func setupConstraints() {
+    private func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(49)
@@ -108,6 +108,11 @@ class OnboardingSearchDropdownView: UIView {
     /// Hide search results table view, intended to be called by parent view controller.
     func hideTableView() {
         tableView.isHidden = true
+    }
+
+    /// Set text of field if value already exists.
+    func setSelectValue(value: String) {
+        searchBar.text = value
     }
 }
 
