@@ -40,6 +40,7 @@ class EditInterestViewController: UIViewController {
     private let saveBarButtonItem = UIBarButtonItem()
 
     // MARK: - Display Settings
+    var showsGroups = true
     private var showingLess = true
     private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
 
@@ -114,10 +115,28 @@ class EditInterestViewController: UIViewController {
             Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
             Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
         ]
+        let yourGroups: [Group] = [
+            Group(name: "Apple", image: ""),
+            Group(name: "banana", image: ""),
+            Group(name: "Cornell AppDev", image: "")
+        ]
+        let moreGroups: [Group] = [
+            Group(name: "dandelion", image: ""),
+            Group(name: "giraffe", image: ""),
+            Group(name: "heap", image: ""),
+            Group(name: "Igloo", image: ""),
+            Group(name: "Jeans", image: "")
+        ]
 
-
-        let yourSection = Section(type: .yours, items: yourInterests.map { ItemType.interest($0) })
-        let moreSection = Section(type: .more, items: moreInterests.map { ItemType.interest($0) })
+        let yourSection: Section
+        let moreSection: Section
+        if showsGroups {
+          yourSection = Section(type: .yours, items: yourGroups.map { ItemType.group($0) })
+          moreSection = Section(type: .more, items: moreGroups.map { ItemType.group($0) })
+        } else {
+            yourSection = Section(type: .yours, items: yourInterests.map { ItemType.interest($0) })
+            moreSection = Section(type: .more, items: moreInterests.map { ItemType.interest($0) })
+        }
         sections = [yourSection, moreSection]
 
         setupNavigationBar()
@@ -179,20 +198,19 @@ extension EditInterestViewController: UITableViewDelegate {
         let section = sections[indexPath.section]
         let item = section.items[indexPath.row]
 
+        let name: String
         switch item {
         case .interest(let interest):
-            let name = interest.name
-            print(name)
-            switch section.type {
-            case .yours:
-                moveData(named: name, from: .yours, to: .more)
-            case .more:
-                moveData(named: name, from: .more, to: .yours)
-            }
-
+            name = interest.name
         case .group(let group):
-            // TODO
-            break
+            name = group.name
+        }
+
+        switch section.type {
+        case .yours:
+            moveData(named: name, from: .yours, to: .more)
+        case .more:
+            moveData(named: name, from: .more, to: .yours)
         }
 
         tableView.reloadData()
@@ -221,19 +239,22 @@ extension EditInterestViewController: UITableViewDataSource {
             return cell
 
         case .group(let group):
-            // TODO
-            return UITableViewCell()
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
+            cell.configure(with: group)
+            cell.changeColor(isSelected: section.type == .yours)
+            cell.selectionChangesAppearence(false)
+            return cell
         }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView: UIView
+        let headerView = EditHeaderView()
         if section == 0 && yourCount == 0 {
-            headerView = EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
+            headerView.configure(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!", useSearch: false)
         } else if section == 0 { // Upper Section
-            headerView = EditHeaderView(with: "Your Interests", info: "Tap to deselect")
+            headerView.configure(with: "Your Interests", info: "Tap to deselect", useSearch: false)
         } else { // Lower Section
-            headerView = EditHeaderView(with: "More Interests", info: "Tap to select")
+            headerView.configure(with: "More Interests", info: "Tap to select", useSearch: showsGroups)
         }
         return headerView
     }
@@ -261,7 +282,7 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 64
+        return showsGroups && section == 1 ? 128 : 64
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -271,31 +292,27 @@ extension EditInterestViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableView Header
-private class EditHeaderView: UIButton {
+private class EditHeaderView: UIView {
 
+    private var usesSearchBar = false
     private let label = UILabel()
+    private var searchBar: UISearchBar?
 
-    convenience init(with title: String, info: String) {
-        self.init(frame: .zero)
-        configure(with: title, info: info)
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        label.numberOfLines = 0
-        addSubview(label)
-        label.snp.makeConstraints { make in
-          make.centerY.equalToSuperview().offset(12)
-          make.centerX.equalToSuperview()
-          make.width.equalToSuperview()
-        }
+    init() {
+        super.init(frame: .zero)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with title: String, info: String) {
+    func configure(with title: String, info: String, useSearch: Bool) {
+        setupText(title: title, info: info)
+        setupViews(withSearch: useSearch)
+        setupConstraints()
+    }
+
+    private func setupText(title: String, info: String) {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 0.0
         style.alignment = .center
@@ -318,8 +335,54 @@ private class EditHeaderView: UIButton {
         label.attributedText = combined
     }
 
+    private func setupViews(withSearch: Bool) {
+        label.numberOfLines = 0
+        addSubview(label)
+
+        if withSearch {
+            print("Is using this-----------------------")
+            print("aaa")
+            searchBar = UISearchBar()
+            guard let searchBar = searchBar else { return }
+            print("This far--------------------")
+            searchBar.delegate = self
+            searchBar.backgroundColor = .backgroundWhite
+            searchBar.backgroundImage = UIImage()
+            searchBar.searchTextField.backgroundColor = .backgroundWhite
+            searchBar.searchTextField.textColor = .textBlack
+            searchBar.searchTextField.font = ._20CircularStdBook
+            searchBar.searchTextField.clearButtonMode = .never
+            searchBar.layer.cornerRadius = 8
+            searchBar.showsCancelButton = false
+            addSubview(searchBar)
+        }
+
+    }
+    private func setupConstraints() {
+        let topPadding = 3
+        let searchPadding = 12
+
+        label.snp.makeConstraints { make in
+          make.centerY.equalToSuperview().offset(topPadding)
+          make.centerX.equalToSuperview()
+          make.width.equalToSuperview()
+        }
+
+        searchBar?.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(42)
+            make.top.equalTo(label.snp.bottom).offset(searchPadding)
+        }
+    }
 }
 
+extension EditHeaderView: UISearchBarDelegate {
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // filterTableView(searchText: getSearchText(from: searchText))
+    }
+
+}
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
