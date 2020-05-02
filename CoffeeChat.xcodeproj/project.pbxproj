@@ -23,6 +23,7 @@
 		305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */; };
 		305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */; };
 		4F004A4A23EF430F00DDAF81 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */; };
+		4F12A7102419925C00AEA21C /* EditInterestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F12A70F2419925C00AEA21C /* EditInterestViewController.swift */; };
 		4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F51324E23F3AE6B00DBDE96 /* Group.swift */; };
 		4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */; };
 		4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */; };
@@ -90,6 +91,7 @@
 		305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingTimeCollectionViewCell.swift; sourceTree = "<group>"; };
 		480251E04C49011C3CF9451F /* Pods-CoffeeChatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4F004A4923EF430F00DDAF81 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4F12A70F2419925C00AEA21C /* EditInterestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInterestViewController.swift; sourceTree = "<group>"; };
 		4F51324E23F3AE6B00DBDE96 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Group.swift; path = CoffeeChat/Controller/Group.swift; sourceTree = SOURCE_ROOT; };
 		4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlaceCollectionViewCell.swift; sourceTree = "<group>"; };
 		4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlacesViewController.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
 				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
+				4F12A70F2419925C00AEA21C /* EditInterestViewController.swift */,
 				D480EC0523E2470000513063 /* HomeViewController.swift */,
 				4FFF3B2223E9189F00C89C29 /* OnboardingInterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
@@ -648,6 +651,7 @@
 				303F81A424395EC2002937CD /* MenuOptionTableViewCell.swift in Sources */,
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
+				4F12A7102419925C00AEA21C /* EditInterestViewController.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
