@@ -202,9 +202,12 @@ extension EditInterestViewController: UITableViewDelegate {
 extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0
-            ? (showingLess && yourCount > hideAfter ? 3 : yourCount)
-            : moreCount
+      switch sections[section].type {
+      case .yours:
+        return showingLess && yourCount > hideAfter ? 3 : yourCount
+      case .more:
+        return moreCount
+      }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -227,11 +230,12 @@ extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView: UIView
-        if section == 0 && yourCount == 0 {
-            headerView = EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
-        } else if section == 0 { // Upper Section
-            headerView = EditHeaderView(with: "Your Interests", info: "Tap to deselect")
-        } else { // Lower Section
+        switch sections[section].type {
+        case .yours:
+            headerView = yourCount == 0
+              ? EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
+              : EditHeaderView(with: "Your Interests", info: "Tap to deselect")
+        case .more:
             headerView = EditHeaderView(with: "More Interests", info: "Tap to select")
         }
         return headerView
