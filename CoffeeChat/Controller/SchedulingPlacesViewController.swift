@@ -55,11 +55,12 @@ class SchedulingPlacesViewController: UIViewController {
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
-    private var isOtherSide: Bool
+    // Whether user is confirming a location from match's availabilities
+    private var isConfirmingTime: Bool
     private var confirmedLocation: String!
 
     private var availabilities: [String: [String]] = [:]
-    private var confirmedTime: [String: String] = [:]
+    private var confirmedTime: (day: String, time: String)!
 
     private let headerHeight: CGFloat = 50
     private let interitemSpacing: CGFloat = 12
@@ -90,9 +91,9 @@ class SchedulingPlacesViewController: UIViewController {
         "Kung Fu Tea"
     ]
 
-    init(isOtherSide: Bool, availabilities: [String: [String]], confirmedTime: [String: String]) {
-        self.isOtherSide = isOtherSide
-        if isOtherSide {
+    init(isConfirmingTime: Bool, availabilities: [String: [String]], confirmedTime: (day: String, time: String)) {
+        self.isConfirmingTime = isConfirmingTime
+        if isConfirmingTime {
             self.confirmedTime = confirmedTime
         } else {
             self.availabilities = availabilities
@@ -115,19 +116,15 @@ class SchedulingPlacesViewController: UIViewController {
         view.addSubview(titleLabel)
 
         var scheduledTime = ""
-        if let confirmedTime = confirmedTime.first {
-            let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
-            let pmTimes = ["12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-            var amPm = ""
-            if amTimes.contains(confirmedTime.value) {
-                amPm = "AM"
-            } else if pmTimes.contains(confirmedTime.value) {
-                amPm = "PM"
-            }
-            scheduledTime = "Meeting at \(confirmedTime.value) \(amPm) on \(confirmedTime.key)"
+        var amPm = ""
+        if Time.isAm(time: confirmedTime.time) {
+            amPm = "AM"
+        } else if Time.isPm(time: confirmedTime.time) {
+            amPm = "PM"
         }
+        scheduledTime = "Meeting at \(confirmedTime.time) \(amPm) on \(confirmedTime.day)"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = isOtherSide ? scheduledTime :  "Pick three"
+        infoLabel.text = isConfirmingTime ? scheduledTime :  "Pick three"
         infoLabel.textColor = .greenGray
         view.addSubview(infoLabel)
 
@@ -136,7 +133,7 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
         locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: locationsCollectionViewLayout)
-        locationsCollectionView.allowsMultipleSelection = !isOtherSide
+        locationsCollectionView.allowsMultipleSelection = !isConfirmingTime
         locationsCollectionView.showsVerticalScrollIndicator = false
         locationsCollectionView.showsHorizontalScrollIndicator = false
         locationsCollectionView.delegate = self
@@ -162,7 +159,7 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        if isOtherSide {
+        if isConfirmingTime {
             campusLocations = campusLocations.filter { matchLocations.contains($0) }
             ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
         }
@@ -178,9 +175,9 @@ class SchedulingPlacesViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isOtherSide ? 60 : 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isConfirmingTime ? 60 : 30)
         let collectionViewPadding = 30
-        let collectionViewSidePadding = isOtherSide ? 80 : 32
+        let collectionViewSidePadding = isConfirmingTime ? 80 : 32
         let infoPadding = 3
         let nextButtonSize = CGSize(width: 175, height: 50)
         let topPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
@@ -256,14 +253,14 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
             switch section {
             case .campus(let locations):
                 let location = locations[indexPath.row]
-                if isOtherSide {
+                if isConfirmingTime {
                     confirmedLocation = location
                 } else {
                     selectedCampusLocations.append(location)
                 }
             case .ctown(let locations):
                 let location = locations[indexPath.row]
-                if isOtherSide {
+                if isConfirmingTime {
                     confirmedLocation = location
                 } else {
                     selectedCtownLocations.append(location)
@@ -311,23 +308,23 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row], isOtherSide: isOtherSide)
+            cell.configure(with: locations[indexPath.row], isConfirmingTime: isConfirmingTime)
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row], isOtherSide: isOtherSide)
+            cell.configure(with: locations[indexPath.row], isConfirmingTime: isConfirmingTime)
             return cell
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = indexPath.section == 0
-        ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
-        : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
-
+        let isCampus = indexPath.section == 0
+        let header = isCampus
+            ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
+            : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
         guard let headerView = header as? HeaderLabel else { return header }
-        headerView.configure(with: indexPath.section == 0 ? "Campus" : "Collegetown")
+        headerView.configure(with: isCampus ? "Campus" : "Collegetown")
         return headerView
     }
 
@@ -337,11 +334,13 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let headersSize = 2 * headerHeight
-        let numberColumns: CGFloat = isOtherSide ? 1 : 2
-        let numberRows = isOtherSide ? CGFloat(campusLocations.count + ctownLocations.count) : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
+        let numberColumns: CGFloat = isConfirmingTime ? 1 : 2
+        let numberRows = isConfirmingTime
+            ? CGFloat(campusLocations.count + ctownLocations.count)
+            : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
-        return CGSize(width: itemWidth, height: min(isOtherSide ? 50 : 43, itemHeight))
+        return CGSize(width: itemWidth, height: min(isConfirmingTime ? 50 : 43, itemHeight))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {

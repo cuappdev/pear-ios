@@ -45,9 +45,9 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func configure(with title: String, isOtherSide: Bool) {
+    func configure(with title: String, isConfirmingTime: Bool) {
         titleLabel.text = title
-        titleLabel.textAlignment = isOtherSide ? .center : .left
+        titleLabel.textAlignment = isConfirmingTime ? .center : .left
     }
 
     func changeSelection(selected: Bool) {
