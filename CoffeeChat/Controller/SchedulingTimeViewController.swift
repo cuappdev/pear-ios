@@ -293,6 +293,8 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func showErrorMessageAlertView() {
+        errorMessageVisualEffectView.frame = view.bounds
+        view.addSubview(errorMessageVisualEffectView)
         view.addSubview(errorMessageAlertView)
 
         errorMessageAlertView.snp.makeConstraints { make in
@@ -469,6 +471,7 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
             self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         }) { (_) in
             self.errorMessageAlertView.removeFromSuperview()
+            self.errorMessageVisualEffectView.removeFromSuperview()
         }
     }
 
