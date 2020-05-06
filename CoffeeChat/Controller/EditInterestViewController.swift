@@ -78,12 +78,12 @@ class Section {
 class EditInterestViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let interestsTableView = UITableView(frame: .zero, style: .grouped)
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     private let backButton = UIButton()
     private let saveBarButtonItem = UIBarButtonItem()
 
     // MARK: - Display Settings
-    var showsGroups = false
+    var showsGroups = true
     private var showingLess = true
     private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
 
@@ -120,21 +120,21 @@ class EditInterestViewController: UIViewController {
         self.title = "Edit \(showsGroups ? "Groups" : "Interests")"
         view.backgroundColor = .backgroundLightGreen
 
-        interestsTableView.delegate = self
-        interestsTableView.dataSource = self
-        interestsTableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        interestsTableView.isScrollEnabled = true
-        interestsTableView.clipsToBounds = true
-        interestsTableView.backgroundColor = .none
-        interestsTableView.allowsMultipleSelection = true
-        interestsTableView.bounces = false
-        interestsTableView.showsHorizontalScrollIndicator = false
-        interestsTableView.showsVerticalScrollIndicator = false
-        interestsTableView.separatorStyle = .none
-        interestsTableView.sectionFooterHeight = 0
-        view.addSubview(interestsTableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        tableView.isScrollEnabled = true
+        tableView.clipsToBounds = true
+        tableView.backgroundColor = .none
+        tableView.allowsMultipleSelection = true
+        tableView.bounces = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = .none
+        tableView.sectionFooterHeight = 0
+        view.addSubview(tableView)
 
-        interestsTableView.snp.makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
@@ -306,7 +306,7 @@ extension EditInterestViewController: UITableViewDataSource {
                 headerView.searchDelegate = {
                     self.moreSection?.filterString = $0
                     self.moreSection?.refilter()
-                    self.interestsTableView.reloadData()
+                    self.tableView.reloadData()
                 }
             }
         }
@@ -319,7 +319,7 @@ extension EditInterestViewController: UITableViewDataSource {
             footerView.changeViewState(less: showingLess)
             footerView.delegate = {
                 self.showingLess = $0
-                self.interestsTableView.reloadData()
+                self.tableView.reloadData()
             }
             return footerView
         } else {
@@ -429,22 +429,21 @@ private class EditHeaderView: UIView {
     }
 
     private func setupConstraints() {
-        let topPadding = 3
-        let searchPadding = 12
+        let seachbarSize = CGSize(width: 290, height: 42)
+        let stackPadding = 12
 
         label.snp.makeConstraints { make in
-          make.width.equalToSuperview()
+            make.width.equalToSuperview()
         }
 
         searchBar?.snp.makeConstraints { make in
-            make.width.equalTo(290)
-            make.height.equalTo(42)
+            make.size.equalTo(seachbarSize)
         }
 
         stackView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalToSuperview().inset(12)
+            make.height.equalToSuperview().inset(stackPadding)
         }
     }
 }
