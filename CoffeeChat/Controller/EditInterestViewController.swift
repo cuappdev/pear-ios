@@ -299,12 +299,20 @@ extension EditInterestViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = EditHeaderView()
 
-        if section == 0 && yourCount == 0 {
-            headerView.configure(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!", useSearch: false)
-        } else if section == 0 { // Upper Section
-            headerView.configure(with: "Your Interests", info: "Tap to deselect", useSearch: false)
+        if section == 0 { // Upper Section
+            let labelTitle = showsGroups ? "Your Groups" : "Your Interests"
+            if yourCount == 0 {
+                let labelSubtext = showsGroups
+                    ? "Select a group so we can better help you find a pair!"
+                    : "Select at least one interest so we can better help you find a pair!"
+                headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+            } else {
+                headerView.configure(with: labelTitle, info: "tap to deselect", useSearch: false)
+            }
         } else { // Lower Section
-            headerView.configure(with: "More Interests", info: "Tap to select", useSearch: showsGroups)
+            let labelTitle = showsGroups ? "More Groups" : "More Interests"
+            let labelSubtext = showsGroups ? "tap or search to add" : "tap to add"
+            headerView.configure(with: labelTitle, info: labelSubtext, useSearch: showsGroups)
             if showsGroups {
                 headerView.searchDelegate = {
                     self.moreSection?.filterString = $0
@@ -318,7 +326,7 @@ extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 && yourCount > hideAfter {
-            let footerView = EditFooterView(with: "View your other interests")
+            let footerView = EditFooterView(showsGroups: showsGroups)
             footerView.changeViewState(less: showingLess)
             footerView.delegate = {
                 self.showingLess = $0
@@ -470,6 +478,7 @@ extension EditHeaderView: UISearchBarDelegate {
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
+    private var showingGroups = false
     private var showingLess = false
 
     private let label = UILabel()
@@ -477,11 +486,12 @@ private class EditFooterView: UIButton {
 
     var delegate: ((Bool) -> Void)?
 
-    convenience init(with text: String) {
+    convenience init(showsGroups: Bool) {
         self.init(frame: .zero)
         label.font = UIFont._16CircularStdMedium
         label.textColor = .greenGray
-        configure(with: text)
+        showingGroups = showsGroups
+        configure(showsGroups: showingGroups)
     }
 
     override init(frame: CGRect) {
@@ -517,7 +527,9 @@ private class EditFooterView: UIButton {
 
     func changeViewState(less: Bool) {
         showingLess = less
-        label.text = less ? "View your other interests" : "View fewer interests"
+        label.text = less
+            ? "View your other \(showingGroups ? "groups" : "interests")"
+            : "View fewer \(showingGroups ? "groups" : "interests")"
         arrowView.transform = less
             ? CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
             : CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
@@ -532,8 +544,8 @@ private class EditFooterView: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with title: String) {
-        label.text = title
+    func configure(showsGroups: Bool) {
+        label.text = showsGroups ? "view your other groups" : "view your other interests"
     }
 
 }
