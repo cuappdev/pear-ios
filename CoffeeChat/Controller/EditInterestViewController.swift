@@ -356,10 +356,14 @@ private class EditHeaderView: UIView {
             searchBar.searchTextField.clearButtonMode = .never
             searchBar.layer.cornerRadius = 8
             searchBar.showsCancelButton = false
+            searchBar.clipsToBounds = false
+            searchBar.layer.shadowColor = UIColor.black.cgColor
+            searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            searchBar.layer.shadowOpacity = 0.1
+            searchBar.layer.shadowRadius = 2
             //addSubview(searchBar)
         }
 
-        stackView.isUserInteractionEnabled = false
         stackView.alignment = .center
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -388,10 +392,9 @@ private class EditHeaderView: UIView {
 
         searchBar?.snp.makeConstraints { make in
             //make.centerX.equalToSuperview()
-            make.width.equalToSuperview()
-    private let arrowView = UIImageView()
+            make.width.equalTo(290)
             make.height.equalTo(42)
-            //make.top.equalTo(label.snp.bottom).offset(searchPadding)
+            //make.top.equalTo(labe.l.snp.bottom).offset(searchPadding)
         }
 
         stackView.snp.makeConstraints { make in
