@@ -35,11 +35,11 @@ class Section {
     var items: [ItemType]
     // filteredItems is always the result ofitems sorted by matching its name with filteredString
     var filteredItems: [ItemType] { get { filteredItemsInternal } }
-    var filteredItemsInternal: [ItemType]
+    private var filteredItemsInternal: [ItemType]
     var filterString: String?
 
     // How section sorts its content
-    let sortStrategy: ((ItemType, ItemType) -> Bool) = { $0.getName() < $1.getName() }
+    private let sortStrategy: ((ItemType, ItemType) -> Bool) = { $0.getName() < $1.getName() }
 
     init(type: SectionType, items: [ItemType]) {
         self.type = type
@@ -64,9 +64,9 @@ class Section {
 
     }
 
-    private func refilter() {
+    func refilter() {
         if let str = filterString {
-            filteredItemsInternal = filteredItemsInternal.filter { $0.getName() == str }
+            filteredItemsInternal = items.filter { $0.getName().localizedCaseInsensitiveContains(str) }
         } else {
             filteredItemsInternal = items
         }
@@ -298,12 +298,20 @@ extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = EditHeaderView()
+
         if section == 0 && yourCount == 0 {
             headerView.configure(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!", useSearch: false)
         } else if section == 0 { // Upper Section
             headerView.configure(with: "Your Interests", info: "Tap to deselect", useSearch: false)
         } else { // Lower Section
             headerView.configure(with: "More Interests", info: "Tap to select", useSearch: showsGroups)
+            if showsGroups {
+                headerView.searchDelegate = {
+                    self.moreSection?.filterString = $0
+                    self.moreSection?.refilter()
+                    self.interestsTableView.reloadData()
+                }
+            }
         }
         return headerView
     }
@@ -343,11 +351,15 @@ extension EditInterestViewController: UITableViewDataSource {
 // MARK: - UITableView Header
 private class EditHeaderView: UIView {
 
+    // Whether it displays with a search bar or not
     private var usesSearchBar = false
 
     private let stackView = UIStackView()
     private let label = UILabel()
     private var searchBar: UISearchBar?
+
+    // Change filtering of sections
+    var searchDelegate: ((String?) -> Void)?
 
     init() {
         super.init(frame: .zero)
@@ -450,7 +462,7 @@ private class EditHeaderView: UIView {
 extension EditHeaderView: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // filterTableView(searchText: getSearchText(from: searchText))
+        searchDelegate?(searchText == "" ? nil : searchText)
     }
 
 }
