@@ -117,7 +117,7 @@ class EditInterestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Edit Groups"
+        self.title = "Edit \(showsGroups ? "Groups" : "Interests")"
         view.backgroundColor = .backgroundLightGreen
 
         interestsTableView.delegate = self
