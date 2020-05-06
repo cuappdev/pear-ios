@@ -295,6 +295,8 @@ extension EditInterestViewController: UITableViewDataSource {
 private class EditHeaderView: UIView {
 
     private var usesSearchBar = false
+
+    private let stackView = UIStackView()
     private let label = UILabel()
     private var searchBar: UISearchBar?
 
@@ -337,7 +339,7 @@ private class EditHeaderView: UIView {
 
     private func setupViews(withSearch: Bool) {
         label.numberOfLines = 0
-        addSubview(label)
+        //addSubview(label)
 
         if withSearch {
             print("Is using this-----------------------")
@@ -354,24 +356,48 @@ private class EditHeaderView: UIView {
             searchBar.searchTextField.clearButtonMode = .never
             searchBar.layer.cornerRadius = 8
             searchBar.showsCancelButton = false
-            addSubview(searchBar)
+            //addSubview(searchBar)
         }
 
+        stackView.isUserInteractionEnabled = false
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.distribution = .fillProportionally
+        stackView.insertArrangedSubview(label, at: 0)
+        if let searchBar = searchBar {
+        stackView.insertArrangedSubview(searchBar, at: 1)
+        }
+        addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalToSuperview()
+        }
     }
+
     private func setupConstraints() {
         let topPadding = 3
         let searchPadding = 12
 
         label.snp.makeConstraints { make in
-          make.centerY.equalToSuperview().offset(topPadding)
-          make.centerX.equalToSuperview()
+          //make.centerY.equalToSuperview().offset(topPadding)
+          //make.centerX.equalToSuperview()
+          make.height.lessThanOrEqualTo(56)
           make.width.equalToSuperview()
         }
 
         searchBar?.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+            //make.centerX.equalToSuperview()
+            make.width.equalToSuperview()
+    private let arrowView = UIImageView()
             make.height.equalTo(42)
-            make.top.equalTo(label.snp.bottom).offset(searchPadding)
+            //make.top.equalTo(label.snp.bottom).offset(searchPadding)
+        }
+
+        stackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalToSuperview().inset(12)
         }
     }
 }
