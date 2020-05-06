@@ -42,14 +42,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let rootVC = onboardingCompleted ? matchVC : onboardingVC
             // let navigationController = UINavigationController(rootViewController: rootVC)
             let testvc = EditInterestViewController()
-            testvc.showsGroups = true
             let navigationcontroller = UINavigationController(rootViewController: testvc)
             window.rootViewController = navigationcontroller
         } else {
             // Ask user to sign in if they have not signed in before.
             //let navigationController = UINavigationController(rootViewController: LoginViewController())
             let testvc = EditInterestViewController()
-            testvc.showsGroups = true
             let navigationcontroller = UINavigationController(rootViewController: testvc)
             window.rootViewController = navigationcontroller
         }

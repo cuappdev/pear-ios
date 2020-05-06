@@ -83,7 +83,7 @@ class EditInterestViewController: UIViewController {
     private let saveBarButtonItem = UIBarButtonItem()
 
     // MARK: - Display Settings
-    var showsGroups = true
+    var showsGroups = false
     private var showingLess = true
     private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
 
@@ -236,11 +236,6 @@ extension EditInterestViewController: UITableViewDelegate {
         guard let yourSection = yourSection else { return }
         guard let moreSection = moreSection else { return }
 
-        print("-----------------")
-        print("Yours: \(yourSection.filteredItems)")
-        print("More: \(moreSection.filteredItems)")
-        print("-----------------")
-
         switch item {
         case .interest(let interest):
             name = interest.name
@@ -255,15 +250,9 @@ extension EditInterestViewController: UITableViewDelegate {
             moveData(named: name, from: moreSection, to: yourSection)
         }
 
-        print("-----------------")
-        print("Yours: \(yourSection.filteredItems)")
-        print("Yours All: \(yourSection.items)")
-        print("More: \(moreSection.filteredItems)")
-        print("More All: \(moreSection.items)")
-        print("-----------------")
-
         tableView.reloadData()
     }
+
 }
 
 // MARK: - UITableViewDataSource
@@ -347,7 +336,7 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showsGroups && section == 1 ? 128 : 86//64
+        return showsGroups && section == 1 ? 128 : 86
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -408,7 +397,6 @@ private class EditHeaderView: UIView {
 
     private func setupViews(withSearch: Bool) {
         label.numberOfLines = 0
-        //addSubview(label)
 
         if withSearch {
             searchBar = UISearchBar()
@@ -427,7 +415,6 @@ private class EditHeaderView: UIView {
             searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
             searchBar.layer.shadowOpacity = 0.1
             searchBar.layer.shadowRadius = 2
-            //addSubview(searchBar)
         }
 
         stackView.alignment = .center
@@ -436,7 +423,7 @@ private class EditHeaderView: UIView {
         stackView.distribution = .fillProportionally
         stackView.insertArrangedSubview(label, at: 0)
         if let searchBar = searchBar {
-        stackView.insertArrangedSubview(searchBar, at: 1)
+            stackView.insertArrangedSubview(searchBar, at: 1)
         }
         addSubview(stackView)
     }
@@ -446,17 +433,12 @@ private class EditHeaderView: UIView {
         let searchPadding = 12
 
         label.snp.makeConstraints { make in
-          //make.centerY.equalToSuperview().offset(topPadding)
-          //make.centerX.equalToSuperview()
-          //make.height.lessThanOrEqualTo(56)
           make.width.equalToSuperview()
         }
 
         searchBar?.snp.makeConstraints { make in
-            //make.centerX.equalToSuperview()
             make.width.equalTo(290)
             make.height.equalTo(42)
-            //make.top.equalTo(labe.l.snp.bottom).offset(searchPadding)
         }
 
         stackView.snp.makeConstraints { make in
@@ -498,6 +480,7 @@ private class EditFooterView: UIButton {
         super.init(frame: frame)
 
         label.numberOfLines = 0
+        label.textAlignment = .center
         label.isUserInteractionEnabled = false
         addSubview(label)
 
