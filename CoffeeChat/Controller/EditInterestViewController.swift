@@ -22,13 +22,56 @@ enum ItemType {
         }
     }
 }
+
 enum SectionType {
     case yours
     case more
 }
-struct Section {
+
+/// Section represents each section of the view
+class Section {
     let type: SectionType
+    // items
     var items: [ItemType]
+    // filteredItems is always the result ofitems sorted by matching its name with filteredString
+    var filteredItems: [ItemType] { get { filteredItemsInternal } }
+    var filteredItemsInternal: [ItemType]
+    var filterString: String?
+
+    // How section sorts its content
+    let sortStrategy: ((ItemType, ItemType) -> Bool) = { $0.getName() < $1.getName() }
+
+    init(type: SectionType, items: [ItemType]) {
+        self.type = type
+        self.items = items.sorted(by: sortStrategy)
+        self.filteredItemsInternal = items
+    }
+
+    func addItem(_ item: ItemType) {
+        items.append(item)
+        items.sort(by: sortStrategy)
+        refilter()
+    }
+
+    func removeItem(named name: String) -> ItemType? {
+        if let loc = items.firstIndex(where: { $0.getName() == name }) {
+            let removed = items.remove(at: loc)
+            items.sort(by: { $0.getName() < $1.getName() })
+            refilter()
+            return removed
+        }
+        return nil
+
+    }
+
+    private func refilter() {
+        if let str = filterString {
+            filteredItemsInternal = filteredItemsInternal.filter { $0.getName() == str }
+        } else {
+            filteredItemsInternal = items
+        }
+    }
+
 }
 
 // MARK: - UIViewController
@@ -45,6 +88,7 @@ class EditInterestViewController: UIViewController {
     private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
 
     private var sections: [Section] = []
+    // More Section and count
     private var moreSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
@@ -54,9 +98,10 @@ class EditInterestViewController: UIViewController {
     }
     private var moreCount: Int {
         get {
-            return moreSection?.items.count ?? 0
+            return moreSection?.filteredItems.count ?? 0
         }
     }
+    // Your section and count
     private var yourSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
@@ -66,7 +111,7 @@ class EditInterestViewController: UIViewController {
     }
     private var yourCount: Int {
         get {
-            return yourSection?.items.count ?? 0
+            return yourSection?.filteredItems.count ?? 0
         }
     }
 
@@ -131,11 +176,11 @@ class EditInterestViewController: UIViewController {
         let yourSection: Section
         let moreSection: Section
         if showsGroups {
-          yourSection = Section(type: .yours, items: yourGroups.map { ItemType.group($0) })
-          moreSection = Section(type: .more, items: moreGroups.map { ItemType.group($0) })
+            yourSection = Section(type: .yours, items: yourGroups.map { .group($0) })
+            moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
         } else {
-            yourSection = Section(type: .yours, items: yourInterests.map { ItemType.interest($0) })
-            moreSection = Section(type: .more, items: moreInterests.map { ItemType.interest($0) })
+            yourSection = Section(type: .yours, items: yourInterests.map { .interest($0) })
+            moreSection = Section(type: .more, items: moreInterests.map { .interest($0) })
         }
         sections = [yourSection, moreSection]
 
@@ -171,22 +216,11 @@ class EditInterestViewController: UIViewController {
     }
 
     // MARK: - Section Manipulation
+
     /// Moves an interest or group with name identifier from a source section to the target section
-    private func moveData(named name: String, from source: SectionType, to target: SectionType) {
-        if
-            let sourceIndx = sections.firstIndex(where: { $0.type == source }),
-            let targetIndx = sections.firstIndex(where: { $0.type == target }) {
-            var sourceSection = sections[sourceIndx]
-            var targetSection = sections[targetIndx]
-            if let loc = sourceSection.items.firstIndex(where: { $0.getName() == name }) {
-                targetSection.items.append(sourceSection.items[loc])
-                sourceSection.items.remove(at: loc)
-                sections[sourceIndx] = sourceSection
-                sections[sourceIndx].items.sort(by: { $0.getName() < $1.getName() })
-                sections[targetIndx] = targetSection
-                sections[targetIndx].items.sort(by: { $0.getName() < $1.getName() })
-            }
-        }
+    private func moveData(named name: String, from source: Section, to target: Section) {
+        let removed = source.removeItem(named: name)
+        if let removed = removed { target.addItem(removed) }
     }
 
 }
@@ -196,9 +230,17 @@ extension EditInterestViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = sections[indexPath.section]
-        let item = section.items[indexPath.row]
+        let item = section.filteredItems[indexPath.row]
 
         let name: String
+        guard let yourSection = yourSection else { return }
+        guard let moreSection = moreSection else { return }
+
+        print("-----------------")
+        print("Yours: \(yourSection.filteredItems)")
+        print("More: \(moreSection.filteredItems)")
+        print("-----------------")
+
         switch item {
         case .interest(let interest):
             name = interest.name
@@ -208,10 +250,17 @@ extension EditInterestViewController: UITableViewDelegate {
 
         switch section.type {
         case .yours:
-            moveData(named: name, from: .yours, to: .more)
+            moveData(named: name, from: yourSection, to: moreSection)
         case .more:
-            moveData(named: name, from: .more, to: .yours)
+            moveData(named: name, from: moreSection, to: yourSection)
         }
+
+        print("-----------------")
+        print("Yours: \(yourSection.filteredItems)")
+        print("Yours All: \(yourSection.items)")
+        print("More: \(moreSection.filteredItems)")
+        print("More All: \(moreSection.items)")
+        print("-----------------")
 
         tableView.reloadData()
     }
@@ -228,7 +277,7 @@ extension EditInterestViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = sections[indexPath.section]
-        let itemType = section.items[indexPath.row]
+        let itemType = section.filteredItems[indexPath.row]
 
         switch itemType {
         case .interest(let interest):
@@ -282,11 +331,11 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showsGroups && section == 1 ? 128 : 64
+        return showsGroups && section == 1 ? 128 : 86//64
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (yourSection?.items.count ?? 0) > hideAfter && section == 0 ? 64 : 0
+        return yourCount > hideAfter && section == 0 ? 64 : 0
     }
 
 }
@@ -342,11 +391,8 @@ private class EditHeaderView: UIView {
         //addSubview(label)
 
         if withSearch {
-            print("Is using this-----------------------")
-            print("aaa")
             searchBar = UISearchBar()
             guard let searchBar = searchBar else { return }
-            print("This far--------------------")
             searchBar.delegate = self
             searchBar.backgroundColor = .backgroundWhite
             searchBar.backgroundImage = UIImage()
@@ -373,10 +419,6 @@ private class EditHeaderView: UIView {
         stackView.insertArrangedSubview(searchBar, at: 1)
         }
         addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalToSuperview()
-        }
     }
 
     private func setupConstraints() {
@@ -386,7 +428,7 @@ private class EditHeaderView: UIView {
         label.snp.makeConstraints { make in
           //make.centerY.equalToSuperview().offset(topPadding)
           //make.centerX.equalToSuperview()
-          make.height.lessThanOrEqualTo(56)
+          //make.height.lessThanOrEqualTo(56)
           make.width.equalToSuperview()
         }
 
@@ -412,6 +454,7 @@ extension EditHeaderView: UISearchBarDelegate {
     }
 
 }
+
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
