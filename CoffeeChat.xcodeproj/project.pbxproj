@@ -37,8 +37,12 @@
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
 		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
-		D44625042415B5B800714167 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625032415B5B800714167 /* Endpoint.swift */; };
+		D44625042415B5B800714167 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625032415B5B800714167 /* Endpoints.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
+		D47FF1852459424C00808A9A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF1842459424C00808A9A /* Response.swift */; };
+		D47FF18724597B5B00808A9A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18624597B5B00808A9A /* User.swift */; };
+		D47FF18924597BEF00808A9A /* SessionAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18824597BEF00808A9A /* SessionAuthorization.swift */; };
+		D47FF18B24597CA800808A9A /* Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18A24597CA800808A9A /* Body.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
 		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
@@ -109,8 +113,12 @@
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
-		D44625032415B5B800714167 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoint.swift; path = CoffeeChat/Controller/Endpoint.swift; sourceTree = SOURCE_ROOT; };
+		D44625032415B5B800714167 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoints.swift; path = CoffeeChat/Controller/Endpoints.swift; sourceTree = SOURCE_ROOT; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
+		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Controller/Response.swift; sourceTree = SOURCE_ROOT; };
+		D47FF18624597B5B00808A9A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		D47FF18824597BEF00808A9A /* SessionAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAuthorization.swift; sourceTree = "<group>"; };
+		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Models/Body.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,6 +198,8 @@
 				4FD8152C23F781790095EC17 /* MatchSummary.swift */,
 				4FD8152E23F7817B0095EC17 /* Interest.swift */,
 				303F81A524395F63002937CD /* MenuOption.swift */,
+				D47FF18624597B5B00808A9A /* User.swift */,
+				D47FF18824597BEF00808A9A /* SessionAuthorization.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -281,7 +291,9 @@
 			isa = PBXGroup;
 			children = (
 				D44625012415B3D700714167 /* NetworkManager.swift */,
-				D44625032415B5B800714167 /* Endpoint.swift */,
+				D44625032415B5B800714167 /* Endpoints.swift */,
+				D47FF1842459424C00808A9A /* Response.swift */,
+				D47FF18A24597CA800808A9A /* Body.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -638,8 +650,10 @@
 			files = (
 				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
+				D47FF18924597BEF00808A9A /* SessionAuthorization.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
+				D47FF1852459424C00808A9A /* Response.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
@@ -651,13 +665,14 @@
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
-				D44625042415B5B800714167 /* Endpoint.swift in Sources */,
+				D44625042415B5B800714167 /* Endpoints.swift in Sources */,
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				303F81A424395EC2002937CD /* MenuOptionTableViewCell.swift in Sources */,
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
+				D47FF18724597B5B00808A9A /* User.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,
 				D4D3EFF223FE546B00229587 /* LayoutHelper.swift in Sources */,
@@ -666,6 +681,7 @@
 				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
+				D47FF18B24597CA800808A9A /* Body.swift in Sources */,
 				303F81A624395F63002937CD /* MenuOption.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,

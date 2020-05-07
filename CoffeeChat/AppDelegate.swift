@@ -7,14 +7,20 @@
 //
 
 import GoogleSignIn
+import FutureNova
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
         // Configure Google sign-in with client ID
         GIDSignIn.sharedInstance().clientID = Keys.googleClientID
+
+        // Setup networking
+        Endpoint.setupEndpointConfig()
+
         return true
     }
 

@@ -17,5 +17,24 @@ class NetworkManager {
 
     private init() {}
 
+    func pingServer() -> Future<Response<String>> {
+        return networking(Endpoint.pingServer()).decode()
+    }
+
+    func createUser(clubs: [String],
+                    idToken: String,
+                    graduationYear: String,
+                    hometown: String,
+                    interests: [String],
+                    major: String,
+                    pronouns: String) -> Future<Response<UserSessionBody>> {
+        return networking(Endpoint.createUser(clubs: clubs,
+                                              idToken: idToken,
+                                              graduationYear: graduationYear,
+                                              hometown: hometown,
+                                              interests: interests,
+                                              major: major,
+                                              pronouns: pronouns)).decode()
+    }
 
 }
