@@ -77,6 +77,11 @@ class SchedulingTimeViewController: UIViewController {
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
     private var selectedDay: String = "Su"
 
+    // Whether user is confirming their own availabilities
+    private var isConfirming: Bool
+    // TODO: Remove after connecting to backend
+    private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
+
     // Whether user is picking a time from match's availabilities
     private var isPicking: Bool
     // Time user picked from match's availabilities
@@ -85,7 +90,8 @@ class SchedulingTimeViewController: UIViewController {
     private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
     private let matchFirstName: String = "Ezra"
 
-    init(isPicking: Bool) {
+    init(isConfirming: Bool, isPicking: Bool) {
+        self.isConfirming = isConfirming
         self.isPicking = isPicking
         super.init(nibName: nil, bundle: nil)
     }
@@ -103,6 +109,10 @@ class SchedulingTimeViewController: UIViewController {
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
 
+        if isConfirming {
+            availabilities = savedAvailabilities
+        }
+
         if isPicking {
             daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
             if let firstDayShort = daysAbbrev.first {
@@ -118,7 +128,9 @@ class SchedulingTimeViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        titleLabel.text = isPicking ? "Pick a time to meet" : "When are you free?"
+        titleLabel.text = isConfirming
+            ? "Confirm your availability"
+            : isPicking ? "Pick a time to meet": "When are you free?"
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -136,7 +148,9 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        dayLabel.text = isPicking ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
+        dayLabel.text = isPicking || isConfirming
+            ? daysDict[selectedDay] ?? ""
+            : "Every \(daysDict[selectedDay] ?? "")"
         dayLabel.textColor = .textBlack
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
@@ -164,7 +178,6 @@ class SchedulingTimeViewController: UIViewController {
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
-        nextButton.isEnabled = false
         nextButton.layer.cornerRadius = nextButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
@@ -178,6 +191,7 @@ class SchedulingTimeViewController: UIViewController {
         setupErrorMessageAlert()
         setupTimeSections()
         setupConstraints()
+        updateNextButton()
     }
 
     func setupTimes(for day: String, isFirstTime: Bool) {
@@ -330,7 +344,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        let placesVC = SchedulingPlacesViewController(isPicking: isPicking, availabilities: availabilities, pickedTime: pickedTime)
+        let placesVC = SchedulingPlacesViewController(isConfirming: isConfirming, isPicking: isPicking, availabilities: availabilities, pickedTime: pickedTime)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
