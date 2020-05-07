@@ -79,14 +79,14 @@ class SchedulingTimeViewController: UIViewController {
 
     // Whether user is confirming their own availabilities
     private var isConfirming: Bool
-    // TODO: Remove after connecting to backend
+    // TODO: Change values after connecting to backend
     private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
 
     // Whether user is picking a time from match's availabilities
     private var isPicking: Bool
     // Time user picked from match's availabilities
     private var pickedTime: (day: String, time: String) = (day: "", time: "")
-    // TODO: Remove after connecting to backend
+    // TODO: Change values after connecting to backend
     private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
     private let matchFirstName: String = "Ezra"
 
