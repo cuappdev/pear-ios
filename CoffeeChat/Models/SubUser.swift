@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  SubUser.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 5/7/20.
@@ -8,18 +8,14 @@
 
 import Foundation
 
-struct User: Codable {
+struct SubUser: Codable {
 
-    let clubs: [String]
     let firstName: String
     let googleID: String
     let graduationYear: String
     let hometown: String
-    let interests: [String]
     let lastName: String
     let netID: String
-    let major: String
-    let matches: [Matching]
     let profilePictureURL: String
     let pronouns: String
 

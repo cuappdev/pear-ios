@@ -13,14 +13,10 @@ extension Endpoint {
 
     static func setupEndpointConfig() {
 
-//        guard let baseURL = Bundle.main.object(forInfoDictionaryKey: "SERVER_URL") as? String else {
-//            fatalError("Could not find SERVER_URL in Info.plist!")
-//        }
-
-        let baseURL = "pear-backend.cornellappdev.com"
+        let baseURL = Keys.serverURL
 
         #if LOCAL
-            Endpoint.config.scheme = " "
+            Endpoint.config.scheme = "http"
             Endpoint.config.port = 5000
         #else
             Endpoint.config.scheme = "http"
@@ -29,30 +25,12 @@ extension Endpoint {
         Endpoint.config.commonPath = "/api/v1"
     }
 
-    // TODO: Revisit (copied from CourseGrab)
-//    static var standardHeaders: [String: String] {
-//        if let token = User.current?.sessionAuthorization?.sessionToken {
-//            return ["Authorization": token]
-//        } else {
-//            return [:]
-//        }
-//    }
-//
-//    // TODO: Revisit (copied from CourseGrab)
-//    static var updateHeaders: [String: String] {
-//        if let token = User.current?.sessionAuthorization?.updateToken {
-//            return ["Authorization": token]
-//        } else {
-//            return [:]
-//        }
-//    }
-
-    /// Check if server application is running
+    /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
         return Endpoint(path: "/auth/hello/")
     }
 
-    /// Create a new user and initialize a Google Auth session
+    /// [POST] Authenticate ID token from Google and creates a user if account does not exist
     static func createUser(clubs: [String],
                            idToken: String,
                            graduationYear: String,
@@ -70,4 +48,35 @@ extension Endpoint {
         return Endpoint(path: "/user/login", body: body)
     }
 
+    /// [GET] Get information about the user
+    static func getUser() -> Endpoint {
+        return Endpoint(path: "/user/")
+    }
+
+    /// [GET] Get clubs of the user
+    static func getUserClubs() -> Endpoint {
+        return Endpoint(path: "/user/clubs/")
+    }
+
+    /// [POST] Get matchings of the user
+    static func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Endpoint {
+        let body = MatchingBody(netIDs: netIDs, schedule: schedule)
+        return Endpoint(path: "/user/matchings/", body: body)
+    }
+
+    /// [GET] Get major of the user
+    static func getUserMajor() -> Endpoint {
+        return Endpoint(path: "/user/majors/")
+    }
+
+    /// [GET] Get interests of the user
+    static func getUserInterests() -> Endpoint {
+        return Endpoint(path: "/user/interests/")
+    }
+
+    /// [POST] Updates information of the use
+    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
+        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
+        return Endpoint(path: "/user/update/", body: body)
+    }
 }

@@ -43,10 +43,8 @@ class HomeViewController: UIViewController {
             switch result {
             case .value(let response):
                 print(response)
-            case .error:
-                DispatchQueue.main.async {
-                    print("error")
-                }
+            case .error(let error):
+                print(error)
             }
         }
 

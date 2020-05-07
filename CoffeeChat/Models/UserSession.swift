@@ -1,14 +1,14 @@
 //
-//  SessionAuthorization.swift
+//  UserSession.swift
 //  CoffeeChat
 //
-//  Created by Lucy Xu on 4/29/20.
+//  Created by Lucy Xu on 5/7/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
 import Foundation
 
-struct SessionAuthorization: Codable {
+struct UserSession: Codable {
 
     let accessToken: String
     let active: Bool

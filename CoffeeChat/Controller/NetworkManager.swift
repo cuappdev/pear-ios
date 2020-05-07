@@ -27,7 +27,7 @@ class NetworkManager {
                     hometown: String,
                     interests: [String],
                     major: String,
-                    pronouns: String) -> Future<Response<UserSessionBody>> {
+                    pronouns: String) -> Future<Response<UserSession>> {
         return networking(Endpoint.createUser(clubs: clubs,
                                               idToken: idToken,
                                               graduationYear: graduationYear,
@@ -35,6 +35,31 @@ class NetworkManager {
                                               interests: interests,
                                               major: major,
                                               pronouns: pronouns)).decode()
+    }
+
+    func getUser() -> Future<Response<User>> {
+        return networking(Endpoint.getUser()).decode()
+    }
+
+    func getUserClubs() -> Future<Response<[String]>> {
+        return networking(Endpoint.getUserClubs()).decode()
+    }
+
+    func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Future<Response<Matching>> {
+        return networking(Endpoint.getUserMatchings(netIDs: netIDs, schedule: schedule)).decode()
+    }
+
+    func getUserMajor() -> Future<Response<String>> {
+        return networking(Endpoint.getUserMajor()).decode()
+    }
+
+    func getUserInterests() -> Future<Response<[String]>> {
+        return networking(Endpoint.getUserInterests()).decode()
+    }
+
+    // TODO: Update response body
+    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
+        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
     }
 
 }

@@ -19,19 +19,20 @@ struct UserSessionBody: Codable {
     let interests: [String]
     let major: String
     let pronouns: String
+
+}
+
+struct MatchingBody: Codable {
+
+    let netIDs: [String]
+    let schedule: [DaySchedule]
+
+}
+
+struct UserUpdateBody: Codable {
+
+    let firstName: String
+    let lastName: String
+    let netID: String
     
-}
-
-struct SessionBody: Codable {
-
-    let token: String
-    let isIos = true // TODO: Review if we have
-
-}
-
-struct DeviceTokenBody: Codable {
-
-    let isIos = true
-    let deviceToken: String
-
 }
