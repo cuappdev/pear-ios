@@ -12,11 +12,20 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    // MARK: - Private View Vars
+    private var errorBlurEffect: UIBlurEffect!
+    private var errorMessageAlertView: MessageAlertView!
+    private var errorMessageVisualEffectView: UIVisualEffectView!
     private let loginButton = GIDSignInButton()
     private let logoImageView = UIImageView()
+    private let welcomeLabel = UILabel()
+
+    // MARK: - Private Data Vars
     private let userDefaults = UserDefaults.standard
 
-    private let logoSize = CGSize(width: 150, height: 150)
+    // MARK: - Private Constants
+    private let loginButtonSize = CGSize(width: 202, height: 50)
+    private let logoSize = CGSize(width: 146, height: 146)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,32 +35,77 @@ class LoginViewController: UIViewController {
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
 
+        welcomeLabel.text = "Welcome to Pear"
+        welcomeLabel.textColor = .textBlack
+        welcomeLabel.font = ._24CircularStdMedium
+        view.addSubview(welcomeLabel)
+
+        logoImageView.layer.cornerRadius = logoSize.width/2
+        logoImageView.image = UIImage(named: "happyPear")
+        view.addSubview(logoImageView)
+
         loginButton.style = .wide
         view.addSubview(loginButton)
 
-        logoImageView.layer.cornerRadius = logoSize.width/2
-        logoImageView.backgroundColor = .inactiveGreen
-        view.addSubview(logoImageView)
-
+        setupErrorMessageAlert()
         setupConstraints()
     }
 
     private func setupConstraints() {
-        loginButton.snp.makeConstraints { make in
+        let welcomeLabelHeight: CGFloat = 30
+        let welcomeLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
+
+        welcomeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(40)
+            make.height.equalTo(welcomeLabelHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(welcomeLabelPadding)
         }
 
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-100)
+            make.top.equalTo(welcomeLabel.snp.bottom).offset(97)
             make.size.equalTo(logoSize)
+        }
+
+        loginButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoImageView.snp.bottom).offset(52)
+            make.size.equalTo(loginButtonSize)
         }
     }
 
+    private func setupErrorMessageAlert() {
+        errorMessageAlertView = MessageAlertView(
+            delegate: self,
+            mainMessage: Constants.Alerts.LoginFailure.message,
+            actionMessage: "Try Again",
+            dismissMessage: "" // Empty string because there is no dismiss option for alert.
+        )
+        errorBlurEffect = UIBlurEffect(style: .light)
+        errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
+    }
+
+    private func showErrorMessageAlertView() {
+        view.addSubview(errorMessageAlertView)
+
+        errorMessageAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(250)
+            make.width.equalTo(292)
+        }
+
+        // Animate the pop up of error alert view in 0.25 seconds
+        UIView.animate(withDuration: 0.25, animations: {
+            self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.errorMessageVisualEffectView.alpha = 1
+            self.errorMessageAlertView.alpha = 1
+            self.errorMessageAlertView.transform = .identity
+        })
+    }
+    
 }
 
-extension LoginViewController: GIDSignInDelegate {
+extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -65,10 +119,7 @@ extension LoginViewController: GIDSignInDelegate {
 
         if let email = user.profile.email, !(email.contains("@cornell.edu")) {
             GIDSignIn.sharedInstance().signOut()
-            let alertController = UIAlertController(title: Constants.Alerts.LoginFailure.title, message: Constants.Alerts.LoginFailure.message, preferredStyle: .alert)
-            let action = UIAlertAction(title: Constants.Alerts.LoginFailure.action, style: .cancel, handler: nil)
-            alertController.addAction(action)
-            present(alertController, animated: true, completion: nil)
+            self.showErrorMessageAlertView()
             return
         }
 
@@ -93,6 +144,17 @@ extension LoginViewController: GIDSignInDelegate {
                 navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
             )
             navigationController?.pushViewController(onboardingVC, animated: false)
+        }
+    }
+
+    // Animate error alert view pop up dismissal in 0.15 seconds
+    func removeAlertView(isDismiss: Bool) {
+        UIView.animate(withDuration: 0.15, animations: {
+            self.errorMessageVisualEffectView.alpha = 0
+            self.errorMessageAlertView.alpha = 0
+            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { (_) in
+            self.errorMessageAlertView.removeFromSuperview()
         }
     }
 
