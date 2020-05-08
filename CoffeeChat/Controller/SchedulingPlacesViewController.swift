@@ -55,6 +55,8 @@ class SchedulingPlacesViewController: UIViewController {
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
+    // Whether user is confirming a location they previously saved
+    private var isConfirming: Bool
     // Whether user is picking a location from match's locations
     private var isPicking: Bool
     // Location user picked from match's locations
@@ -92,8 +94,14 @@ class SchedulingPlacesViewController: UIViewController {
         "Green Dragon",
         "Kung Fu Tea"
     ]
+    private let savedLocations = [
+        "Atrium Cafe",
+        "Cafe Jennie",
+        "Mango Mango"
+    ]
 
-    init(isPicking: Bool, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
+    init(isConfirming: Bool, isPicking: Bool, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
+        self.isConfirming = isConfirming
         self.isPicking = isPicking
         if isPicking {
             self.pickedTime = pickedTime
@@ -113,7 +121,9 @@ class SchedulingPlacesViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true // TODO Remove this
 
         titleLabel.font = ._24CircularStdMedium
-        titleLabel.text = "Where do you prefer?"
+        titleLabel.text = isConfirming
+            ? "Confirm preferred places"
+            : isPicking ? "Pick a place to meet" : "Where do you prefer?"
         titleLabel.textColor = .textBlack
         view.addSubview(titleLabel)
 
@@ -161,6 +171,11 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
+        if isConfirming {
+            selectedCampusLocations = campusLocations.filter { savedLocations.contains($0) }
+            selectedCtownLocations = ctownLocations.filter { savedLocations.contains($0) }
+        }
+
         if isPicking {
             campusLocations = campusLocations.filter { matchLocations.contains($0) }
             ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
@@ -173,6 +188,7 @@ class SchedulingPlacesViewController: UIViewController {
         ]
 
         setupConstraints()
+        updateNext()
     }
 
     private func setupConstraints() {
@@ -310,12 +326,20 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row], isPicking: isPicking)
+            let location = locations[indexPath.row]
+            cell.configure(with: location, isPicking: isPicking)
+            if isConfirming && savedLocations.contains(location) {
+                cell.changeSelection(selected: true)
+            }
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(with: locations[indexPath.row], isPicking: isPicking)
+            let location = locations[indexPath.row]
+            cell.configure(with: location, isPicking: isPicking)
+            if isConfirming && savedLocations.contains(location) {
+                cell.changeSelection(selected: true)
+            }
             return cell
         }
     }

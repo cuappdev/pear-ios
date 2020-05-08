@@ -100,7 +100,7 @@ class NoMatchViewController: UIViewController {
      }
 
      @objc private func availabilityButtonPressed() {
-        let timeVC = SchedulingTimeViewController(isPicking: false)
+        let timeVC = SchedulingTimeViewController(isConfirming: false, isPicking: false)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 

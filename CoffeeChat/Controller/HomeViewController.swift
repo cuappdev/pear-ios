@@ -170,7 +170,8 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        print("Reach out pressed.")
+        let timeVC = SchedulingTimeViewController(isConfirming: true, isPicking: false)
+        navigationController?.pushViewController(timeVC, animated: true)
     }
 }
 
