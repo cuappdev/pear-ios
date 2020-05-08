@@ -38,7 +38,6 @@ class OnboardingTableViewCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         backdropView.layer.cornerRadius = 8
-        backdropView.layer.cornerRadius = 8
         backdropView.layer.masksToBounds = true
 
         interestImageView.layer.cornerRadius = 4

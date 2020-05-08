@@ -1,5 +1,5 @@
 //
-//  EditInterestVireController.swift
+//  EditingViewController.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 3/11/20.
@@ -56,12 +56,11 @@ class Section {
     func removeItem(named name: String) -> ItemType? {
         if let loc = items.firstIndex(where: { $0.getName() == name }) {
             let removed = items.remove(at: loc)
-            items.sort(by: { $0.getName() < $1.getName() })
+            items.sort(by: sortStrategy)
             refilter()
             return removed
         }
         return nil
-
     }
 
     func refilter() {
@@ -75,12 +74,12 @@ class Section {
 }
 
 // MARK: - UIViewController
-class EditInterestViewController: UIViewController {
+class EditingViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let tableView = UITableView(frame: .zero, style: .grouped)
     private let backButton = UIButton()
     private let saveBarButtonItem = UIBarButtonItem()
+    private let tableView = UITableView(frame: .zero, style: .grouped)
 
     // MARK: - Display Settings
     var showsGroups = true
@@ -226,7 +225,7 @@ class EditInterestViewController: UIViewController {
 }
 
 // MARK: - UITableViewDelegate
-extension EditInterestViewController: UITableViewDelegate {
+extension EditingViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = sections[indexPath.section]
@@ -256,12 +255,16 @@ extension EditInterestViewController: UITableViewDelegate {
 }
 
 // MARK: - UITableViewDataSource
-extension EditInterestViewController: UITableViewDataSource {
+extension EditingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0
-            ? (showingLess && yourCount > hideAfter ? 3 : yourCount)
-            : moreCount
+        let section = sections[section]
+        switch  section.type {
+        case .yours:
+            return showingLess && yourCount > hideAfter ? hideAfter : yourCount
+        case .more:
+            return moreCount
+      }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -286,21 +289,26 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = EditHeaderView()
 
-        if section == 0 { // Upper Section
-            let labelTitle = showsGroups ? "Your Groups" : "Your Interests"
+        let headerView = EditHeaderView()
+        let section = sections[section]
+        let labelTitle: String
+        let labelSubtext : String
+
+        switch section.type {
+        case .yours:
+            labelTitle = showsGroups ? "Your Groups" : "Your Interests"
             if yourCount == 0 {
-                let labelSubtext = showsGroups
-                    ? "Select a group so we can better help you find a pair!"
-                    : "Select at least one interest so we can better help you find a pair!"
-                headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+              labelSubtext = showsGroups
+                  ? "Select a group so we can better help you find a pair!"
+                  : "Select at least one interest so we can better help you find a pair!"
             } else {
-                headerView.configure(with: labelTitle, info: "tap to deselect", useSearch: false)
+              labelSubtext = "tap to deselect"
             }
-        } else { // Lower Section
-            let labelTitle = showsGroups ? "More Groups" : "More Interests"
-            let labelSubtext = showsGroups ? "tap or search to add" : "tap to add"
+          headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+        case .more:
+            labelTitle = showsGroups ? "More Groups" : "More Interests"
+            labelSubtext = showsGroups ? "tap or search to add" : "tap to add"
             headerView.configure(with: labelTitle, info: labelSubtext, useSearch: showsGroups)
             if showsGroups {
                 headerView.searchDelegate = {
