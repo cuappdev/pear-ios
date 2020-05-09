@@ -20,7 +20,7 @@ class OnboardingPageViewController: UIPageViewController {
     private let backgroundImage = UIImageView()
     private var demographicsViewController: DemographicsViewController!
     private var groupsViewController: GroupsViewController!
-    private var interestsViewController: OnboardingInterestsViewController!
+    private var interestsViewController: InterestsViewController!
     private var onboardingPages = [UIViewController]()
 
     // MARK: - Private Data Vars
@@ -44,7 +44,7 @@ class OnboardingPageViewController: UIPageViewController {
         backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
 
         demographicsViewController = DemographicsViewController(delegate: self)
-        interestsViewController = OnboardingInterestsViewController(delegate: self)
+        interestsViewController = InterestsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
 

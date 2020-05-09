@@ -1,5 +1,5 @@
 //
-//  OnboardingInterestsViewController.swift
+//  InterestsViewController.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 2/3/20.
@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class OnboardingInterestsViewController: UIViewController {
+class InterestsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -42,6 +42,7 @@ class OnboardingInterestsViewController: UIViewController {
         Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
+    private let userDefaults = UserDefaults.standard
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -89,6 +90,8 @@ class OnboardingInterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
+        let userInterests = selectedInterests.map { $0.name }
+        userDefaults.set(userInterests, forKey: Constants.UserDefaults.userInterests)
         delegate.nextPage(index: 2)
     }
 
@@ -171,7 +174,7 @@ class OnboardingInterestsViewController: UIViewController {
 }
 
 // MARK: TableViewDelegate
-extension OnboardingInterestsViewController: UITableViewDelegate {
+extension InterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
@@ -202,7 +205,7 @@ extension OnboardingInterestsViewController: UITableViewDelegate {
 }
 
 // MARK: TableViewDataSource
-extension OnboardingInterestsViewController: UITableViewDataSource {
+extension InterestsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:

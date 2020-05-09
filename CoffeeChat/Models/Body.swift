@@ -12,8 +12,13 @@ import Foundation
 
 struct UserSessionBody: Codable {
 
-    let clubs: [String]
     let idToken: String
+
+}
+
+struct UserUpdateBody: Codable {
+
+    let clubs: [String]
     let graduationYear: String
     let hometown: String
     let interests: [String]
@@ -27,12 +32,4 @@ struct MatchingBody: Codable {
     let netIDs: [String]
     let schedule: [DaySchedule]
 
-}
-
-struct UserUpdateBody: Codable {
-
-    let firstName: String
-    let lastName: String
-    let netID: String
-    
 }

@@ -13,7 +13,9 @@ extension Endpoint {
 
     static func setupEndpointConfig() {
 
-        let baseURL = Keys.serverURL
+//        let baseURL = Keys.serverURL
+//        print(baseURL)
+        let baseURL = "pear-backend.cornellappdev.com"
 
         #if LOCAL
             Endpoint.config.scheme = "http"
@@ -25,27 +27,47 @@ extension Endpoint {
         Endpoint.config.commonPath = "/api/v1"
     }
 
+//    static var standardHeaders: [String: String] {
+//        if let token = User.current?.sessionAuthorization?.sessionToken {
+//            return ["Authorization": token]
+//        } else {
+//            return [:]
+//        }
+//    }
+
+//    static var updateHeaders: [String: String] {
+//        if let token = User.current?.sessionAuthorization?.updateToken {
+//            return ["Authorization": token]
+//        } else {
+//            return [:]
+//        }
+//    }
+
     /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
-        return Endpoint(path: "/auth/hello/")
+        return Endpoint(path: "/general/hello/")
     }
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
-    static func createUser(clubs: [String],
-                           idToken: String,
+    static func createUser(idToken: String) -> Endpoint {
+        let body = UserSessionBody(idToken: idToken)
+        return Endpoint(path: "/auth/login/", body: body)
+    }
+
+    /// [POST] Authenticate ID token from Google and creates a user if account does not exist
+    static func updateUser(clubs: [String],
                            graduationYear: String,
                            hometown: String,
                            interests: [String],
                            major: String,
                            pronouns: String) -> Endpoint {
-        let body = UserSessionBody(clubs: clubs,
-                            idToken: idToken,
+        let body = UserUpdateBody(clubs: clubs,
                             graduationYear: graduationYear,
                             hometown: hometown,
                             interests: interests,
                             major: major,
                             pronouns: pronouns)
-        return Endpoint(path: "/user/login", body: body)
+        return Endpoint(path: "/user/update/", body: body)
     }
 
     /// [GET] Get information about the user
@@ -74,9 +96,9 @@ extension Endpoint {
         return Endpoint(path: "/user/interests/")
     }
 
-    /// [POST] Updates information of the use
-    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
-        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
-        return Endpoint(path: "/user/update/", body: body)
-    }
+//    /// [POST] Updates information of the use
+//    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
+//        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
+//        return Endpoint(path: "/user/update/", body: body)
+//    }
 }

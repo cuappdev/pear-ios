@@ -227,7 +227,7 @@ class EditDemographicsViewController: UIViewController {
 
 extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
 
-    func updateSelectedFields(tag: Int, isSelected: Bool) {
+    func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String) {
         fieldsEntered[tag] = isSelected
     }
 

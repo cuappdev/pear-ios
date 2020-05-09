@@ -23,7 +23,12 @@ struct Constants {
         static let userId = "userId"
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"
-        static let userToken = "userToken"
+        static let userIdToken = "userIdToken"
+        static let userClubs = "userClubs"
+        static let userGraduationYear = "userGraduationYear"
+        static let userHometown = "userHometown"
+        static let userInterests = "userInterests"
+        static let userMajor = "userMajor"
+        static let userPronouns = "userPronouns"
     }
-
 }

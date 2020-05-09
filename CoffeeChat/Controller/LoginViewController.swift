@@ -102,6 +102,19 @@ class LoginViewController: UIViewController {
             self.errorMessageAlertView.transform = .identity
         })
     }
+
+    private func createUser() {
+        if let idToken = userDefaults.string(forKey: Constants.UserDefaults.userIdToken) {
+            NetworkManager.shared.createUser(idToken: idToken).observe { result in
+                switch result {
+                case .value(let response):
+                    print(response)
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
     
 }
 
@@ -128,9 +141,10 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             let userFirstName = user.profile.givenName,
             let userFullName = user.profile.name {
             userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
-            userDefaults.set(userToken, forKey: Constants.UserDefaults.userToken)
+            userDefaults.set(userToken, forKey: Constants.UserDefaults.userIdToken)
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
+            createUser()
         }
 
         let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)

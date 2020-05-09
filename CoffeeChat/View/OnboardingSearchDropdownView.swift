@@ -12,7 +12,7 @@ protocol OnboardingDropdownViewDelegate: class {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
     func sendDropdownViewToBack(dropdownView: UIView)
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat)
-    func updateSelectedFields(tag: Int, isSelected: Bool)
+    func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String)
 }
 
 /// Custom onboarding dropdown tableview that resizes based on content
@@ -134,9 +134,10 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
 
     /// Updates searchbar text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        searchBar.text = resultsTableData[indexPath.row]
+        let selectedText = resultsTableData[indexPath.row]
+        searchBar.text = selectedText
         tableView.isHidden = true
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: selectedText)
         delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 
@@ -149,7 +150,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
         resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: false) // Reset fieldSelected to false.
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height

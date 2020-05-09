@@ -21,15 +21,17 @@ class NetworkManager {
         return networking(Endpoint.pingServer()).decode()
     }
 
-    func createUser(clubs: [String],
-                    idToken: String,
+    func createUser(idToken: String) -> Future<Response<UserSession>> {
+        return networking(Endpoint.createUser(idToken: idToken)).decode()
+    }
+
+    func updateUser(clubs: [String],
                     graduationYear: String,
                     hometown: String,
                     interests: [String],
                     major: String,
                     pronouns: String) -> Future<Response<UserSession>> {
-        return networking(Endpoint.createUser(clubs: clubs,
-                                              idToken: idToken,
+        return networking(Endpoint.updateUser(clubs: clubs,
                                               graduationYear: graduationYear,
                                               hometown: hometown,
                                               interests: interests,
@@ -58,8 +60,8 @@ class NetworkManager {
     }
 
     // TODO: Update response body
-    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
-        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
-    }
+//    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
+//        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
+//    }
 
 }

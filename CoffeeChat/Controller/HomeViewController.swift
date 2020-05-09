@@ -39,7 +39,8 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
-        NetworkManager.shared.createUser(clubs: ["string"], idToken: "string", graduationYear: "string", hometown: "string", interests: ["string"], major: "string", pronouns: "string").observe { result in
+        NetworkManager.shared.pingServer().observe { result in
+            print(result)
             switch result {
             case .value(let response):
                 print(response)
@@ -47,7 +48,7 @@ class HomeViewController: UIViewController {
                 print(error)
             }
         }
-
+        
         // TODO: Remove after connecting to backend. These are temp values.
         let firstName = "Ezra"
         let lastName = "Cornell"

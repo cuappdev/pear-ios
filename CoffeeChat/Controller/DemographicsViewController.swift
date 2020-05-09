@@ -14,6 +14,7 @@ class DemographicsViewController: UIViewController {
     private var classSearchFields: [String] = []
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
+    private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
@@ -32,6 +33,12 @@ class DemographicsViewController: UIViewController {
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
+    private let fieldMap = [
+        Constants.UserDefaults.userGraduationYear,
+        Constants.UserDefaults.userMajor,
+        Constants.UserDefaults.userHometown,
+        Constants.UserDefaults.userPronouns
+    ]
     private let textFieldHeight: CGFloat = 49
 
     init(delegate: OnboardingPageDelegate) {
@@ -90,6 +97,9 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
+        for (key, value) in fieldValues {
+            userDefaults.set(value, forKey: key)
+        }
         delegate?.nextPage(index: 1)
     }
 
@@ -158,8 +168,9 @@ class DemographicsViewController: UIViewController {
 
 extension DemographicsViewController: OnboardingDropdownViewDelegate {
 
-    func updateSelectedFields(tag: Int, isSelected: Bool) {
+    func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String) {
         fieldsEntered[tag] = isSelected
+        if isSelected { fieldValues[fieldMap[tag]] = valueSelected }
         let allFieldsEntered = !fieldsEntered.contains(false)
         nextButton.isEnabled = allFieldsEntered
         if nextButton.isEnabled {

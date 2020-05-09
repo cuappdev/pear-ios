@@ -21,15 +21,6 @@ class NoMatchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NetworkManager.shared.createUser(clubs: ["string"], idToken: "string", graduationYear: "string", hometown: "string", interests: ["string"], major: "string", pronouns: "string").observe { result in
-            switch result {
-            case .value(let response):
-                print(response)
-            case .error(let error):
-                print(error)
-            }
-        }
-
         title = "" // To get rid of the "back" text on navigation bar
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
