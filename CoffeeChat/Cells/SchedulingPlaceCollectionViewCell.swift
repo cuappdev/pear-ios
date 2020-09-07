@@ -41,13 +41,13 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().inset(12)
-            make.trailing.equalToSuperview().inset(6)
+            make.leading.trailing.equalToSuperview().inset(10)
         }
     }
 
-    func configure(with title: String) {
+    func configure(with title: String, isPicking: Bool) {
         titleLabel.text = title
+        titleLabel.textAlignment = isPicking ? .center : .left
     }
 
     func changeSelection(selected: Bool) {

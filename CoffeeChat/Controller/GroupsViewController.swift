@@ -289,15 +289,11 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 12
+        return 76
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return groups.count
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -305,14 +301,14 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedGroups.append(displayedGroups[indexPath.section])
+        selectedGroups.append(displayedGroups[indexPath.row])
         updateSearchBarText()
         filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.section].name}
+        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
         updateSearchBarText()
         filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
@@ -327,7 +323,7 @@ extension GroupsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
             OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
         OnboardingTableViewCell else { return UITableViewCell() }
-        let data = displayedGroups[indexPath.section]
+        let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
         if selectedGroups.contains(where: { $0.name == data.name }) {

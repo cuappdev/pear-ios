@@ -68,8 +68,8 @@ class MessageAlertView: UIView {
         if hasDismissOption {
             dismissButton.setTitle(dismissMessage, for: .normal)
             dismissButton.setTitleColor(.darkGreen, for: .normal)
-            dismissButton.titleLabel?.font = ._16CircularStdBook
-            dismissButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
+            dismissButton.titleLabel?.font = ._16CircularStdMedium
+            dismissButton.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
             addSubview(dismissButton)
         }
     }
@@ -100,6 +100,7 @@ class MessageAlertView: UIView {
             dismissButton.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(actionButton.snp.bottom).offset(27)
+                make.bottom.equalToSuperview().inset(25)
                 make.size.equalTo(dismissButtonSize)
             }
         }
