@@ -162,10 +162,10 @@ class GroupsViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        setupTableviewFadeEffect()
+        setupTableViewFadeEffect()
     }
 
-    private func setupTableviewFadeEffect() {
+    private func setupTableViewFadeEffect() {
         let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
         let fadeColors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
 
