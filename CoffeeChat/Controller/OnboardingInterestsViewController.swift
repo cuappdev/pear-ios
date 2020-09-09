@@ -93,17 +93,22 @@ class OnboardingInterestsViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        setupTableViewFadeEffect()
+    }
+
+    private func setupTableViewFadeEffect() {
         let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
+        let fadeColors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
 
         let topLayer = CAGradientLayer()
         topLayer.frame = topFadeView.bounds
-        topLayer.colors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
+        topLayer.colors = fadeColors
         topLayer.locations = [0.0, 1.0]
         topFadeView.layer.insertSublayer(topLayer, at: 0)
 
         let bottomLayer = CAGradientLayer()
         bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundLightGreen.cgColor]
+        bottomLayer.colors = fadeColors.reversed()
         bottomLayer.locations = [0.0, 1.0]
         bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
