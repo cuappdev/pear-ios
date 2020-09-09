@@ -14,7 +14,7 @@ class OnboardingInterestsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let nextButton = UIButton()
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = FadedTableView(frame: .zero, style: .plain)
     private let titleLabel = UILabel()
 
     // MARK: - Gradients
