@@ -24,6 +24,7 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private var delegate: OnboardingPageDelegate
+    // TODO: Replace values with backend
     private var interests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),

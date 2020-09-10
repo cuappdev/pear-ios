@@ -97,6 +97,7 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
+        /// Save onboarding information to user defaults, for user creation later.
         for (key, value) in fieldValues {
             userDefaults.set(value, forKey: key)
         }

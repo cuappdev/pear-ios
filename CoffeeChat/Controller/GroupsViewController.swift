@@ -245,7 +245,6 @@ class GroupsViewController: UIViewController {
 //        print(userDefaults.string(forKey: Constants.UserDefaults.userMajor))
 //        print(userDefaults.string(forKey: Constants.UserDefaults.userPronouns))
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
-            let idToken = userDefaults.string(forKey: Constants.UserDefaults.userIdToken),
             let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
             let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
             let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],

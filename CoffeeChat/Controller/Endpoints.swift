@@ -50,6 +50,7 @@ extension Endpoint {
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
     static func createUser(idToken: String) -> Endpoint {
+        print(idToken)
         let body = UserSessionBody(idToken: idToken)
         return Endpoint(path: "/auth/login/", body: body)
     }
