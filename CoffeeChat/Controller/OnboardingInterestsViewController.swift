@@ -162,7 +162,7 @@ extension OnboardingInterestsViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return interests.count
+        return 1
     }
 
 }
