@@ -1,5 +1,5 @@
 //
-//  FadedTableView.swift
+//  FadeTableView.swift
 //  CoffeeChat
 //
 //  Created by Phillip OReggio on 9/9/20.
