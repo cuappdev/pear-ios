@@ -14,6 +14,7 @@ class GroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private var selectedGroups: [Group] = []
+
     // TODO: change when networking with backend
     private var groups: [Group] = [
         Group(name: "Apple", image: ""),
@@ -216,7 +217,7 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return displayedGroups.count
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -256,11 +257,12 @@ extension GroupsViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return displayedGroups.count
+        return 1
     }
 
 }
 
+// MARK: - SearchBarDelegate
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
