@@ -61,15 +61,7 @@ class GroupsViewController: UIViewController {
 
         fadeTableView.tableView.delegate = self
         fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.backgroundColor = .none
         fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        fadeTableView.tableView.isScrollEnabled = true
-        fadeTableView.tableView.clipsToBounds = true
-        fadeTableView.tableView.allowsMultipleSelection = true
-        fadeTableView.tableView.showsHorizontalScrollIndicator = false
-        fadeTableView.tableView.showsVerticalScrollIndicator = false
-        fadeTableView.tableView.separatorStyle = .none
-        fadeTableView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         view.addSubview(fadeTableView)
 
         clubLabel.text = "What are you a part of?"

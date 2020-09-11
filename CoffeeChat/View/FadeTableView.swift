@@ -14,18 +14,20 @@ class FadeTableView: UIView {
     let tableView = UITableView(frame: .zero, style: .plain)
 
     private let fadeColor: UIColor
-    private let transparentColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
+    private let transparentColor: UIColor
 
     private let topFadeView = UIView()
     private let bottomFadeView = UIView()
 
     init(fadeColor: UIColor) {
         self.fadeColor = fadeColor
+        self.transparentColor = UIColor(cgColor: fadeColor.withAlphaComponent(0).cgColor)
         super.init(frame: .zero)
 
         addSubview(tableView)
         addSubview(topFadeView)
         addSubview(bottomFadeView)
+        setupTableView()
         setupConstraints()
     }
 
@@ -51,6 +53,17 @@ class FadeTableView: UIView {
         gradientLayer.colors = colors
         gradientLayer.locations = [0.0, 1.0]
         view.layer.insertSublayer(gradientLayer, at: 0)
+    }
+
+    private func setupTableView() {
+        tableView.clipsToBounds = true
+        tableView.backgroundColor = .none
+        tableView.allowsMultipleSelection = true
+        tableView.bounces = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
     }
 
     private func setupConstraints() {

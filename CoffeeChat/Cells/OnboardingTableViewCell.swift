@@ -9,6 +9,7 @@
 import UIKit
 
 class OnboardingTableViewCell: UITableViewCell {
+
     // MARK: Private View Vars
     private let backdropView = UIView()
     private let interestImageView = UIImageView()
