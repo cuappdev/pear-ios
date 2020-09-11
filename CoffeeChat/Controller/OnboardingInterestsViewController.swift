@@ -81,10 +81,6 @@ class OnboardingInterestsViewController: UIViewController {
         setupConstraints()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     @objc func nextButtonPressed() {
         delegate.nextPage(index: 2)
     }
