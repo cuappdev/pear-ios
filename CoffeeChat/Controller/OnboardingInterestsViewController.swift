@@ -14,13 +14,8 @@ class OnboardingInterestsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let nextButton = UIButton()
-    private let tableView = FadedTableView(frame: .zero, style: .plain)
+    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
     private let titleLabel = UILabel()
-
-    // MARK: - Gradients
-    // Fade out affects on the top and bottom of the tableView
-    private let bottomFadeView = UIView()
-    private let topFadeView = UIView()
 
     // MARK: - Data
     private var delegate: OnboardingPageDelegate
@@ -60,21 +55,19 @@ class OnboardingInterestsViewController: UIViewController {
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        tableView.isScrollEnabled = true
-        tableView.clipsToBounds = true
-        tableView.backgroundColor = .none
-        tableView.allowsMultipleSelection = true
-        tableView.bounces = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
-        view.addSubview(tableView)
-        view.addSubview(topFadeView)
-        view.addSubview(bottomFadeView)
+        fadeTableView.tableView.delegate = self
+        fadeTableView.tableView.dataSource = self
+        fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.tableView.isScrollEnabled = true
+        fadeTableView.tableView.clipsToBounds = true
+        fadeTableView.tableView.backgroundColor = .none
+        fadeTableView.tableView.allowsMultipleSelection = true
+        fadeTableView.tableView.bounces = false
+        fadeTableView.tableView.showsHorizontalScrollIndicator = false
+        fadeTableView.tableView.showsVerticalScrollIndicator = false
+        fadeTableView.tableView.separatorStyle = .none
+        fadeTableView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
+        view.addSubview(fadeTableView)
 
         nextButton.setTitle("Almost there", for: .normal)
         nextButton.layer.cornerRadius = 27
@@ -88,33 +81,15 @@ class OnboardingInterestsViewController: UIViewController {
         setupConstraints()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
     @objc func nextButtonPressed() {
         delegate.nextPage(index: 2)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        setupTableViewFadeEffect()
-    }
-
-    private func setupTableViewFadeEffect() {
-        let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
-        let fadeColors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
-
-        let topLayer = CAGradientLayer()
-        topLayer.frame = topFadeView.bounds
-        topLayer.colors = fadeColors
-        topLayer.locations = [0.0, 1.0]
-        topFadeView.layer.insertSublayer(topLayer, at: 0)
-
-        let bottomLayer = CAGradientLayer()
-        bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = fadeColors.reversed()
-        bottomLayer.locations = [0.0, 1.0]
-        bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
-    }
-
     private func setupConstraints() {
-        let fadeHeight: CGFloat = 26
         let nextButtonSize = CGSize(width: 225, height: 54)
         let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let tableViewWidth: CGFloat = 295
@@ -122,7 +97,6 @@ class OnboardingInterestsViewController: UIViewController {
         let tableViewTopPadding: CGFloat = 50
         let titleHeight: CGFloat = 30
         let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
-        let topFadeHeight: CGFloat = 10
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -130,21 +104,11 @@ class OnboardingInterestsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
         }
 
-        tableView.snp.makeConstraints { make in
+        fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(tableViewWidth)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
-        }
-
-        topFadeView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(tableView)
-            make.height.equalTo(topFadeHeight)
-        }
-
-        bottomFadeView.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalTo(tableView)
-            make.height.equalTo(fadeHeight)
         }
 
         nextButton.snp.makeConstraints { make in
