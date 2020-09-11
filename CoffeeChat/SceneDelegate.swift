@@ -47,7 +47,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let navigationController = UINavigationController(rootViewController: LoginViewController())
             window.rootViewController = navigationController
         }
-
+        window.rootViewController = UINavigationController(rootViewController: OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
+)
         self.window = window
         window.makeKeyAndVisible()
     }
