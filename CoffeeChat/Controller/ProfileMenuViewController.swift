@@ -115,6 +115,19 @@ class ProfileMenuViewController: UIViewController {
         navigationController?.pushViewController(editDemographicsVC, animated: false)
     }
 
+    func yourInterestsButtonPressed() {
+        let editingInterestsVC = EditingViewController()
+        editingInterestsVC.showsGroups = false
+        navigationController?.pushViewController(editingInterestsVC, animated: false)
+    }
+
+    func yourGroupsButtonPressed() {
+        let editingInterestsVC = EditingViewController()
+        editingInterestsVC.showsGroups = true
+        navigationController?.pushViewController(editingInterestsVC, animated: false)
+    }
+
+
 }
 
 extension ProfileMenuViewController: UITableViewDataSource {
@@ -128,6 +141,15 @@ extension ProfileMenuViewController: UITableViewDataSource {
         let option = menuOptions[indexPath.row]
         cell.configure(for: option)
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let option = menuOptions[indexPath.row]
+        if option.text == "Your interests" {
+            yourInterestsButtonPressed()
+        } else if option.text == "Your groups" {
+            yourGroupsButtonPressed()
+        }
     }
 
 }
