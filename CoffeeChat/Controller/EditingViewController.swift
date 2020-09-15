@@ -229,6 +229,8 @@ class EditingViewController: UIViewController {
 
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen
+        saveBarButtonItem.target = self
+        saveBarButtonItem.action = #selector(savePressed)
         saveBarButtonItem.setTitleTextAttributes([
             .font: UIFont.getFont(.medium, size: 20)
         ], for: .normal)
@@ -236,6 +238,11 @@ class EditingViewController: UIViewController {
     }
 
     @objc private func backPressed() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc func savePressed() {
+        // TODO save favorites
         navigationController?.popViewController(animated: true)
     }
 
