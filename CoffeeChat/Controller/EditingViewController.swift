@@ -23,7 +23,7 @@ enum ItemType {
     }
 }
 
-enum SectionType {
+enum SectionType: CaseIterable {
     case yours
     case more
 }
@@ -31,8 +31,8 @@ enum SectionType {
 /// Section represents each section of the view
 class Section {
     let type: SectionType
-    // items
     var items: [ItemType]
+
     // filteredItems is always the result ofitems sorted by matching its name with filteredString
     var filteredItems: [ItemType] { get { filteredItemsInternal } }
     private var filteredItemsInternal: [ItemType]
@@ -82,36 +82,61 @@ class EditingViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
 
     // MARK: - Display Settings
-    var showsGroups = true
-    private var showingLess = true
-    private var hideAfter = 3 // Doesn't display more [hideAfter] categories if showingLess is true
+    private var showsGroups = true
+    private var showingLessRows = true
+    private var numberHiddenShownRows = 3 // Displays only [numberHiddenShownRows] if showingLessRows is true
 
     private var sections: [Section] = []
+
     // More Section and count
     private var moreSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
                 return sections[loc]
-            } else { return nil }
+            } else {
+                return nil
+            }
         }
     }
-    private var moreCount: Int {
-        get {
-            return moreSection?.filteredItems.count ?? 0
-        }
+    private var moreSectionSize: Int {
+        get { return moreSection?.filteredItems.count ?? 0 }
     }
+
     // Your section and count
     private var yourSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
                 return sections[loc]
-            } else { return nil }
+            } else {
+                return nil
+            }
         }
     }
-    private var yourCount: Int {
-        get {
-            return yourSection?.filteredItems.count ?? 0
-        }
+
+    private var yourSectionSize: Int {
+        get { return yourSection?.filteredItems.count ?? 0 }
+    }
+
+
+    // Initialization
+    private init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    static func createForInterests() -> EditingViewController {
+        let editingVC = EditingViewController()
+        editingVC.showsGroups = false
+        return editingVC
+    }
+
+    static func createForGroups() -> EditingViewController {
+        let editingVC = EditingViewController()
+        editingVC.showsGroups = true
+        return editingVC
     }
 
     override func viewDidLoad() {
@@ -214,8 +239,6 @@ class EditingViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    // MARK: - Section Manipulation
-
     /// Moves an interest or group with name identifier from a source section to the target section
     private func moveData(named name: String, from source: Section, to target: Section) {
         let removed = source.removeItem(named: name)
@@ -231,22 +254,22 @@ extension EditingViewController: UITableViewDelegate {
         let section = sections[indexPath.section]
         let item = section.filteredItems[indexPath.row]
 
-        let name: String
+        let itemName: String
         guard let yourSection = yourSection else { return }
         guard let moreSection = moreSection else { return }
 
         switch item {
         case .interest(let interest):
-            name = interest.name
+            itemName = interest.name
         case .group(let group):
-            name = group.name
+            itemName = group.name
         }
 
         switch section.type {
         case .yours:
-            moveData(named: name, from: yourSection, to: moreSection)
+            moveData(named: itemName, from: yourSection, to: moreSection)
         case .more:
-            moveData(named: name, from: moreSection, to: yourSection)
+            moveData(named: itemName, from: moreSection, to: yourSection)
         }
 
         tableView.reloadData()
@@ -257,39 +280,41 @@ extension EditingViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension EditingViewController: UITableViewDataSource {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let section = sections[section]
-        switch  section.type {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
+        switch sections[sectionIndex].type {
         case .yours:
-            return showingLess && yourCount > hideAfter ? hideAfter : yourCount
+            if showingLessRows && yourSectionSize > numberHiddenShownRows {
+                return numberHiddenShownRows
+            } else {
+                return yourSectionSize
+            }
+
         case .more:
-            return moreCount
-      }
+            return moreSectionSize
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = sections[indexPath.section]
         let itemType = section.filteredItems[indexPath.row]
 
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
+
+        cell.changeColor(isSelected: section.type == .yours)
+
         switch itemType {
         case .interest(let interest):
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
             cell.configure(with: interest)
-            cell.changeColor(isSelected: section.type == .yours)
-            cell.selectionChangesAppearence(false)
-            return cell
-
         case .group(let group):
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
             cell.configure(with: group)
-            cell.changeColor(isSelected: section.type == .yours)
-            cell.selectionChangesAppearence(false)
-            return cell
         }
+
+        cell.selectionChangesAppearence = false
+
+        return cell
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
         let headerView = EditHeaderView()
         let section = sections[section]
         let labelTitle: String
@@ -298,37 +323,41 @@ extension EditingViewController: UITableViewDataSource {
         switch section.type {
         case .yours:
             labelTitle = showsGroups ? "Your Groups" : "Your Interests"
-            if yourCount == 0 {
-              labelSubtext = showsGroups
-                  ? "Select a group so we can better help you find a pair!"
-                  : "Select at least one interest so we can better help you find a pair!"
+            if yourSectionSize == 0 {
+                labelSubtext = showsGroups
+                    ? "Select a group so we can better help you find a pair!"
+                    : "Select at least one interest so we can better help you find a pair!"
             } else {
-              labelSubtext = "tap to deselect"
+                labelSubtext = "tap to deselect"
             }
-          headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+            headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+
         case .more:
             labelTitle = showsGroups ? "More Groups" : "More Interests"
             labelSubtext = showsGroups ? "tap or search to add" : "tap to add"
             headerView.configure(with: labelTitle, info: labelSubtext, useSearch: showsGroups)
+
             if showsGroups {
-                headerView.searchDelegate = {
-                    self.moreSection?.filterString = $0
+                headerView.searchDelegate = { searchText in
+                    self.moreSection?.filterString = searchText
                     self.moreSection?.refilter()
                     self.tableView.reloadData()
                 }
             }
         }
+
         return headerView
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 && yourCount > hideAfter {
+        if section == 0 && yourSectionSize > numberHiddenShownRows {
             let footerView = EditFooterView(showsGroups: showsGroups)
-            footerView.changeViewState(less: showingLess)
+            footerView.changeViewState(isShowingLess: showingLessRows)
             footerView.delegate = {
-                self.showingLess = $0
+                self.showingLessRows = $0
                 self.tableView.reloadData()
             }
+
             return footerView
         } else {
             return UIView()
@@ -336,7 +365,7 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return SectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -348,31 +377,20 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return yourCount > hideAfter && section == 0 ? 64 : 0
+        return yourSectionSize > numberHiddenShownRows && section == 0 ? 64 : 0
     }
 
 }
 
 // MARK: - UITableView Header
-private class EditHeaderView: UIView {
-
-    // Whether it displays with a search bar or not
-    private var usesSearchBar = false
+private class EditHeaderView: UIView, UISearchBarDelegate {
 
     private let stackView = UIStackView()
     private let label = UILabel()
     private var searchBar: UISearchBar?
 
-    // Change filtering of sections
+    /// Callback when search text is changed
     var searchDelegate: ((String?) -> Void)?
-
-    init() {
-        super.init(frame: .zero)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     func configure(with title: String, info: String, useSearch: Bool) {
         setupText(title: title, info: info)
@@ -395,44 +413,59 @@ private class EditHeaderView: UIView {
             .foregroundColor: UIColor.greenGray
         ]
 
-        let titleStr = NSMutableAttributedString(string: "\(title)\n", attributes: primaryAttributes)
-        let infoStr = NSMutableAttributedString(string: info, attributes: secondaryAttributes)
-        let combined = NSMutableAttributedString()
-        combined.append(titleStr)
-        combined.append(infoStr)
-        label.attributedText = combined
+        let title = NSMutableAttributedString(string: "\(title)\n", attributes: primaryAttributes)
+        let subtitle = NSMutableAttributedString(string: info, attributes: secondaryAttributes)
+
+        let fullTitle = NSMutableAttributedString()
+        fullTitle.append(title)
+        fullTitle.append(subtitle)
+
+        label.attributedText = fullTitle
     }
 
     private func setupViews(withSearch: Bool) {
         label.numberOfLines = 0
-
         if withSearch {
-            searchBar = UISearchBar()
-            guard let searchBar = searchBar else { return }
-            searchBar.delegate = self
-            searchBar.backgroundColor = .backgroundWhite
-            searchBar.backgroundImage = UIImage()
-            searchBar.searchTextField.backgroundColor = .backgroundWhite
-            searchBar.searchTextField.textColor = .textBlack
-            searchBar.searchTextField.font = ._20CircularStdBook
-            searchBar.searchTextField.clearButtonMode = .never
-            searchBar.layer.cornerRadius = 8
-            searchBar.showsCancelButton = false
-            searchBar.clipsToBounds = false
-            searchBar.layer.shadowColor = UIColor.black.cgColor
-            searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            searchBar.layer.shadowOpacity = 0.1
-            searchBar.layer.shadowRadius = 2
+            setupSearchbar()
         }
+        setupStack()
+    }
 
+    private func setupSearchbar() {
+        let searchBar = UISearchBar()
+
+        searchBar.delegate = self
+        searchBar.showsCancelButton = false
+        searchBar.clipsToBounds = false
+
+        searchBar.backgroundColor = .backgroundWhite
+        searchBar.backgroundImage = UIImage()
+
+        searchBar.searchTextField.backgroundColor = .backgroundWhite
+        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.font = ._20CircularStdBook
+        searchBar.searchTextField.clearButtonMode = .never
+
+        searchBar.layer.cornerRadius = 8
+        searchBar.layer.shadowColor = UIColor.black.cgColor
+        searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        searchBar.layer.shadowOpacity = 0.1
+        searchBar.layer.shadowRadius = 2
+
+        self.searchBar = searchBar
+    }
+
+    private func setupStack() {
         stackView.alignment = .center
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.distribution = .fillProportionally
+
         stackView.insertArrangedSubview(label, at: 0)
         if let searchBar = searchBar {
             stackView.insertArrangedSubview(searchBar, at: 1)
         }
+
         addSubview(stackView)
     }
 
@@ -454,9 +487,6 @@ private class EditHeaderView: UIView {
             make.height.equalToSuperview().inset(stackPadding)
         }
     }
-}
-
-extension EditHeaderView: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchDelegate?(searchText == "" ? nil : searchText)
@@ -467,75 +497,82 @@ extension EditHeaderView: UISearchBarDelegate {
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
-    private var showingGroups = false
-    private var showingLess = false
+    private let showingGroups: Bool
+    private var showingLessRows = false
 
+    private let stack = UIStackView()
     private let label = UILabel()
     private let arrowView = UIImageView()
 
     var delegate: ((Bool) -> Void)?
 
-    convenience init(showsGroups: Bool) {
-        self.init(frame: .zero)
-        label.font = UIFont._16CircularStdMedium
-        label.textColor = .greenGray
+    init(showsGroups: Bool) {
         showingGroups = showsGroups
-        configure(showsGroups: showingGroups)
-    }
+        super.init(frame: .zero)
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.isUserInteractionEnabled = false
-        addSubview(label)
-
-        arrowView.image = UIImage(named: "right_arrow")
-        arrowView.isUserInteractionEnabled = false
-        arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
-        arrowView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 9, height: 18))
-        }
-
-        let stack = UIStackView()
-        stack.isUserInteractionEnabled = false
-        stack.alignment = .center
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.distribution = .fillProportionally
-        stack.insertArrangedSubview(arrowView, at: 0)
-        stack.insertArrangedSubview(label, at: 1)
-        addSubview(stack)
-        stack.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.equalToSuperview().inset(44)
-        }
-
-        addTarget(self, action: #selector(buttonAction), for: .touchDown)
-    }
-
-    func changeViewState(less: Bool) {
-        showingLess = less
-        label.text = less
-            ? "View your other \(showingGroups ? "groups" : "interests")"
-            : "View fewer \(showingGroups ? "groups" : "interests")"
-        arrowView.transform = less
-            ? CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
-            : CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
-        delegate?(showingLess)
-    }
-
-    @objc private func buttonAction() {
-        changeViewState(less: !showingLess)
+        setupViews()
+        setupConstraints()
+        configure()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(showsGroups: Bool) {
-        label.text = showsGroups ? "view your other groups" : "view your other interests"
+    private func setupViews() {
+        label.font = UIFont._16CircularStdMedium
+        label.textColor = .greenGray
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = false
+
+        arrowView.image = UIImage(named: "rightArrow")
+        arrowView.isUserInteractionEnabled = false
+        arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+
+        stack.isUserInteractionEnabled = false
+        stack.alignment = .center
+        stack.axis = .horizontal
+        stack.spacing = 12
+        stack.insertArrangedSubview(arrowView, at: 0)
+        stack.insertArrangedSubview(label, at: 1)
+        addSubview(stack)
+
+        addTarget(self, action: #selector(buttonPressed), for: .touchDown)
+    }
+
+    private func setupConstraints() {
+        arrowView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 9, height: 18))
+        }
+
+        stack.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().inset(44)
+        }
+    }
+
+    func changeViewState(isShowingLess: Bool) {
+        showingLessRows = isShowingLess
+
+        if showingLessRows {
+            label.text = "View your other \(showingGroups ? "groups" : "interests")"
+            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
+        } else {
+            label.text = "View fewer \(showingGroups ? "groups" : "interests")"
+            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+        }
+
+        delegate?(showingLessRows)
+    }
+
+    @objc func buttonPressed() {
+        changeViewState(isShowingLess: !showingLessRows)
+
+    }
+
+    func configure() {
+        label.text = showingGroups ? "view your other groups" : "view your other interests"
     }
 
 }

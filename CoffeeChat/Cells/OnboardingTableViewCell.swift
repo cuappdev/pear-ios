@@ -27,7 +27,7 @@ class OnboardingTableViewCell: UITableViewCell {
     // Store whether it was showing interests or groups so it doesn't relayout on dequeue
     private var showingInterests = false
     // Whether the cell should change its appearence when setSelected is called
-    private var selectionChangesAppearence = true
+    var selectionChangesAppearence = true
 
     static let reuseIdentifier = "OnboardingTableViewCell"
 
@@ -113,11 +113,6 @@ class OnboardingTableViewCell: UITableViewCell {
 
     func changeColor(isSelected: Bool) {
         backdropView.backgroundColor = isSelected ? .pearGreen : .white
-    }
-
-    /// Changes whether the cell changes its appearence on selection
-    func selectionChangesAppearence(_ changes: Bool) {
-        selectionChangesAppearence = changes
     }
 
     /// Removes and resets constraints on the cell. Includes categoriesLabel in the layout if `interests` is true
