@@ -38,16 +38,6 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
-
-        NetworkManager.shared.pingServer().observe { result in
-            print(result)
-            switch result {
-            case .value(let response):
-                print(response)
-            case .error(let error):
-                print(error)
-            }
-        }
         
         // TODO: Remove after connecting to backend. These are temp values.
         let firstName = "Ezra"

@@ -13,9 +13,7 @@ extension Endpoint {
 
     static func setupEndpointConfig() {
 
-//        let baseURL = Keys.serverURL
-//        print(baseURL)
-        let baseURL = "pear-backend.cornellappdev.com"
+        let baseURL = Keys.serverURL
 
         #if LOCAL
             Endpoint.config.scheme = "http"
@@ -27,22 +25,6 @@ extension Endpoint {
         Endpoint.config.commonPath = "/api/v1"
     }
 
-//    static var standardHeaders: [String: String] {
-//        if let token = User.current?.sessionAuthorization?.sessionToken {
-//            return ["Authorization": token]
-//        } else {
-//            return [:]
-//        }
-//    }
-
-//    static var updateHeaders: [String: String] {
-//        if let token = User.current?.sessionAuthorization?.updateToken {
-//            return ["Authorization": token]
-//        } else {
-//            return [:]
-//        }
-//    }
-
     /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
         return Endpoint(path: "/general/hello/")
@@ -50,7 +32,6 @@ extension Endpoint {
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
     static func createUser(idToken: String) -> Endpoint {
-        print(idToken)
         let body = UserSessionBody(idToken: idToken)
         return Endpoint(path: "/auth/login/", body: body)
     }
@@ -97,9 +78,10 @@ extension Endpoint {
         return Endpoint(path: "/user/interests/")
     }
 
-//    /// [POST] Updates information of the use
-//    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
-//        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
-//        return Endpoint(path: "/user/update/", body: body)
-//    }
+    //    /// [POST] Updates information of the use
+    //    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
+    //        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
+    //        return Endpoint(path: "/user/update/", body: body)
+    //    }
+
 }

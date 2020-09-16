@@ -238,12 +238,6 @@ class GroupsViewController: UIViewController {
     }
 
     private func updateUser() {
-//        print(userDefaults.array(forKey: Constants.UserDefaults.userClubs))
-//        print(userDefaults.string(forKey: Constants.UserDefaults.userIdToken))
-//        print(userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear))
-//        print(userDefaults.string(forKey: Constants.UserDefaults.userHometown))
-//        print(userDefaults.string(forKey: Constants.UserDefaults.userMajor))
-//        print(userDefaults.string(forKey: Constants.UserDefaults.userPronouns))
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
             let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
             let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
