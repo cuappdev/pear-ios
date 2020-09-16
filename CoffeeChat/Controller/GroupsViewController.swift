@@ -14,6 +14,7 @@ class GroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private var selectedGroups: [Group] = []
+
     // TODO: change when networking with backend
     private var groups: [Group] = [
         Group(name: "Apple", image: ""),
@@ -34,12 +35,7 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let tableView = UITableView(frame: .zero, style: .plain)
-
-    // MARK: - Gradients
-    // Fade out affects on the top and bottom of the tableView
-    private let bottomFadeView = UIView()
-    private let topFadeView = UIView()
+    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -64,20 +60,10 @@ class GroupsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .none
-        tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        tableView.isScrollEnabled = true
-        tableView.clipsToBounds = true
-        tableView.allowsMultipleSelection = true
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
-        view.addSubview(tableView)
-        view.addSubview(topFadeView)
-        view.addSubview(bottomFadeView)
+        fadeTableView.tableView.delegate = self
+        fadeTableView.tableView.dataSource = self
+        fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        view.addSubview(fadeTableView)
 
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
@@ -106,7 +92,6 @@ class GroupsViewController: UIViewController {
 
     private func setupConstraints() {
         let backSize = CGSize(width: 86, height: 20)
-        let fadeHeight: CGFloat = 26
         let nextBackPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 49)
         let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let nextButtonSize = CGSize(width: 225, height: 54)
@@ -117,7 +102,6 @@ class GroupsViewController: UIViewController {
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
         let titleSpacing: CGFloat = 100
-        let topFadeHeight: CGFloat = 10
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -131,21 +115,11 @@ class GroupsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
         }
 
-        tableView.snp.makeConstraints { make in
+        fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(tableViewWidth)
             make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
-        }
-
-        topFadeView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(tableView)
-            make.height.equalTo(topFadeHeight)
-        }
-
-        bottomFadeView.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalTo(tableView)
-            make.height.equalTo(fadeHeight)
         }
 
         nextButton.snp.makeConstraints { make in
@@ -159,22 +133,6 @@ class GroupsViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        let clearColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0)
-
-        let topLayer = CAGradientLayer()
-        topLayer.frame = topFadeView.bounds
-        topLayer.colors = [UIColor.backgroundLightGreen.cgColor, clearColor.cgColor]
-        topLayer.locations = [0.0, 1.0]
-        topFadeView.layer.insertSublayer(topLayer, at: 0)
-
-        let bottomLayer = CAGradientLayer()
-        bottomLayer.frame = bottomFadeView.bounds
-        bottomLayer.colors = [clearColor.cgColor, UIColor.backgroundLightGreen.cgColor]
-        bottomLayer.locations = [0.0, 1.0]
-        bottomFadeView.layer.insertSublayer(bottomLayer, at: 0)
     }
 
     // MARK: - Search Bar
@@ -227,7 +185,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = searchText.isEmpty
             ? groups
             : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        tableView.reloadData()
+        fadeTableView.tableView.reloadData()
     }
 
     // MARK: - Next and Previous Buttons
@@ -286,7 +244,7 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return displayedGroups.count
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -325,12 +283,9 @@ extension GroupsViewController: UITableViewDataSource {
         return cell
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return displayedGroups.count
-    }
-
 }
 
+// MARK: - SearchBarDelegate
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
