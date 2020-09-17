@@ -18,7 +18,7 @@ class OnboardingInterestsViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Data
-    private var delegate: OnboardingPageDelegate
+    private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
@@ -51,6 +51,10 @@ class OnboardingInterestsViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
 
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+
         titleLabel.text = "What do you love?"
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -72,18 +76,29 @@ class OnboardingInterestsViewController: UIViewController {
         setupConstraints()
     }
 
+    @objc func backButtonPressed() {
+        delegate?.backPage(index: 0)
+    }
+
     @objc func nextButtonPressed() {
-        delegate.nextPage(index: 2)
+        delegate?.nextPage(index: 2)
     }
 
     private func setupConstraints() {
+        let backButtonSize = CGSize(width: 10, height: 18)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
-        let tableViewTopPadding: CGFloat = 50
+        let tableViewTopPadding: CGFloat = 48
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
+        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.size.equalTo(backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

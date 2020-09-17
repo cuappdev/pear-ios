@@ -27,6 +27,7 @@ class OnboardingPageViewController: UIPageViewController {
     private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
     private let screenWidth = UIScreen.main.bounds.width
     private let screenHeight = UIScreen.main.bounds.height
+    private var scrollContentOffset = UIScreen.main.bounds.width
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,7 +64,10 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // Update x position based on screen size when page scrolls
-        backgroundXPosition -= 0.04 * screenWidth
+
+        let scrollRate: CGFloat = scrollView.contentOffset.x - scrollContentOffset > 0 ? -0.04 : 0.04
+        backgroundXPosition += scrollRate * screenWidth
+        scrollContentOffset = scrollView.contentOffset.x
         backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }
 }

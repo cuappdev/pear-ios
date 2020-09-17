@@ -30,6 +30,7 @@ class GroupsViewController: UIViewController {
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
+    private let backButton = UIButton()
     private let clubLabel = UILabel()
     private let greetingLabel = UILabel()
     private let nextButton = UIButton()
@@ -48,6 +49,10 @@ class GroupsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
 
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
@@ -91,17 +96,24 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
+        let backButtonSize = CGSize(width: 10, height: 18)
         let backSize = CGSize(width: 86, height: 20)
-        let nextBackPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 49)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
+        let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
-        let searchTopPadding: CGFloat = 50
+        let searchTopPadding: CGFloat = 48
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = 100
+        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(clubLabel)
+            make.size.equalTo(backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -131,7 +143,7 @@ class GroupsViewController: UIViewController {
         skipButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(skipBottomPadding)
         }
     }
 
@@ -193,6 +205,10 @@ class GroupsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+    }
+
+    @objc func backButtonPressed() {
+        delegate?.backPage(index: 1)
     }
 
     @objc func nextButtonPressed() {

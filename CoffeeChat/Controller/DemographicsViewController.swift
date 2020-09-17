@@ -94,10 +94,10 @@ class DemographicsViewController: UIViewController {
     }
 
     private func setUpConstraints() {
-        let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 60)
+        let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 84)
         let helloLabelHeight: CGFloat = 30
-        let helloLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
+        let helloLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
