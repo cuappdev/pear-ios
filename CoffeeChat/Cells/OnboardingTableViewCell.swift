@@ -27,7 +27,7 @@ class OnboardingTableViewCell: UITableViewCell {
     // Store whether it was showing interests or groups so it doesn't relayout on dequeue
     private var showingInterests = false
     // Whether the cell should change its appearence when setSelected is called
-    var selectionChangesAppearence = true
+    var shouldSelectionChangeAppearence = true
 
     static let reuseIdentifier = "OnboardingTableViewCell"
 
@@ -124,7 +124,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        if selectionChangesAppearence {
+        if shouldSelectionChangeAppearence {
             changeColor(isSelected: isSelected)
         }
     }

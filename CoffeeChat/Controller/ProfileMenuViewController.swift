@@ -116,13 +116,12 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditingViewController.createForInterests(), animated: false)
+        navigationController?.pushViewController(EditingViewController(isShowingGroups: false), animated: false)
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditingViewController.createForGroups(), animated: false)
+        navigationController?.pushViewController(EditingViewController(isShowingGroups: true), animated: false)
     }
-
 
 }
 

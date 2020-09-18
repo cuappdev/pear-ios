@@ -33,7 +33,7 @@ class Section {
     let type: SectionType
     var items: [ItemType]
 
-    // filteredItems is always the result ofitems sorted by matching its name with filteredString
+    // filteredItems is always the result of items sorted by matching its name with filteredString
     var filteredItems: [ItemType] { get { filteredItemsInternal } }
     private var filteredItemsInternal: [ItemType]
     var filterString: String?
@@ -82,13 +82,13 @@ class EditingViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
 
     // MARK: - Display Settings
-    private var showsGroups = true
-    private var showingLessRows = true
-    private var numberHiddenShownRows = 3 // Displays only [numberHiddenShownRows] if showingLessRows is true
+    private var isShowingGroups = true
+    private var isCollapsed = true
+    private var numRowsShownWhenCollapsed = 3
 
     private var sections: [Section] = []
 
-    // More Section and count
+    // moreSection refers to the categories the user has not selected. Selecting something in this section would add it to `yourSection`.
     private var moreSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
@@ -99,10 +99,10 @@ class EditingViewController: UIViewController {
         }
     }
     private var moreSectionSize: Int {
-        get { return moreSection?.filteredItems.count ?? 0 }
+        get { moreSection?.filteredItems.count ?? 0 }
     }
 
-    // Your section and count
+    // yourSection refers to the categories the user has already selected or is saved in UserDefaults. Deselecting a cell here would move it to moreSection.
     private var yourSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
@@ -114,34 +114,23 @@ class EditingViewController: UIViewController {
     }
 
     private var yourSectionSize: Int {
-        get { return yourSection?.filteredItems.count ?? 0 }
+        get { yourSection?.filteredItems.count ?? 0 }
     }
 
 
     // Initialization
-    private init() {
+    init(isShowingGroups: Bool) {
         super.init(nibName: nil, bundle: nil)
+        self.isShowingGroups = isShowingGroups
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    static func createForInterests() -> EditingViewController {
-        let editingVC = EditingViewController()
-        editingVC.showsGroups = false
-        return editingVC
-    }
-
-    static func createForGroups() -> EditingViewController {
-        let editingVC = EditingViewController()
-        editingVC.showsGroups = true
-        return editingVC
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Edit \(showsGroups ? "Groups" : "Interests")"
+        self.title = "Edit \(isShowingGroups ? "Groups" : "Interests")"
         view.backgroundColor = .backgroundLightGreen
 
         tableView.delegate = self
@@ -164,7 +153,7 @@ class EditingViewController: UIViewController {
         }
 
         // Setup Sections
-        // TODO replace with actual data
+        // TODO replace with actual data from backend
         let yourInterests: [Interest] = [
             Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
             Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
@@ -199,7 +188,7 @@ class EditingViewController: UIViewController {
 
         let yourSection: Section
         let moreSection: Section
-        if showsGroups {
+        if isShowingGroups {
             yourSection = Section(type: .yours, items: yourGroups.map { .group($0) })
             moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
         } else {
@@ -290,11 +279,9 @@ extension EditingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
         switch sections[sectionIndex].type {
         case .yours:
-            if showingLessRows && yourSectionSize > numberHiddenShownRows {
-                return numberHiddenShownRows
-            } else {
-                return yourSectionSize
-            }
+            return isCollapsed && yourSectionSize > numRowsShownWhenCollapsed
+                ? numRowsShownWhenCollapsed
+                : yourSectionSize
 
         case .more:
             return moreSectionSize
@@ -305,9 +292,13 @@ extension EditingViewController: UITableViewDataSource {
         let section = sections[indexPath.section]
         let itemType = section.filteredItems[indexPath.row]
 
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(
+                            withIdentifier: OnboardingTableViewCell.reuseIdentifier,
+                            for: indexPath
+                        ) as? OnboardingTableViewCell else {
+            return UITableViewCell()
+        }
 
-        cell.changeColor(isSelected: section.type == .yours)
 
         switch itemType {
         case .interest(let interest):
@@ -316,7 +307,8 @@ extension EditingViewController: UITableViewDataSource {
             cell.configure(with: group)
         }
 
-        cell.selectionChangesAppearence = false
+        cell.changeColor(isSelected: section.type == .yours)
+        cell.shouldSelectionChangeAppearence = false
 
         return cell
     }
@@ -329,22 +321,22 @@ extension EditingViewController: UITableViewDataSource {
 
         switch section.type {
         case .yours:
-            labelTitle = showsGroups ? "Your Groups" : "Your Interests"
-            if yourSectionSize == 0 {
-                labelSubtext = showsGroups
+            labelTitle = isShowingGroups ? "Your Groups" : "Your Interests"
+            if yourSectionSize == 0 { // TODO disable save button
+                labelSubtext = isShowingGroups
                     ? "Select a group so we can better help you find a pair!"
                     : "Select at least one interest so we can better help you find a pair!"
             } else {
                 labelSubtext = "tap to deselect"
             }
-            headerView.configure(with: labelTitle, info: labelSubtext, useSearch: false)
+            headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: false)
 
         case .more:
-            labelTitle = showsGroups ? "More Groups" : "More Interests"
-            labelSubtext = showsGroups ? "tap or search to add" : "tap to add"
-            headerView.configure(with: labelTitle, info: labelSubtext, useSearch: showsGroups)
+            labelTitle = isShowingGroups ? "More Groups" : "More Interests"
+            labelSubtext = isShowingGroups ? "tap or search to add" : "tap to add"
+            headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: isShowingGroups)
 
-            if showsGroups {
+            if isShowingGroups {
                 headerView.searchDelegate = { searchText in
                     self.moreSection?.filterString = searchText
                     self.moreSection?.refilter()
@@ -357,11 +349,12 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 && yourSectionSize > numberHiddenShownRows {
-            let footerView = EditFooterView(showsGroups: showsGroups)
-            footerView.changeViewState(isShowingLess: showingLessRows)
+        if section == 0 && yourSectionSize > numRowsShownWhenCollapsed {
+            let footerView = EditFooterView(isShowingGroups: isShowingGroups)
+            footerView.sectionIsCollapsed = isCollapsed
+            footerView.updateViewState()
             footerView.delegate = {
-                self.showingLessRows = $0
+                self.isCollapsed = $0
                 self.tableView.reloadData()
             }
 
@@ -380,11 +373,11 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showsGroups && section == 1 ? 128 : 86
+        return isShowingGroups && section == 1 ? 128 : 86
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return yourSectionSize > numberHiddenShownRows && section == 0 ? 64 : 0
+        return yourSectionSize > numRowsShownWhenCollapsed && section == 0 ? 64 : 0
     }
 
 }
@@ -399,9 +392,9 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
     /// Callback when search text is changed
     var searchDelegate: ((String?) -> Void)?
 
-    func configure(with title: String, info: String, useSearch: Bool) {
+    func configure(with title: String, info: String, shouldIncludeSearchBar: Bool) {
         setupText(title: title, info: info)
-        setupViews(withSearch: useSearch)
+        setupViews(shouldIncludeSearchBar: shouldIncludeSearchBar)
         setupConstraints()
     }
 
@@ -430,9 +423,9 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         label.attributedText = fullTitle
     }
 
-    private func setupViews(withSearch: Bool) {
+    private func setupViews(shouldIncludeSearchBar: Bool) {
         label.numberOfLines = 0
-        if withSearch {
+        if shouldIncludeSearchBar {
             setupSearchbar()
         }
         setupStack()
@@ -504,17 +497,17 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
-    private let showingGroups: Bool
-    private var showingLessRows = false
+    private let isShowingGroups: Bool
+    var sectionIsCollapsed = false
 
-    private let stack = UIStackView()
-    private let label = UILabel()
     private let arrowView = UIImageView()
+    private let label = UILabel()
+    private let stackView = UIStackView()
 
     var delegate: ((Bool) -> Void)?
 
-    init(showsGroups: Bool) {
-        showingGroups = showsGroups
+    init(isShowingGroups: Bool) {
+        self.isShowingGroups = isShowingGroups
         super.init(frame: .zero)
 
         setupViews()
@@ -537,13 +530,13 @@ private class EditFooterView: UIButton {
         arrowView.isUserInteractionEnabled = false
         arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
 
-        stack.isUserInteractionEnabled = false
-        stack.alignment = .center
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.insertArrangedSubview(arrowView, at: 0)
-        stack.insertArrangedSubview(label, at: 1)
-        addSubview(stack)
+        stackView.isUserInteractionEnabled = false
+        stackView.alignment = .center
+        stackView.axis = .horizontal
+        stackView.spacing = 12
+        stackView.insertArrangedSubview(arrowView, at: 0)
+        stackView.insertArrangedSubview(label, at: 1)
+        addSubview(stackView)
 
         addTarget(self, action: #selector(buttonPressed), for: .touchDown)
     }
@@ -553,33 +546,31 @@ private class EditFooterView: UIButton {
             make.size.equalTo(CGSize(width: 9, height: 18))
         }
 
-        stack.snp.makeConstraints { make in
+        stackView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.equalToSuperview().inset(44)
         }
     }
 
-    func changeViewState(isShowingLess: Bool) {
-        showingLessRows = isShowingLess
-
-        if showingLessRows {
-            label.text = "View your other \(showingGroups ? "groups" : "interests")"
+    func updateViewState() {
+        if sectionIsCollapsed {
+            label.text = "View your other \(isShowingGroups ? "groups" : "interests")"
             arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
         } else {
-            label.text = "View fewer \(showingGroups ? "groups" : "interests")"
+            label.text = "View fewer \(isShowingGroups ? "groups" : "interests")"
             arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
         }
 
-        delegate?(showingLessRows)
+        delegate?(sectionIsCollapsed)
     }
 
     @objc func buttonPressed() {
-        changeViewState(isShowingLess: !showingLessRows)
-
+        sectionIsCollapsed.toggle()
+        updateViewState()
     }
 
     func configure() {
-        label.text = showingGroups ? "view your other groups" : "view your other interests"
+        label.text = isShowingGroups ? "view your other groups" : "view your other interests"
     }
 
 }
