@@ -19,6 +19,7 @@ class OnboardingPageViewController: UIPageViewController {
     // MARK: - Private View Vars
     private let backgroundImage = UIImageView()
     private var demographicsViewController: DemographicsViewController!
+    private var goalsViewController: GoalsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: OnboardingInterestsViewController!
     private var onboardingPages = [UIViewController]()
@@ -47,7 +48,8 @@ class OnboardingPageViewController: UIPageViewController {
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = OnboardingInterestsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
-        onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
+        goalsViewController = GoalsViewController(delegate: self)
+        onboardingPages = [demographicsViewController, interestsViewController, groupsViewController, goalsViewController]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
     }

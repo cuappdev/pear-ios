@@ -74,7 +74,7 @@ class GroupsViewController: UIViewController {
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Ready for Pear", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -212,9 +212,10 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+//        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+//        let homeVC = HomeViewController()
+//        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 3)
     }
 
     @objc func skipButtonPressed() {
