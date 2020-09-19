@@ -223,6 +223,9 @@ class EditingViewController: UIViewController {
         saveBarButtonItem.setTitleTextAttributes([
             .font: UIFont.getFont(.medium, size: 20)
         ], for: .normal)
+        saveBarButtonItem.setTitleTextAttributes([
+            .font: UIFont.getFont(.medium, size: 20)
+        ], for: .disabled)
         navigationItem.rightBarButtonItem = saveBarButtonItem
     }
 
@@ -326,8 +329,10 @@ extension EditingViewController: UITableViewDataSource {
                 labelSubtext = isShowingGroups
                     ? "Select a group so we can better help you find a pair!"
                     : "Select at least one interest so we can better help you find a pair!"
+                saveBarButtonItem.isEnabled = false
             } else {
                 labelSubtext = "tap to deselect"
+                saveBarButtonItem.isEnabled = true
             }
             headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: false)
 
