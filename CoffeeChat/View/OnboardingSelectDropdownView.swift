@@ -127,10 +127,11 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
 
     /// Updates dropdown text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dropdownButton.setTitle("\(textTemplate) \(tableData[indexPath.row])", for: .normal)
+        let selectedText = tableData[indexPath.row]
+        dropdownButton.setTitle("\(textTemplate) \(selectedText)", for: .normal)
         dropdownButton.setTitleColor(.textBlack, for: .normal)
         hideTableView()
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: true)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: selectedText)
         delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 }
