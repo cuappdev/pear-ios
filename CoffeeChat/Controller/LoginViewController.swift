@@ -107,6 +107,7 @@ class LoginViewController: UIViewController {
         NetworkManager.shared.createUser(idToken: idToken).observe { result in
             switch result {
             case .value(let response):
+                // TODO: Add user creation handling
                 print(response)
             case .error(let error):
                 print(error)

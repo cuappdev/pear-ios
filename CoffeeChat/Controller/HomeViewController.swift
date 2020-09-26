@@ -38,7 +38,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
-        
+
         // TODO: Remove after connecting to backend. These are temp values.
         let firstName = "Ezra"
         let lastName = "Cornell"

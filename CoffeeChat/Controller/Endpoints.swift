@@ -36,19 +36,23 @@ extension Endpoint {
         return Endpoint(path: "/auth/login/", body: body)
     }
 
-    /// [POST] Authenticate ID token from Google and creates a user if account does not exist
-    static func updateUser(clubs: [String],
-                           graduationYear: String,
-                           hometown: String,
-                           interests: [String],
-                           major: String,
-                           pronouns: String) -> Endpoint {
-        let body = UserUpdateBody(clubs: clubs,
-                            graduationYear: graduationYear,
-                            hometown: hometown,
-                            interests: interests,
-                            major: major,
-                            pronouns: pronouns)
+    /// [POST] Update information about the user
+    static func updateUser(
+        clubs: [String],
+        graduationYear: String,
+        hometown: String,
+        interests: [String],
+        major: String,
+        pronouns: String
+    ) -> Endpoint {
+        let body = UserUpdateBody(
+            clubs: clubs,
+            graduationYear: graduationYear,
+            hometown: hometown,
+            interests: interests,
+            major: major,
+            pronouns: pronouns
+        )
         return Endpoint(path: "/user/update/", body: body)
     }
 
@@ -77,11 +81,5 @@ extension Endpoint {
     static func getUserInterests() -> Endpoint {
         return Endpoint(path: "/user/interests/")
     }
-
-    //    /// [POST] Updates information of the use
-    //    static func updateUser(firstName: String, lastName: String, netID: String) -> Endpoint {
-    //        let body = UserUpdateBody(firstName: firstName, lastName: lastName, netID: netID)
-    //        return Endpoint(path: "/user/update/", body: body)
-    //    }
 
 }

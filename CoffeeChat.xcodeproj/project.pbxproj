@@ -131,7 +131,7 @@
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
 		D44625032415B5B800714167 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoints.swift; path = CoffeeChat/Controller/Endpoints.swift; sourceTree = SOURCE_ROOT; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
-		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Controller/Response.swift; sourceTree = SOURCE_ROOT; };
+		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Models/Response.swift; sourceTree = SOURCE_ROOT; };
 		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Models/Body.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
 		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -209,6 +209,7 @@
 		30304E1923F60CC9006DC6C3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D47FF1842459424C00808A9A /* Response.swift */,
 				4FD8152C23F781790095EC17 /* MatchSummary.swift */,
 				4FD8152E23F7817B0095EC17 /* Interest.swift */,
 				303F81A524395F63002937CD /* MenuOption.swift */,
@@ -312,7 +313,6 @@
 			children = (
 				D44625012415B3D700714167 /* NetworkManager.swift */,
 				D44625032415B5B800714167 /* Endpoints.swift */,
-				D47FF1842459424C00808A9A /* Response.swift */,
 				D47FF18A24597CA800808A9A /* Body.swift */,
 			);
 			path = Networking;

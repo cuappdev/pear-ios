@@ -197,12 +197,11 @@ class GroupsViewController: UIViewController {
 
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
-            let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
-            let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
-            let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],
-            let major = userDefaults.string(forKey: Constants.UserDefaults.userMajor),
-            let pronouns = userDefaults.string(forKey: Constants.UserDefaults.userPronouns) {
-            print("success")
+           let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
+           let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
+           let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],
+           let major = userDefaults.string(forKey: Constants.UserDefaults.userMajor),
+           let pronouns = userDefaults.string(forKey: Constants.UserDefaults.userPronouns) {
             NetworkManager.shared.updateUser(clubs: clubs,
                                              graduationYear: graduationYear,
                                              hometown: hometown,

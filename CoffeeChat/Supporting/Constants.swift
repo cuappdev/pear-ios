@@ -28,13 +28,13 @@ struct Constants {
 
     struct UserDefaults {
         static let onboardingCompletion = "onboardingCompletion"
-        static let userId = "userId"
+        static let userClubs = "userClubs"
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"
-        static let userIdToken = "userIdToken"
-        static let userClubs = "userClubs"
         static let userGraduationYear = "userGraduationYear"
         static let userHometown = "userHometown"
+        static let userIdToken = "userIdToken"
+        static let userId = "userId"
         static let userInterests = "userInterests"
         static let userMajor = "userMajor"
         static let userPronouns = "userPronouns"
