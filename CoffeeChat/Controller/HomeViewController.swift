@@ -15,6 +15,7 @@ class HomeViewController: UIViewController {
     private let logoutButton = UIButton()
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
+    private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
     private let profileButton = UIButton()
@@ -43,6 +44,7 @@ class HomeViewController: UIViewController {
         let lastName = "Cornell"
         let major = "Government"
         let year = 2020
+        let pronouns = "She/Her"
         let hometown = "Ithaca, NY"
 
         logoutButton.setTitle("Log Out", for: .normal)
@@ -50,17 +52,21 @@ class HomeViewController: UIViewController {
         logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
         view.addSubview(logoutButton)
 
-        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)"
-        matchDemographicsLabel.textColor = .textGreen
-        matchDemographicsLabel.font = ._16CircularStdBook
-        matchDemographicsLabel.numberOfLines = 0
-        view.addSubview(matchDemographicsLabel)
+        matchProfileBackgroundView.axis = .vertical
+        matchProfileBackgroundView.spacing = 4
+        view.addSubview(matchProfileBackgroundView)
 
         matchNameLabel.text = "\(firstName)\n\(lastName)"
         matchNameLabel.textColor = .textBlack
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
-        view.addSubview(matchNameLabel)
+        matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
+
+        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)\n\(pronouns)"
+        matchDemographicsLabel.textColor = .textGreen
+        matchDemographicsLabel.font = ._16CircularStdBook
+        matchDemographicsLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchDemographicsLabel, at: 1)
 
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
@@ -113,21 +119,16 @@ class HomeViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
         }
 
-        matchDemographicsLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(matchNameLabel)
-            make.top.equalTo(matchNameLabel.snp.bottom).offset(8)
-        }
-
-        matchNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(matchProfileImageView.snp.trailing).offset(20)
-            make.trailing.equalToSuperview().inset(padding)
-            make.top.equalTo(matchProfileImageView).offset(5)
-        }
-
         matchProfileImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(padding)
             make.top.equalTo(titleLabel.snp.bottom).offset(padding)
             make.size.equalTo(imageSize)
+        }
+
+        matchProfileBackgroundView.snp.makeConstraints { make in
+            make.centerY.equalTo(matchProfileImageView)
+            make.leading.equalTo(matchProfileImageView.snp.trailing).offset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
         matchSummaryTableView.snp.makeConstraints { make in
