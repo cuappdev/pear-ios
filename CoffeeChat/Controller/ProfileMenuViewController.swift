@@ -115,6 +115,14 @@ class ProfileMenuViewController: UIViewController {
         navigationController?.pushViewController(editDemographicsVC, animated: false)
     }
 
+    func pushEditingInterestsViewController() {
+        navigationController?.pushViewController(EditingViewController(isShowingGroups: false), animated: false)
+    }
+
+    func pushEditingGroupsViewController() {
+        navigationController?.pushViewController(EditingViewController(isShowingGroups: true), animated: false)
+    }
+
 }
 
 extension ProfileMenuViewController: UITableViewDataSource {
@@ -128,6 +136,15 @@ extension ProfileMenuViewController: UITableViewDataSource {
         let option = menuOptions[indexPath.row]
         cell.configure(for: option)
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let option = menuOptions[indexPath.row]
+        if option.text == "Your interests" {
+            pushEditingInterestsViewController()
+        } else if option.text == "Your groups" {
+            pushEditingGroupsViewController()
+        }
     }
 
 }

@@ -37,7 +37,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
-        navigationController?.navigationBar.isHidden = true
 
         // TODO: Remove after connecting to backend. These are temp values.
         let firstName = "Ezra"
@@ -97,6 +96,11 @@ class HomeViewController: UIViewController {
         view.addSubview(titleLabel)
 
         setupConstraints()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
 
     private func setupConstraints() {

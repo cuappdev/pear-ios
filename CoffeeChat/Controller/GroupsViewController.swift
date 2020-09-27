@@ -212,7 +212,34 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
+        let userGroups = selectedGroups.map { $0.name }
+        userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
+        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        updateUser()
         delegate?.nextPage(index: 3)
+    }
+
+    private func updateUser() {
+        if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
+           let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
+           let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
+           let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],
+           let major = userDefaults.string(forKey: Constants.UserDefaults.userMajor),
+           let pronouns = userDefaults.string(forKey: Constants.UserDefaults.userPronouns) {
+            NetworkManager.shared.updateUser(clubs: clubs,
+                                             graduationYear: graduationYear,
+                                             hometown: hometown,
+                                             interests: interests,
+                                             major: major,
+                                             pronouns: pronouns).observe { result in
+                switch result {
+                case .value(let response):
+                    print(response)
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {
