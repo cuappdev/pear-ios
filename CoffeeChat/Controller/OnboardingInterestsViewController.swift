@@ -64,7 +64,7 @@ class OnboardingInterestsViewController: UIViewController {
         fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
-        nextButton.setTitle("Almost there", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.layer.cornerRadius = 27
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
@@ -87,12 +87,12 @@ class OnboardingInterestsViewController: UIViewController {
     private func setupConstraints() {
         let backButtonSize = CGSize(width: 10, height: 18)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
+        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 48
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
@@ -103,7 +103,7 @@ class OnboardingInterestsViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in

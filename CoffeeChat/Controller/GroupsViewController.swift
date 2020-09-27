@@ -74,7 +74,7 @@ class GroupsViewController: UIViewController {
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitle("Almost there", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -98,8 +98,8 @@ class GroupsViewController: UIViewController {
     private func setupConstraints() {
         let backButtonSize = CGSize(width: 10, height: 18)
         let backSize = CGSize(width: 86, height: 20)
-        let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
+        let skipBottomPadding: CGFloat = Constants.Onboarding.skipBottomPadding
+        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
         let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
         let searchTopPadding: CGFloat = 48
@@ -107,7 +107,7 @@ class GroupsViewController: UIViewController {
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(clubLabel)
@@ -124,7 +124,7 @@ class GroupsViewController: UIViewController {
         clubLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
@@ -212,16 +212,11 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-//        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-//        let homeVC = HomeViewController()
-//        navigationController?.pushViewController(homeVC, animated: true)
         delegate?.nextPage(index: 3)
     }
 
     @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 3)
     }
 
 }

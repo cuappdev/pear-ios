@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Constants {
 
@@ -32,6 +33,12 @@ struct Constants {
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"
         static let userToken = "userToken"
+    }
+
+    struct Onboarding {
+        static let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
+        static let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
+        static let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
     }
 
 }

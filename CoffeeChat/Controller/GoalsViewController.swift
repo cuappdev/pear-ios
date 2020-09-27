@@ -68,7 +68,7 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -90,13 +90,13 @@ class GoalsViewController: UIViewController {
     private func setupConstraints() {
         let backButtonSize = CGSize(width: 10, height: 18)
         let backSize = CGSize(width: 86, height: 20)
-        let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
+        let skipBottomPadding: CGFloat = Constants.Onboarding.skipBottomPadding
+        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
         let nextButtonSize = CGSize(width: 225, height: 54)
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
+        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
         let titleSize = CGSize(width: 318, height: 61)
-        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
 
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel).offset(6)
@@ -107,7 +107,7 @@ class GoalsViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(titleSize)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
         }
 
         subtitleLabel.snp.makeConstraints { make in
