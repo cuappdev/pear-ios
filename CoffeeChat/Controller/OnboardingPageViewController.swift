@@ -66,7 +66,6 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // Update x position based on screen size when page scrolls
-
         let scrollRate: CGFloat = scrollView.contentOffset.x - scrollContentOffset > 0 ? -0.04 : 0.04
         backgroundXPosition += scrollRate * screenWidth
         scrollContentOffset = scrollView.contentOffset.x

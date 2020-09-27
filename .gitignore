@@ -1,10 +1,10 @@
 # Keys
-CoffeeChat/Supporting/Keys.plist
 CoffeeChat/Supporting/GoogleService-Info.plist
 CoffeeChat/Supporting/Keys.plist
 
 # CocoaPods
 Pods/
+Podfile.lock
 
 .DS_Store
 */.DS_Store
