@@ -13,25 +13,25 @@ class GoalsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private var selectedGoals: [String] = []
-
     // TODO: change when networking with backend
     private var goals: [String] = [
-        "Chatting with someone new",
-        "Finding new friends",
-        "Getting outside of my comfort zone",
-        "Getting advice",
-        "Giving advice",
+        "Just chatting",
+        "Finding my people",
+        "Meeting someone different",
+        "Learning from mentors",
+        "Guiding mentees",
         "Not sure yet"
     ]
+    private var isGoalSelected: [Bool] = [false, false, false, false, false, false]
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let titleLabel = UILabel()
     private let nextButton = UIButton()
     private let skipButton = UIButton()
+    private let subtitleLabel = UILabel()
     private let tableView = UITableView()
+    private let titleLabel = UILabel()
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -57,9 +57,16 @@ class GoalsViewController: UIViewController {
         tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
 
-        titleLabel.text = "How can Pear help you?"
+        titleLabel.text = "How do you want to use\nPear?"
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
+
+        subtitleLabel.text = "Pick as many as you'd like"
+        subtitleLabel.textColor = .greenGray
+        subtitleLabel.font = ._12CircularStdBook
+        view.addSubview(subtitleLabel)
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -86,29 +93,33 @@ class GoalsViewController: UIViewController {
         let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         let nextButtonSize = CGSize(width: 225, height: 54)
-        let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
-        let titleHeight: CGFloat = 30
+        let titleSize = CGSize(width: 318, height: 61)
         let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
 
         backButton.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
+            make.top.equalTo(titleLabel).offset(6)
             make.size.equalTo(backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(titleHeight)
+            make.size.equalTo(titleSize)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
         }
 
-        tableView.snp.makeConstraints { make in
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.centerX.equalToSuperview()
-            make.width.equalTo(tableViewWidth)
-            make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
+            make.height.equalTo(20)
+        }
+
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
+            make.leading.trailing.equalToSuperview().inset(40)
         }
 
         nextButton.snp.makeConstraints { make in
@@ -128,7 +139,7 @@ class GoalsViewController: UIViewController {
     // MARK: - Next and Previous Buttons
     /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
-        nextButton.isEnabled = selectedGoals.count > 0
+        nextButton.isEnabled = isGoalSelected.filter{$0}.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
@@ -154,7 +165,7 @@ class GoalsViewController: UIViewController {
 extension GoalsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        return 54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -162,13 +173,9 @@ extension GoalsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedGoals.append(goals[indexPath.row])
+        isGoalSelected[indexPath.row].toggle()
         updateNext()
-    }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGoals.removeAll { $0 == goals[indexPath.row]}
-        updateNext()
+        tableView.reloadData()
     }
 
 }
@@ -181,7 +188,8 @@ extension GoalsViewController: UITableViewDataSource {
         GoalTableViewCell.reuseIdentifier, for: indexPath) as?
         GoalTableViewCell else { return UITableViewCell() }
         let data = goals[indexPath.row]
-        cell.configure(with: data)
+        let isSelected = isGoalSelected[indexPath.row]
+        cell.configure(with: data, isSelected: isSelected)
         return cell
     }
 

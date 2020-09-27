@@ -22,10 +22,6 @@ class GoalTableViewCell: UITableViewCell {
 
         backgroundColor = .backgroundLightGreen
 
-        titleLabel.textColor = .textBlack
-        titleLabel.font = ._16CircularStdBook
-        addSubview(titleLabel)
-
         backdropView.backgroundColor = .clear
         backdropView.clipsToBounds = false
         backdropView.layer.shadowColor = UIColor.black.cgColor
@@ -35,6 +31,10 @@ class GoalTableViewCell: UITableViewCell {
         backdropView.layer.cornerRadius = 8
         backdropView.layer.masksToBounds = true
         contentView.addSubview(backdropView)
+
+        titleLabel.textColor = .textBlack
+        titleLabel.font = ._16CircularStdBook
+        backdropView.addSubview(titleLabel)
 
         setupConstraints()
     }
@@ -47,29 +47,19 @@ class GoalTableViewCell: UITableViewCell {
         let textSidePadding: CGFloat = 8
 
         backdropView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
             make.leading.trailing.equalToSuperview()
             make.top.bottom.equalToSuperview().inset(5)
-            make.height.equalTo(44)
         }
 
         titleLabel.snp.remakeConstraints { make in
-            make.leading.equalToSuperview().offset(textSidePadding)
+            make.leading.trailing.equalToSuperview().inset(textSidePadding)
             make.centerY.equalToSuperview()
         }
     }
 
-    func configure(with goal: String) {
+    func configure(with goal: String, isSelected: Bool) {
         titleLabel.text = goal
-    }
-
-    func changeColor(isSelected: Bool) {
         backdropView.backgroundColor = isSelected ? .pearGreen : .white
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        changeColor(isSelected: isSelected)
     }
 
 }
