@@ -153,6 +153,24 @@ class HomeViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
         }
+
+        let blank = UIView()
+        blank.backgroundColor = .white
+        view.addSubview(blank)
+
+        blank.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        let tester = MeetupStatusView(for: .newPair)
+        view.addSubview(tester)
+
+        tester.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(24)
+            make.width.equalTo(319)
+            make.height.equalTo(75)
+        }
     }
 
     @objc private func profilePressed() {
