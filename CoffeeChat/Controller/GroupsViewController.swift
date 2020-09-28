@@ -214,10 +214,14 @@ class GroupsViewController: UIViewController {
     @objc func nextButtonPressed() {
         let userGroups = selectedGroups.map { $0.name }
         userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         updateUser()
         delegate?.nextPage(index: 3)
     }
+
+    @objc func skipButtonPressed() {
+        delegate?.nextPage(index: 3)
+    }
+
 
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
@@ -240,10 +244,6 @@ class GroupsViewController: UIViewController {
                 }
             }
         }
-    }
-
-    @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 3)
     }
 
 }
