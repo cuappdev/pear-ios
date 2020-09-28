@@ -54,6 +54,7 @@ class GoalsViewController: UIViewController {
         tableView.backgroundColor = .none
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
+        tableView.allowsMultipleSelection = true
         tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
 
@@ -175,7 +176,11 @@ extension GoalsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         isGoalSelected[indexPath.row].toggle()
         updateNext()
-        tableView.reloadData()
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        isGoalSelected[indexPath.row].toggle()
+        updateNext()
     }
 
 }

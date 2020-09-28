@@ -59,7 +59,11 @@ class GoalTableViewCell: UITableViewCell {
 
     func configure(with goal: String, isSelected: Bool) {
         titleLabel.text = goal
-        backdropView.backgroundColor = isSelected ? .pearGreen : .white
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        backdropView.backgroundColor = selected ? .pearGreen : .white
     }
 
 }
