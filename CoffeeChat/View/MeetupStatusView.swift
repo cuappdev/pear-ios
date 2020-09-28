@@ -18,12 +18,12 @@ class MeetupStatusView: UIView {
 
     private let pearImageSize = CGSize(width: 40, height: 40)
 
-    convenience init(forNewPair name: String) {
+    convenience init(respondingTo name: String) {
         self.init()
         setupForNewPair(with: name)
     }
 
-    convenience init (reachingOutTo name: String) {
+    convenience init (reachedOutTo name: String) {
         self.init()
         setupForReachingOut(with: name)
     }

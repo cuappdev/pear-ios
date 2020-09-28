@@ -30,8 +30,8 @@ class HomeViewController: UIViewController {
     private let profileButton = UIButton()
     private let titleLabel = UILabel()
 
-    private var reachOutButton = UIButton() //: UIButton? // TODO integrate PairingProgress with this
-    private var meetupStateView: MeetupStatusView?
+    private var reachOutButton: UIButton?
+    private var meetupStatusView: MeetupStatusView?
 
     private let imageSize = CGSize(width: 120, height: 120)
     private let profileButtonSize = CGSize(width: 35, height: 35)
@@ -78,25 +78,50 @@ class HomeViewController: UIViewController {
         let pronouns = "She/Her"
         let hometown = "Ithaca, NY"
 
-        //let buttonText: String
+        if pairingProgress == .reachingOut || pairingProgress == .responding {
+            reachOutButton = UIButton()
+            if let reachOutButton = reachOutButton {
+                reachOutButton.backgroundColor = .backgroundOrange
+                reachOutButton.setTitleColor(.white, for: .normal)
+                reachOutButton.titleLabel?.font = ._20CircularStdBold
+                reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
+                reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+                if pairingProgress == .reachingOut {
+                    reachOutButton.setTitle("Reach out!", for: .normal)
+                } else if pairingProgress == .responding {
+                    reachOutButton.setTitle("Pick a time", for: .normal)
+                }
+                view.addSubview(reachOutButton)
+            }
+        }
 
-        // switch pairingProgress {
-        //     case .reachingOut
-        //     buttonText = "Reach out!"
+        switch pairingProgress {
+        case .waitingOnResponse:
+            meetupStatusView = MeetupStatusView(reachedOutTo: firstName)
+        case .responding:
+            meetupStatusView = MeetupStatusView(respondingTo: firstName)
+        case .dateScheduled:
+            meetupStatusView = MeetupStatusView(chatScheduledOn: Date())
+        default: break
+        }
 
-        //     case .waitingOnResponse
-        //     buttonText = ""
-        //     case .responding
-        //     case .dateScheduled
-        // }
+        if let meetupStatusView = meetupStatusView {
+            view.addSubview(meetupStatusView)
+        }
 
-        meetupStateView = MeetupStatusView(chatScheduledOn: Date())
-        view.addSubview(meetupStateView!)
+        titleLabel.text = "Meet your Pear"
+        titleLabel.textColor = .textBlack
+        titleLabel.font = ._24CircularStdMedium
+        view.addSubview(titleLabel)
 
-        logoutButton.setTitle("aaa", for: .normal)
-        logoutButton.setTitleColor(.textBlack, for: .normal)
-        logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
-        view.addSubview(logoutButton)
+        profileButton.backgroundColor = .inactiveGreen
+        profileButton.layer.cornerRadius = profileButtonSize.width/2
+        profileButton.layer.shadowColor = UIColor.black.cgColor
+        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        profileButton.layer.shadowOpacity = 0.15
+        profileButton.layer.shadowRadius = 2
+        profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
+        view.addSubview(profileButton)
 
         matchProfileBackgroundView.axis = .vertical
         matchProfileBackgroundView.spacing = 4
@@ -125,27 +150,11 @@ class HomeViewController: UIViewController {
         matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: cellReuseId)
         view.addSubview(matchSummaryTableView)
 
-        profileButton.backgroundColor = .inactiveGreen
-        profileButton.layer.cornerRadius = profileButtonSize.width/2
-        profileButton.layer.shadowColor = UIColor.black.cgColor
-        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        profileButton.layer.shadowOpacity = 0.15
-        profileButton.layer.shadowRadius = 2
-        profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
-        view.addSubview(profileButton)
+        logoutButton.setTitle("Log out", for: .normal)
+        logoutButton.setTitleColor(.textBlack, for: .normal)
+        logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
+        view.addSubview(logoutButton)
 
-        reachOutButton.backgroundColor = .backgroundOrange
-        reachOutButton.setTitle("Reach out!", for: .normal)
-        reachOutButton.setTitleColor(.white, for: .normal)
-        reachOutButton.titleLabel?.font = ._20CircularStdBold
-        reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
-        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-        view.addSubview(reachOutButton)
-
-        titleLabel.text = "Meet your Pear"
-        titleLabel.textColor = .textBlack
-        titleLabel.font = ._24CircularStdMedium
-        view.addSubview(titleLabel)
     }
 
     private func setupConstraints() {
@@ -154,22 +163,30 @@ class HomeViewController: UIViewController {
         let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
         let meetupPadding = 24
         let meetupSize = CGSize(width: 319, height: 75)
+        let matchSummaryBottomPadding = 46
 
-        logoutButton.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
         }
 
-        meetupStateView?.snp.makeConstraints { make in
+        profileButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
+            make.leading.equalToSuperview().inset(20)
+            make.size.equalTo(profileButtonSize)
+        }
+
+        meetupStatusView?.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(padding)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
             make.size.equalTo(meetupSize)
         }
 
+
         matchProfileImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(padding)
-            if let meetupStateView = meetupStateView {
-                make.top.equalTo(meetupStateView.snp.bottom).offset(padding)
+            if let meetupStatusView = meetupStatusView {
+                make.top.equalTo(meetupStatusView.snp.bottom).offset(padding)
             } else {
                 make.top.equalTo(titleLabel.snp.bottom).offset(padding)
             }
@@ -183,27 +200,27 @@ class HomeViewController: UIViewController {
         }
 
         matchSummaryTableView.snp.makeConstraints { make in
-            make.top.equalTo(matchDemographicsLabel.snp.bottom).offset(padding)
-            make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
+            make.top.equalTo(matchProfileBackgroundView.snp.bottom).offset(padding)
+            if let reachOutButton = reachOutButton {
+                make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
+            } else {
+                make.bottom.equalTo(logoutButton.snp.top).offset(-matchSummaryBottomPadding)
+            }
+
             make.leading.trailing.equalToSuperview().inset(padding)
         }
 
-        profileButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            make.leading.equalToSuperview().inset(20)
-            make.size.equalTo(profileButtonSize)
-        }
-
-        reachOutButton.snp.makeConstraints { make in
+        reachOutButton?.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(reachOutButtonSize)
         }
 
-        titleLabel.snp.makeConstraints { make in
+        logoutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
         }
+
     }
 
     // MARK: Button Actions
