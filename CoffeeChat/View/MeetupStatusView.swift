@@ -110,7 +110,7 @@ class MeetupStatusView: UIView {
 
     private func setupForNewPair(with name: String) {
         statusLabel.text = "New Pear"
-        messageLabel.text = "\(name) wants to meet you! Pick a time that works for both of you"
+        messageLabel.text = "\(name) wants to meet you! Pick a time that works for both of you."
     }
 
     private func setupForReachingOut(with name: String) {
@@ -136,10 +136,12 @@ class MeetupStatusView: UIView {
         ]
 
         let prefix = NSMutableAttributedString(string: "Get pumped to meet on ", attributes: unformattedText)
-        let suffix = NSMutableAttributedString(string: "\(formatDate(date))", attributes: underlinedText)
+        let body = NSMutableAttributedString(string: "\(formatDate(date))", attributes: underlinedText)
+        let suffix = NSMutableAttributedString(string: ".", attributes: unformattedText)
 
         let fullText = NSMutableAttributedString()
         fullText.append(prefix)
+        fullText.append(body)
         fullText.append(suffix)
 
         messageLabel.attributedText = fullText

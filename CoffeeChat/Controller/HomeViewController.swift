@@ -21,6 +21,7 @@ class HomeViewController: UIViewController {
     private let profileButton = UIButton()
     private let reachOutButton = UIButton()
     private let titleLabel = UILabel()
+    private var meetupStateView: MeetupStatusView?
 
     private let imageSize = CGSize(width: 120, height: 120)
     private let profileButtonSize = CGSize(width: 35, height: 35)
@@ -113,15 +114,27 @@ class HomeViewController: UIViewController {
         let padding: CGFloat = 35 // TODO: Not sure about dimensions.
         let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
         let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
+        let meetupPadding = 24
+        let meetupSize = CGSize(width: 319, height: 75)
 
         logoutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
         }
 
+        meetupStateView?.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
+            make.size.equalTo(meetupSize)
+        }
+
         matchProfileImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(padding)
-            make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+            if let meetupStateView = meetupStateView {
+                make.top.equalTo(meetupStateView.snp.bottom).offset(padding)
+            } else {
+                make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+            }
             make.size.equalTo(imageSize)
         }
 
@@ -152,25 +165,6 @@ class HomeViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-        }
-
-        let blank = UIView()
-        blank.backgroundColor = .white
-        view.addSubview(blank)
-
-        blank.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        //let tester = MeetupStatusView(forNewPair: "Maggie")
-        let tester = MeetupStatusView(chatScheduledOn: Date())
-        view.addSubview(tester)
-
-        tester.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.width.equalTo(319)
-            make.height.equalTo(75)
         }
     }
 
