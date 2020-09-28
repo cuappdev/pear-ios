@@ -150,6 +150,7 @@ class MeetupStatusView: UIView {
     /**
      Converts a date to a string formatted:
      [Day of Week], [Month Number]/[Day Number] at [h:mm] [AM/PM] [Time Zone Abbreviation]
+     Will Format the date to the current Eastern Time Zone
 
     Example:
     The Date for Sunday, September 27 2020 at 9:30 PM Eastern Time would become:
@@ -160,10 +161,11 @@ class MeetupStatusView: UIView {
         dateFormatter.dateFormat = "M/d 'at' h:m a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
+        dateFormatter.timeZone = TimeZone(identifier: "America/New_York")!
 
         let dayOfWeek = dateFormatter.weekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
         let monthDayAndTime = dateFormatter.string(from: date)
-        let currentTimeZone = TimeZone.current.abbreviation(for: date) ?? ""
+        let currentTimeZone = dateFormatter.timeZone.abbreviation(for: date) ?? ""
 
         return "\(dayOfWeek), \(monthDayAndTime) \(currentTimeZone)"
     }

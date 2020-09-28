@@ -10,7 +10,16 @@ import GoogleSignIn
 import SideMenu
 import UIKit
 
+enum PairingProgress {
+    case reachingOut
+    case waitingOnResponse
+    case responding
+    case dateScheduled
+}
+
 class HomeViewController: UIViewController {
+
+    private let pairingProgress: PairingProgress
 
     private let logoutButton = UIButton()
     private let matchDemographicsLabel = UILabel()
@@ -19,8 +28,9 @@ class HomeViewController: UIViewController {
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
     private let profileButton = UIButton()
-    private let reachOutButton = UIButton()
     private let titleLabel = UILabel()
+
+    private var reachOutButton = UIButton() //: UIButton? // TODO integrate PairingProgress with this
     private var meetupStateView: MeetupStatusView?
 
     private let imageSize = CGSize(width: 120, height: 120)
@@ -36,8 +46,28 @@ class HomeViewController: UIViewController {
         MatchSummary(title: "He is also part of...", detail: "EzraBox")
     ]
 
+    init(for progress: PairingProgress) {
+        pairingProgress = progress
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupViews()
+        setupConstraints()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
+
+    private func setupViews() {
         view.backgroundColor = .backgroundLightGreen
 
         // TODO: Remove after connecting to backend. These are temp values.
@@ -48,7 +78,22 @@ class HomeViewController: UIViewController {
         let pronouns = "She/Her"
         let hometown = "Ithaca, NY"
 
-        logoutButton.setTitle("Log Out", for: .normal)
+        //let buttonText: String
+
+        // switch pairingProgress {
+        //     case .reachingOut
+        //     buttonText = "Reach out!"
+
+        //     case .waitingOnResponse
+        //     buttonText = ""
+        //     case .responding
+        //     case .dateScheduled
+        // }
+
+        meetupStateView = MeetupStatusView(chatScheduledOn: Date())
+        view.addSubview(meetupStateView!)
+
+        logoutButton.setTitle("aaa", for: .normal)
         logoutButton.setTitleColor(.textBlack, for: .normal)
         logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
         view.addSubview(logoutButton)
@@ -101,13 +146,6 @@ class HomeViewController: UIViewController {
         titleLabel.textColor = .textBlack
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
-
-        setupConstraints()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
     }
 
     private func setupConstraints() {
@@ -167,6 +205,8 @@ class HomeViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
         }
     }
+
+    // MARK: Button Actions
 
     @objc private func profilePressed() {
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())

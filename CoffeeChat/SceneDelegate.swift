@@ -35,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Onboard user if they haven't done so yet, otherwise bring to home.
             let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let assignedMatch = true
-            let homeVC = HomeViewController()
+            let homeVC = HomeViewController(for: .reachingOut)
             let noMatchVC = NoMatchViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal)
             let matchVC = assignedMatch ? homeVC : noMatchVC

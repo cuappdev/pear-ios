@@ -223,13 +223,13 @@ class GroupsViewController: UIViewController {
         userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
         userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         updateUser()
-        let homeVC = HomeViewController()
+        let homeVC = HomeViewController(for: .reachingOut)
         navigationController?.pushViewController(homeVC, animated: true)
     }
 
     @objc func skipButtonPressed() {
         userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
+        let homeVC = HomeViewController(for: .reachingOut)
         navigationController?.pushViewController(homeVC, animated: true)
     }
 
