@@ -162,7 +162,8 @@ class HomeViewController: UIViewController {
             make.edges.equalToSuperview()
         }
 
-        let tester = MeetupStatusView(for: .newPair)
+        //let tester = MeetupStatusView(forNewPair: "Maggie")
+        let tester = MeetupStatusView(chatScheduledOn: Date())
         view.addSubview(tester)
 
         tester.snp.makeConstraints { make in

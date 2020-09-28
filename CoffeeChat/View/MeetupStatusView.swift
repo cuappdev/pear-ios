@@ -8,12 +8,7 @@
 
 import UIKit
 
-enum MeetupState {
-    case newPair, reachedOut, chatScheduled
-}
-
-class MeetupStatusView: UIView { // TODO improve naming probably
-
+class MeetupStatusView: UIView {
 
     private let backgroundShadingView = UIView()
     private let messageLabel = UILabel()
@@ -23,26 +18,25 @@ class MeetupStatusView: UIView { // TODO improve naming probably
 
     private let pearImageSize = CGSize(width: 40, height: 40)
 
-    init(for state: MeetupState) {
+    convenience init(forNewPair name: String) {
+        self.init()
+        setupForNewPair(with: name)
+    }
+
+    convenience init (reachingOutTo name: String) {
+        self.init()
+        setupForReachingOut(with: name)
+    }
+
+    convenience init(chatScheduledOn date: Date) {
+        self.init()
+        setupForChatScheduled(on: date)
+    }
+
+    private init() {
         super.init(frame: .zero)
 
-        //XXX DEBUG
-        statusLabel.text = "status"
-        messageLabel.text = "message label!"
-        // ---------
-
         setupViews()
-        setupConstraints()
-
-        switch state {
-        case .newPair:
-            setupForNewPair()
-        case .reachedOut:
-            setupForNewPair()
-        case .chatScheduled:
-            setupForChatScheduled()
-        }
-
         setupConstraints()
     }
 
@@ -79,7 +73,6 @@ class MeetupStatusView: UIView { // TODO improve naming probably
 
     private func setupConstraints() {
         let statusImageSize = CGSize(width: 10, height: 10)
-        let statusPadding = 4
         let statusMessagePadding = 4
         let pearSidePadding = 8
         let messageLeadingPadding = 12
@@ -115,15 +108,62 @@ class MeetupStatusView: UIView { // TODO improve naming probably
 
     }
 
-    private func setupForNewPair() {
-
+    private func setupForNewPair(with name: String) {
+        statusLabel.text = "New Pear"
+        messageLabel.text = "\(name) wants to meet you! Pick a time that works for both of you"
     }
 
-    private func setupForReachOut() {
-
+    private func setupForReachingOut(with name: String) {
+        statusLabel.text = "Reached out"
+        messageLabel.text = "Just waiting on \(name) to pick a time and place!"
     }
 
-    private func setupForChatScheduled() {
+    private func setupForChatScheduled(on date: Date) {
+        statusLabel.text = "Chat scheduled"
 
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 0
+        let unformattedText: [NSAttributedString.Key: Any] = [
+            .font: UIFont._16CircularStdMedium as Any,
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: UIColor.textBlack
+        ]
+        let underlinedText: [NSAttributedString.Key: Any] = [
+            .font: UIFont._16CircularStdMedium as Any,
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: UIColor.textBlack
+        ]
+
+        let prefix = NSMutableAttributedString(string: "Get pumped to meet on ", attributes: unformattedText)
+        let suffix = NSMutableAttributedString(string: "\(formatDate(date))", attributes: underlinedText)
+
+        let fullText = NSMutableAttributedString()
+        fullText.append(prefix)
+        fullText.append(suffix)
+
+        messageLabel.attributedText = fullText
     }
+
+    /**
+     Converts a date to a string formatted:
+     [Day of Week], [Month Number]/[Day Number] at [h:mm] [AM/PM] [Time Zone Abbreviation]
+
+    Example:
+    The Date for Sunday, September 27 2020 at 9:30 PM Eastern Time would become:
+    "Sunday, 9/27 at 9:30 PM EDT"
+    */
+    private func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/d 'at' h:m a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+
+        let dayOfWeek = dateFormatter.weekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
+        let monthDayAndTime = dateFormatter.string(from: date)
+        let currentTimeZone = TimeZone.current.abbreviation(for: date) ?? ""
+
+        return "\(dayOfWeek), \(monthDayAndTime) \(currentTimeZone)"
+    }
+
 }
