@@ -43,6 +43,8 @@
 		D41FE860246464240048900F /* DaySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85F246464240048900F /* DaySchedule.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
 		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
+		D42961842525F1C800C677C3 /* InterestsGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961832525F1C800C677C3 /* InterestsGroupsViewController.swift */; };
+		D42961892526012400C677C3 /* InterestsGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961882526012400C677C3 /* InterestsGroups.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
 		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
@@ -128,6 +130,8 @@
 		D41FE85F246464240048900F /* DaySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySchedule.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
 		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		D42961832525F1C800C677C3 /* InterestsGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsGroupsViewController.swift; sourceTree = "<group>"; };
+		D42961882526012400C677C3 /* InterestsGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsGroups.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
@@ -222,6 +226,7 @@
 				D41FE85D2464640F0048900F /* Matching.swift */,
 				D41FE85F246464240048900F /* DaySchedule.swift */,
 				D41FE861246464310048900F /* SubUser.swift */,
+				D42961882526012400C677C3 /* InterestsGroups.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -287,6 +292,7 @@
 				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
 				303F81A124394F95002937CD /* ProfileMenuViewController.swift */,
 				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
+				D42961832525F1C800C677C3 /* InterestsGroupsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -691,7 +697,9 @@
 				4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
+				D42961842525F1C800C677C3 /* InterestsGroupsViewController.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
+				D42961892526012400C677C3 /* InterestsGroups.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,

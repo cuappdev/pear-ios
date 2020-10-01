@@ -143,15 +143,11 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 4)
     }
 
     @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 4)
     }
 
 }
