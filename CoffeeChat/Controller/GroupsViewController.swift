@@ -223,8 +223,7 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data, type: .normal, subtitle: nil)

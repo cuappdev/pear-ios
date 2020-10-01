@@ -60,8 +60,8 @@ class SimpleOnboardingTableViewCell: UITableViewCell {
 
     }
 
-    func configure(with text: String, type: InterestGroupEnum, subtitle: String?) {
-        titleLabel.text = text
+    func configure(with title: String, type: SimpleOnboardingCellType, subtitle: String?) {
+        titleLabel.text = title
         isInterest = type == .interest
         subtitleLabel.isHidden = type != .interest
         if let subtitle = subtitle {

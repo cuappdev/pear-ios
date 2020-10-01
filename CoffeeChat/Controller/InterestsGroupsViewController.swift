@@ -13,18 +13,18 @@ class InterestsGroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var displayedInterestsGroups: [InterestsGroups] = []
-    private var interestsGroups: [InterestsGroups] = [
-        InterestsGroups(name: "Art", type: .interest, categories: "painting, crafts, embroidery..."),
-        InterestsGroups(name: "Business", type: .interest, categories: "entrepreneurship, finance, VC..."),
-        InterestsGroups(name: "Cornell AppDev", type: .normal, categories: nil),
-        InterestsGroups(name: "Bread Club", type: .normal, categories: nil),
-        InterestsGroups(name: "Cornell Venture Capital", type: .normal, categories: nil),
-        InterestsGroups(name: "Medium Design Collective", type: .normal, categories: nil),
-        InterestsGroups(name: "Women in Computing at Cornell", type: .normal, categories: nil),
-        InterestsGroups(name: "Design and Tech Initiative", type: .normal, categories: nil)
+    private var displayedInterestsGroups: [SimpleOnboardingCell] = []
+    private var interestsGroups: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "Art", type: .interest, categories: "painting, crafts, embroidery..."),
+        SimpleOnboardingCell(name: "Business", type: .interest, categories: "entrepreneurship, finance, VC..."),
+        SimpleOnboardingCell(name: "Cornell AppDev", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Bread Club", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Cornell Venture Capital", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Medium Design Collective", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Women in Computing at Cornell", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Design and Tech Initiative", type: .normal, categories: nil)
     ]
-    private var selectedInterestsGroups: [InterestsGroups] = []
+    private var selectedInterestsGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
