@@ -7,22 +7,17 @@
 //
 
 import GoogleSignIn
-import SideMenu
 import UIKit
 
 class MatchViewController: UIViewController {
 
-    private let logoutButton = UIButton()
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
-    private let profileButton = UIButton()
     private let reachOutButton = UIButton()
-    private let titleLabel = UILabel()
 
     private let imageSize = CGSize(width: 120, height: 120)
-    private let profileButtonSize = CGSize(width: 35, height: 35)
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
     private let cellReuseId = "cellReuseIdentifier"
 
@@ -45,11 +40,6 @@ class MatchViewController: UIViewController {
         let year = 2020
         let hometown = "Ithaca, NY"
 
-        logoutButton.setTitle("Log Out", for: .normal)
-        logoutButton.setTitleColor(.textBlack, for: .normal)
-        logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
-        view.addSubview(logoutButton)
-
         matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)"
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook
@@ -69,18 +59,10 @@ class MatchViewController: UIViewController {
         matchSummaryTableView.backgroundColor = .backgroundLightGreen
         matchSummaryTableView.separatorStyle = .none
         matchSummaryTableView.showsVerticalScrollIndicator = false
+        matchSummaryTableView.isScrollEnabled = false
         matchSummaryTableView.dataSource = self
         matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: cellReuseId)
         view.addSubview(matchSummaryTableView)
-
-        profileButton.backgroundColor = .inactiveGreen
-        profileButton.layer.cornerRadius = profileButtonSize.width/2
-        profileButton.layer.shadowColor = UIColor.black.cgColor
-        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        profileButton.layer.shadowOpacity = 0.15
-        profileButton.layer.shadowRadius = 2
-        profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
-        view.addSubview(profileButton)
 
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitle("Reach out!", for: .normal)
@@ -89,11 +71,6 @@ class MatchViewController: UIViewController {
         reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
         reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
         view.addSubview(reachOutButton)
-
-        titleLabel.text = "Meet your Pear"
-        titleLabel.textColor = .textBlack
-        titleLabel.font = ._24CircularStdMedium
-        view.addSubview(titleLabel)
 
         setupConstraints()
     }
@@ -105,13 +82,7 @@ class MatchViewController: UIViewController {
 
     private func setupConstraints() {
         let padding: CGFloat = 35 // TODO: Not sure about dimensions.
-        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
         let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
-
-        logoutButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(logoutPadding)
-        }
 
         matchDemographicsLabel.snp.makeConstraints { make in
             make.leading.trailing.equalTo(matchNameLabel)
@@ -121,12 +92,12 @@ class MatchViewController: UIViewController {
         matchNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(matchProfileImageView.snp.trailing).offset(20)
             make.trailing.equalToSuperview().inset(padding)
-            make.top.equalTo(matchProfileImageView).offset(5)
+            make.top.equalTo(matchProfileImageView).offset(6)
         }
 
         matchProfileImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(padding)
-            make.top.equalTo(titleLabel.snp.bottom).offset(padding)
+            make.top.equalToSuperview().offset(27)
             make.size.equalTo(imageSize)
         }
 
@@ -136,41 +107,12 @@ class MatchViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(padding)
         }
 
-        profileButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            make.leading.equalToSuperview().inset(20)
-            make.size.equalTo(profileButtonSize)
-        }
-
         reachOutButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
             make.centerX.equalToSuperview()
             make.size.equalTo(reachOutButtonSize)
         }
 
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-        }
-    }
-
-    @objc private func profilePressed() {
-        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())
-        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
-        presentationStyle.presentingEndAlpha = 0.85
-        menu.presentationStyle = presentationStyle
-        menu.leftSide = true
-        menu.statusBarEndAlpha = 0
-        menu.menuWidth = view.frame.width * 0.8
-        present(menu, animated: true, completion: nil)
-    }
-
-    @objc private func logoutPressed() {
-        GIDSignIn.sharedInstance().signOut()
-
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .fullScreen
-        present(loginVC, animated: true, completion: nil)
     }
 
     @objc private func reachOutPressed() {

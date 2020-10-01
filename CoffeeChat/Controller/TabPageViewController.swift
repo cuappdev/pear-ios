@@ -11,9 +11,9 @@ import UIKit
 class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
-    private var discoverViewController: MatchViewController!
+    private var matchViewController: MatchViewController!
     private var pages: [UIViewController] = [UIViewController]()
-    private var profileViewController: MatchViewController!
+    private var communityViewController: CommunityViewController!
 
     override init(
         transitionStyle style: UIPageViewController.TransitionStyle,
@@ -30,9 +30,9 @@ class TabPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        profileViewController = MatchViewController()
-        discoverViewController = MatchViewController()
-        pages = [discoverViewController, profileViewController]
+        communityViewController = CommunityViewController()
+        matchViewController = MatchViewController()
+        pages = [matchViewController, communityViewController]
 
         setViewControllers([pages[0]], direction: .forward, animated: true, completion: nil)
     }
