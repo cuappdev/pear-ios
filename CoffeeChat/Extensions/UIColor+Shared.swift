@@ -16,7 +16,6 @@ extension UIColor {
     static let metaData = colorFromCode(0x9E9E9E)
     static let primaryText = colorFromCode(0x212121)
     static let secondaryText = colorFromCode(0x616161)
-    static let textBlack = colorFromCode(0x000000)
     static let textGray = colorFromCode(0x3D3D3D)
     static let textGreen = colorFromCode(0x789F74)
     static let textLightGray = colorFromCode(0xADADAD)

@@ -39,7 +39,7 @@ class SchedulingTimeCollectionViewCell: UICollectionViewCell {
             layer.shadowOpacity = 0
             layer.shadowRadius = 0
         } else {
-            label.textColor = .textBlack
+            label.textColor = .black
             contentView.layer.cornerRadius = 10
             contentView.backgroundColor = .white
             layer.shadowColor = UIColor.black.cgColor

@@ -43,7 +43,7 @@ class OnboardingTableViewCell: UITableViewCell {
         interestImageView.layer.cornerRadius = 4
         backdropView.addSubview(interestImageView)
 
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._20CircularStdBook
         backdropView.addSubview(titleLabel)
 

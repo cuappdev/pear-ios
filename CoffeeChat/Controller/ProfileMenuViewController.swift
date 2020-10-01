@@ -71,7 +71,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileInfoLabel)
 
         profileNameLabel.text = "\(firstName) \(lastName)"
-        profileNameLabel.textColor = .textBlack
+        profileNameLabel.textColor = .black
         profileNameLabel.numberOfLines = 0
         profileNameLabel.font = ._24CircularStdMedium
         view.addSubview(profileNameLabel)

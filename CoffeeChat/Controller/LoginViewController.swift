@@ -36,7 +36,7 @@ class LoginViewController: UIViewController {
         GIDSignIn.sharedInstance().presentingViewController = self
 
         welcomeLabel.text = "Welcome to Pear"
-        welcomeLabel.textColor = .textBlack
+        welcomeLabel.textColor = .black
         welcomeLabel.font = ._24CircularStdMedium
         view.addSubview(welcomeLabel)
 

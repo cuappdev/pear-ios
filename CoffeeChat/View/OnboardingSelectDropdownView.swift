@@ -105,7 +105,7 @@ class OnboardingSelectDropdownView: UIView {
     /// Set text of field if value already exists
     func setSelectValue(value: String) {
         dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
-        dropdownButton.setTitleColor(.textBlack, for: .normal)
+        dropdownButton.setTitleColor(.black, for: .normal)
     }
 }
 
@@ -129,7 +129,7 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedText = tableData[indexPath.row]
         dropdownButton.setTitle("\(textTemplate) \(selectedText)", for: .normal)
-        dropdownButton.setTitleColor(.textBlack, for: .normal)
+        dropdownButton.setTitleColor(.black, for: .normal)
         hideTableView()
         delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: selectedText)
         delegate?.sendDropdownViewToBack(dropdownView: self)

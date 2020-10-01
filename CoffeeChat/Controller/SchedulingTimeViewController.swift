@@ -131,7 +131,7 @@ class SchedulingTimeViewController: UIViewController {
         titleLabel.text = isConfirming
             ? "Confirm your availability"
             : isPicking ? "Pick a time to meet": "When are you free?"
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
@@ -151,7 +151,7 @@ class SchedulingTimeViewController: UIViewController {
         dayLabel.text = isPicking || isConfirming
             ? daysDict[selectedDay] ?? ""
             : "Every \(daysDict[selectedDay] ?? "")"
-        dayLabel.textColor = .textBlack
+        dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
 

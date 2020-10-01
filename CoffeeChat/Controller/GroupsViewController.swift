@@ -58,7 +58,7 @@ class GroupsViewController: UIViewController {
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
         searchBar.searchTextField.backgroundColor = .backgroundWhite
-        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = 8

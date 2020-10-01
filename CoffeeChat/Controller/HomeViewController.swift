@@ -46,7 +46,7 @@ class HomeViewController: UIViewController {
         let hometown = "Ithaca, NY"
 
         logoutButton.setTitle("Log Out", for: .normal)
-        logoutButton.setTitleColor(.textBlack, for: .normal)
+        logoutButton.setTitleColor(.black, for: .normal)
         logoutButton.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
         view.addSubview(logoutButton)
 
@@ -57,7 +57,7 @@ class HomeViewController: UIViewController {
         view.addSubview(matchDemographicsLabel)
 
         matchNameLabel.text = "\(firstName)\n\(lastName)"
-        matchNameLabel.textColor = .textBlack
+        matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         view.addSubview(matchNameLabel)
@@ -91,7 +91,7 @@ class HomeViewController: UIViewController {
         view.addSubview(reachOutButton)
 
         titleLabel.text = "Meet your Pear"
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 

@@ -46,7 +46,7 @@ class NoMatchViewController: UIViewController {
         noMatchTitleLabel.numberOfLines = 2
         noMatchTitleLabel.sizeToFit()
         noMatchTitleLabel.textAlignment = .center
-        noMatchTitleLabel.textColor = .textBlack
+        noMatchTitleLabel.textColor = .black
         noMatchTitleLabel.font = ._24CircularStdMedium
         view.addSubview(noMatchTitleLabel)
 

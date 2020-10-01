@@ -32,7 +32,7 @@ class GoalTableViewCell: UITableViewCell {
         backdropView.layer.masksToBounds = true
         contentView.addSubview(backdropView)
 
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._16CircularStdBook
         backdropView.addSubview(titleLabel)
 
