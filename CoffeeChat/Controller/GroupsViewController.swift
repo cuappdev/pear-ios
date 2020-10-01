@@ -13,20 +13,20 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private var selectedGroups: [Group] = []
+    private var selectedGroups: [String] = []
 
     // TODO: change when networking with backend
-    private var groups: [Group] = [
-        Group(name: "Apple", image: ""),
-        Group(name: "banana", image: ""),
-        Group(name: "Cornell AppDev", image: ""),
-        Group(name: "dandelion", image: ""),
-        Group(name: "giraffe", image: ""),
-        Group(name: "heap", image: ""),
-        Group(name: "Igloo", image: ""),
-        Group(name: "Jeans", image: "")
+    private var groups: [String] = [
+        "AppDev",
+        "DTI",
+        "Guac Magazine",
+        "GCC",
+        "GVC",
+        "CUABS",
+        "Bread Club",
+        "CUSD"
     ]
-    private var displayedGroups: [Group] = []
+    private var displayedGroups: [String] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
@@ -57,9 +57,10 @@ class GroupsViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
+        searchBar.placeholder = "Search"
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
-        searchBar.searchTextField.font = ._20CircularStdBook
+        searchBar.searchTextField.font = ._16CircularStdBook
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
@@ -67,8 +68,9 @@ class GroupsViewController: UIViewController {
 
         fadeTableView.tableView.delegate = self
         fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
+
 
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
@@ -96,16 +98,12 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
+        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(clubLabel)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
-        }
-
-        searchBar.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(48)
-            make.size.equalTo(CGSize(width: 295, height: 42))
         }
 
         clubLabel.snp.makeConstraints { make in
@@ -114,10 +112,16 @@ class GroupsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
+        searchBar.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(clubLabel.snp.bottom).offset(searchBarTopPadding)
+            make.size.equalTo(CGSize(width: 295, height: 40))
+        }
+
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(295)
-            make.top.equalTo(searchBar.snp.bottom).offset(24)
+            make.top.equalTo(searchBar.snp.bottom).offset(17)
             make.bottom.equalTo(nextButton.snp.top).offset(-57)
         }
 
@@ -135,55 +139,13 @@ class GroupsViewController: UIViewController {
     }
 
     // MARK: - Search Bar
-    /// Updates the search bar text based on currently selected Groups.
-    private func updateSearchBarText() {
-        if selectedGroups.isEmpty {
-            searchBar.text = ""
-            return
-        }
-
-        // Number of characters before list is considered "too long" and shortened to "..."
-        let maxChar = 20
-        let wordLong = 15
-
-        let listString = (selectedGroups.map { $0.name }).joined(separator: ", ")
-        let lastComma = listString.lastIndex(of: ",")
-
-        if let comma = lastComma {
-            let lastWordLength = listString.count - comma.utf16Offset(in: listString) - 2
-            if listString.count < maxChar {
-                searchBar.text = "\(listString), "
-            } else if listString.count > maxChar && lastWordLength < wordLong { // Last word is short enough to show
-                searchBar.text = "...\(listString.suffix(from: comma)), "
-            } else { // Both the entire string and the last word are too long to display
-                searchBar.text = "..., "
-            }
-        } else if listString.count < maxChar { // listString is one item, and show it if its short
-            searchBar.text = "\(listString), "
-        }
-    }
-
-    /// Retrieves user typed search text from searchBar
-    private func getSearchText(from searchText: String) -> String {
-        guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
-        let result: String
-        if searchText.contains(lastGroupName) { // Search for text after listing
-            result = searchText.components(separatedBy: lastGroupName + ", ").last ?? ""
-        } else if searchText.contains("..., ") { // Search for text after ..., "
-            result = searchText.components(separatedBy: "..., ").last ?? ""
-        } else if searchText.contains(", ") { // User backspaced into the previous list item
-            result = searchText.components(separatedBy: ", ").last ?? ""
-        } else { // User is deleting list, and should show all options
-          result = ""
-        }
-        return result.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
 
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
+        print(searchText)
         displayedGroups = searchText.isEmpty
             ? groups
-            : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            : groups.filter { $0.localizedCaseInsensitiveContains(searchText) }
         fadeTableView.tableView.reloadData()
     }
 
@@ -199,7 +161,7 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        let userGroups = selectedGroups.map { $0.name }
+        let userGroups = selectedGroups.map { $0 }
         userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
         updateUser()
         delegate?.nextPage(index: 3)
@@ -239,28 +201,21 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        return 54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return displayedGroups.count
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
-    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.row])
-        updateSearchBarText()
-        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
-        updateSearchBarText()
-        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
+        selectedGroups.removeAll { $0 == displayedGroups[indexPath.row]}
         updateNext()
     }
 
@@ -271,12 +226,12 @@ extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
-            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
-        OnboardingTableViewCell else { return UITableViewCell() }
+                                                        GoalTableViewCell.reuseIdentifier, for: indexPath) as?
+                GoalTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedGroups.contains(where: { $0.name == data.name }) {
+        if selectedGroups.contains(where: { $0 == data }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell
@@ -288,7 +243,7 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filterTableView(searchText: getSearchText(from: searchText))
+        filterTableView(searchText: searchText)
     }
 
 }

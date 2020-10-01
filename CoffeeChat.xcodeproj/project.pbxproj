@@ -45,10 +45,10 @@
 		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
-		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
-		D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */; };
 		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
 		D44625042415B5B800714167 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625032415B5B800714167 /* Endpoints.swift */; };
+		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
+		D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
 		D47FF1852459424C00808A9A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF1842459424C00808A9A /* Response.swift */; };
 		D47FF18B24597CA800808A9A /* Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18A24597CA800808A9A /* Body.swift */; };
@@ -130,10 +130,10 @@
 		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
-		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
-		D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTableViewCell.swift; sourceTree = "<group>"; };
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
 		D44625032415B5B800714167 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoints.swift; path = CoffeeChat/Controller/Endpoints.swift; sourceTree = SOURCE_ROOT; };
+		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
+		D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTableViewCell.swift; sourceTree = "<group>"; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
 		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Models/Response.swift; sourceTree = SOURCE_ROOT; };
 		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Models/Body.swift; sourceTree = SOURCE_ROOT; };
@@ -465,7 +465,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = cuappdev;
 				TargetAttributes = {
 					D48BB00623DE099200E88129 = {
@@ -680,7 +680,6 @@
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */,
-				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
 				D47FF1852459424C00808A9A /* Response.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
@@ -700,7 +699,6 @@
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				D41FE860246464240048900F /* DaySchedule.swift in Sources */,
 				303F81A424395EC2002937CD /* MenuOptionTableViewCell.swift in Sources */,
-				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F12A7102419925C00AEA21C /* EditingViewController.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
@@ -804,6 +802,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -864,6 +863,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
