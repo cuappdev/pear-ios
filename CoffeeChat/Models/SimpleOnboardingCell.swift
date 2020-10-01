@@ -1,5 +1,5 @@
 //
-//  InterestsGroups.swift
+//  SimpleOnboardingCell.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 10/1/20.
@@ -12,9 +12,9 @@ enum SimpleOnboardingCellType { case interest, normal }
 
 struct SimpleOnboardingCell {
 
+    let categories: String?
     let name: String
     let type: SimpleOnboardingCellType
-    let categories: String?
 
     init(name: String, type: SimpleOnboardingCellType, categories: String?) {
         self.name = name
