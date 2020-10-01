@@ -67,7 +67,7 @@ class GroupsViewController: UIViewController {
 
         fadeTableView.tableView.delegate = self
         fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
+        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
 
@@ -224,10 +224,10 @@ extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
-                                                        GoalTableViewCell.reuseIdentifier, for: indexPath) as?
-                GoalTableViewCell else { return UITableViewCell() }
+                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+                SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
-        cell.configure(with: data)
+        cell.configure(with: data, type: .normal, subtitle: nil)
         // Keep previous selected cell when reloading tableView
         if selectedGroups.contains(where: { $0 == data }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)

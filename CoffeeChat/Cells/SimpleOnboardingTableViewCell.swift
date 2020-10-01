@@ -1,5 +1,5 @@
 //
-//  GoalTableViewCell.swift
+//  SimpleOnboardingTableViewCell.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 9/16/20.
@@ -8,12 +8,16 @@
 
 import UIKit
 
-class GoalTableViewCell: UITableViewCell {
+class SimpleOnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let backdropView = UIView()
+    private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
-    static let reuseIdentifier = "GoalTableViewCell"
+
+    // MARK: Private Data Vars
+    private var isInterest: Bool = false
+    static let reuseIdentifier = "SimpleOnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,6 +40,10 @@ class GoalTableViewCell: UITableViewCell {
         titleLabel.font = ._16CircularStdBook
         backdropView.addSubview(titleLabel)
 
+        subtitleLabel.textColor = .greenGray
+        subtitleLabel.font = ._12CircularStdBook
+        backdropView.addSubview(subtitleLabel)
+
         setupConstraints()
     }
 
@@ -50,14 +58,29 @@ class GoalTableViewCell: UITableViewCell {
             make.top.bottom.equalToSuperview().inset(5)
         }
 
-        titleLabel.snp.remakeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(8)
-            make.centerY.equalToSuperview()
-        }
     }
 
-    func configure(with goal: String) {
-        titleLabel.text = goal
+    func configure(with text: String, type: InterestGroupEnum, subtitle: String?) {
+        titleLabel.text = text
+        isInterest = type == .interest
+        subtitleLabel.isHidden = type != .interest
+        if let subtitle = subtitle {
+            subtitleLabel.text = subtitle
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(8)
+            if isInterest {
+                make.top.equalToSuperview().offset(8)
+            } else {
+                make.centerY.equalToSuperview()
+            }
+        }
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(titleLabel)
+            make.top.equalTo(titleLabel.snp.bottom)
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

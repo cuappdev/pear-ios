@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum InterestGroupEnum { case interest, group }
+enum InterestGroupEnum { case interest, normal }
 
 struct InterestsGroups {
 

@@ -54,7 +54,7 @@ class GoalsViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = true
-        tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
+        tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
 
         titleLabel.text = "How do you want to use\nPear?"
@@ -181,9 +181,9 @@ extension GoalsViewController: UITableViewDelegate {
 extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: GoalTableViewCell.reuseIdentifier, for: indexPath) as? GoalTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as? SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let goal = Array(goals)[indexPath.row].key
-        cell.configure(with: goal)
+        cell.configure(with: goal, type: .normal, subtitle: nil)
         return cell
     }
 

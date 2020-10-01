@@ -17,12 +17,12 @@ class InterestsGroupsViewController: UIViewController {
     private var interestsGroups: [InterestsGroups] = [
         InterestsGroups(name: "Art", type: .interest, categories: "painting, crafts, embroidery..."),
         InterestsGroups(name: "Business", type: .interest, categories: "entrepreneurship, finance, VC..."),
-        InterestsGroups(name: "Cornell AppDev", type: .group, categories: nil),
-        InterestsGroups(name: "Bread Club", type: .group, categories: nil),
-        InterestsGroups(name: "Cornell Venture Capital", type: .group, categories: nil),
-        InterestsGroups(name: "Medium Design Collective", type: .group, categories: nil),
-        InterestsGroups(name: "Women in Computing at Cornell", type: .group, categories: nil),
-        InterestsGroups(name: "Design and Tech Initiative", type: .group, categories: nil)
+        InterestsGroups(name: "Cornell AppDev", type: .normal, categories: nil),
+        InterestsGroups(name: "Bread Club", type: .normal, categories: nil),
+        InterestsGroups(name: "Cornell Venture Capital", type: .normal, categories: nil),
+        InterestsGroups(name: "Medium Design Collective", type: .normal, categories: nil),
+        InterestsGroups(name: "Women in Computing at Cornell", type: .normal, categories: nil),
+        InterestsGroups(name: "Design and Tech Initiative", type: .normal, categories: nil)
     ]
     private var selectedInterestsGroups: [InterestsGroups] = []
     private let userDefaults = UserDefaults.standard
@@ -64,7 +64,7 @@ class InterestsGroupsViewController: UIViewController {
 
         fadeTableView.tableView.delegate = self
         fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
+        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
         titleLabel.text = "What do you most want\nto talk about?"
@@ -153,7 +153,12 @@ class InterestsGroupsViewController: UIViewController {
 extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        switch interestsGroups[indexPath.row].type {
+        case .interest:
+            return 61
+        case .normal:
+            return 54
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -178,10 +183,10 @@ extension InterestsGroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier:
-                                                        GoalTableViewCell.reuseIdentifier, for: indexPath) as?
-                GoalTableViewCell else { return UITableViewCell() }
+                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+                SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedInterestsGroups[indexPath.row]
-        cell.configure(with: data.name)
+        cell.configure(with: data.name, type: data.type, subtitle: data.categories)
         // Keep previous selected cell when reloading tableView
         if selectedInterestsGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
