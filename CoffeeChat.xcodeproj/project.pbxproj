@@ -43,17 +43,19 @@
 		D41FE860246464240048900F /* DaySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85F246464240048900F /* DaySchedule.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
 		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
+		D42961A02526246600C677C3 /* NewHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D429619F2526246600C677C3 /* NewHomeViewController.swift */; };
+		D42961A22526253B00C677C3 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961A12526253B00C677C3 /* TabPageViewController.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
-		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
-		D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */; };
 		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
 		D44625042415B5B800714167 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625032415B5B800714167 /* Endpoints.swift */; };
+		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
+		D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
 		D47FF1852459424C00808A9A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF1842459424C00808A9A /* Response.swift */; };
 		D47FF18B24597CA800808A9A /* Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18A24597CA800808A9A /* Body.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
-		D480EC0623E2470000513063 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* HomeViewController.swift */; };
+		D480EC0623E2470000513063 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EC0523E2470000513063 /* MatchViewController.swift */; };
 		D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00A23DE099200E88129 /* AppDelegate.swift */; };
 		D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB00C23DE099200E88129 /* SceneDelegate.swift */; };
 		D48BB01223DE099200E88129 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01023DE099200E88129 /* Main.storyboard */; };
@@ -61,6 +63,7 @@
 		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
+		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */; };
 		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
 		D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */; };
@@ -128,17 +131,19 @@
 		D41FE85F246464240048900F /* DaySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySchedule.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
 		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		D429619F2526246600C677C3 /* NewHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHomeViewController.swift; sourceTree = "<group>"; };
+		D42961A12526253B00C677C3 /* TabPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
-		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
-		D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTableViewCell.swift; sourceTree = "<group>"; };
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
 		D44625032415B5B800714167 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Endpoints.swift; path = CoffeeChat/Controller/Endpoints.swift; sourceTree = SOURCE_ROOT; };
+		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
+		D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTableViewCell.swift; sourceTree = "<group>"; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
 		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Models/Response.swift; sourceTree = SOURCE_ROOT; };
 		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Models/Body.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
-		D480EC0523E2470000513063 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		D480EC0523E2470000513063 /* MatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		D48BB00723DE099200E88129 /* Coffee Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB00A23DE099200E88129 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D48BB00C23DE099200E88129 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -152,6 +157,7 @@
 		D48BB02823DE099900E88129 /* CoffeeChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatUITests.swift; sourceTree = "<group>"; };
 		D48BB02E23DE099900E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDemographicsViewController.swift; sourceTree = "<group>"; };
 		D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemographicsViewController.swift; sourceTree = "<group>"; };
 		D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
@@ -267,6 +273,7 @@
 				305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */,
 				4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */,
 				D4490F4E2512FF69002AA934 /* GoalTableViewCell.swift */,
+				D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -278,7 +285,7 @@
 				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
 				4F12A70F2419925C00AEA21C /* EditingViewController.swift */,
-				D480EC0523E2470000513063 /* HomeViewController.swift */,
+				D480EC0523E2470000513063 /* MatchViewController.swift */,
 				4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
@@ -287,6 +294,8 @@
 				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
 				303F81A124394F95002937CD /* ProfileMenuViewController.swift */,
 				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
+				D429619F2526246600C677C3 /* NewHomeViewController.swift */,
+				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -680,7 +689,7 @@
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* GoalTableViewCell.swift in Sources */,
-				4FFF3B2323E9189F00C89C29 /* OnboardingInterestsViewController.swift in Sources */,
+				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
 				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
 				D47FF1852459424C00808A9A /* Response.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
@@ -689,6 +698,7 @@
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
 				305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */,
 				30E3A3C5245678EA0049D09B /* Time+Helper.swift in Sources */,
+				D42961A22526253B00C677C3 /* TabPageViewController.swift in Sources */,
 				4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
@@ -704,7 +714,7 @@
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F12A7102419925C00AEA21C /* EditingViewController.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
-				D480EC0623E2470000513063 /* HomeViewController.swift in Sources */,
+				D480EC0623E2470000513063 /* MatchViewController.swift in Sources */,
 				D41FE85A246463E10048900F /* UserSession.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,
@@ -718,11 +728,13 @@
 				D41FE85E2464640F0048900F /* Matching.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
+				D42961A02526246600C677C3 /* NewHomeViewController.swift in Sources */,
 				D47FF18B24597CA800808A9A /* Body.swift in Sources */,
 				303F81A624395F63002937CD /* MenuOption.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
+				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

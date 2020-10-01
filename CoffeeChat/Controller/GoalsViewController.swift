@@ -144,13 +144,13 @@ class GoalsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
+        let homeVC = NewHomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }
 
     @objc func skipButtonPressed() {
         userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
+        let homeVC = NewHomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }
 

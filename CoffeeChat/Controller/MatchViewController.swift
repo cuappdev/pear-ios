@@ -1,5 +1,5 @@
 //
-//  HomeViewController.swift
+//  MatchViewController.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 1/29/20.
@@ -10,7 +10,7 @@ import GoogleSignIn
 import SideMenu
 import UIKit
 
-class HomeViewController: UIViewController {
+class MatchViewController: UIViewController {
 
     private let logoutButton = UIButton()
     private let matchDemographicsLabel = UILabel()
@@ -179,7 +179,7 @@ class HomeViewController: UIViewController {
     }
 }
 
-extension HomeViewController: UITableViewDataSource {
+extension MatchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         matchSummaries.count
     }
