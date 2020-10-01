@@ -44,7 +44,6 @@ class GoalTableViewCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        let textSidePadding: CGFloat = 8
 
         backdropView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -52,7 +51,7 @@ class GoalTableViewCell: UITableViewCell {
         }
 
         titleLabel.snp.remakeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(textSidePadding)
+            make.leading.trailing.equalToSuperview().inset(8)
             make.centerY.equalToSuperview()
         }
     }

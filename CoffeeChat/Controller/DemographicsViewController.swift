@@ -25,11 +25,11 @@ class DemographicsViewController: UIViewController {
     private var activeDropdownView: UIView? // Keep track of currently active field
     private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
-    private let titleLabel = UILabel()
     private var hometownDropdownView: OnboardingSearchDropdownView!
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
     private var pronounsDropdownView: OnboardingSelectDropdownView!
+    private let titleLabel = UILabel()
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8

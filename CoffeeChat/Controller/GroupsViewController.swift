@@ -96,14 +96,6 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backSize = CGSize(width: 86, height: 20)
-        let searchSize = CGSize(width: 295, height: 42)
-        let searchTopPadding: CGFloat = 48
-        let tableViewWidth: CGFloat = 295
-        let tableViewBottomPadding: CGFloat = 57
-        let tableViewTopPadding: CGFloat = 24
-        let titleHeight: CGFloat = 30
-
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(clubLabel)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
@@ -112,21 +104,21 @@ class GroupsViewController: UIViewController {
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(searchTopPadding)
-            make.size.equalTo(searchSize)
+            make.top.equalTo(clubLabel.snp.bottom).offset(48)
+            make.size.equalTo(CGSize(width: 295, height: 42))
         }
 
         clubLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(titleHeight)
+            make.height.equalTo(30)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(tableViewWidth)
-            make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
-            make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
+            make.width.equalTo(295)
+            make.top.equalTo(searchBar.snp.bottom).offset(24)
+            make.bottom.equalTo(nextButton.snp.top).offset(-57)
         }
 
         nextButton.snp.makeConstraints { make in
@@ -136,7 +128,7 @@ class GroupsViewController: UIViewController {
         }
 
         skipButton.snp.makeConstraints { make in
-            make.size.equalTo(backSize)
+            make.size.equalTo(CGSize(width: 86, height: 20))
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
