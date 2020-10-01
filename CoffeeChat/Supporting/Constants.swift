@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Constants {
 
@@ -39,4 +40,13 @@ struct Constants {
         static let userMajor = "userMajor"
         static let userPronouns = "userPronouns"
     }
+    
+    struct Onboarding {
+        static let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
+        static let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
+        static let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
+        static let backButtonSize = CGSize(width: 10, height: 18)
+        static let mainButtonSize = CGSize(width: 225, height: 54)
+    }
+
 }

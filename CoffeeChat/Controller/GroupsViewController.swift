@@ -30,6 +30,7 @@ class GroupsViewController: UIViewController {
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
+    private let backButton = UIButton()
     private let clubLabel = UILabel()
     private let greetingLabel = UILabel()
     private let nextButton = UIButton()
@@ -48,6 +49,10 @@ class GroupsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
 
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
@@ -69,7 +74,7 @@ class GroupsViewController: UIViewController {
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Ready for Pear", for: .normal)
+        nextButton.setTitle("Almost there", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -91,47 +96,41 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backSize = CGSize(width: 86, height: 20)
-        let nextBackPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 49)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
-        let nextButtonSize = CGSize(width: 225, height: 54)
-        let searchSize = CGSize(width: 295, height: 42)
-        let searchTopPadding: CGFloat = 50
-        let tableViewWidth: CGFloat = 295
-        let tableViewBottomPadding: CGFloat = 57
-        let tableViewTopPadding: CGFloat = 24
-        let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = 100
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(clubLabel)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(searchTopPadding)
-            make.size.equalTo(searchSize)
+            make.top.equalTo(clubLabel.snp.bottom).offset(48)
+            make.size.equalTo(CGSize(width: 295, height: 42))
         }
 
         clubLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
+            make.height.equalTo(30)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(tableViewWidth)
-            make.top.equalTo(searchBar.snp.bottom).offset(tableViewTopPadding)
-            make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
+            make.width.equalTo(295)
+            make.top.equalTo(searchBar.snp.bottom).offset(24)
+            make.bottom.equalTo(nextButton.snp.top).offset(-57)
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
 
         skipButton.snp.makeConstraints { make in
-            make.size.equalTo(backSize)
+            make.size.equalTo(CGSize(width: 86, height: 20))
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBackPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
     }
 
@@ -195,6 +194,22 @@ class GroupsViewController: UIViewController {
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
+    @objc func backButtonPressed() {
+        delegate?.backPage(index: 1)
+    }
+
+    @objc func nextButtonPressed() {
+        let userGroups = selectedGroups.map { $0.name }
+        userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
+        updateUser()
+        delegate?.nextPage(index: 3)
+    }
+
+    @objc func skipButtonPressed() {
+        delegate?.nextPage(index: 3)
+    }
+
+
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
            let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
@@ -216,21 +231,6 @@ class GroupsViewController: UIViewController {
                 }
             }
         }
-    }
-
-    @objc func nextButtonPressed() {
-        let userGroups = selectedGroups.map { $0.name }
-        userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        updateUser()
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
-    }
-
-    @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
     }
 
 }

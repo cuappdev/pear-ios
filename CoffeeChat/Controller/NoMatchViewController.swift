@@ -30,7 +30,7 @@ class NoMatchViewController: UIViewController {
         let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
         let imageWidth = (UIScreen.main.bounds.width / 375) * 176
         let profileButtonSize = CGSize(width: 35, height: 35)
-        let subtitleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
+        let subtitleLabelPadding: CGFloat = Constants.Onboarding.skipBottomPadding
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
 
         profileButton.backgroundColor = .inactiveGreen

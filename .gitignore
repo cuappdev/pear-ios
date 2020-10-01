@@ -4,6 +4,7 @@ CoffeeChat/Supporting/Keys.plist
 
 # CocoaPods
 Pods/
+Podfile.lock
 
 .DS_Store
 */.DS_Store

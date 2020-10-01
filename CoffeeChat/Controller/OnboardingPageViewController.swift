@@ -19,6 +19,7 @@ class OnboardingPageViewController: UIPageViewController {
     // MARK: - Private View Vars
     private let backgroundImage = UIImageView()
     private var demographicsViewController: DemographicsViewController!
+    private var goalsViewController: GoalsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: InterestsViewController!
     private var onboardingPages = [UIViewController]()
@@ -27,6 +28,7 @@ class OnboardingPageViewController: UIPageViewController {
     private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
     private let screenWidth = UIScreen.main.bounds.width
     private let screenHeight = UIScreen.main.bounds.height
+    private var scrollContentOffset = UIScreen.main.bounds.width
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +48,13 @@ class OnboardingPageViewController: UIPageViewController {
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = InterestsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
-        onboardingPages = [demographicsViewController, interestsViewController, groupsViewController]
+        goalsViewController = GoalsViewController(delegate: self)
+        onboardingPages = [
+            demographicsViewController,
+            interestsViewController,
+            groupsViewController,
+            goalsViewController
+        ]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
     }
@@ -63,7 +71,9 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // Update x position based on screen size when page scrolls
-        backgroundXPosition -= 0.04 * screenWidth
+        let scrollRate: CGFloat = scrollView.contentOffset.x - scrollContentOffset > 0 ? -0.04 : 0.04
+        backgroundXPosition += scrollRate * screenWidth
+        scrollContentOffset = scrollView.contentOffset.x
         backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }
 }
