@@ -89,25 +89,21 @@ class InterestsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backButtonSize = CGSize(width: 10, height: 18)
-        let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 48
         let titleHeight: CGFloat = 30
-        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
-            make.size.equalTo(backButtonSize)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
@@ -118,9 +114,9 @@ class InterestsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
 

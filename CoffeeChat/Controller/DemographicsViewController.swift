@@ -107,9 +107,6 @@ class DemographicsViewController: UIViewController {
     private func setUpConstraints() {
         let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 84)
         let titleLabelHeight: CGFloat = 30
-        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
-        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
-        let nextButtonSize = CGSize(width: 225, height: 54)
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
         let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
@@ -117,7 +114,7 @@ class DemographicsViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleLabelHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         greetingLabel.snp.makeConstraints { make in
@@ -154,9 +151,9 @@ class DemographicsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
 

@@ -96,22 +96,17 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backButtonSize = CGSize(width: 10, height: 18)
         let backSize = CGSize(width: 86, height: 20)
-        let skipBottomPadding: CGFloat = Constants.Onboarding.skipBottomPadding
-        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
-        let nextButtonSize = CGSize(width: 225, height: 54)
         let searchSize = CGSize(width: 295, height: 42)
         let searchTopPadding: CGFloat = 48
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
         let titleHeight: CGFloat = 30
-        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
 
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(clubLabel)
-            make.size.equalTo(backButtonSize)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
 
@@ -124,7 +119,7 @@ class GroupsViewController: UIViewController {
         clubLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
@@ -135,15 +130,15 @@ class GroupsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
 
         skipButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(skipBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
     }
 

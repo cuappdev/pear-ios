@@ -57,7 +57,7 @@ class GoalTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with goal: String, isSelected: Bool) {
+    func configure(with goal: String) {
         titleLabel.text = goal
     }
 

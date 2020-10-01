@@ -49,7 +49,12 @@ class OnboardingPageViewController: UIPageViewController {
         interestsViewController = InterestsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         goalsViewController = GoalsViewController(delegate: self)
-        onboardingPages = [demographicsViewController, interestsViewController, groupsViewController, goalsViewController]
+        onboardingPages = [
+            demographicsViewController,
+            interestsViewController,
+            groupsViewController,
+            goalsViewController
+        ]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
     }

@@ -6,23 +6,22 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 class GoalsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var goals: [String] = [
-        "Just chatting",
-        "Finding my people",
-        "Meeting someone different",
-        "Learning from mentors",
-        "Guiding mentees",
-        "Not sure yet"
+    private var goals: [String: Bool] = [
+        "Just chatting": false,
+        "Finding my people": false,
+        "Meeting someone different": false,
+        "Learning from mentors": false,
+        "Guiding mentees": false,
+        "Not sure yet": false
     ]
-    private var isGoalSelected: [Bool] = [false, false, false, false, false, false]
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
@@ -89,26 +88,21 @@ class GoalsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let backButtonSize = CGSize(width: 10, height: 18)
         let backSize = CGSize(width: 86, height: 20)
-        let skipBottomPadding: CGFloat = Constants.Onboarding.skipBottomPadding
-        let nextBottomPadding: CGFloat = Constants.Onboarding.nextBottomPadding
-        let nextButtonSize = CGSize(width: 225, height: 54)
         let tableViewBottomPadding: CGFloat = 57
         let tableViewTopPadding: CGFloat = 24
-        let titleLabelPadding: CGFloat = Constants.Onboarding.titleLabelPadding
         let titleSize = CGSize(width: 318, height: 61)
 
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel).offset(6)
-            make.size.equalTo(backButtonSize)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(titleSize)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         subtitleLabel.snp.makeConstraints { make in
@@ -124,15 +118,15 @@ class GoalsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
 
         skipButton.snp.makeConstraints { make in
             make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(skipBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
     }
 
@@ -140,7 +134,7 @@ class GoalsViewController: UIViewController {
     // MARK: - Next and Previous Buttons
     /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
-        nextButton.isEnabled = isGoalSelected.filter{$0}.count > 0
+        nextButton.isEnabled = goals.filter{$0.value}.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
@@ -174,12 +168,14 @@ extension GoalsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        isGoalSelected[indexPath.row].toggle()
+        let goal = Array(goals)[indexPath.row].key
+        goals[goal]?.toggle()
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        isGoalSelected[indexPath.row].toggle()
+        let goal = Array(goals)[indexPath.row].key
+        goals[goal]?.toggle()
         updateNext()
     }
 
@@ -189,12 +185,9 @@ extension GoalsViewController: UITableViewDelegate {
 extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-        GoalTableViewCell.reuseIdentifier, for: indexPath) as?
-        GoalTableViewCell else { return UITableViewCell() }
-        let data = goals[indexPath.row]
-        let isSelected = isGoalSelected[indexPath.row]
-        cell.configure(with: data, isSelected: isSelected)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: GoalTableViewCell.reuseIdentifier, for: indexPath) as? GoalTableViewCell else { return UITableViewCell() }
+        let goal = Array(goals)[indexPath.row].key
+        cell.configure(with: goal)
         return cell
     }
 
