@@ -23,18 +23,18 @@ class InterestsViewController: UIViewController {
         Interest(name: "Art", categories: "painting, crafts, embroidery...", image: "art"),
         Interest(name: "Business", categories: "entrepreneurship, finance, VC...", image: "business"),
         Interest(name: "Dance", categories: "urban, hip hop, ballet, swing...", image: "dance"),
-        Interest(name: "Design", categories: "experience, graphic, print...", image: "design"),
-        Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
+        Interest(name: "Design", categories: "UI/UX, graphic, print...", image: "design"),
+        Interest(name: "Fashion", categories: "", image: "fashion"),
         Interest(name: "Fitness", categories: "working out, outdoors, basketball...", image: "fitness"),
         Interest(name: "Food", categories: "cooking, eating, baking...", image: "food"),
         Interest(name: "Humanities", categories: "history, politics...", image: "humanities"),
-        Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
-        Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
-        Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
-        Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
-        Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
-        Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
-        Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
+        Interest(name: "Music", categories: "instruments, producing, acapella...", image: "music"),
+        Interest(name: "Photography", categories: "digital, analog...", image: "photography"),
+        Interest(name: "Reading", categories: "", image: "reading"),
+        Interest(name: "Sustainability", categories: "", image: "sustainability"),
+        Interest(name: "Tech", categories: "programming, web/app development...", image: "tech"),
+        Interest(name: "Travel", categories: "road trips, backpacking...", image: "travel"),
+        Interest(name: "TV & Film", categories: "", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
     private let userDefaults = UserDefaults.standard

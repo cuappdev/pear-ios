@@ -64,16 +64,17 @@ class SimpleOnboardingTableViewCell: UITableViewCell {
         titleLabel.text = title
         isInterest = type == .interest
         subtitleLabel.isHidden = type != .interest
+
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
         }
 
-        titleLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(8)
+        titleLabel.snp.remakeConstraints { remake in
+            remake.leading.trailing.equalToSuperview().inset(8)
             if isInterest {
-                make.top.equalToSuperview().offset(8)
+                remake.top.equalToSuperview().offset(8)
             } else {
-                make.centerY.equalToSuperview()
+                remake.centerY.equalToSuperview()
             }
         }
 
