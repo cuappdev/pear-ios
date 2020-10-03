@@ -186,7 +186,7 @@ extension InterestsGroupsViewController: UITableViewDataSource {
                                                         SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedInterestsGroups[indexPath.row]
-        cell.configure(with: data.name, type: data.type, subtitle: data.categories)
+        cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
         if selectedInterestsGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)

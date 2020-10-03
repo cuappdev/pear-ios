@@ -14,24 +14,23 @@ class GroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var displayedGroups: [String] = []
-    private var groups: [String] = [
-        "AppDev",
-        "DTI",
-        "Guac Magazine",
-        "GCC",
-        "GVC",
-        "CUABS",
-        "Bread Club",
-        "CUSD"
+    private var displayedGroups: [SimpleOnboardingCell] = []
+    private var groups: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "AppDev", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "DTI", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Guac Magazine", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "GCC", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "GVC", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "CUABS", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Bread Club", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "CUSD", type: .normal, categories: nil)
     ]
-    private var selectedGroups: [String] = []
+    private var selectedGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let clubLabel = UILabel()
-    private let greetingLabel = UILabel()
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
@@ -75,7 +74,7 @@ class GroupsViewController: UIViewController {
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Almost there", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -143,7 +142,7 @@ class GroupsViewController: UIViewController {
     private func filterTableView(searchText: String) {
         displayedGroups = searchText.isEmpty
             ? groups
-            : groups.filter { $0.localizedCaseInsensitiveContains(searchText) }
+            : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         fadeTableView.tableView.reloadData()
     }
 
@@ -159,7 +158,7 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        let userGroups = selectedGroups.map { $0 }
+        let userGroups = selectedGroups.map { $0.name }
         userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
         updateUser()
         delegate?.nextPage(index: 3)
@@ -213,7 +212,7 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0 == displayedGroups[indexPath.row]}
+        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
         updateNext()
     }
 
@@ -226,9 +225,9 @@ extension GroupsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
-        cell.configure(with: data, type: .normal, subtitle: nil)
+        cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedGroups.contains(where: { $0 == data }) {
+        if selectedGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell

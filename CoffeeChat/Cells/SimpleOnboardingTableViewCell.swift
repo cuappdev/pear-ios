@@ -60,12 +60,12 @@ class SimpleOnboardingTableViewCell: UITableViewCell {
 
     }
 
-    func configure(with title: String, type: SimpleOnboardingCellType, subtitle: String?) {
-        titleLabel.text = title
-        isInterest = type == .interest
-        subtitleLabel.isHidden = type != .interest
+    func configure(with item: SimpleOnboardingCell) {
+        titleLabel.text = item.name
+        isInterest = item.type == .interest
+        subtitleLabel.isHidden = item.type != .interest
 
-        if let subtitle = subtitle {
+        if let subtitle = item.categories {
             subtitleLabel.text = subtitle
         }
 

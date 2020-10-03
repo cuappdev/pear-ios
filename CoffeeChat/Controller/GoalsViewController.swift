@@ -14,14 +14,15 @@ class GoalsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var goals: [String: Bool] = [
-        "Just chatting": false,
-        "Finding my people": false,
-        "Meeting someone different": false,
-        "Learning from mentors": false,
-        "Guiding mentees": false,
-        "Not sure yet": false
+    private var goals: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "Just chatting", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Finding my people", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Meeting someone different", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Learning from mentors", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Guiding mentees", type: .normal, categories: nil),
+        SimpleOnboardingCell(name: "Not sure yet", type: .normal, categories: nil)
     ]
+    private var selectedGoals: [Bool] = [false, false, false, false, false, false]
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
@@ -68,7 +69,7 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Ready for Pear", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -132,9 +133,8 @@ class GoalsViewController: UIViewController {
 
 
     // MARK: - Next and Previous Buttons
-    /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
-        nextButton.isEnabled = goals.filter{$0.value}.count > 0
+        nextButton.isEnabled = selectedGoals.filter{$0}.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
@@ -164,14 +164,12 @@ extension GoalsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let goal = Array(goals)[indexPath.row].key
-        goals[goal]?.toggle()
+        selectedGoals[indexPath.row].toggle()
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let goal = Array(goals)[indexPath.row].key
-        goals[goal]?.toggle()
+        selectedGoals[indexPath.row].toggle()
         updateNext()
     }
 
@@ -182,8 +180,8 @@ extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as? SimpleOnboardingTableViewCell else { return UITableViewCell() }
-        let goal = Array(goals)[indexPath.row].key
-        cell.configure(with: goal, type: .normal, subtitle: nil)
+        let goal = goals[indexPath.row]
+        cell.configure(with: goal)
         return cell
     }
 
