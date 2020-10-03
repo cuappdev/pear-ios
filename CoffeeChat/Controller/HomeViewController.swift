@@ -120,9 +120,7 @@ extension HomeViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeTabOptionCollectionViewCell.reuseIdentifier, for: indexPath) as? HomeTabOptionCollectionViewCell else { return UICollectionViewCell() }
-        if indexPath.item == activeTabIndex {
-            cell.isSelected = true
-        }
+        cell.isSelected = indexPath.item == activeTabIndex
         cell.configure(with: tabs[indexPath.item])
         return cell
     }
