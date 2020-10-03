@@ -19,7 +19,6 @@ class MatchViewController: UIViewController {
 
     private let imageSize = CGSize(width: 120, height: 120)
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
-    private let cellReuseId = "cellReuseIdentifier"
 
     private var matchSummaries: [MatchSummary] = [
         // TODO: Remove after connecting to backend. These are temp values.
@@ -61,7 +60,7 @@ class MatchViewController: UIViewController {
         matchSummaryTableView.showsVerticalScrollIndicator = false
         matchSummaryTableView.isScrollEnabled = false
         matchSummaryTableView.dataSource = self
-        matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: cellReuseId)
+        matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: MatchSummaryTableViewCell.reuseIdentifier)
         view.addSubview(matchSummaryTableView)
 
         reachOutButton.backgroundColor = .backgroundOrange
@@ -127,7 +126,7 @@ extension MatchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath) as? MatchSummaryTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MatchSummaryTableViewCell.reuseIdentifier, for: indexPath) as? MatchSummaryTableViewCell else { return UITableViewCell() }
         let summary = matchSummaries[indexPath.row]
         cell.configure(for: summary)
         return cell

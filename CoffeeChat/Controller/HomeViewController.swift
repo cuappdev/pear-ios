@@ -20,7 +20,6 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
-    private let tabCellReuseIdentifier = "tabCellReuseIdentifier"
     private let tabs = ["Weekly Pear", "People"]
 
     override func viewDidLoad() {
@@ -51,7 +50,7 @@ class HomeViewController: UIViewController {
         tabCollectionView = UICollectionView(frame: .zero, collectionViewLayout: tabLayout)
         tabCollectionView.delegate = self
         tabCollectionView.dataSource = self
-        tabCollectionView.register(HomeTabOptionCollectionViewCell.self, forCellWithReuseIdentifier: tabCellReuseIdentifier)
+        tabCollectionView.register(HomeTabOptionCollectionViewCell.self, forCellWithReuseIdentifier: HomeTabOptionCollectionViewCell.reuseIdentifier)
         tabCollectionView.backgroundColor = .white
         tabCollectionView.clipsToBounds = true
         tabCollectionView.layer.masksToBounds = false
@@ -120,7 +119,7 @@ extension HomeViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tabCellReuseIdentifier, for: indexPath) as? HomeTabOptionCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeTabOptionCollectionViewCell.reuseIdentifier, for: indexPath) as? HomeTabOptionCollectionViewCell else { return UICollectionViewCell() }
         if indexPath.item == activeTabIndex {
             cell.isSelected = true
         }

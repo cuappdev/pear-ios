@@ -13,6 +13,8 @@ class MatchSummaryTableViewCell: UITableViewCell {
     private let detailLabel = UILabel()
     private let titleLabel = UILabel()
 
+    static let reuseIdentifier = "MatchSummaryTableViewCell"
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .backgroundLightGreen

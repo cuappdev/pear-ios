@@ -11,19 +11,18 @@ import UIKit
 class HomeTabOptionCollectionViewCell: UICollectionViewCell {
 
     private let tabLabel = UILabel()
-    private var activeCellColor: UIColor = .darkGreen
-    private var inactiveCellColor: UIColor = .inactiveGreen
+    static let reuseIdentifier = "TabCellReuseIdentifier"
 
     override var isSelected: Bool {
         didSet {
-            tabLabel.textColor = isSelected ? activeCellColor : inactiveCellColor
+            tabLabel.textColor = isSelected ? .darkGreen : .inactiveGreen
         }
     }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        tabLabel.textColor = inactiveCellColor
+        tabLabel.textColor = .inactiveGreen
         tabLabel.font = ._16CircularStdBook
         addSubview(tabLabel)
 
