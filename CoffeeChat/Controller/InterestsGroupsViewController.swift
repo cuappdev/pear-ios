@@ -15,14 +15,14 @@ class InterestsGroupsViewController: UIViewController {
     // TODO: change when networking with backend
     private var displayedInterestsGroups: [SimpleOnboardingCell] = []
     private var interestsGroups: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "Art", type: .interest, categories: "painting, crafts, embroidery..."),
-        SimpleOnboardingCell(name: "Business", type: .interest, categories: "entrepreneurship, finance, VC..."),
-        SimpleOnboardingCell(name: "Cornell AppDev", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Bread Club", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Cornell Venture Capital", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Medium Design Collective", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Women in Computing at Cornell", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Design and Tech Initiative", type: .normal, categories: nil)
+        SimpleOnboardingCell(name: "Art", subtitle: "painting, crafts, embroidery..."),
+        SimpleOnboardingCell(name: "Business", subtitle: "entrepreneurship, finance, VC..."),
+        SimpleOnboardingCell(name: "Cornell AppDev", subtitle: nil),
+        SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
+        SimpleOnboardingCell(name: "Cornell Venture Capital", subtitle: nil),
+        SimpleOnboardingCell(name: "Medium Design Collective", subtitle: nil),
+        SimpleOnboardingCell(name: "Women in Computing at Cornell", subtitle: nil),
+        SimpleOnboardingCell(name: "Design and Tech Initiative", subtitle: nil)
     ]
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
@@ -32,6 +32,7 @@ class InterestsGroupsViewController: UIViewController {
     private let titleLabel = UILabel()
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
+    private let skipButton = UIButton()
     private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
 
     init(delegate: OnboardingPageDelegate) {
@@ -82,12 +83,20 @@ class InterestsGroupsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        skipButton.titleLabel?.font = ._16CircularStdMedium
+        skipButton.setTitle("Skip", for: .normal)
+        skipButton.setTitleColor(.greenGray, for: .normal)
+        skipButton.backgroundColor = .none
+        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+        view.addSubview(skipButton)
+
         displayedInterestsGroups = interestsGroups
 
         setupConstraints()
     }
 
     private func setupConstraints() {
+        let backSize = CGSize(width: 86, height: 20)
         let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
 
         backButton.snp.makeConstraints { make in
@@ -120,6 +129,12 @@ class InterestsGroupsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
 
+        skipButton.snp.makeConstraints { make in
+            make.size.equalTo(backSize)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
+        }
+
     }
 
     /// Filters table view results based on text typed in search
@@ -135,6 +150,9 @@ class InterestsGroupsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedInterestsGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        skipButton.isEnabled = selectedInterestsGroups.count == 0
+        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {
@@ -147,16 +165,20 @@ class InterestsGroupsViewController: UIViewController {
         navigationController?.pushViewController(homeVC, animated: true)
     }
 
+    @objc func skipButtonPressed() {
+        let homeVC = HomeViewController()
+        navigationController?.pushViewController(homeVC, animated: true)
+    }
+
 }
 
 // MARK: - TableViewDelegate
 extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch interestsGroups[indexPath.row].type {
-        case .interest:
+        if let _ = interestsGroups[indexPath.row].subtitle {
             return 61
-        case .normal:
+        } else {
             return 54
         }
     }

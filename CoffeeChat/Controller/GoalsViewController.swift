@@ -15,12 +15,12 @@ class GoalsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var goals: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "Just chatting", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Finding my people", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Meeting someone different", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Learning from mentors", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Guiding mentees", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Not sure yet", type: .normal, categories: nil)
+        SimpleOnboardingCell(name: "Just chatting", subtitle: nil),
+        SimpleOnboardingCell(name: "Finding my people", subtitle: nil),
+        SimpleOnboardingCell(name: "Meeting someone different", subtitle: nil),
+        SimpleOnboardingCell(name: "Learning from mentors", subtitle: nil),
+        SimpleOnboardingCell(name: "Guiding mentees", subtitle: nil),
+        SimpleOnboardingCell(name: "Not sure yet", subtitle: nil)
     ]
     private var selectedGoals: [Bool] = [false, false, false, false, false, false]
     private let userDefaults = UserDefaults.standard
@@ -79,7 +79,7 @@ class GoalsViewController: UIViewController {
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
-        skipButton.setTitle("I'll add later", for: .normal)
+        skipButton.setTitle("Skip", for: .normal)
         skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
@@ -136,6 +136,9 @@ class GoalsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedGoals.filter{$0}.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        skipButton.isEnabled = selectedGoals.filter{$0}.count == 0
+        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {

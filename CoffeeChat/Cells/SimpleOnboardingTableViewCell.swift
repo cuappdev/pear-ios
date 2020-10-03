@@ -16,7 +16,6 @@ class SimpleOnboardingTableViewCell: UITableViewCell {
     private let titleLabel = UILabel()
 
     // MARK: Private Data Vars
-    private var isInterest: Bool = false
     static let reuseIdentifier = "SimpleOnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -62,16 +61,17 @@ class SimpleOnboardingTableViewCell: UITableViewCell {
 
     func configure(with item: SimpleOnboardingCell) {
         titleLabel.text = item.name
-        isInterest = item.type == .interest
-        subtitleLabel.isHidden = item.type != .interest
+        var showSubtitle = false
 
-        if let subtitle = item.categories {
+        if let subtitle = item.subtitle {
             subtitleLabel.text = subtitle
+            showSubtitle = true
         }
 
+        subtitleLabel.isHidden = !showSubtitle
         titleLabel.snp.remakeConstraints { remake in
             remake.leading.trailing.equalToSuperview().inset(8)
-            if isInterest {
+            if showSubtitle {
                 remake.top.equalToSuperview().offset(8)
             } else {
                 remake.centerY.equalToSuperview()

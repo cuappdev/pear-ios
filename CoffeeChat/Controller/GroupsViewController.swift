@@ -16,14 +16,14 @@ class GroupsViewController: UIViewController {
     // TODO: change when networking with backend
     private var displayedGroups: [SimpleOnboardingCell] = []
     private var groups: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "AppDev", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "DTI", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Guac Magazine", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "GCC", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "GVC", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "CUABS", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "Bread Club", type: .normal, categories: nil),
-        SimpleOnboardingCell(name: "CUSD", type: .normal, categories: nil)
+        SimpleOnboardingCell(name: "AppDev", subtitle: nil),
+        SimpleOnboardingCell(name: "DTI", subtitle: nil),
+        SimpleOnboardingCell(name: "Guac Magazine", subtitle: nil),
+        SimpleOnboardingCell(name: "GCC", subtitle: nil),
+        SimpleOnboardingCell(name: "GVC", subtitle: nil),
+        SimpleOnboardingCell(name: "CUABS", subtitle: nil),
+        SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
+        SimpleOnboardingCell(name: "CUSD", subtitle: nil)
     ]
     private var selectedGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
@@ -151,6 +151,9 @@ class GroupsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        skipButton.isEnabled = selectedGroups.count == 0
+        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {

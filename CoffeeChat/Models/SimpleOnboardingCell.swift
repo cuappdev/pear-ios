@@ -8,18 +8,14 @@
 
 import Foundation
 
-enum SimpleOnboardingCellType { case interest, normal }
-
 struct SimpleOnboardingCell {
 
-    let categories: String?
+    let subtitle: String?
     let name: String
-    let type: SimpleOnboardingCellType
 
-    init(name: String, type: SimpleOnboardingCellType, categories: String?) {
+    init(name: String, subtitle: String?) {
         self.name = name
-        self.type = type
-        self.categories = categories
+        self.subtitle = subtitle
     }
 
 }
