@@ -55,12 +55,11 @@ class HomeViewController: UIViewController {
         tabCollectionView.backgroundColor = .white
         tabCollectionView.clipsToBounds = true
         tabCollectionView.layer.masksToBounds = false
-        tabCollectionView.layer.cornerRadius = 24
-        // TODO: Fix tab bar shadows
-        tabCollectionView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
-        tabCollectionView.layer.shadowOffset = CGSize(width: 4.0, height: 8.0)
-        tabCollectionView.layer.shadowOpacity = 0.07
-        tabCollectionView.layer.shadowRadius = 4.0
+        tabCollectionView.layer.cornerRadius = 20
+        tabCollectionView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        tabCollectionView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        tabCollectionView.layer.shadowOpacity = 1
+        tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
         setUpConstraints()
