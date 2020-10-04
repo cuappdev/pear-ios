@@ -148,7 +148,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
 
         if onboardingCompleted {
-            let homeVC = HomeViewController(for: .reachingOut)
+            let homeVC = HomeViewController()
             navigationController?.pushViewController(homeVC, animated: false)
         } else {
             let onboardingVC = OnboardingPageViewController(

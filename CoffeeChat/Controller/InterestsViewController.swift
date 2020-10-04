@@ -18,8 +18,7 @@ class InterestsViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Data
-    private var delegate: OnboardingPageDelegate
-    // TODO: Replace values with backend
+    private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
         Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
         Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
@@ -53,6 +52,10 @@ class InterestsViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
 
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+
         titleLabel.text = "What do you love?"
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -62,7 +65,7 @@ class InterestsViewController: UIViewController {
         fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
-        nextButton.setTitle("Almost there", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.layer.cornerRadius = 27
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
@@ -74,25 +77,33 @@ class InterestsViewController: UIViewController {
         setupConstraints()
     }
 
+    @objc func backButtonPressed() {
+        delegate?.backPage(index: 0)
+    }
+
     @objc func nextButtonPressed() {
+        delegate?.nextPage(index: 2)
         let userInterests = selectedInterests.map { $0.name }
         userDefaults.set(userInterests, forKey: Constants.UserDefaults.userInterests)
-        delegate.nextPage(index: 2)
+        delegate?.nextPage(index: 2)
     }
 
     private func setupConstraints() {
-        let nextButtonSize = CGSize(width: 225, height: 54)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
         let tableViewWidth: CGFloat = 295
         let tableViewBottomPadding: CGFloat = 57
-        let tableViewTopPadding: CGFloat = 50
+        let tableViewTopPadding: CGFloat = 48
         let titleHeight: CGFloat = 30
-        let titleSpacing: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
+
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleSpacing)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         fadeTableView.snp.makeConstraints { make in
@@ -103,9 +114,9 @@ class InterestsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
 

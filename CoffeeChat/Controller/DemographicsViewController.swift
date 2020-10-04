@@ -25,11 +25,11 @@ class DemographicsViewController: UIViewController {
     private var activeDropdownView: UIView? // Keep track of currently active field
     private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
-    private let helloLabel = UILabel()
     private var hometownDropdownView: OnboardingSearchDropdownView!
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
     private var pronounsDropdownView: OnboardingSelectDropdownView!
+    private let titleLabel = UILabel()
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -53,10 +53,10 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         navigationController?.navigationBar.isHidden = true
 
-        helloLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
-        helloLabel.textColor = .textBlack
-        helloLabel.font = ._24CircularStdMedium
-        view.addSubview(helloLabel)
+        titleLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
+        titleLabel.textColor = .textBlack
+        titleLabel.font = ._24CircularStdMedium
+        view.addSubview(titleLabel)
 
         greetingLabel.text = "Let's get to know you better."
         greetingLabel.textColor = .textBlack
@@ -105,24 +105,21 @@ class DemographicsViewController: UIViewController {
     }
 
     private func setUpConstraints() {
-        let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 60)
-        let helloLabelHeight: CGFloat = 30
-        let helloLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
-        let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 90)
-        let nextButtonSize = CGSize(width: 225, height: 54)
+        let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 84)
+        let titleLabelHeight: CGFloat = 30
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
         let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
 
-        helloLabel.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(helloLabelHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(helloLabelPadding)
+            make.height.equalTo(titleLabelHeight)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         greetingLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(helloLabel.snp.bottom).offset(10)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
 
         classDropdownView.snp.makeConstraints { make in
@@ -154,9 +151,9 @@ class DemographicsViewController: UIViewController {
         }
 
         nextButton.snp.makeConstraints { make in
-            make.size.equalTo(nextButtonSize)
+            make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
 
