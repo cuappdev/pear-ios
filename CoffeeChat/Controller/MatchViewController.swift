@@ -13,7 +13,9 @@ enum PairingProgress {
     case reachingOut
     case waitingOnResponse
     case responding
-    case dateScheduled
+    case chatScheduled
+    case afterChat
+    case cancelled
 }
 
 class MatchViewController: UIViewController {
@@ -21,6 +23,7 @@ class MatchViewController: UIViewController {
     private let pairingProgress: PairingProgress
 
     private let matchDemographicsLabel = UILabel()
+    private let matchProfileBackgroundView = UIStackView()
     private let matchNameLabel = UILabel()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
@@ -67,6 +70,7 @@ class MatchViewController: UIViewController {
         let lastName = "Cornell"
         let major = "Government"
         let year = 2020
+        let pronouns = "He/Him"
         let hometown = "Ithaca, NY"
 
         if pairingProgress == .reachingOut || pairingProgress == .responding {
@@ -88,30 +92,32 @@ class MatchViewController: UIViewController {
 
         switch pairingProgress {
         case .waitingOnResponse:
-            meetupStatusView = MeetupStatusView(reachedOutTo: firstName)
+            meetupStatusView = MeetupStatusView(waitingOn: firstName)
         case .responding:
             meetupStatusView = MeetupStatusView(respondingTo: firstName)
-        case .dateScheduled:
-            meetupStatusView = MeetupStatusView(chatScheduledOn: Date())
+        case .chatScheduled:
+            meetupStatusView = MeetupStatusView(forChatScheduledOn: Date(), name: firstName)
         default: break
         }
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
 
-        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)"
-        matchDemographicsLabel.textColor = .textGreen
-        matchDemographicsLabel.font = ._16CircularStdBook
-        matchDemographicsLabel.numberOfLines = 0
-        view.addSubview(matchDemographicsLabel)
-        // TODO add back pronouns
+        matchProfileBackgroundView.axis = .vertical
+        matchProfileBackgroundView.spacing = 4
+        view.addSubview(matchProfileBackgroundView)
 
         matchNameLabel.text = "\(firstName)\n\(lastName)"
         matchNameLabel.textColor = .textBlack
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
-        view.addSubview(matchNameLabel)
+        matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
+        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)\n\(pronouns)"
+        matchDemographicsLabel.textColor = .textGreen
+        matchDemographicsLabel.font = ._16CircularStdBook
+        matchDemographicsLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchDemographicsLabel, at: 1)
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         view.addSubview(matchProfileImageView)
@@ -126,9 +132,9 @@ class MatchViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let padding: CGFloat = 35 // TODO: Not sure about dimensions.
-        let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70) // TODO: Not sure about dimensions.
-        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30) // TODO: Not sure about dimensions.
+        let padding: CGFloat = 35
+        let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
+        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
         let meetupPadding = 24
         let meetupSize = CGSize(width: 319, height: 75)
         let matchSummaryBottomPadding = 46
@@ -137,17 +143,6 @@ class MatchViewController: UIViewController {
             make.top.equalToSuperview().offset(meetupPadding)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
             make.size.equalTo(meetupSize)
-        }
-
-        matchDemographicsLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(matchNameLabel)
-            make.top.equalTo(matchNameLabel.snp.bottom).offset(8)
-        }
-
-        matchNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(matchProfileImageView.snp.trailing).offset(20)
-            make.trailing.equalToSuperview().inset(padding)
-            make.top.equalTo(matchProfileImageView).offset(6)
         }
 
         matchProfileImageView.snp.makeConstraints { make in
@@ -160,8 +155,14 @@ class MatchViewController: UIViewController {
             make.size.equalTo(imageSize)
         }
 
+        matchProfileBackgroundView.snp.makeConstraints { make in
+            make.centerY.equalTo(matchProfileImageView)
+            make.leading.equalTo(matchProfileImageView.snp.trailing).offset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+
         matchSummaryTableView.snp.makeConstraints { make in
-            make.top.equalTo(matchDemographicsLabel.snp.bottom).offset(padding)
+            make.top.equalTo(matchProfileBackgroundView.snp.bottom).offset(padding)
             if let reachOutButton = reachOutButton {
                 make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
             } else {
