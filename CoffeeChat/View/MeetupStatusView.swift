@@ -8,7 +8,12 @@
 import UIKit
 
 enum ChatStatus {
-    case finished, cancelled, noResponses
+    case chatScheduled(User, Date)
+    case waitingOn(User)
+    case respondingTo(User)
+    case finished
+    case cancelled(User)
+    case noResponses
 }
 
 class MeetupStatusView: UIView {
@@ -19,41 +24,30 @@ class MeetupStatusView: UIView {
     private let statusImageView = UIImageView()
     private let statusLabel = UILabel()
 
+    private let messageLeadingPadding: CGFloat = 12
+    private let messageTrailingPadding: CGFloat = 8
+    private let messageVerticalPadding: CGFloat = 8
     private let pearImageSize = CGSize(width: 40, height: 40)
+    private let pearPadding: CGFloat = 8
+    private let statusImageSize = CGSize(width: 10, height: 10)
+    private let statusMessagePadding: CGFloat = 6.5
 
-    let unformattedStyle: [NSAttributedString.Key: Any]
-    let underlinedStyle: [NSAttributedString.Key: Any]
     let hyperlinkedStyle: [NSAttributedString.Key: Any]
-
-    convenience init(respondingTo name: String) {
-        self.init()
-
-        setupForResponding(to: name)
-    }
-
-    convenience init(waitingOn name: String) {
-        self.init()
-
-        setupForWaiting(for: name)
-    }
-
-    convenience init(forChatScheduledOn date: Date, name: String, instagram: String? = nil, facebook: String? = nil) {
-        self.init()
-
-        if isTommorow(meeting: date) {
-            //setupForDayBeforeMeeting(on: date)
-            setupForChatScheduled(on: date, name: name, instagram: instagram, facebook: facebook)
-        } else {
-            setupForChatScheduled(on: date, name: name, instagram: instagram, facebook: facebook)
-        }
-    }
+    let underlinedStyle: [NSAttributedString.Key: Any]
+    let unformattedStyle: [NSAttributedString.Key: Any]
 
     convenience init(for status: ChatStatus) {
         self.init()
 
         switch status {
-        case .cancelled:
-            setupForChatCancelled()
+        case .respondingTo(let user):
+            setupForResponding(to: user)
+        case .waitingOn(let user):
+            setupForWaiting(for: user)
+        case .chatScheduled(let user, let date):
+            setupForChatScheduled(on: date, for: user)
+        case .cancelled(let user):
+            setupForChatCancelled(with: user)
         case .noResponses:
             setupForNoResponses()
         case .finished:
@@ -91,6 +85,17 @@ class MeetupStatusView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// Returns the height required for this view to display the text without overflowing
+    public func getRecommendedHeight(for width: CGFloat) -> CGFloat {
+        let textWidth: CGFloat = CGFloat(width - pearImageSize.width - messageLeadingPadding - messageTrailingPadding - pearPadding)
+        let verticalSpace = 2*messageVerticalPadding + statusMessagePadding + statusImageSize.height
+        if let attributedText = messageLabel.attributedText {
+            return attributedText.height(containerWidth: textWidth) + verticalSpace
+        } else {
+            return 0
+        }
+    }
+
     private func setupViews() {
         backgroundShadingView.backgroundColor = .backgroundLightGrayGreen
         backgroundShadingView.layer.cornerRadius = 12
@@ -119,12 +124,6 @@ class MeetupStatusView: UIView {
     }
 
     private func setupConstraints() {
-        let statusImageSize = CGSize(width: 10, height: 10)
-        let statusMessagePadding = 4
-        let pearSidePadding = 8
-        let messageLeadingPadding = 12
-        let messageTrailingPadding = 8
-
         statusImageView.snp.makeConstraints { make in
             make.size.equalTo(statusImageSize)
             make.leading.equalToSuperview()
@@ -142,33 +141,32 @@ class MeetupStatusView: UIView {
         }
 
         pearImageView.snp.makeConstraints { make in
-            make.leading.equalTo(backgroundShadingView).inset(pearSidePadding)
-            make.centerY.equalToSuperview()
+            make.leading.top.equalToSuperview().inset(pearPadding)
             make.size.equalTo(pearImageSize)
         }
 
         messageLabel.snp.makeConstraints { make in
             make.leading.equalTo(pearImageView.snp.trailing).offset(messageLeadingPadding)
-            make.centerY.equalToSuperview()
+            make.top.bottom.equalToSuperview().inset(messageVerticalPadding)
             make.trailing.equalToSuperview().inset(messageTrailingPadding)
         }
     }
 
     // MARK: Different View States
 
-    private func setupForResponding(to name: String) {
+    private func setupForResponding(to user: User) {
         statusImageView.image = UIImage(named: "new-pear")
         statusLabel.text = "New Pear"
-        messageLabel.text = "\(name) wants to meet you! Pick a time that works for both of you."
+        messageLabel.attributedText = unformattedText(for: "\(user.firstName) wants to meet you! Pick a time that works for both of you.")
     }
 
-    private func setupForWaiting(for name: String) {
+    private func setupForWaiting(for user: User) {
         statusImageView.image = UIImage(named: "reached-out")
         statusLabel.text = "Reached out"
-        messageLabel.text = "Just waiting on \(name) to pick a time and place!"
+        messageLabel.attributedText = unformattedText(for: "Just waiting on \(user.firstName) to pick a time and place!")
     }
 
-    private func setupForChatScheduled(on date: Date, name: String, instagram: String? = nil, facebook: String? = nil) {
+    private func setupForChatScheduled(on date: Date, for user: User) {
         statusImageView.image = UIImage(named: "scheduled")
         statusLabel.text = "Chat scheduled"
 
@@ -181,9 +179,9 @@ class MeetupStatusView: UIView {
         fullText.append(body)
         fullText.append(suffix)
 
-        if instagram != nil || facebook != nil {
-            let contactPrefix = unformattedText(for: "\nYou can reach \(name) on ")
-            let contactLinks = textForSocialMedia(facebook: facebook, instagram: instagram)
+        if user.instagram != nil || user.facebook != nil {
+            let contactPrefix = unformattedText(for: "\nYou can reach \(user.firstName) on ")
+            let contactLinks = textForSocialMedia(facebook: user.facebook, instagram: user.instagram)
             let contactSuffix = unformattedText(for: ".")
             fullText.append(contactPrefix)
             fullText.append(contactLinks)
@@ -210,16 +208,30 @@ class MeetupStatusView: UIView {
     }
 
     private func setupForNoResponses() {
+        statusImageView.image = UIImage(named: "new-pear")
         statusLabel.text = "New Pear"
-        messageLabel.text = "Uh-oh, looks like neither of you has reached out yet. Be bold and make the first move!"
+        messageLabel.attributedText = unformattedText(for: "Uh-oh, looks like neither of you has reached out yet. Be bold and make the first move!")
     }
 
     private func setupForChatFinished() {
-        // TODO
+        statusImageView.image = UIImage(named: "finished")
+        statusLabel.text = "Finished chat"
+        messageLabel.attributedText = unformattedText(for: "Hope your chat went well! Now you have one more friend at Cornell 😊")
     }
 
-    private func setupForChatCancelled() {
-        // TODO
+    private func setupForChatCancelled(with user: User) {
+        statusImageView.image = UIImage(named: "Cancelled")
+        statusLabel.text = "Cancelled"
+
+        let cancelledText = unformattedText(for: "Oh no, it looks like your schedules don’t line up 😢 I hope it works out next time!")
+
+        if user.instagram != nil || user.facebook != nil {
+            cancelledText.append(unformattedText(for: "You can still reach Maggie on "))
+           cancelledText.append(textForSocialMedia(facebook: user.facebook, instagram: user.instagram))
+            cancelledText.append(unformattedText(for: "."))
+        }
+
+        messageLabel.attributedText = cancelledText
     }
 
     // MARK: Attributed Strings
@@ -299,4 +311,13 @@ class MeetupStatusView: UIView {
         return false
     }
 
+}
+
+extension NSAttributedString {
+    func height(containerWidth: CGFloat) -> CGFloat {
+        let rect = self.boundingRect(with: CGSize.init(width: containerWidth, height: CGFloat.greatestFiniteMagnitude),
+                                     options: [.usesFontLeading, .usesLineFragmentOrigin],
+                                     context: nil)
+        return ceil(rect.size.height)
+    }
 }

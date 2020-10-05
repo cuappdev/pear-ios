@@ -72,6 +72,9 @@ class MatchViewController: UIViewController {
         let year = 2020
         let pronouns = "He/Him"
         let hometown = "Ithaca, NY"
+        let user = User(clubs: [], firstName: firstName, googleID: "", graduationYear: "2020", hometown: hometown,
+                        interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
+                        pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
 
         if pairingProgress == .reachingOut || pairingProgress == .responding {
             reachOutButton = UIButton()
@@ -92,11 +95,11 @@ class MatchViewController: UIViewController {
 
         switch pairingProgress {
         case .waitingOnResponse:
-            meetupStatusView = MeetupStatusView(waitingOn: firstName)
+            meetupStatusView = MeetupStatusView(for: .waitingOn(user))
         case .responding:
-            meetupStatusView = MeetupStatusView(respondingTo: firstName)
+            meetupStatusView = MeetupStatusView(for: .respondingTo(user))
         case .chatScheduled:
-            meetupStatusView = MeetupStatusView(forChatScheduledOn: Date(), name: firstName)
+            meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date()))
         default: break
         }
         if let meetupStatusView = meetupStatusView {
@@ -136,13 +139,15 @@ class MatchViewController: UIViewController {
         let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
         let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
         let meetupPadding = 24
-        let meetupSize = CGSize(width: 319, height: 75)
+        let meetupWidth: CGFloat = 319
         let matchSummaryBottomPadding = 46
 
+        print(meetupStatusView!.getRecommendedHeight(for: meetupWidth))
         meetupStatusView?.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(meetupPadding)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
-            make.size.equalTo(meetupSize)
+            make.width.equalTo(meetupWidth)
+            make.height.equalTo(meetupStatusView!.getRecommendedHeight(for: meetupWidth))
         }
 
         matchProfileImageView.snp.makeConstraints { make in
