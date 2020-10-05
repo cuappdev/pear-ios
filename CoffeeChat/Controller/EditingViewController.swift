@@ -200,6 +200,11 @@ class EditingViewController: UIViewController {
         setupNavigationBar()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
     private func setupNavigationBar() {
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
@@ -208,7 +213,7 @@ class EditingViewController: UIViewController {
             .font: UIFont.getFont(.medium, size: 24)
         ]
 
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.imageView?.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 10, height: 20))
         }

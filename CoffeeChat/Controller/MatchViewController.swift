@@ -44,7 +44,7 @@ class MatchViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //navigationController?.navigationBar.isHidden = true TODO might not need this with the changes
+        navigationController?.navigationBar.isHidden = true
     }
 
     override func viewDidLoad() {
@@ -121,7 +121,6 @@ class MatchViewController: UIViewController {
         let meetupWidth: CGFloat = 319
         let matchSummaryBottomPadding = 46
 
-        print(meetupStatusView!.getRecommendedHeight(for: meetupWidth))
         meetupStatusView?.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(meetupPadding)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
