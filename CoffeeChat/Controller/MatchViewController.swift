@@ -9,18 +9,9 @@
 import GoogleSignIn
 import UIKit
 
-enum PairingProgress {
-    case reachingOut
-    case waitingOnResponse
-    case responding
-    case chatScheduled
-    case afterChat
-    case cancelled
-}
-
 class MatchViewController: UIViewController {
 
-    private let pairingProgress: PairingProgress
+    private let hasReachedOut: Bool
 
     private let matchDemographicsLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
@@ -42,8 +33,8 @@ class MatchViewController: UIViewController {
         MatchSummary(title: "He is also part of...", detail: "EzraBox")
     ]
 
-    init(for progress: PairingProgress) {
-        pairingProgress = progress
+    init(hasReachedOut: Bool) {
+        self.hasReachedOut = hasReachedOut
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -76,32 +67,20 @@ class MatchViewController: UIViewController {
                         interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
                         pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
 
-        if pairingProgress == .reachingOut || pairingProgress == .responding {
+        if hasReachedOut {
             reachOutButton = UIButton()
             if let reachOutButton = reachOutButton {
                 reachOutButton.backgroundColor = .backgroundOrange
                 reachOutButton.setTitleColor(.white, for: .normal)
                 reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
                 reachOutButton.titleLabel?.font = ._20CircularStdBold
-                if pairingProgress == .reachingOut {
-                    reachOutButton.setTitle("Reach out!", for: .normal)
-                } else if pairingProgress == .responding {
-                    reachOutButton.setTitle("Pick a time", for: .normal)
-                }
+                reachOutButton.setTitle("Pick a time", for: .normal) // TODO change text based on whether responding
                 reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
                 view.addSubview(reachOutButton)
             }
         }
 
-        switch pairingProgress {
-        case .waitingOnResponse:
-            meetupStatusView = MeetupStatusView(for: .waitingOn(user))
-        case .responding:
-            meetupStatusView = MeetupStatusView(for: .respondingTo(user))
-        case .chatScheduled:
-            meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date()))
-        default: break
-        }
+        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date())) // TODO change based on chat status
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
