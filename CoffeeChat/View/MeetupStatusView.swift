@@ -19,7 +19,7 @@ enum ChatStatus {
 class MeetupStatusView: UIView {
 
     private let backgroundShadingView = UIView()
-    private let messageLabel = UILabel()
+    private let messageTextView = UITextView()
     private let pearImageView = UIImageView()
     private let statusImageView = UIImageView()
     private let statusLabel = UILabel()
@@ -89,7 +89,7 @@ class MeetupStatusView: UIView {
     public func getRecommendedHeight(for width: CGFloat) -> CGFloat {
         let textWidth: CGFloat = CGFloat(width - pearImageSize.width - messageLeadingPadding - messageTrailingPadding - pearPadding)
         let verticalSpace = 2*messageVerticalPadding + statusMessagePadding + statusImageSize.height
-        if let attributedText = messageLabel.attributedText {
+        if let attributedText = messageTextView.attributedText {
             return attributedText.height(containerWidth: textWidth) + verticalSpace
         } else {
             return 0
@@ -109,10 +109,17 @@ class MeetupStatusView: UIView {
         statusImageView.image = UIImage(named: "happyPear")
         addSubview(statusImageView)
 
-        messageLabel.font = UIFont._16CircularStdMedium
-        messageLabel.textColor = .textBlack
-        messageLabel.numberOfLines = 0
-        backgroundShadingView.addSubview(messageLabel)
+        messageTextView.backgroundColor = .clear
+        messageTextView.contentInset = .zero
+        messageTextView.contentInsetAdjustmentBehavior = .never
+        messageTextView.font = UIFont._16CircularStdMedium
+        messageTextView.isEditable = false
+        messageTextView.isScrollEnabled = false
+        messageTextView.textColor = .textBlack
+        messageTextView.textContainer.lineFragmentPadding = 0
+        messageTextView.textContainerInset = .zero
+        messageTextView.tintColor = .textGreen
+        backgroundShadingView.addSubview(messageTextView)
 
         pearImageView.image = UIImage(named: "happyPear")
         pearImageView.layer.cornerRadius = pearImageSize.width / 2
@@ -145,7 +152,7 @@ class MeetupStatusView: UIView {
             make.size.equalTo(pearImageSize)
         }
 
-        messageLabel.snp.makeConstraints { make in
+        messageTextView.snp.makeConstraints { make in
             make.leading.equalTo(pearImageView.snp.trailing).offset(messageLeadingPadding)
             make.top.bottom.equalToSuperview().inset(messageVerticalPadding)
             make.trailing.equalToSuperview().inset(messageTrailingPadding)
@@ -157,13 +164,13 @@ class MeetupStatusView: UIView {
     private func setupForResponding(to user: User) {
         statusImageView.image = UIImage(named: "new-pear")
         statusLabel.text = "New Pear"
-        messageLabel.attributedText = unformattedText(for: "\(user.firstName) wants to meet you! Pick a time that works for both of you.")
+        messageTextView.attributedText = unformattedText(for: "\(user.firstName) wants to meet you! Pick a time that works for both of you.")
     }
 
     private func setupForWaiting(for user: User) {
         statusImageView.image = UIImage(named: "reached-out")
         statusLabel.text = "Reached out"
-        messageLabel.attributedText = unformattedText(for: "Just waiting on \(user.firstName) to pick a time and place!")
+        messageTextView.attributedText = unformattedText(for: "Just waiting on \(user.firstName) to pick a time and place!")
     }
 
     private func setupForChatScheduled(on date: Date, for user: User) {
@@ -188,7 +195,7 @@ class MeetupStatusView: UIView {
             fullText.append(contactSuffix)
         }
 
-        messageLabel.attributedText = fullText
+        messageTextView.attributedText = fullText
     }
 
     private func setupForDayBeforeMeeting(on date: Date) {
@@ -204,19 +211,19 @@ class MeetupStatusView: UIView {
         fullText.append(body)
         fullText.append(suffix)
 
-        messageLabel.attributedText = fullText
+        messageTextView.attributedText = fullText
     }
 
     private func setupForNoResponses() {
         statusImageView.image = UIImage(named: "new-pear")
         statusLabel.text = "New Pear"
-        messageLabel.attributedText = unformattedText(for: "Uh-oh, looks like neither of you has reached out yet. Be bold and make the first move!")
+        messageTextView.attributedText = unformattedText(for: "Uh-oh, looks like neither of you has reached out yet. Be bold and make the first move!")
     }
 
     private func setupForChatFinished() {
         statusImageView.image = UIImage(named: "finished")
         statusLabel.text = "Finished chat"
-        messageLabel.attributedText = unformattedText(for: "Hope your chat went well! Now you have one more friend at Cornell 😊")
+        messageTextView.attributedText = unformattedText(for: "Hope your chat went well! Now you have one more friend at Cornell 😊")
     }
 
     private func setupForChatCancelled(with user: User) {
@@ -231,7 +238,7 @@ class MeetupStatusView: UIView {
             cancelledText.append(unformattedText(for: "."))
         }
 
-        messageLabel.attributedText = cancelledText
+        messageTextView.attributedText = cancelledText
     }
 
     // MARK: Attributed Strings
