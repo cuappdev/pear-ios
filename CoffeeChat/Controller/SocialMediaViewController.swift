@@ -175,8 +175,6 @@ class SocialMediaViewController: UIViewController {
 
         let isSocialMediaEntered = instagramHandle.trimmingCharacters(in: .whitespaces) != "" && facebookHandle.trimmingCharacters(in: .whitespaces) != ""
 
-        print(isSocialMediaEntered)
-
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = !nextButton.isEnabled
