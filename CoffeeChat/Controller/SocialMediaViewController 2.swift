@@ -51,12 +51,12 @@ class SocialMediaViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
+//        instagramTextField.delegate = self
         instagramTextField.backgroundColor = .backgroundWhite
         instagramTextField.textColor = .black
         instagramTextField.font = ._20CircularStdBook
         instagramTextField.placeholder = "@Instagram Handle"
         instagramTextField.clearButtonMode = .never
-        instagramTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let instagramImageView = UIImageView(image: UIImage(named: "instagram"))
         instagramImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         instagramTextField.addSubview(instagramImageView)
@@ -74,7 +74,6 @@ class SocialMediaViewController: UIViewController {
         facebookTextField.font = ._20CircularStdBook
         facebookTextField.placeholder = "Facebook profile link"
         facebookTextField.clearButtonMode = .never
-        facebookTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let facebookImageView = UIImageView(image: UIImage(named: "facebook"))
         facebookImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         facebookTextField.addSubview(facebookImageView)
@@ -170,17 +169,15 @@ class SocialMediaViewController: UIViewController {
     private func updateNext() {
 
         guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
+
         let isSocialMediaEntered = instagramHandle.trimmingCharacters(in: .whitespaces) != "" && facebookHandle.trimmingCharacters(in: .whitespaces) != ""
+
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = !nextButton.isEnabled
         let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
         skipButton.setTitleColor(skipButtonColor, for: .normal)
 
-    }
-
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        updateNext()
     }
 
     @objc func backButtonPressed() {
@@ -198,5 +195,6 @@ class SocialMediaViewController: UIViewController {
         let homeVC = HomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }
+
 
 }
