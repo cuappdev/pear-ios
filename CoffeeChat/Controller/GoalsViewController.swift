@@ -22,7 +22,7 @@ class GoalsViewController: UIViewController {
         SimpleOnboardingCell(name: "Guiding mentees", subtitle: nil),
         SimpleOnboardingCell(name: "Not sure yet", subtitle: nil)
     ]
-    private var selectedGoals: [String] = []
+    private var selectedGoals: [Bool] = [false, false, false, false, false, false]
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
@@ -134,9 +134,9 @@ class GoalsViewController: UIViewController {
 
     // MARK: - Next and Previous Buttons
     private func updateNext() {
-        nextButton.isEnabled = selectedGoals.count > 0
+        nextButton.isEnabled = selectedGoals.filter{$0}.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        skipButton.isEnabled = !nextButton.isEnabled
+        skipButton.isEnabled = selectedGoals.filter{$0}.count == 0
         let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
         skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
@@ -167,14 +167,12 @@ extension GoalsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let goal = goals[indexPath.row]
-        selectedGoals.append(goal.name)
+        selectedGoals[indexPath.row].toggle()
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let goal = goals[indexPath.row]
-        selectedGoals.removeAll { $0 == goal.name }
+        selectedGoals[indexPath.row].toggle()
         updateNext()
     }
 

@@ -10,7 +10,12 @@ import Foundation
 
 struct SimpleOnboardingCell {
 
-    let name: String
     let subtitle: String?
+    let name: String
+
+    init(name: String, subtitle: String?) {
+        self.name = name
+        self.subtitle = subtitle
+    }
 
 }
