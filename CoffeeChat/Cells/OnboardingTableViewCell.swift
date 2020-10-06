@@ -43,8 +43,8 @@ class OnboardingTableViewCell: UITableViewCell {
         interestImageView.layer.cornerRadius = 4
         backdropView.addSubview(interestImageView)
 
-        titleLabel.textColor = .textBlack
-        titleLabel.font = ._20CircularStdBook
+        titleLabel.textColor = .black
+        titleLabel.font = ._16CircularStdBook
         backdropView.addSubview(titleLabel)
 
         backdropView.clipsToBounds = false
@@ -60,14 +60,13 @@ class OnboardingTableViewCell: UITableViewCell {
     }
 
     private func setupConstraints(showingInterests: Bool) {
-        let cellSize = CGSize(width: 290, height: 64)
-        let imageSize = CGSize(width: 32, height: 32)
+        let imageSize = CGSize(width: 22, height: 22)
         let sidePadding: CGFloat = 12
-        let textSidePadding: CGFloat = 8
 
         backdropView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(cellSize)
+            make.height.equalTo(52)
+            make.leading.trailing.equalToSuperview()
         }
 
         interestImageView.snp.remakeConstraints { make in
@@ -77,9 +76,9 @@ class OnboardingTableViewCell: UITableViewCell {
         }
 
         titleLabel.snp.remakeConstraints { make in
-            make.leading.equalTo(interestImageView.snp.trailing).offset(textSidePadding)
+            make.leading.equalTo(interestImageView.snp.trailing).offset(8)
             if showingInterests {
-                make.top.equalToSuperview().inset(sidePadding)
+                make.top.equalToSuperview().inset(8.5)
             } else {
                 make.centerY.equalToSuperview()
             }

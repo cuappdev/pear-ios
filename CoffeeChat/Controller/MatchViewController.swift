@@ -46,7 +46,7 @@ class MatchViewController: UIViewController {
         view.addSubview(matchDemographicsLabel)
 
         matchNameLabel.text = "\(firstName)\n\(lastName)"
-        matchNameLabel.textColor = .textBlack
+        matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         view.addSubview(matchNameLabel)

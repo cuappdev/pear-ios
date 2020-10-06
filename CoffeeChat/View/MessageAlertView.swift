@@ -54,7 +54,7 @@ class MessageAlertView: UIView {
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
         messageLabel.font = ._20CircularStdBook
-        messageLabel.textColor = .textBlack
+        messageLabel.textColor = .black
         addSubview(messageLabel)
 
         actionButton.setTitle(actionMessage, for: .normal)

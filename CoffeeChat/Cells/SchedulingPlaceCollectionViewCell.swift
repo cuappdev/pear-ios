@@ -27,7 +27,7 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
         changeSelection(selected: false)
 
         titleLabel.text = ""
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._16CircularStdBook
         contentView.addSubview(titleLabel)
 

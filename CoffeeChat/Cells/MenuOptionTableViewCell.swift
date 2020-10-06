@@ -26,7 +26,7 @@ class MenuOptionTableViewCell: UITableViewCell {
         optionImageView.contentMode = .scaleAspectFit
         contentView.addSubview(optionImageView)
 
-        optionLabel.textColor = .textBlack
+        optionLabel.textColor = .black
         optionLabel.font = ._20CircularStdMedium
         contentView.addSubview(optionLabel)
 

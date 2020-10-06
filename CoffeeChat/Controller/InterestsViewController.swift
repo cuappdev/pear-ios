@@ -20,21 +20,21 @@ class InterestsViewController: UIViewController {
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
-        Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
-        Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
-        Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance"),
-        Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
-        Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
-        Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
-        Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
-        Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
-        Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
-        Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
-        Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
-        Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
-        Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
-        Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
-        Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
+        Interest(name: "Art", categories: "painting, crafts, embroidery...", image: "art"),
+        Interest(name: "Business", categories: "entrepreneurship, finance, VC...", image: "business"),
+        Interest(name: "Dance", categories: "urban, hip hop, ballet, swing...", image: "dance"),
+        Interest(name: "Design", categories: "UI/UX, graphic, print...", image: "design"),
+        Interest(name: "Fashion", categories: "", image: "fashion"),
+        Interest(name: "Fitness", categories: "working out, outdoors, basketball...", image: "fitness"),
+        Interest(name: "Food", categories: "cooking, eating, baking...", image: "food"),
+        Interest(name: "Humanities", categories: "history, politics...", image: "humanities"),
+        Interest(name: "Music", categories: "instruments, producing, acapella...", image: "music"),
+        Interest(name: "Photography", categories: "digital, analog...", image: "photography"),
+        Interest(name: "Reading", categories: "", image: "reading"),
+        Interest(name: "Sustainability", categories: "", image: "sustainability"),
+        Interest(name: "Tech", categories: "programming, web/app development...", image: "tech"),
+        Interest(name: "Travel", categories: "road trips, backpacking...", image: "travel"),
+        Interest(name: "TV & Film", categories: "", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
     private let userDefaults = UserDefaults.standard
@@ -89,9 +89,8 @@ class InterestsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let tableViewWidth: CGFloat = 295
-        let tableViewBottomPadding: CGFloat = 57
-        let tableViewTopPadding: CGFloat = 48
+        let tableViewTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+        let tableViewBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 44)
         let titleHeight: CGFloat = 30
 
         backButton.snp.makeConstraints { make in
@@ -108,7 +107,7 @@ class InterestsViewController: UIViewController {
 
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(tableViewWidth)
+            make.width.equalTo(295)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
         }
@@ -145,7 +144,7 @@ class InterestsViewController: UIViewController {
 extension InterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        return 64
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

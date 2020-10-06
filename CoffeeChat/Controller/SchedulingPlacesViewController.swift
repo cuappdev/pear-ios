@@ -124,7 +124,7 @@ class SchedulingPlacesViewController: UIViewController {
         titleLabel.text = isConfirming
             ? "Confirm preferred places"
             : isPicking ? "Pick a place to meet" : "Where do you prefer?"
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
         var scheduledTime = ""

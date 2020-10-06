@@ -1,36 +1,35 @@
 //
-//  GroupsViewController.swift
+//  InterestsGroupsViewController.swift
 //  CoffeeChat
 //
-//  Created by Lucy Xu on 2/9/20.
+//  Created by Lucy Xu on 10/1/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
 import UIKit
-import SnapKit
 
-class GroupsViewController: UIViewController {
+class InterestsGroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "AppDev", subtitle: nil),
-        SimpleOnboardingCell(name: "DTI", subtitle: nil),
-        SimpleOnboardingCell(name: "Guac Magazine", subtitle: nil),
-        SimpleOnboardingCell(name: "GCC", subtitle: nil),
-        SimpleOnboardingCell(name: "GVC", subtitle: nil),
-        SimpleOnboardingCell(name: "CUABS", subtitle: nil),
+    private var displayedInterestsGroups: [SimpleOnboardingCell] = []
+    private var interestsGroups: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "Art", subtitle: "painting, crafts, embroidery..."),
+        SimpleOnboardingCell(name: "Business", subtitle: "entrepreneurship, finance, VC..."),
+        SimpleOnboardingCell(name: "Cornell AppDev", subtitle: nil),
         SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
-        SimpleOnboardingCell(name: "CUSD", subtitle: nil)
+        SimpleOnboardingCell(name: "Cornell Venture Capital", subtitle: nil),
+        SimpleOnboardingCell(name: "Medium Design Collective", subtitle: nil),
+        SimpleOnboardingCell(name: "Women in Computing at Cornell", subtitle: nil),
+        SimpleOnboardingCell(name: "Design and Tech Initiative", subtitle: nil)
     ]
-    private var selectedGroups: [SimpleOnboardingCell] = []
+    private var selectedInterestsGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let clubLabel = UILabel()
+    private let titleLabel = UILabel()
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
@@ -55,7 +54,7 @@ class GroupsViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Search interests and groups"
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._16CircularStdBook
@@ -69,12 +68,13 @@ class GroupsViewController: UIViewController {
         fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
+        titleLabel.text = "What do you most want\nto talk about?"
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
+        titleLabel.font = ._24CircularStdMedium
+        view.addSubview(titleLabel)
 
-        clubLabel.text = "What are you a part of?"
-        clubLabel.font = ._24CircularStdMedium
-        view.addSubview(clubLabel)
-
-        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitle("Almost there", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -84,35 +84,35 @@ class GroupsViewController: UIViewController {
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
-        skipButton.setTitle("I'll add later", for: .normal)
+        skipButton.setTitle("Skip", for: .normal)
         skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        displayedGroups = groups
+        displayedInterestsGroups = interestsGroups
 
         setupConstraints()
     }
 
     private func setupConstraints() {
-        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+        let backSize = CGSize(width: 86, height: 20)
+        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
 
         backButton.snp.makeConstraints { make in
-            make.centerY.equalTo(clubLabel)
+            make.top.equalTo(titleLabel).offset(6)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
 
-        clubLabel.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(30)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(searchBarTopPadding)
+            make.top.equalTo(titleLabel.snp.bottom).offset(searchBarTopPadding)
             make.size.equalTo(CGSize(width: 295, height: 40))
         }
 
@@ -130,107 +130,87 @@ class GroupsViewController: UIViewController {
         }
 
         skipButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 86, height: 20))
+            make.size.equalTo(backSize)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
-    }
 
-    // MARK: - Search Bar
+    }
 
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
-        displayedGroups = searchText.isEmpty
-            ? groups
-            : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        displayedInterestsGroups = searchText.isEmpty
+            ? interestsGroups
+            : interestsGroups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         fadeTableView.tableView.reloadData()
     }
 
     // MARK: - Next and Previous Buttons
-    /// Updates the enabled state of next button based on the state of selectedGroups.
+    /// Updates the enabled state of next button based on the state of selectedInterestsGroups.
     private func updateNext() {
-        nextButton.isEnabled = selectedGroups.count > 0
+        nextButton.isEnabled = selectedInterestsGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        skipButton.isEnabled = selectedGroups.count == 0
+        skipButton.isEnabled = selectedInterestsGroups.count == 0
         let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
         skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {
-        delegate?.backPage(index: 1)
+        delegate?.backPage(index: 3)
     }
 
     @objc func nextButtonPressed() {
-        let userGroups = selectedGroups.map { $0.name }
-        userDefaults.set(userGroups, forKey: Constants.UserDefaults.userClubs)
-        updateUser()
-        delegate?.nextPage(index: 3)
+        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        let homeVC = HomeViewController()
+        navigationController?.pushViewController(homeVC, animated: true)
     }
 
     @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 3)
-    }
-
-
-    private func updateUser() {
-        if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
-           let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
-           let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
-           let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],
-           let major = userDefaults.string(forKey: Constants.UserDefaults.userMajor),
-           let pronouns = userDefaults.string(forKey: Constants.UserDefaults.userPronouns) {
-            NetworkManager.shared.updateUser(clubs: clubs,
-                                             graduationYear: graduationYear,
-                                             hometown: hometown,
-                                             interests: interests,
-                                             major: major,
-                                             pronouns: pronouns).observe { result in
-                switch result {
-                case .value(let response):
-                    print(response)
-                case .error(let error):
-                    print(error)
-                }
-            }
-        }
+        let homeVC = HomeViewController()
+        navigationController?.pushViewController(homeVC, animated: true)
     }
 
 }
 
 // MARK: - TableViewDelegate
-extension GroupsViewController: UITableViewDelegate {
+extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        if let _ = interestsGroups[indexPath.row].subtitle {
+            return 61
+        } else {
+            return 54
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedGroups.count
+        return displayedInterestsGroups.count
     }
 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedGroups.append(displayedGroups[indexPath.row])
+        selectedInterestsGroups.append(displayedInterestsGroups[indexPath.row])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
+        selectedInterestsGroups.removeAll { $0.name == displayedInterestsGroups[indexPath.row].name}
         updateNext()
     }
 
 }
 
 // MARK: - TableViewDataSource
-extension GroupsViewController: UITableViewDataSource {
+extension InterestsGroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier:
+                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
-        let data = displayedGroups[indexPath.row]
+        let data = displayedInterestsGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedGroups.contains(where: { $0.name == data.name }) {
+        if selectedInterestsGroups.contains(where: { $0.name == data.name }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell
@@ -239,7 +219,7 @@ extension GroupsViewController: UITableViewDataSource {
 }
 
 // MARK: - SearchBarDelegate
-extension GroupsViewController: UISearchBarDelegate {
+extension InterestsGroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterTableView(searchText: searchText)

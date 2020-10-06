@@ -22,6 +22,7 @@ class OnboardingPageViewController: UIPageViewController {
     private var goalsViewController: GoalsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: InterestsViewController!
+    private var interestsGroupsViewController: InterestsGroupsViewController!
     private var onboardingPages = [UIViewController]()
 
     // MARK: - Private Data Vars
@@ -47,13 +48,15 @@ class OnboardingPageViewController: UIPageViewController {
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = InterestsViewController(delegate: self)
+        interestsGroupsViewController = InterestsGroupsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         goalsViewController = GoalsViewController(delegate: self)
         onboardingPages = [
             demographicsViewController,
             interestsViewController,
             groupsViewController,
-            goalsViewController
+            goalsViewController,
+            interestsGroupsViewController
         ]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
