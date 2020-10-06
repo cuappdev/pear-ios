@@ -45,7 +45,11 @@ class MeetupStatusView: UIView {
         case .waitingOn(let user):
             setupForWaiting(for: user)
         case .chatScheduled(let user, let date):
-            setupForChatScheduled(on: date, for: user)
+            if isTommorow(date) {
+                setupForDayBeforeMeeting(on: date)
+            } else {
+                setupForChatScheduled(on: date, for: user)
+            }
         case .cancelled(let user):
             setupForChatCancelled(with: user)
         case .noResponses:
@@ -107,6 +111,7 @@ class MeetupStatusView: UIView {
         addSubview(statusLabel)
 
         statusImageView.image = UIImage(named: "happyPear")
+        statusImageView.contentMode = .scaleAspectFit
         addSubview(statusImageView)
 
         messageTextView.backgroundColor = .clear
@@ -233,7 +238,7 @@ class MeetupStatusView: UIView {
         let cancelledText = unformattedText(for: "Oh no, it looks like your schedules don’t line up 😢 I hope it works out next time!")
 
         if user.instagram != nil || user.facebook != nil {
-            cancelledText.append(unformattedText(for: "You can still reach Maggie on "))
+            cancelledText.append(unformattedText(for: "\nYou can still reach Maggie on "))
            cancelledText.append(textForSocialMedia(facebook: user.facebook, instagram: user.instagram))
             cancelledText.append(unformattedText(for: "."))
         }
@@ -285,7 +290,7 @@ class MeetupStatusView: UIView {
     */
     private func formatDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "M/d 'at' h:m a"
+        dateFormatter.dateFormat = "M/d 'at' h:mm a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         dateFormatter.timeZone = TimeZone(identifier: "America/New_York")!
@@ -305,10 +310,10 @@ class MeetupStatusView: UIView {
     If today is October 4th 12:00 PM and the meeting is October 6th 12:00 PM this returns false
     If today is October 4th 1:00 AM and the meeting is October 5th 11:00 PM this returns true
     */
-    private func isTommorow(meeting: Date) -> Bool {
+    private func isTommorow(_ date: Date) -> Bool {
         if
-        let today = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date()),
-        let meetingDate = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: meeting)
+            let today = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date()),
+            let meetingDate = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: date)
         {
             if let dayDifference = Calendar.current.dateComponents([.day], from: today, to: meetingDate).day {
                 return dayDifference <= 1

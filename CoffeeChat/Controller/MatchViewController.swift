@@ -67,7 +67,7 @@ class MatchViewController: UIViewController {
                         interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
                         pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
 
-        if hasReachedOut {
+        if !hasReachedOut {
             reachOutButton = UIButton()
             if let reachOutButton = reachOutButton {
                 reachOutButton.backgroundColor = .backgroundOrange
@@ -80,7 +80,7 @@ class MatchViewController: UIViewController {
             }
         }
 
-        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date())) // TODO change based on chat status
+        meetupStatusView = MeetupStatusView(for: .cancelled(user)) // TODO change based on chat status
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
