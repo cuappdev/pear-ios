@@ -160,14 +160,11 @@ class InterestsGroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 5)
     }
 
     @objc func skipButtonPressed() {
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 5)
     }
 
 }

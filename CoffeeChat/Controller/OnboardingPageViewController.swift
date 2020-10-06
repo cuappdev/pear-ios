@@ -24,6 +24,7 @@ class OnboardingPageViewController: UIPageViewController {
     private var interestsViewController: InterestsViewController!
     private var interestsGroupsViewController: InterestsGroupsViewController!
     private var onboardingPages = [UIViewController]()
+    private var socialMediaViewController: SocialMediaViewController!
 
     // MARK: - Private Data Vars
     private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
@@ -51,12 +52,14 @@ class OnboardingPageViewController: UIPageViewController {
         interestsGroupsViewController = InterestsGroupsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         goalsViewController = GoalsViewController(delegate: self)
+        socialMediaViewController = SocialMediaViewController(delegate: self)
         onboardingPages = [
             demographicsViewController,
             interestsViewController,
             groupsViewController,
             goalsViewController,
-            interestsGroupsViewController
+            interestsGroupsViewController,
+            socialMediaViewController
         ]
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)

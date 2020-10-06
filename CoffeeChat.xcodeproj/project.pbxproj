@@ -72,6 +72,7 @@
 		D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */; };
 		D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */; };
 		D4D3EFF223FE546B00229587 /* LayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D3EFF123FE546B00229587 /* LayoutHelper.swift */; };
+		D4FFD108252BE0780036C4B2 /* SocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */; };
 		F6684FC13217004C9B598811 /* Pods_CoffeeChat_CoffeeChatUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0F9EB58139A53CDF08D3CA /* Pods_CoffeeChat_CoffeeChatUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -169,6 +170,7 @@
 		D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoMatchViewController.swift; sourceTree = "<group>"; };
 		D4D3EFF123FE546B00229587 /* LayoutHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutHelper.swift; sourceTree = "<group>"; };
+		D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaViewController.swift; sourceTree = "<group>"; };
 		FA0F9EB58139A53CDF08D3CA /* Pods_CoffeeChat_CoffeeChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoffeeChat_CoffeeChatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2ACF261DD961E7CFB699AD /* Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat-CoffeeChatUITests/Pods-CoffeeChat-CoffeeChatUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -305,6 +307,7 @@
 				D429619F2526246600C677C3 /* HomeViewController.swift */,
 				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
 				D498CFE125265FB200F2E2ED /* CommunityViewController.swift */,
+				D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -740,6 +743,7 @@
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 				D42961A02526246600C677C3 /* HomeViewController.swift in Sources */,
 				D47FF18B24597CA800808A9A /* Body.swift in Sources */,
+				D4FFD108252BE0780036C4B2 /* SocialMediaViewController.swift in Sources */,
 				303F81A624395F63002937CD /* MenuOption.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
