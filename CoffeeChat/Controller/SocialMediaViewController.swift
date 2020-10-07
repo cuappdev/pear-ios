@@ -17,12 +17,14 @@ class SocialMediaViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let disclaimerLabel = UILabel()
+//    private var facebookTextField = UITextField()
+//    private var instagramTextField = UITextField()
+    private var facebookTextField: UITextField!
+    private var instagramTextField: UITextField!
     private let nextButton = UIButton()
+    private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
-    private let skipButton = UIButton()
-    private let instagramTextField = UITextField()
-    private let facebookTextField = UITextField()
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -51,40 +53,18 @@ class SocialMediaViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        instagramTextField.backgroundColor = .backgroundWhite
-        instagramTextField.textColor = .black
-        instagramTextField.font = ._20CircularStdBook
-        instagramTextField.placeholder = "@Instagram Handle"
-        instagramTextField.clearButtonMode = .never
-        instagramTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        instagramTextField = getSocialMediaTextField()
+        instagramTextField.placeholder = "@Instagram handle"
         let instagramImageView = UIImageView(image: UIImage(named: "instagram"))
         instagramImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         instagramTextField.addSubview(instagramImageView)
-        instagramTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
-        instagramTextField.leftViewMode = .always
-        instagramTextField.layer.cornerRadius = 8
-        instagramTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        instagramTextField.layer.shadowOpacity = 1
-        instagramTextField.layer.shadowRadius = 4
-        instagramTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.addSubview(instagramTextField)
 
-        facebookTextField.backgroundColor = .backgroundWhite
-        facebookTextField.textColor = .black
-        facebookTextField.font = ._20CircularStdBook
+        facebookTextField = getSocialMediaTextField()
         facebookTextField.placeholder = "Facebook profile link"
-        facebookTextField.clearButtonMode = .never
-        facebookTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let facebookImageView = UIImageView(image: UIImage(named: "facebook"))
         facebookImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         facebookTextField.addSubview(facebookImageView)
-        facebookTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
-        facebookTextField.leftViewMode = .always
-        facebookTextField.layer.cornerRadius = 8
-        facebookTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        facebookTextField.layer.shadowOpacity = 1
-        facebookTextField.layer.shadowRadius = 4
-        facebookTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.addSubview(facebookTextField)
 
         disclaimerLabel.text = "Your information will only be shared with the verified Cornell students you are paired with."
@@ -114,6 +94,23 @@ class SocialMediaViewController: UIViewController {
         setupConstraints()
     }
 
+    private func getSocialMediaTextField() -> UITextField {
+        let socialMediaTextField = UITextField()
+        socialMediaTextField.backgroundColor = .backgroundWhite
+        socialMediaTextField.textColor = .black
+        socialMediaTextField.font = ._20CircularStdBook
+        socialMediaTextField.clearButtonMode = .never
+        socialMediaTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        socialMediaTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
+        socialMediaTextField.leftViewMode = .always
+        socialMediaTextField.layer.cornerRadius = 8
+        socialMediaTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        socialMediaTextField.layer.shadowOpacity = 1
+        socialMediaTextField.layer.shadowRadius = 4
+        socialMediaTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
+        return socialMediaTextField
+    }
+
     private func setupConstraints() {
 
         backButton.snp.makeConstraints { make in
@@ -125,7 +122,9 @@ class SocialMediaViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(CGSize(width: 318, height: 61))
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
+            make.top
+                .equalTo(view.safeAreaLayoutGuide)
+                .offset(Constants.Onboarding.titleLabelPadding)
         }
 
         subtitleLabel.snp.makeConstraints { make in
@@ -165,12 +164,13 @@ class SocialMediaViewController: UIViewController {
 
     }
 
-
     // MARK: - Next and Previous Buttons
     private func updateNext() {
 
         guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
-        let isSocialMediaEntered = instagramHandle.trimmingCharacters(in: .whitespaces) != "" && facebookHandle.trimmingCharacters(in: .whitespaces) != ""
+        let isSocialMediaEntered =
+            instagramHandle.trimmingCharacters(in: .whitespaces) != "" &&
+            facebookHandle.trimmingCharacters(in: .whitespaces) != ""
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = !nextButton.isEnabled
