@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "reached-out.png",
+      "filename" : "newPear1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "reached-out-1.png",
+      "filename" : "newPear2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

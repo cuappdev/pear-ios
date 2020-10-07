@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "scheduled.png",
+      "filename" : "schedule1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "scheduled-1.png",
+      "filename" : "schedule2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

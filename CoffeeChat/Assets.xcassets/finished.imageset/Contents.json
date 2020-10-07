@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "finished.png",
+      "filename" : "finished2x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "finished-1.png",
+      "filename" : "finished1x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

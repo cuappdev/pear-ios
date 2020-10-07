@@ -14,13 +14,13 @@ class MatchViewController: UIViewController {
     private let hasReachedOut: Bool
 
     private let matchDemographicsLabel = UILabel()
-    private let matchProfileBackgroundView = UIStackView()
     private let matchNameLabel = UILabel()
+    private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
 
-    private var reachOutButton: UIButton?
     private var meetupStatusView: MeetupStatusView?
+    private var reachOutButton = UIButton()
 
     private let imageSize = CGSize(width: 120, height: 120)
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
@@ -44,7 +44,7 @@ class MatchViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     override func viewDidLoad() {
@@ -67,20 +67,18 @@ class MatchViewController: UIViewController {
                         interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
                         pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
 
+        reachOutButton = UIButton()
+        reachOutButton.backgroundColor = .backgroundOrange
+        reachOutButton.setTitleColor(.white, for: .normal)
+        reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
+        reachOutButton.titleLabel?.font = ._20CircularStdBold
+        reachOutButton.setTitle("Pick a time", for: .normal) // TODO change text based on whether responding
+        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
         if !hasReachedOut {
-            reachOutButton = UIButton()
-            if let reachOutButton = reachOutButton {
-                reachOutButton.backgroundColor = .backgroundOrange
-                reachOutButton.setTitleColor(.white, for: .normal)
-                reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
-                reachOutButton.titleLabel?.font = ._20CircularStdBold
-                reachOutButton.setTitle("Pick a time", for: .normal) // TODO change text based on whether responding
-                reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-                view.addSubview(reachOutButton)
-            }
+            view.addSubview(reachOutButton)
         }
 
-        meetupStatusView = MeetupStatusView(for: .cancelled(user)) // TODO change based on chat status
+        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date.distantFuture)) // TODO change based on chat status
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
@@ -114,18 +112,16 @@ class MatchViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let padding: CGFloat = 35
-        let reachOutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
-        let logoutPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 30)
+        let padding = 35
+        let reachOutPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
         let meetupPadding = 24
         let meetupWidth: CGFloat = 319
-        let matchSummaryBottomPadding = 46
 
         meetupStatusView?.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(meetupPadding)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
             make.width.equalTo(meetupWidth)
-            make.height.equalTo(meetupStatusView!.getRecommendedHeight(for: meetupWidth))
+            make.height.equalTo(meetupStatusView?.getRecommendedHeight(for: meetupWidth) ?? 0)
         }
 
         matchProfileImageView.snp.makeConstraints { make in
@@ -146,7 +142,7 @@ class MatchViewController: UIViewController {
 
         matchSummaryTableView.snp.makeConstraints { make in
             make.top.equalTo(matchProfileBackgroundView.snp.bottom).offset(padding)
-            if let reachOutButton = reachOutButton {
+            if !hasReachedOut {
                 make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
             } else {
                 make.bottom.equalToSuperview().inset(padding)
@@ -154,10 +150,12 @@ class MatchViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(padding)
         }
 
-        reachOutButton?.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
-            make.centerX.equalToSuperview()
-            make.size.equalTo(reachOutButtonSize)
+        if !hasReachedOut {
+            reachOutButton.snp.makeConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
+                make.centerX.equalToSuperview()
+                make.size.equalTo(reachOutButtonSize)
+            }
         }
 
     }
