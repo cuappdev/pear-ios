@@ -34,11 +34,11 @@ class SchedulingTimeViewController: UIViewController {
         case evening = "Evening"
         case morning = "Morning"
     }
-    
+
     private enum ItemType {
         case header(String)
         case time(String)
-        
+
         func getTime() -> String? {
             switch self {
             case .time(let time):
@@ -181,7 +181,7 @@ class SchedulingTimeViewController: UIViewController {
         nextButton.layer.cornerRadius = nextButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
-        
+
         noTimesWorkButton.setTitle("No times work", for: .normal)
         noTimesWorkButton.setTitleColor(.darkGreen, for: .normal)
         noTimesWorkButton.titleLabel?.font = ._16CircularStdMedium
@@ -214,7 +214,7 @@ class SchedulingTimeViewController: UIViewController {
         let afternoonSection = Section(type: .afternoon, items: afternoonItems)
         let eveningSection = Section(type: .evening, items: eveningItems)
         let morningSection = Section(type: .morning, items: morningItems)
-        
+
         timeSections = []
         if !morningTimes.isEmpty {
             timeSections.append(morningSection)
@@ -266,27 +266,27 @@ class SchedulingTimeViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.size.equalTo(nextButtonSize)
         }
-        
+
         if isPicking {
             infoLabel.snp.makeConstraints { make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(5)
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(20)
             }
-            
+
             noTimesWorkButton.snp.makeConstraints { make in
                 make.top.equalTo(nextButton.snp.bottom).offset(10)
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(20)
             }
         }
-        
+
         setupTimeCollectionViewConstraints()
     }
-    
+
     private func setupTimeCollectionViewConstraints() {
         let timeCollectionViewWidth = timeSections.count * 105
-        
+
         timeCollectionView.snp.updateConstraints { update in
             update.top.equalTo(dayLabel.snp.bottom).offset(8)
             update.bottom.equalTo(nextButton.snp.top).offset(-20)
@@ -294,7 +294,7 @@ class SchedulingTimeViewController: UIViewController {
             update.width.equalTo(timeCollectionViewWidth)
         }
     }
-    
+
     private func setupErrorMessageAlert() {
         errorMessageAlertView = MessageAlertView(
             delegate: self,
@@ -441,7 +441,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             updateNextButton()
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if collectionView == timeCollectionView {
             let section = timeSections[indexPath.section]
