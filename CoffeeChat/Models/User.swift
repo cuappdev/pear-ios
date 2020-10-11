@@ -22,5 +22,7 @@ struct User: Codable {
     let netID: String
     let profilePictureURL: String
     let pronouns: String
+    let facebook: String?
+    let instagram: String?
 
 }
