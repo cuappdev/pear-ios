@@ -97,7 +97,7 @@ class MeetupStatusView: UIView {
         messageTextView.font = UIFont._16CircularStdMedium
         messageTextView.isEditable = false
         messageTextView.isScrollEnabled = false
-        messageTextView.textColor = .textBlack
+        messageTextView.textColor = .black
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = .zero
         messageTextView.tintColor = .textGreen
@@ -261,7 +261,7 @@ fileprivate extension NSMutableAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont._16CircularStdMedium as Any,
             .paragraphStyle: createParagraphStyle(),
-            .foregroundColor: UIColor.textBlack
+            .foregroundColor: UIColor.black
         ]
         self.append(NSMutableAttributedString(string: string, attributes: attributes))
         return self
@@ -272,8 +272,9 @@ fileprivate extension NSMutableAttributedString {
             .font: UIFont._16CircularStdMedium as Any,
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .paragraphStyle: createParagraphStyle(),
-            .foregroundColor: UIColor.textBlack
+            .foregroundColor: UIColor.black
         ]
+
         self.append(NSMutableAttributedString(string: string, attributes: attributes))
         return self
     }
