@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "onboardingBackground1x.png",
+      "filename" : "facebook1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "facebook2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "facebook3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

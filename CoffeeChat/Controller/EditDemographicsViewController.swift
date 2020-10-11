@@ -96,7 +96,7 @@ class EditDemographicsViewController: UIViewController {
         nameTextField.delegate = self
         nameTextField.tag = 0
         nameTextField.backgroundColor = .backgroundWhite
-        nameTextField.textColor = .textBlack
+        nameTextField.textColor = .black
         nameTextField.font = ._20CircularStdBook
         nameTextField.text = name
         nameTextField.clearButtonMode = .never

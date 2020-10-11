@@ -24,7 +24,7 @@ class MatchSummaryTableViewCell: UITableViewCell {
         titleLabel.font = ._20CircularStdBook
         contentView.addSubview(titleLabel)
         
-        detailLabel.textColor = .textBlack
+        detailLabel.textColor = .black
         detailLabel.font = ._20CircularStdMedium
         detailLabel.numberOfLines = 0
         contentView.addSubview(detailLabel)

@@ -53,15 +53,12 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         navigationController?.navigationBar.isHidden = true
 
-        titleLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!"
-        titleLabel.textColor = .textBlack
+        titleLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
+        titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
         view.addSubview(titleLabel)
-
-        greetingLabel.text = "Let's get to know you better."
-        greetingLabel.textColor = .textBlack
-        greetingLabel.font = ._24CircularStdMedium
-        view.addSubview(greetingLabel)
 
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -106,25 +103,18 @@ class DemographicsViewController: UIViewController {
 
     private func setUpConstraints() {
         let fieldTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 84)
-        let titleLabelHeight: CGFloat = 30
         let textFieldSidePadding: CGFloat = 40
-        let textFieldTopPadding: CGFloat = 20
-        let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
+        let textFieldTotalPadding: CGFloat = textFieldHeight + 20
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(titleLabelHeight)
+            make.leading.trailing.equalToSuperview().inset(29)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
-        }
-
-        greetingLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
 
         classDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(greetingLabel.snp.bottom).offset(fieldTopPadding)
+            make.top.equalTo(titleLabel.snp.bottom).offset(fieldTopPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }

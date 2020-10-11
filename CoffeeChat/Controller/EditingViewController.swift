@@ -415,7 +415,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         let primaryAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont._20CircularStdMedium as Any,
             .paragraphStyle: style,
-            .foregroundColor: UIColor.textBlack
+            .foregroundColor: UIColor.black
         ]
         let secondaryAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont._12CircularStdBook as Any,
@@ -452,7 +452,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         searchBar.backgroundImage = UIImage()
 
         searchBar.searchTextField.backgroundColor = .backgroundWhite
-        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
         searchBar.searchTextField.clearButtonMode = .never
 

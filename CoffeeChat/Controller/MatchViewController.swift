@@ -88,7 +88,7 @@ class MatchViewController: UIViewController {
         view.addSubview(matchProfileBackgroundView)
 
         matchNameLabel.text = "\(firstName)\n\(lastName)"
-        matchNameLabel.textColor = .textBlack
+        matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
