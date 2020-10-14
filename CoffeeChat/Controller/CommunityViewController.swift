@@ -10,23 +10,67 @@ import UIKit
 
 class CommunityViewController: UIViewController {
 
+    private let communityTableView = UITableView()
+    private let users: [User] = [
+        User(
+            clubs: ["AppDev"],
+            firstName: "Lucy",
+            googleID: "12345",
+            graduationYear: "2021",
+            hometown: "Boston, MA",
+            interests: ["Art"],
+            lastName: "Xu",
+            major: "Computer Science",
+            matches: nil,
+            netID: "llx2",
+            profilePictureURL: "",
+            pronouns: "She/her",
+            facebook: nil,
+            instagram: nil
+        )
+    ]
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .backgroundLightGrayGreen
+        view.backgroundColor = .backgroundLightGreen
 
-        // Do any additional setup after loading the view.
+        communityTableView.delegate = self
+        communityTableView.dataSource = self
+        communityTableView.separatorStyle = .none
+        communityTableView.backgroundColor = .clear
+        communityTableView.rowHeight = UITableView.automaticDimension
+        communityTableView.estimatedRowHeight = 140
+        communityTableView.setNeedsLayout()
+        communityTableView.layoutIfNeeded()
+        view.addSubview(communityTableView)
+
+        setupConstraints()
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func setupConstraints() {
+        communityTableView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(24)
+            make.top.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview()
+        }
     }
-    */
 
 }
+
+extension CommunityViewController: UITableViewDelegate {
+
+}
+
+extension CommunityViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return users.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+
+
+}
+

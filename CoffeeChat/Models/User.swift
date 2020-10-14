@@ -18,7 +18,7 @@ struct User: Codable {
     let interests: [String]
     let lastName: String
     let major: String
-    let matches: [Matching]
+    let matches: [Matching]?
     let netID: String
     let profilePictureURL: String
     let pronouns: String
