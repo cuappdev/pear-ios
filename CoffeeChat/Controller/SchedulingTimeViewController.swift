@@ -20,7 +20,7 @@ class SchedulingTimeViewController: UIViewController {
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
-    private var timeCollectionView: UICollectionView!
+    private var timeCollectionView: FadeWrapperView<UICollectionView>!
     private let titleLabel = UILabel()
 
     // MARK: - Section
@@ -124,7 +124,7 @@ class SchedulingTimeViewController: UIViewController {
             setupTimes(for: firstDay, isFirstTime: true)
         }
 
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
@@ -166,12 +166,16 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionViewLayout.sectionInset = sectionInsets
         timeCollectionViewLayout.scrollDirection = .horizontal
 
-        timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
-        timeCollectionView.allowsMultipleSelection = !isPicking
-        timeCollectionView.backgroundColor = .clear
-        timeCollectionView.dataSource = self
-        timeCollectionView.delegate = self
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        let timeCV = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
+        timeCV.allowsMultipleSelection = !isPicking
+        timeCV.backgroundColor = .clear
+        timeCV.dataSource = self
+        timeCV.delegate = self
+        timeCV.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        timeCV.isScrollEnabled = true
+
+        timeCollectionView = FadeWrapperView(timeCV, fadeColor: .backgroundLightGreen)
+        timeCollectionView.fadePositions = [.bottom]
         view.addSubview(timeCollectionView)
 
         nextButton.setTitle("Next", for: .normal)
@@ -399,11 +403,11 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
                 if let day = daysDict[selectedDay] {
                     if isPicking,
                         pickedTime.time == time && pickedTime.day == day {
-                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                        timeCollectionView.view.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     } else if let dayAvailability = availabilities[day],
                         dayAvailability.contains(time) {
-                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                        timeCollectionView.view.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     }
                 }
@@ -423,7 +427,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             if isPicking, let day = daysDict[selectedDay] {
                 setupTimes(for: day, isFirstTime: false)
             }
-            timeCollectionView.reloadData()
+            timeCollectionView.view.reloadData()
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]

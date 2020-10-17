@@ -1,4 +1,3 @@
-//
 //  OnboardingPageViewController.swift
 //  CoffeeChat
 //

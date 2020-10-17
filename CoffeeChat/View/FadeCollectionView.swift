@@ -1,17 +1,17 @@
 //
-//  FadeTableView.swift
+//  FadeCollectionView.swift
 //  CoffeeChat
 //
-//  Created by Phillip OReggio on 9/9/20.
+//  Created by Phillip OReggio on 10/15/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
 import UIKit
 
-/// UITableView that fades its top and bottom based on `fadeColor` to make the edges blend in with the background
-class FadeTableView: UIView {
+// TODO make a fade variant of this
+class FadeCollectionView: UIView {
 
-    let tableView = UITableView(frame: .zero, style: .plain)
+    let collectionView: UICollectionView
 
     private let fadeColor: UIColor
     private let transparentColor: UIColor
@@ -19,15 +19,19 @@ class FadeTableView: UIView {
     private let topFadeView = UIView()
     private let bottomFadeView = UIView()
 
-    init(fadeColor: UIColor) {
+    private let fadePosition: FadePosition
+
+    init(collectionViewLayout: UICollectionViewLayout, fadeColor: UIColor, fadePosition: FadePosition) {
         self.fadeColor = fadeColor
         self.transparentColor = UIColor(cgColor: fadeColor.withAlphaComponent(0).cgColor)
+        self.fadePosition = fadePosition
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         super.init(frame: .zero)
 
-        addSubview(tableView)
+        addSubview(collectionView)
         addSubview(topFadeView)
         addSubview(bottomFadeView)
-        setupTableView()
+        setupViews()
         setupConstraints()
     }
 
@@ -55,34 +59,31 @@ class FadeTableView: UIView {
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
 
-    private func setupTableView() {
-        tableView.clipsToBounds = true
-        tableView.backgroundColor = .none
-        tableView.allowsMultipleSelection = true
-        tableView.bounces = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+    private func setupViews() {
+        collectionView.backgroundColor = .clear
+
+        topFadeView.isHidden = fadePosition == .bottom
+        bottomFadeView.isHidden = fadePosition == .top
+        print("top hidden? \(topFadeView.isHidden) , bottom hidden: \(bottomFadeView.isHidden)")
     }
 
     private func setupConstraints() {
         let topFadeHeight: CGFloat = 10
-        let bottomFadeHeight: CGFloat = 26
+        let bottomFadeHeight: CGFloat = 44
 
-        tableView.snp.makeConstraints { make in
+        collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
         topFadeView.snp.makeConstraints { make in
-            make.top.leading.trailing.width.equalTo(tableView)
+            make.top.leading.trailing.width.equalTo(collectionView)
             make.height.equalTo(topFadeHeight)
         }
 
         bottomFadeView.snp.makeConstraints { make in
-            make.top.leading.trailing.width.equalTo(tableView)
+            make.bottom.leading.trailing.width.equalTo(collectionView)
             make.height.equalTo(bottomFadeHeight)
         }
     }
-}
 
+}
