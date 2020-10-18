@@ -14,10 +14,12 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
     // MARK: - Private View Vars
     private let interestTagLabel = UILabel()
 
+    static let reuseIdentifier = "InterestTagCollectionViewCell"
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = false
-        layer.cornerRadius = 12
+        layer.cornerRadius = 11
         backgroundColor = .paleGreen
 
         interestTagLabel.textAlignment = .center

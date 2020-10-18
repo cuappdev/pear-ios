@@ -15,6 +15,9 @@ class CommunityUserTableViewCell: UITableViewCell {
     private let nameLabel = UILabel()
     private let informationLabel = UILabel()
     private var interestsCollectionView: SelfSizingCollectionView!
+    private var interests: [String] = []
+
+    static let reuseIdentifier = "CommunityUserTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -48,7 +51,7 @@ class CommunityUserTableViewCell: UITableViewCell {
             frame: CGRect(x: 0, y: 0, width: frame.width, height: 0),
             collectionViewLayout: tagsCollectionViewLayout)
         interestsCollectionView.backgroundColor = .clear
-        interestsCollectionView.register(InterestTagCollectionViewCell.self, forCellWithReuseIdentifier: "tagCellReuseIdentifier")
+        interestsCollectionView.register(InterestTagCollectionViewCell.self, forCellWithReuseIdentifier: InterestTagCollectionViewCell.reuseIdentifier)
         interestsCollectionView.dataSource = self
         interestsCollectionView.delegate = self
         interestsCollectionView.layoutIfNeeded()
@@ -80,7 +83,13 @@ class CommunityUserTableViewCell: UITableViewCell {
         informationLabel.snp.makeConstraints { make in
             make.leading.trailing.equalTo(nameLabel)
             make.height.equalTo(13)
-            make.top.equalTo(nameLabel.snp.bottom)
+            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+        }
+
+        interestsCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(nameLabel)
+            make.top.equalTo(informationLabel.snp.bottom).offset(8)
+            make.bottom.equalTo(containerView).inset(12)
         }
 
     }
@@ -88,7 +97,8 @@ class CommunityUserTableViewCell: UITableViewCell {
     func configure(with user: User) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         informationLabel.text = "\(user.major) · \(user.graduationYear) · \(user.hometown) · \(user.pronouns)"
-
+        interests = user.interests
+        interestsCollectionView.reloadData()
     }
 
     required init?(coder: NSCoder) {
@@ -99,12 +109,29 @@ class CommunityUserTableViewCell: UITableViewCell {
 
 extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return interests.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InterestTagCollectionViewCell.reuseIdentifier, for: indexPath) as?
+                InterestTagCollectionViewCell else { return UICollectionViewCell() }
+        let interest = interests[indexPath.row]
+        cell.configure(with: interest)
+        return cell
+    }
+}
+
+extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
+    func calculateNecessaryWidth(text: String) -> CGFloat {
+        let label = UILabel()
+        label.text = text
+        label.font = .systemFont(ofSize: 12)
+        label.sizeToFit()
+        return label.frame.width
     }
 
-
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let totalHorizontalPadding: CGFloat = 16
+        return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item]) + totalHorizontalPadding, height: 19)
+    }
 }

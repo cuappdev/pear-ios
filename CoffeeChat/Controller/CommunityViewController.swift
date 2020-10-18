@@ -19,7 +19,7 @@ class CommunityViewController: UIViewController {
             googleID: "12345",
             graduationYear: "2021",
             hometown: "Boston, MA",
-            interests: ["Art"],
+            interests: ["Art", "AppDev", "DTI"],
             lastName: "Xu",
             major: "Computer Science",
             matches: nil,
@@ -31,12 +31,12 @@ class CommunityViewController: UIViewController {
         ),
         User(
             clubs: ["AppDev"],
-            firstName: "Lucy",
+            firstName: "Cindy",
             googleID: "12345",
-            graduationYear: "2021",
+            graduationYear: "2022",
             hometown: "Boston, MA",
-            interests: ["Art"],
-            lastName: "Xu",
+            interests: ["Art", "Art", "Netflix", "Netflix", "Writing", "Art", "Netflix", "Netflix", "Art", "Art"],
+            lastName: "Shuang",
             major: "Computer Science",
             matches: nil,
             netID: "llx2",
@@ -47,17 +47,17 @@ class CommunityViewController: UIViewController {
         ),
         User(
             clubs: ["AppDev"],
-            firstName: "Lucy",
+            firstName: "Manish",
             googleID: "12345",
             graduationYear: "2021",
             hometown: "Boston, MA",
-            interests: ["Art"],
-            lastName: "Xu",
+            interests: ["Art", "ABC", "Chill", "Box", "Long", "Array"],
+            lastName: "Shah",
             major: "Computer Science",
             matches: nil,
             netID: "llx2",
             profilePictureURL: "",
-            pronouns: "She/her",
+            pronouns: "He/Him",
             facebook: nil,
             instagram: nil
         )
@@ -91,7 +91,7 @@ class CommunityViewController: UIViewController {
         communityTableView.rowHeight = UITableView.automaticDimension
         communityTableView.estimatedRowHeight = 140
         communityTableView.sizeToFit()
-        communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: "communityUserReuseIdentifier")
+        communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
 
         setupConstraints()
@@ -124,7 +124,7 @@ extension CommunityViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "communityUserReuseIdentifier", for: indexPath) as? CommunityUserTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommunityUserTableViewCell.reuseIdentifier, for: indexPath) as? CommunityUserTableViewCell else {
             return UITableViewCell()
         }
         let user = users[indexPath.row]
