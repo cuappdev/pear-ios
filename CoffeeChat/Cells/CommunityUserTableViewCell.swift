@@ -29,7 +29,6 @@ class CommunityUserTableViewCell: UITableViewCell {
         containerView.layer.cornerRadius = 12
         containerView.layer.masksToBounds = true
         containerView.clipsToBounds = false
-        containerView.sizeToFit()
         contentView.addSubview(containerView)
 
         profileImageView.layer.cornerRadius = 18
@@ -47,6 +46,8 @@ class CommunityUserTableViewCell: UITableViewCell {
         containerView.addSubview(informationLabel)
 
         let tagsCollectionViewLayout = LeftAlignedFlowLayout()
+        tagsCollectionViewLayout.minimumInteritemSpacing = 4
+        tagsCollectionViewLayout.minimumLineSpacing = 4
         interestsCollectionView = SelfSizingCollectionView(
             frame: CGRect(x: 0, y: 0, width: frame.width, height: 0),
             collectionViewLayout: tagsCollectionViewLayout)
@@ -63,9 +64,9 @@ class CommunityUserTableViewCell: UITableViewCell {
     private func setupConstraints() {
 
         containerView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(contentView)
-            make.height.equalTo(120)
+            make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(contentView).inset(8)
+            make.top.equalToSuperview()
         }
 
         profileImageView.snp.makeConstraints { make in
@@ -89,7 +90,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         interestsCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(nameLabel)
             make.top.equalTo(informationLabel.snp.bottom).offset(8)
-            make.bottom.equalTo(containerView).inset(12)
+            make.bottom.equalTo(containerView).inset(8)
         }
 
     }
@@ -125,7 +126,7 @@ extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
     func calculateNecessaryWidth(text: String) -> CGFloat {
         let label = UILabel()
         label.text = text
-        label.font = .systemFont(ofSize: 12)
+        label.font = ._12CircularStdBook
         label.sizeToFit()
         return label.frame.width
     }

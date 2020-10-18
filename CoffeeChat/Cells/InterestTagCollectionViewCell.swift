@@ -23,7 +23,7 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
         backgroundColor = .paleGreen
 
         interestTagLabel.textAlignment = .center
-        interestTagLabel.font = .systemFont(ofSize: 12)
+        interestTagLabel.font = ._12CircularStdBook
         interestTagLabel.preferredMaxLayoutWidth = 120
         interestTagLabel.numberOfLines = 0
         interestTagLabel.textColor = .black

@@ -12,6 +12,7 @@ class CommunityViewController: UIViewController {
 
     private let communityTableView = UITableView()
     private let searchBar = UISearchBar()
+    // TODO: Replace with backend values
     private let users: [User] = [
         User(
             clubs: ["AppDev"],
@@ -36,7 +37,7 @@ class CommunityViewController: UIViewController {
             graduationYear: "2022",
             hometown: "Boston, MA",
             interests: ["Art", "Art", "Netflix", "Netflix", "Writing", "Art", "Netflix", "Netflix", "Art", "Art"],
-            lastName: "Shuang",
+            lastName: "Huang",
             major: "Computer Science",
             matches: nil,
             netID: "llx2",
@@ -86,6 +87,7 @@ class CommunityViewController: UIViewController {
 
         communityTableView.delegate = self
         communityTableView.dataSource = self
+        communityTableView.isScrollEnabled = true
         communityTableView.separatorStyle = .none
         communityTableView.backgroundColor = .clear
         communityTableView.rowHeight = UITableView.automaticDimension
