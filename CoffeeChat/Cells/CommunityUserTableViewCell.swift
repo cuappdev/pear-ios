@@ -100,7 +100,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         interestsCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(nameLabel)
             make.top.equalTo(informationLabel.snp.bottom).offset(bottomPadding)
-            make.bottom.equalTo(containerView).inset(bottomPadding)
+            make.bottom.equalTo(containerView).inset(topPadding)
         }
     }
 
