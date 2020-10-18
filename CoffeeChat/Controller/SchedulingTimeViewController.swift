@@ -24,6 +24,11 @@ class SchedulingTimeViewController: UIViewController {
     private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
 
+    // MARK: - Sizing
+    private let timeCellSize = CGSize(width: 88, height: 36)
+    private let timeCellVerticalSpacing: CGFloat = 8
+    private var timeCollectionViewWidth: CGFloat { get { CGFloat(timeSections.count * 105) }}
+
     // MARK: - Section
     private struct Section {
         let type: SectionType
@@ -172,22 +177,18 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
+        timeCollectionView.clipsToBounds = false
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         timeCollectionView.isScrollEnabled = false
-        //timeCV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
 
         timeScrollView = FadeWrapperView<UIScrollView>(UIScrollView(), fadeColor: .backgroundLightGreen)
-        timeScrollView.fadePositions = [.bottom]
+        timeScrollView.fadePositions = [.top, .bottom]
         timeScrollView.view.addSubview(timeCollectionView)
-        //timeScrollView.view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 200, right: 0)
-        timeScrollView.view.contentSize = CGSize(width: 300, height: 800)
         timeScrollView.view.isScrollEnabled = true
         timeScrollView.view.delegate = self
-        // prolly set content size...
+        timeScrollView.view.showsVerticalScrollIndicator = false
+        timeScrollView.view.contentInset = UIEdgeInsets(top: timeScrollView.fadeInsets.top, left: 0, bottom: timeScrollView.fadeInsets.bottom, right: 0)
         view.addSubview(timeScrollView)
-        //timeCollectionView = FadeWrapperView(timeCV, fadeColor: .backgroundLightGreen)
-        //timeCollectionView.fadePositions = [.bottom]
-        //view.addSubview(timeCollectionView)
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -300,8 +301,6 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupTimeCollectionViewConstraints() {
-        let timeCollectionViewWidth = timeSections.count * 105
-
         //timeCollectionView.snp.updateConstraints { update in
         //    update.top.equalTo(dayLabel.snp.bottom).offset(8)
         //    update.bottom.equalTo(nextButton.snp.top).offset(-20)
@@ -316,10 +315,22 @@ class SchedulingTimeViewController: UIViewController {
             update.width.equalTo(timeCollectionViewWidth)
         }
 
+        timeScrollView.view.contentSize = calculateTimesHeight()
+        print(calculateTimesHeight())
+
         timeCollectionView.snp.makeConstraints { update in
             update.top.equalTo(timeScrollView.view.snp.top)
             update.size.equalTo(timeScrollView.view.contentSize)
         }
+
+    }
+
+    private func calculateTimesHeight() -> CGSize {
+        // +1 is due to the header
+        let longestTimeCount = CGFloat(max(morningTimes.count, afternoonTimes.count, eveningTimes.count)) + 1
+        let cellsHeight = timeCellSize.height * longestTimeCount
+        let interitemHeight = timeCellVerticalSpacing * (longestTimeCount - 1)
+        return CGSize(width: timeCollectionViewWidth, height: cellsHeight + interitemHeight)
     }
 
     private func setupErrorMessageAlert() {
@@ -491,10 +502,11 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == dayCollectionView {
             return CGSize(width: 36, height: 48)
         } else {
-            let itemCount = CGFloat(timeSections[indexPath.section].items.count)
-            let itemWidth = timeCollectionView.frame.width / CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
-            let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
-            return CGSize(width: itemWidth, height: min(36, itemHeight))
+            //let itemCount = CGFloat(timeSections[indexPath.section].items.count)
+            //let itemWidth = timeCollectionView.frame.width / CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
+            //let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
+            //return CGSize(width: itemWidth, height: min(36, itemHeight))
+            return timeCellSize
         }
     }
 
