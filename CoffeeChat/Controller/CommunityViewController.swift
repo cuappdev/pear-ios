@@ -10,8 +10,11 @@ import UIKit
 
 class CommunityViewController: UIViewController {
 
+    // MARK: - Private View Vars
     private let communityTableView = UITableView()
     private let searchBar = UISearchBar()
+
+    // MARK: - Private Data Vars
     // TODO: Replace with backend values
     private let users: [User] = [
         User(
@@ -140,7 +143,7 @@ extension CommunityViewController: UITableViewDataSource {
 extension CommunityViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        // TODO: Implement search and filter
     }
 
 }

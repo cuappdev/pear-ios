@@ -14,6 +14,7 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
     // MARK: - Private View Vars
     private let interestTagLabel = UILabel()
 
+    // MARK: - Private Data Vars
     static let reuseIdentifier = "InterestTagCollectionViewCell"
 
     override init(frame: CGRect) {
