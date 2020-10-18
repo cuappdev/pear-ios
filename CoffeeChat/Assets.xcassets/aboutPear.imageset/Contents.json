@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "interests.png",
+      "filename" : "aboutPear.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "aboutPear2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "aboutPear3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

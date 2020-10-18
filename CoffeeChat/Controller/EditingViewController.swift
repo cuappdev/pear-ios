@@ -208,8 +208,8 @@ class EditingViewController: UIViewController {
             .font: UIFont.getFont(.medium, size: 24)
         ]
 
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
-        backButton.imageView?.snp.makeConstraints { make in
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)

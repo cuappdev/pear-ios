@@ -122,6 +122,11 @@ class ProfileMenuViewController: UIViewController {
     func pushEditingGroupsViewController() {
         navigationController?.pushViewController(EditingViewController(isShowingGroups: true), animated: false)
     }
+    
+    func pushSettingsViewController() {
+        navigationController?.pushViewController(SettingsViewController(), animated: false)
+    }
+    
 
 }
 
@@ -144,6 +149,8 @@ extension ProfileMenuViewController: UITableViewDataSource {
             pushEditingInterestsViewController()
         } else if option.text == "Your groups" {
             pushEditingGroupsViewController()
+        } else if option.text == "Settings" {
+            pushSettingsViewController()
         }
     }
 

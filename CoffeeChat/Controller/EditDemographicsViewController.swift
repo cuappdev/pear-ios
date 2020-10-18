@@ -55,7 +55,7 @@ class EditDemographicsViewController: UIViewController {
             .font: UIFont.getFont(.medium, size: 24),
         ]
         
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         backBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backBarButtonItem
