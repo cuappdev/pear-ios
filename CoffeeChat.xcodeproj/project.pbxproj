@@ -49,6 +49,9 @@
 		D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961882526012400C677C3 /* SimpleOnboardingCell.swift */; };
 		D42961A02526246600C677C3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D429619F2526246600C677C3 /* HomeViewController.swift */; };
 		D42961A22526253B00C677C3 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961A12526253B00C677C3 /* TabPageViewController.swift */; };
+		D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4349978253C14320024A992 /* LeftAlignedFlowLayour.swift */; };
+		D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */; };
+		D434997D253C151C0024A992 /* InterestTagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
 		D44625022415B3D700714167 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44625012415B3D700714167 /* NetworkManager.swift */; };
@@ -142,6 +145,9 @@
 		D42961882526012400C677C3 /* SimpleOnboardingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingCell.swift; sourceTree = "<group>"; };
 		D429619F2526246600C677C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D42961A12526253B00C677C3 /* TabPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
+		D4349978253C14320024A992 /* LeftAlignedFlowLayour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedFlowLayour.swift; sourceTree = "<group>"; };
+		D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingCollectionView.swift; sourceTree = "<group>"; };
+		D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestTagCollectionViewCell.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
 		D44625012415B3D700714167 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = CoffeeChat/Controller/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
@@ -275,6 +281,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		D4349977253C14190024A992 /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				D4349978253C14320024A992 /* LeftAlignedFlowLayour.swift */,
+			);
+			path = Layouts;
+			sourceTree = "<group>";
+		};
 		D480EBFD23E2425C00513063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +302,7 @@
 				D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */,
 				D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */,
 				D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */,
+				D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -325,6 +340,7 @@
 				D471EDA7244DBE260079665D /* MessageAlertView.swift */,
 				4F0A8BEF250B44C800F59DDE /* FadeTableView.swift */,
 				4FCE3AE925200DF0004E2E33 /* MeetupStatusView.swift */,
+				D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -377,6 +393,7 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
+				D4349977253C14190024A992 /* Layouts */,
 				D4D3EFF023FE544D00229587 /* Utilities */,
 				30304E1923F60CC9006DC6C3 /* Models */,
 				4FFF3B1F23E9083F00C89C29 /* Extensions */,
@@ -704,6 +721,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
+				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
@@ -741,11 +759,13 @@
 				D41FE85C246463FC0048900F /* User.swift in Sources */,
 				4F0A8BF0250B44C800F59DDE /* FadeTableView.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
+				D434997D253C151C0024A992 /* InterestTagCollectionViewCell.swift in Sources */,
 				D41FE862246464310048900F /* SubUser.swift in Sources */,
 				D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */,
 				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
 				D41FE85E2464640F0048900F /* Matching.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
+				D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
 				D42961A02526246600C677C3 /* HomeViewController.swift in Sources */,
 				D47FF18B24597CA800808A9A /* Body.swift in Sources */,
