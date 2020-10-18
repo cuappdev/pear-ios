@@ -20,7 +20,8 @@ class SchedulingTimeViewController: UIViewController {
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
-    private var timeCollectionView: FadeWrapperView<UICollectionView>!
+    private var timeCollectionView: UICollectionView!
+    private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
 
     // MARK: - Section
@@ -166,17 +167,27 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionViewLayout.sectionInset = sectionInsets
         timeCollectionViewLayout.scrollDirection = .horizontal
 
-        let timeCV = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
-        timeCV.allowsMultipleSelection = !isPicking
-        timeCV.backgroundColor = .clear
-        timeCV.dataSource = self
-        timeCV.delegate = self
-        timeCV.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
-        timeCV.isScrollEnabled = true
+        timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
+        timeCollectionView.allowsMultipleSelection = !isPicking
+        timeCollectionView.backgroundColor = .clear
+        timeCollectionView.dataSource = self
+        timeCollectionView.delegate = self
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        timeCollectionView.isScrollEnabled = false
+        //timeCV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
 
-        timeCollectionView = FadeWrapperView(timeCV, fadeColor: .backgroundLightGreen)
-        timeCollectionView.fadePositions = [.bottom]
-        view.addSubview(timeCollectionView)
+        timeScrollView = FadeWrapperView<UIScrollView>(UIScrollView(), fadeColor: .backgroundLightGreen)
+        timeScrollView.fadePositions = [.bottom]
+        timeScrollView.view.addSubview(timeCollectionView)
+        //timeScrollView.view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 200, right: 0)
+        timeScrollView.view.contentSize = CGSize(width: 300, height: 800)
+        timeScrollView.view.isScrollEnabled = true
+        timeScrollView.view.delegate = self
+        // prolly set content size...
+        view.addSubview(timeScrollView)
+        //timeCollectionView = FadeWrapperView(timeCV, fadeColor: .backgroundLightGreen)
+        //timeCollectionView.fadePositions = [.bottom]
+        //view.addSubview(timeCollectionView)
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -291,11 +302,23 @@ class SchedulingTimeViewController: UIViewController {
     private func setupTimeCollectionViewConstraints() {
         let timeCollectionViewWidth = timeSections.count * 105
 
-        timeCollectionView.snp.updateConstraints { update in
+        //timeCollectionView.snp.updateConstraints { update in
+        //    update.top.equalTo(dayLabel.snp.bottom).offset(8)
+        //    update.bottom.equalTo(nextButton.snp.top).offset(-20)
+        //    update.centerX.equalToSuperview()
+        //    update.width.equalTo(timeCollectionViewWidth)
+        //}
+
+        timeScrollView.snp.updateConstraints { update in
             update.top.equalTo(dayLabel.snp.bottom).offset(8)
             update.bottom.equalTo(nextButton.snp.top).offset(-20)
             update.centerX.equalToSuperview()
             update.width.equalTo(timeCollectionViewWidth)
+        }
+
+        timeCollectionView.snp.makeConstraints { update in
+            update.top.equalTo(timeScrollView.view.snp.top)
+            update.size.equalTo(timeScrollView.view.contentSize)
         }
     }
 
@@ -403,11 +426,11 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
                 if let day = daysDict[selectedDay] {
                     if isPicking,
                         pickedTime.time == time && pickedTime.day == day {
-                        timeCollectionView.view.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     } else if let dayAvailability = availabilities[day],
                         dayAvailability.contains(time) {
-                        timeCollectionView.view.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     }
                 }
@@ -427,7 +450,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             if isPicking, let day = daysDict[selectedDay] {
                 setupTimes(for: day, isFirstTime: false)
             }
-            timeCollectionView.view.reloadData()
+            timeCollectionView.reloadData()
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]

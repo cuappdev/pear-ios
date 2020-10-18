@@ -20,7 +20,7 @@ class FadeWrapperView<T: UIView>: UIView {
     // MARK: Public View Vars
     let view: T
     var fadeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 26, right: 0)
-    var fadePositions: [FadePosition] = [.top, .bottom] // need didSet
+    var fadePositions: [FadePosition] = [.top, .bottom]
 
     // MARK: Private View Vars
     private let fadeColor: UIColor
