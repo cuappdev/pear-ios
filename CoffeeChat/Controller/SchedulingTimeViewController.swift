@@ -217,6 +217,7 @@ class SchedulingTimeViewController: UIViewController {
         daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
         daysAbbrev.removeSubrange(0..<dayIndex)
+        selectedDay = daysAbbrev.first ?? "Su"
     }
 
     private func setupTimes(for day: String, isFirstTime: Bool) {
