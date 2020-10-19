@@ -25,9 +25,10 @@ class SchedulingTimeViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Sizing
-    private let timeCellSize = CGSize(width: 88, height: 36)
+    // TODO move these into setup method
+    private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
     private let timeCellVerticalSpacing: CGFloat = 8
-    private var timeCollectionViewWidth: CGFloat { get { CGFloat(timeSections.count * 105) }}
+    private var timeCollectionViewWidth: CGFloat { get { CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105)) }}
 
     // MARK: - Section
     private struct Section {
@@ -79,7 +80,7 @@ class SchedulingTimeViewController: UIViewController {
     private var morningItems: [ItemType] = []
 
     private var availabilities: [String: [String]] = [:]
-    private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+    private var daysAbbrev: [String] = []
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
     private var selectedDay: String = "Su"
 
@@ -114,6 +115,8 @@ class SchedulingTimeViewController: UIViewController {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
+
+        removePassedDays()
 
         if isConfirming {
             availabilities = savedAvailabilities
@@ -210,7 +213,13 @@ class SchedulingTimeViewController: UIViewController {
         updateNextButton()
     }
 
-    func setupTimes(for day: String, isFirstTime: Bool) {
+    private func removePassedDays() {
+        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
+        daysAbbrev.removeSubrange(0..<dayIndex)
+    }
+
+    private func setupTimes(for day: String, isFirstTime: Bool) {
         if isPicking, let times = matchAvailabilities[day] {
             afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
             eveningTimes = allEveningTimes.filter { times.contains($0) }
@@ -316,7 +325,6 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         timeScrollView.view.contentSize = calculateTimesHeight()
-        print(calculateTimesHeight())
 
         timeCollectionView.snp.makeConstraints { update in
             update.top.equalTo(timeScrollView.view.snp.top)

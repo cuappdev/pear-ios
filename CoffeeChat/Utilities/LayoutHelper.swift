@@ -26,15 +26,6 @@ class LayoutHelper {
         return heightSize
     }
 
-    /// Returns custom vertical padding based using cubic ratio of screen size.
-    func getShortenedCustomVertPadding(size: CGFloat) -> CGFloat {
-        let quadHeight = pow(UIScreen.main.bounds.height, 3)
-        let quadBase = pow(LayoutHelper.baseSize.height, 3)
-        let ratio =  min(1, (quadHeight / quadBase))
-        let heightSize = size * ratio
-        return heightSize
-    }
-
     /// Returns custom horizontal padding based on ratio of screen size.
     func getCustomHorizontalPadding(size: CGFloat) -> CGFloat {
         let width = UIScreen.main.bounds.width
