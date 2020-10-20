@@ -12,14 +12,14 @@ import SnapKit
 class AboutPearViewController: UIViewController {
     
     // MARK: - Private View Vars
-    private let backButton = UIButton()
-    private let settingsTableView = UITableView()
-    private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
     private let aboutLabel = UILabel()
     private let aboutTableView = UITableView()
+    private let backButton = UIButton()
+    private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
     private let feedbackButton = UIButton()
-    private let visitWebsiteButton = UIButton()
     private let moreAppsButton = UIButton()
+    private let settingsTableView = UITableView()
+    private let visitWebsiteButton = UIButton()
     
     // MARK: - Private Data Vars
     private let aboutParagraphs: [AboutParagraph] = [
@@ -53,6 +53,7 @@ class AboutPearViewController: UIViewController {
         aboutTableView.delegate = self
         aboutTableView.dataSource = self
         aboutTableView.backgroundColor = .backgroundLightGreen
+        aboutTableView.isScrollEnabled = false
         aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: aboutReuseId)
         view.addSubview(aboutTableView)
         
@@ -61,6 +62,7 @@ class AboutPearViewController: UIViewController {
         feedbackButton.setTitleColor(.black, for: .normal)
         feedbackButton.titleLabel?.font = ._16CircularStdBook
         feedbackButton.backgroundColor = .white
+        feedbackButton.addTarget(self, action: #selector(sendFeedback), for: .touchUpInside)
         setShadow(button: feedbackButton)
         view.addSubview(feedbackButton)
         
@@ -69,6 +71,7 @@ class AboutPearViewController: UIViewController {
         visitWebsiteButton.setTitleColor(.black, for: .normal)
         visitWebsiteButton.titleLabel?.font = ._16CircularStdBook
         visitWebsiteButton.backgroundColor = .white
+        visitWebsiteButton.addTarget(self, action: #selector(visitWebsite), for: .touchUpInside)
         setShadow(button: visitWebsiteButton)
         view.addSubview(visitWebsiteButton)
         
@@ -77,6 +80,7 @@ class AboutPearViewController: UIViewController {
         moreAppsButton.setTitleColor(.black, for: .normal)
         moreAppsButton.titleLabel?.font = ._16CircularStdBook
         moreAppsButton.backgroundColor = .white
+        moreAppsButton.addTarget(self, action: #selector(presentMoreApps), for: .touchUpInside)
         setShadow(button: moreAppsButton)
         view.addSubview(moreAppsButton)
         
@@ -112,7 +116,19 @@ class AboutPearViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    func setupConstraints() {
+    @objc private func sendFeedback() {
+        // Todo
+    }
+    
+    @objc private func visitWebsite() {
+        // Todo
+    }
+    
+    @objc private func presentMoreApps() {
+        // Todo
+    }
+    
+    private func setupConstraints() {
         aboutLabel.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.equalTo(view.snp.top).offset(125)

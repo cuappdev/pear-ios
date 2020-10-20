@@ -13,10 +13,10 @@ class ConnectSocialMediaViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-    private let saveBarButtonItem = UIBarButtonItem()
+    private let fbTextField = UITextField()
     private let infoTextView = UITextView()
     private let instaTextField = UITextField()
-    private let fbTextField = UITextField()
+    private let saveBarButtonItem = UIBarButtonItem()
 
     override func viewDidLoad() {
         super.viewDidLoad()

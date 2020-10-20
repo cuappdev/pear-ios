@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 protocol PausePearDelegate: class {
     func presentPausePear()
@@ -31,7 +32,6 @@ class SettingsViewController: UIViewController {
         SettingOption(image: "aboutPear", text: "About Pear", hasSwitch: false, switchOn: false),
         SettingOption(image: "logout", text: "Log Out", hasSwitch: false, switchOn: false)
     ]
-
     let settingsReuseIdentifier = "settingsReuseIdentifier"
     
     override func viewDidLoad() {
@@ -60,7 +60,6 @@ class SettingsViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
-
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize(width: 10, height: 20))
@@ -102,6 +101,7 @@ class SettingsViewController: UIViewController {
 }
 
 extension SettingsViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return settingOptions.count
     }
@@ -120,21 +120,29 @@ extension SettingsViewController: UITableViewDataSource {
         if option.text == "About Pear" {
             pushAboutPearViewController()
         }
-        else if option.text == "Connect Social Media" {
-            pushConnectSocialMediaViewController()
-        }
         else if option.text == "Edit Availabilities" {
             pushEditAvailabilitiesViewController()
         }
+        else if option.text == "Connect Social Media" {
+            pushConnectSocialMediaViewController()
+        }
+        else if option.text == "Log Out" {
+            GIDSignIn.sharedInstance()?.signOut()
+            self.view.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+            self.view.window?.makeKeyAndVisible()
+        }
+        
     }
     
     
 }
 
 extension SettingsViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         62
     }
+    
 }
 
 extension SettingsViewController: PausePearDelegate {
@@ -160,8 +168,10 @@ extension SettingsViewController: PausePearDelegate {
     }
     
     func pausePearAction(data: String) {
-        print("paused for \(data)")
+        // Todo - pause pear action after selecting a time
+      
     }
+    
     func removePausePear() {
         UIView.animate(withDuration: 0.15) {
             self.pauseVisualEffectView.alpha = 0
@@ -171,4 +181,5 @@ extension SettingsViewController: PausePearDelegate {
             self.pausePearView.removeFromSuperview()
         }
     }
+    
 }

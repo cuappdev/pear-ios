@@ -42,16 +42,16 @@ class EditAvailabilityViewController: UIViewController {
     
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let saveBarButtonItem = UIBarButtonItem()
-    private var editScrollView: UIScrollView!
     private let contentView = UIView(frame: .zero)
-    private let scheduleTimeLabel = UILabel()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
-    private var timeCollectionView: UICollectionView!
-    private let scheduleLocationLabel = UILabel()
-    private let scheduleLocationSubLabel = UILabel()
+    private var editScrollView: UIScrollView!
     private var locationsCollectionView: UICollectionView!
+    private let saveBarButtonItem = UIBarButtonItem()
+    private let scheduleLocationLabel = UILabel()
+    private let scheduleTimeLabel = UILabel()
+    private let scheduleLocationSubLabel = UILabel()
+    private var timeCollectionView: UICollectionView!
     
     // MARK: - Time CollectionView Sections
     private struct TimeSection {
@@ -80,7 +80,6 @@ class EditAvailabilityViewController: UIViewController {
     }
     
     private var timeSections: [TimeSection] = []
-    
     
     // MARK: - Time Data Vars
     private let timeInteritemSpacing: CGFloat = 4
@@ -291,7 +290,7 @@ class EditAvailabilityViewController: UIViewController {
     }
     
     @objc private func saveAvailability() {
-        print("saving")
+        // Todo save new availability
     }
     
     private func setupTimes(for day: String, isFirstTime: Bool) {
@@ -372,7 +371,6 @@ class EditAvailabilityViewController: UIViewController {
 
     }
     
-    
 }
 
 extension EditAvailabilityViewController: UICollectionViewDataSource {
@@ -443,6 +441,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
                 cell.configure(with: location, isPicking: false)
                 if savedLocations.contains(location) {
                     cell.changeSelection(selected: true)
+                    locationsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 }
                 return cell
             case .ctown(let locations):
@@ -451,6 +450,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
                 cell.configure(with: location, isPicking: false)
                 if savedLocations.contains(location) {
                     cell.changeSelection(selected: true)
+                    locationsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 }
                 return cell
             }
@@ -473,12 +473,12 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
         let defaultHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: defaultHeaderId, for: indexPath)
         guard let headerView = defaultHeader as? DefaultHeader else { return defaultHeader }
         return headerView
-
     }
     
 }
 
 extension EditAvailabilityViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = daysAbbrev[indexPath.item]
