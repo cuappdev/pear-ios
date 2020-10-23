@@ -36,7 +36,6 @@ class SchedulingTimeViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Sizing
-    // TODO move these into setup method
     private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
     private let timeCellVerticalSpacing: CGFloat = 8
     private var timeCollectionViewWidth: CGFloat {
@@ -95,9 +94,7 @@ class SchedulingTimeViewController: UIViewController {
     private var availabilities: [String: [String]] = [:]
     private var daysAbbrev: [String] = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
-    private var selectedDay: String = "Su" // TODO optional
-
-
+    private var selectedDay: String = "Su"
 
     // TODO: Change values after connecting to backend
     private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
@@ -143,21 +140,20 @@ class SchedulingTimeViewController: UIViewController {
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
 
-        selectedDay = daysAbbrev.first! // TODO not make this force unwrapped
-
-        // TODO if removing days leaves you with no more days, we should prolly make it so the screen is blank
-        changeTimes(for: daysDict[daysAbbrev.first!]!) // TODO prolly better default case than this likely related to above TODO
+        guard let firstDay = daysAbbrev.first else {
+            fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
+        }
+        selectedDay = firstDay
+        changeTimes(for: daysDict[firstDay] ?? "Sunday")
     }
 
     private func setupForStatus(_ status: SchedulingStatus) {
+        timeCollectionView.allowsMultipleSelection = !isChoosing
         if isConfirming || isChoosing {
             dayLabel.text = daysDict[selectedDay]
         } else {
              dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
         }
-
-        timeCollectionView.allowsMultipleSelection = !isChoosing
-
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "When are you free?"
@@ -174,11 +170,9 @@ class SchedulingTimeViewController: UIViewController {
         if schedulingStatus == .confirming || isChoosing {
             removePassedDays()
         }
-
         if isChoosing {
             removeUnavailableDays()
         }
-
     }
 
     private func removePassedDays() {
