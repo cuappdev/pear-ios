@@ -6,12 +6,12 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import UIKit
 import GoogleSignIn
+import UIKit
 
 protocol PausePearDelegate: class {
-    func presentPausePear()
     func pausePearAction(data: String)
+    func presentPausePear()
     func removePausePear()
 }
 
@@ -36,7 +36,7 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Settings"
+        title = "Settings"
         view.backgroundColor = .backgroundLightGreen
         
         settingsTableView.backgroundColor = .backgroundLightGreen
@@ -50,18 +50,18 @@ class SettingsViewController: UIViewController {
         
         setupNavigationBar()
         setupPausePear()
+        
         setupConstraints()
     }
     
     private func setupNavigationBar() {
-        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.snp.makeConstraints { (make) in
+        backButton.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
@@ -80,7 +80,7 @@ class SettingsViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        settingsTableView.snp.makeConstraints { (make) in
+        settingsTableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(28)
             make.leading.trailing.bottom.equalToSuperview()
         }
@@ -119,21 +119,16 @@ extension SettingsViewController: UITableViewDataSource {
         let option = settingOptions[indexPath.row]
         if option.text == "About Pear" {
             pushAboutPearViewController()
-        }
-        else if option.text == "Edit Availabilities" {
+        } else if option.text == "Edit Availabilities" {
             pushEditAvailabilitiesViewController()
-        }
-        else if option.text == "Connect Social Media" {
+        } else if option.text == "Connect Social Media" {
             pushConnectSocialMediaViewController()
-        }
-        else if option.text == "Log Out" {
+        } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             self.view.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             self.view.window?.makeKeyAndVisible()
         }
-        
     }
-    
     
 }
 
@@ -152,7 +147,7 @@ extension SettingsViewController: PausePearDelegate {
         view.addSubview(pauseVisualEffectView)
         view.addSubview(pausePearView)
         
-        pausePearView.snp.makeConstraints { (make) in
+        pausePearView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.height.equalTo(305)
             make.width.equalTo(295)
@@ -164,12 +159,10 @@ extension SettingsViewController: PausePearDelegate {
             self.pausePearView.alpha = 1
             self.pausePearView.transform = .identity
         })
-        
     }
     
     func pausePearAction(data: String) {
-        // Todo - pause pear action after selecting a time
-      
+        // TODO: pause pear action after selecting a time
     }
     
     func removePausePear() {
@@ -177,7 +170,7 @@ extension SettingsViewController: PausePearDelegate {
             self.pauseVisualEffectView.alpha = 0
             self.pausePearView.alpha = 0
             self.pausePearView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        } completion: { (_) in
+        } completion: { _ in
             self.pausePearView.removeFromSuperview()
         }
     }

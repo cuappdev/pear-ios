@@ -11,11 +11,11 @@ import UIKit
 class PausePearView: UIView {
 
     // MARK: - Private View Vars
-    private let pauseLabel = UILabel()
-    private let oneWeekButton = UIButton()
-    private let twoWeekButton = UIButton()
-    private let threeWeekButton = UIButton()
     private let cancelButton = UIButton()
+    private let oneWeekButton = UIButton()
+    private let pauseLabel = UILabel()
+    private let threeWeekButton = UIButton()
+    private let twoWeekButton = UIButton()
     
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
@@ -24,6 +24,7 @@ class PausePearView: UIView {
         super.init(frame: .zero)
         self.delegate = delegate
         setUpViews()
+        
         setupConstraints()
     }
     
@@ -42,26 +43,17 @@ class PausePearView: UIView {
         addSubview(pauseLabel)
         
         oneWeekButton.setTitle("1 Week", for: .normal)
-        oneWeekButton.layer.cornerRadius = 8
-        oneWeekButton.backgroundColor = .white
-        oneWeekButton.setTitleColor(.black, for: .normal)
-        oneWeekButton.titleLabel?.font = ._16CircularStdBook
+        setButtonAppearance(button: oneWeekButton)
         oneWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         addSubview(oneWeekButton)
         
         twoWeekButton.setTitle("2 Weeks", for: .normal)
-        twoWeekButton.layer.cornerRadius = 8
-        twoWeekButton.backgroundColor = .white
-        twoWeekButton.setTitleColor(.black, for: .normal)
-        twoWeekButton.titleLabel?.font = ._16CircularStdBook
+        setButtonAppearance(button: twoWeekButton)
         twoWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         addSubview(twoWeekButton)
         
         threeWeekButton.setTitle("3 Weeks", for: .normal)
-        threeWeekButton.layer.cornerRadius = 8
-        threeWeekButton.backgroundColor = .white
-        threeWeekButton.setTitleColor(.black, for: .normal)
-        threeWeekButton.titleLabel?.font = ._16CircularStdBook
+        setButtonAppearance(button: threeWeekButton)
         threeWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         addSubview(threeWeekButton)
         
@@ -72,36 +64,44 @@ class PausePearView: UIView {
         cancelButton.addTarget(self, action: #selector(cancelPause), for: .touchUpInside)
         addSubview(cancelButton)
     }
+
+    private func setButtonAppearance(button: UIButton) {
+        button.layer.cornerRadius = 8
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = ._16CircularStdBook
+    }
+
     
     private func setupConstraints() {
         let weekButtonSize = CGSize(width: 110, height: 40)
         let cancelButtonSize = CGSize(width: 52, height: 20)
         
-        pauseLabel.snp.makeConstraints { (make) in
+        pauseLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(36)
             make.leading.trailing.equalToSuperview().inset(75)
         }
         
-        oneWeekButton.snp.makeConstraints { (make) in
+        oneWeekButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(pauseLabel.snp.bottom).offset(22)
             make.size.equalTo(weekButtonSize)
         }
         
-        twoWeekButton.snp.makeConstraints { (make) in
+        twoWeekButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(oneWeekButton.snp.bottom).offset(12)
             make.size.equalTo(weekButtonSize)
         }
         
-        threeWeekButton.snp.makeConstraints { (make) in
+        threeWeekButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(twoWeekButton.snp.bottom).offset(12)
             make.size.equalTo(weekButtonSize)
         }
         
-        cancelButton.snp.makeConstraints { (make) in
+        cancelButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(threeWeekButton.snp.bottom).offset(30)
             make.size.equalTo(cancelButtonSize)

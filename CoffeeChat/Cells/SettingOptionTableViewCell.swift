@@ -9,11 +9,10 @@
 import UIKit
 
 class SettingOptionTableViewCell: UITableViewCell {
-    
-    private let switchView = UISwitch()
-    private let optionLabel = UILabel()
+
     private let optionImageView = UIImageView()
-    private let selectedView = UIView()
+    private let optionLabel = UILabel()
+    private let switchView = UISwitch()
     
     weak var delegate: PausePearDelegate?
 
@@ -35,21 +34,18 @@ class SettingOptionTableViewCell: UITableViewCell {
         optionImageView.clipsToBounds = true
         optionImageView.contentMode = .scaleAspectFit
         contentView.addSubview(optionImageView)
-
-        selectedView.backgroundColor = .backgroundLightGrayGreen
-        selectedBackgroundView = selectedView
         
         setupConstraints()
     }
     
     private func setupConstraints() {
-        optionImageView.snp.makeConstraints { (make) in
+        optionImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(25)
             make.centerY.equalToSuperview()
             make.height.width.equalTo(32)
         }
         
-        optionLabel.snp.makeConstraints { (make) in
+        optionLabel.snp.makeConstraints { make in
             make.leading.equalTo(optionImageView.snp.trailing).offset(20)
             make.centerY.equalToSuperview()
         }

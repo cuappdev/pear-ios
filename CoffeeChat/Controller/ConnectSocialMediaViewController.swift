@@ -23,7 +23,7 @@ class ConnectSocialMediaViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         setupNavigationBar()
         
-        backgroundImage.image = UIImage(named: "aboutPearBackground")
+        backgroundImage.image = UIImage(named: "settingsBackground")
         backgroundImage.contentMode =  .scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
         
@@ -38,7 +38,7 @@ class ConnectSocialMediaViewController: UIViewController {
         infoTextView.isScrollEnabled = false
         view.addSubview(infoTextView)
         
-        // fill with previously saved socials from backend
+        // TODO: fill with previously saved socials from backend
         instaTextField.text = "@cndyhuang"
         instaTextField.font = ._20CircularStdBook
         instaTextField.backgroundColor = .white
@@ -52,7 +52,7 @@ class ConnectSocialMediaViewController: UIViewController {
         
         
         let instaicon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        instaicon.image = UIImage(named: "instaicon")
+        instaicon.image = UIImage(named: "instagramIcon")
         let instaViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         instaViewL.addSubview(instaicon)
         instaTextField.leftView = instaViewL
@@ -75,12 +75,12 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(fbTextField)
         
         let fbicon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        fbicon.image = UIImage(named: "facebookicon")
+        fbicon.image = UIImage(named: "facebookIcon")
         let facebookViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         facebookViewL.addSubview(fbicon)
         fbTextField.leftView = facebookViewL
         fbTextField.leftViewMode = .always
-        
+
         let facebookViewR = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         fbTextField.rightView = facebookViewR
         fbTextField.rightViewMode = .always
@@ -90,7 +90,6 @@ class ConnectSocialMediaViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
@@ -98,7 +97,7 @@ class ConnectSocialMediaViewController: UIViewController {
         ]
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.snp.makeConstraints { (make) in
+        backButton.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
@@ -108,7 +107,7 @@ class ConnectSocialMediaViewController: UIViewController {
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen
         saveBarButtonItem.target = self
-        saveBarButtonItem.action = #selector(saveAvailability)
+        saveBarButtonItem.action = #selector(saveSocialMedia)
         saveBarButtonItem.setTitleTextAttributes([
             .font: UIFont.getFont(.medium, size: 20)
         ], for: .normal)
@@ -119,27 +118,26 @@ class ConnectSocialMediaViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc private func saveAvailability() {
-        print("saving")
+    @objc private func saveSocialMedia() {
         navigationController?.popViewController(animated: true)
     }
     
     private func setupConstraints() {
-        infoTextView.snp.makeConstraints { (make) in
+        infoTextView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.trailing.equalToSuperview().inset(63)
             make.height.equalTo(90)
         }
         
-        instaTextField.snp.makeConstraints { (make) in
+        instaTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(infoTextView.snp.bottom).offset(48)
             make.leading.trailing.equalToSuperview().inset(40)
             make.height.equalTo(50)
         }
         
-        fbTextField.snp.makeConstraints { (make) in
+        fbTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(instaTextField.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(40)

@@ -16,29 +16,30 @@ class AboutPearTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         
-        contentView.backgroundColor = .backgroundLightGreen
+        contentView.backgroundColor = .clear
+        backgroundColor = .clear
         paragraphLabel.numberOfLines = 0
         paragraphLabel.backgroundColor = .clear
         contentView.addSubview(paragraphLabel)
+        
         setupConstraints()
     }
     
     private func setupConstraints() {
-        paragraphLabel.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().inset(36)
-            make.trailing.equalToSuperview().inset(36)
+        paragraphLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(36)
             make.centerY.equalTo(contentView.snp.centerY)
         }
     }
     
     func configure(for aboutParagraph: AboutParagraph) {
         let boldText = aboutParagraph.bold
-        let boldTextAttributes = [NSAttributedString.Key.font : UIFont.getFont(.bold, size: 16)]
-        let boldAttributedText = NSMutableAttributedString(string: boldText, attributes: boldTextAttributes as [NSAttributedString.Key : Any])
+        let boldTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: UIFont.getFont(.bold, size: 16)]
+        let boldAttributedText = NSMutableAttributedString(string: boldText, attributes: boldTextAttributes)
         
         let regularText = aboutParagraph.regular
-        let regularTextAttributes = [NSAttributedString.Key.font : UIFont.getFont(.book, size: 16)]
-        let regularAttributedText = NSMutableAttributedString(string: regularText, attributes: regularTextAttributes as [NSAttributedString.Key : Any])
+        let regularTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: UIFont.getFont(.book, size: 16)]
+        let regularAttributedText = NSMutableAttributedString(string: regularText, attributes: regularTextAttributes)
         
         boldAttributedText.append(regularAttributedText)
         paragraphLabel.attributedText = boldAttributedText

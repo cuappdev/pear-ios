@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "aboutPear.png",
+      "filename" : "settingsBackground1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "About Pear 2X.png",
+      "filename" : "settingsBackground2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "About Pear 3X.png",
+      "filename" : "settingsBackground3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

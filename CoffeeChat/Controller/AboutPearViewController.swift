@@ -30,14 +30,14 @@ class AboutPearViewController: UIViewController {
     ]
     let aboutReuseId = "aboutReuseId"
     private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
-    private let screenWidth = UIScreen.main.bounds.width
     private let screenHeight = UIScreen.main.bounds.height
+    private let screenWidth = UIScreen.main.bounds.width
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "About Pear"
+        title = "About Pear"
         
-        backgroundImage.image = UIImage(named: "aboutPearBackground")
+        backgroundImage.image = UIImage(named: "settingsBackground")
         backgroundImage.contentMode =  .scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
         
@@ -52,36 +52,24 @@ class AboutPearViewController: UIViewController {
         aboutTableView.showsVerticalScrollIndicator = false
         aboutTableView.delegate = self
         aboutTableView.dataSource = self
-        aboutTableView.backgroundColor = .backgroundLightGreen
+        aboutTableView.backgroundColor = .clear
         aboutTableView.isScrollEnabled = false
         aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: aboutReuseId)
         view.addSubview(aboutTableView)
-        
-        feedbackButton.layer.cornerRadius = 8
+
         feedbackButton.setTitle("Send Feedback", for: .normal)
-        feedbackButton.setTitleColor(.black, for: .normal)
-        feedbackButton.titleLabel?.font = ._16CircularStdBook
-        feedbackButton.backgroundColor = .white
         feedbackButton.addTarget(self, action: #selector(sendFeedback), for: .touchUpInside)
-        setShadow(button: feedbackButton)
+        setButtonAppearance(button: feedbackButton)
         view.addSubview(feedbackButton)
-        
-        visitWebsiteButton.layer.cornerRadius = 8
+
         visitWebsiteButton.setTitle("Visit our Website", for: .normal)
-        visitWebsiteButton.setTitleColor(.black, for: .normal)
-        visitWebsiteButton.titleLabel?.font = ._16CircularStdBook
-        visitWebsiteButton.backgroundColor = .white
         visitWebsiteButton.addTarget(self, action: #selector(visitWebsite), for: .touchUpInside)
-        setShadow(button: visitWebsiteButton)
+        setButtonAppearance(button: visitWebsiteButton)
         view.addSubview(visitWebsiteButton)
-        
-        moreAppsButton.layer.cornerRadius = 8
+
         moreAppsButton.setTitle("More Apps", for: .normal)
-        moreAppsButton.setTitleColor(.black, for: .normal)
-        moreAppsButton.titleLabel?.font = ._16CircularStdBook
-        moreAppsButton.backgroundColor = .white
         moreAppsButton.addTarget(self, action: #selector(presentMoreApps), for: .touchUpInside)
-        setShadow(button: moreAppsButton)
+        setButtonAppearance(button: moreAppsButton)
         view.addSubview(moreAppsButton)
         
         setupConstraints()
@@ -89,7 +77,6 @@ class AboutPearViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
@@ -97,16 +84,19 @@ class AboutPearViewController: UIViewController {
         ]
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.snp.makeConstraints { (make) in
+        backButton.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
     
-    private func setShadow(button: UIButton) {
-        button.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+    private func setButtonAppearance(button: UIButton) {
+        button.layer.cornerRadius = 8
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = ._16CircularStdBook
+        button.backgroundColor = .white
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.layer.shadowOpacity = 1
         button.layer.shadowRadius = 4
@@ -117,38 +107,42 @@ class AboutPearViewController: UIViewController {
     }
     
     @objc private func sendFeedback() {
-        // Todo
+        // TODO
     }
     
     @objc private func visitWebsite() {
-        // Todo
+        // TODO
     }
     
     @objc private func presentMoreApps() {
-        // Todo
+        // TODO
     }
     
     private func setupConstraints() {
-        aboutLabel.snp.makeConstraints { (make) in
+        aboutLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.equalTo(view.snp.top).offset(125)
         }
-        aboutTableView.snp.makeConstraints { (make) in
+
+        aboutTableView.snp.makeConstraints { make in
             make.top.equalTo(aboutLabel.snp.bottom).offset(40)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.snp.bottom).offset(-290)
+            make.bottom.equalTo(view.snp.bottom).inset(250)
         }
-        feedbackButton.snp.makeConstraints { (make) in
+
+        feedbackButton.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(aboutTableView.snp.bottom).offset(10)
             make.width.equalTo(180)
             make.height.equalTo(40)
         }
-        visitWebsiteButton.snp.makeConstraints { (make) in
+
+        visitWebsiteButton.snp.makeConstraints { make in
             make.centerX.height.width.equalTo(feedbackButton)
             make.top.equalTo(feedbackButton.snp.bottom).offset(12)
         }
-        moreAppsButton.snp.makeConstraints { (make) in
+
+        moreAppsButton.snp.makeConstraints { make in
             make.centerX.width.height.equalTo(feedbackButton)
             make.top.equalTo(visitWebsiteButton.snp.bottom).offset(12)
         }
@@ -156,7 +150,8 @@ class AboutPearViewController: UIViewController {
 
 }
 
-extension AboutPearViewController: UITableViewDataSource, UITableViewDelegate {
+extension AboutPearViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         aboutParagraphs.count
     }
@@ -168,7 +163,12 @@ extension AboutPearViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
+}
+
+extension AboutPearViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         76
     }
+    
 }

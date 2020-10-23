@@ -9,10 +9,11 @@
 import Foundation
 
 class SettingOption {
-    let image: String
-    let text: String
+
     let hasSwitch: Bool
+    let image: String
     var switchOn: Bool
+    let text: String
     
     init(image: String, text: String, hasSwitch: Bool, switchOn: Bool) {
         self.image = image

@@ -207,8 +207,6 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save values to backend.
-        print("save pressed")
-
     }
 
     @objc private func uploadPhotoPressed() {
