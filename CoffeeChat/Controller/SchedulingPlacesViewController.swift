@@ -55,12 +55,9 @@ class SchedulingPlacesViewController: UIViewController {
     private var selectedCampusLocations = [String]()
     private var selectedCtownLocations = [String]()
 
-    // Whether user is confirming a location they previously saved
-    private var isConfirming: Bool
-    // Whether user is picking a location from match's locations
-    private var isPicking: Bool
+    private let schedulingStatus: SchedulingStatus
     // Location user picked from match's locations
-    private var pickedLocation: String!
+    private var pickedLocation: String! // TODO optional
 
     // Data received from `SchedulingTimeViewController`
     private var availabilities: [String: [String]] = [:]
@@ -100,10 +97,9 @@ class SchedulingPlacesViewController: UIViewController {
         "Mango Mango"
     ]
 
-    init(isConfirming: Bool, isPicking: Bool, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
-        self.isConfirming = isConfirming
-        self.isPicking = isPicking
-        if isPicking {
+    init(status: SchedulingStatus, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
+        self.schedulingStatus = status
+        if schedulingStatus == .choosing {
             self.pickedTime = pickedTime
         } else {
             self.availabilities = availabilities
@@ -121,22 +117,27 @@ class SchedulingPlacesViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true // TODO Remove this
 
         titleLabel.font = ._24CircularStdMedium
-        titleLabel.text = isConfirming
-            ? "Confirm preferred places"
-            : isPicking ? "Pick a place to meet" : "Where do you prefer?"
+        switch schedulingStatus {
+        case .pickingTypical:
+            titleLabel.text = "Where do you prefer?"
+        case .confirming:
+            titleLabel.text = "Confirm preferred places"
+        case .choosing:
+            titleLabel.text = "Pick a place to meet"
+        }
         titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
-        var scheduledTime = ""
+        var scheduledTimeMessage = ""
         var amPm = ""
         if Time.isAm(time: pickedTime.time) {
             amPm = "AM"
         } else if Time.isPm(time: pickedTime.time) {
             amPm = "PM"
         }
-        scheduledTime = "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
+        scheduledTimeMessage = "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = isPicking ? scheduledTime :  "Pick three"
+        infoLabel.text = schedulingStatus == .choosing ? scheduledTimeMessage :  "Pick three"
         infoLabel.textColor = .greenGray
         view.addSubview(infoLabel)
 
@@ -145,7 +146,7 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
         locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: locationsCollectionViewLayout)
-        locationsCollectionView.allowsMultipleSelection = !isPicking
+        locationsCollectionView.allowsMultipleSelection = schedulingStatus != .choosing
         locationsCollectionView.showsVerticalScrollIndicator = false
         locationsCollectionView.showsHorizontalScrollIndicator = false
         locationsCollectionView.delegate = self
@@ -171,12 +172,12 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        if isConfirming {
+        if schedulingStatus == .confirming {
             selectedCampusLocations = campusLocations.filter { savedLocations.contains($0) }
             selectedCtownLocations = ctownLocations.filter { savedLocations.contains($0) }
         }
 
-        if isPicking {
+        if schedulingStatus == .choosing {
             campusLocations = campusLocations.filter { matchLocations.contains($0) }
             ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
         }
@@ -193,9 +194,9 @@ class SchedulingPlacesViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isPicking ? 60 : 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: schedulingStatus == .choosing ? 60 : 30)
         let collectionViewPadding = 30
-        let collectionViewSidePadding = isPicking ? 80 : 32
+        let collectionViewSidePadding = schedulingStatus == .choosing ? 80 : 32
         let infoPadding = 3
         let nextButtonSize = CGSize(width: 175, height: 50)
         let topPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
@@ -252,7 +253,7 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        // TODO implement
+        navigationController?.pushViewController(MatchViewController(hasReachedOut: true), animated: true)
     }
 
     @objc private func backButtonPressed() {
@@ -271,14 +272,14 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
             switch section {
             case .campus(let locations):
                 let location = locations[indexPath.row]
-                if isPicking {
+                if schedulingStatus == .choosing {
                     pickedLocation = location
                 } else {
                     selectedCampusLocations.append(location)
                 }
             case .ctown(let locations):
                 let location = locations[indexPath.row]
-                if isPicking {
+                if schedulingStatus == .choosing {
                     pickedLocation = location
                 } else {
                     selectedCtownLocations.append(location)
@@ -327,8 +328,8 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
             let location = locations[indexPath.row]
-            cell.configure(with: location, isPicking: isPicking)
-            if isConfirming && savedLocations.contains(location) {
+            cell.configure(with: location, isPicking: schedulingStatus == .choosing)
+            if schedulingStatus == .confirming && savedLocations.contains(location) {
                 cell.changeSelection(selected: true)
             }
             return cell
@@ -336,8 +337,8 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
             let location = locations[indexPath.row]
-            cell.configure(with: location, isPicking: isPicking)
-            if isConfirming && savedLocations.contains(location) {
+            cell.configure(with: location, isPicking: schedulingStatus == .choosing)
+            if schedulingStatus == .confirming && savedLocations.contains(location) {
                 cell.changeSelection(selected: true)
             }
             return cell
@@ -360,13 +361,13 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let headersSize = 2 * headerHeight
-        let numberColumns: CGFloat = isPicking ? 1 : 2
-        let numberRows = isPicking
+        let numberColumns: CGFloat = schedulingStatus == .choosing ? 1 : 2
+        let numberRows = schedulingStatus == .choosing
             ? CGFloat(campusLocations.count + ctownLocations.count)
             : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
-        return CGSize(width: itemWidth, height: min(isPicking ? 50 : 43, itemHeight))
+        return CGSize(width: itemWidth, height: min(schedulingStatus == .choosing ? 50 : 43, itemHeight))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {

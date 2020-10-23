@@ -15,7 +15,6 @@ enum SchedulingStatus {
     case confirming
     /// If the pear reached out first, the user chooses 1 time from the availabilities
     case choosing
-
 }
 
 class SchedulingTimeViewController: UIViewController {
@@ -167,7 +166,7 @@ class SchedulingTimeViewController: UIViewController {
             availabilities = savedAvailabilities
         }
 
-        if schedulingStatus == .confirming || isChoosing {
+        if isConfirming || isChoosing {
             removePassedDays()
         }
         if isChoosing {
@@ -418,8 +417,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        // TODO change
-        let placesVC = SchedulingPlacesViewController(isConfirming: true, isPicking: true, availabilities: availabilities, pickedTime: pickedTime)
+        let placesVC = SchedulingPlacesViewController(status: schedulingStatus, availabilities: availabilities, pickedTime: pickedTime)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
@@ -539,10 +537,6 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == dayCollectionView {
             return CGSize(width: 36, height: 48)
         } else {
-            //let itemCount = CGFloat(timeSections[indexPath.section].items.count)
-            //let itemWidth = timeCollectionView.frame.width / CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
-            //let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
-            //return CGSize(width: itemWidth, height: min(36, itemHeight))
             return timeCellSize
         }
     }

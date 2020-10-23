@@ -45,6 +45,7 @@ class MatchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
+        print("???")
     }
 
     override func viewDidLoad() {
@@ -78,7 +79,11 @@ class MatchViewController: UIViewController {
             view.addSubview(reachOutButton)
         }
 
-        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date.distantFuture)) // TODO change based on chat status
+        // TODO change based on chat status
+        let sampleUser = User(clubs: [], firstName: "Ezra", googleID: "", graduationYear: "2024", hometown: "Ithaca", interests: [], lastName: "Cornell", major: "CS", matches: [], netID: "ec1", profilePictureURL: "", pronouns: "He/Him", facebook: "", instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
+        meetupStatusView = hasReachedOut
+            ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
+            : MeetupStatusView(for: .respondingTo(sampleUser))
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
