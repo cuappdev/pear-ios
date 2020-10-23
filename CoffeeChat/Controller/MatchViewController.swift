@@ -161,7 +161,7 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        let timeVC = SchedulingTimeViewController(isConfirming: false, isPicking: true)
+        let timeVC = SchedulingTimeViewController(for: .confirming)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 }
