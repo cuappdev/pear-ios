@@ -93,9 +93,9 @@ class SchedulingTimeViewController: UIViewController {
     private var morningItems: [ItemType] = []
 
     private var availabilities: [String: [String]] = [:]
-    private var daysAbbrev: [String] = []
+    private var daysAbbrev: [String] = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
-    private var selectedDay: String = "Su"
+    private var selectedDay: String = "Su" // TODO optional
 
 
 
@@ -110,6 +110,9 @@ class SchedulingTimeViewController: UIViewController {
     // MARK: ViewController State
     private let schedulingStatus: SchedulingStatus
     private var isChoosing: Bool { get { schedulingStatus == .choosing } }
+    private var isConfirming: Bool { get { schedulingStatus == .confirming } }
+    private var isPickingTypical: Bool { get { schedulingStatus == .pickingTypical } }
+
 
     init(for status: SchedulingStatus) {
         self.schedulingStatus = status
@@ -127,29 +130,27 @@ class SchedulingTimeViewController: UIViewController {
 
         setupViews()
         setupForStatus(schedulingStatus)
-        setupTimes()
+        setupDaysAndTimes()
 
         setupErrorMessageAlert()
         setupTimeSections()
         setupConstraints()
         updateNextButton()
-
-        if let firstDay = daysDict[selectedDay] {
-            changeTimes(for: firstDay)
-        }
     }
 
-    private func setupTimes() {
+    private func setupDaysAndTimes() {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
-        changeTimes(for: "Sunday") // TODO ???
-        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"] // TODO change
-        // TODO if removing days leaves you with no more days, we should prolly make it so the screen is blank...
+
+        selectedDay = daysAbbrev.first! // TODO not make this force unwrapped
+
+        // TODO if removing days leaves you with no more days, we should prolly make it so the screen is blank
+        changeTimes(for: daysDict[daysAbbrev.first!]!) // TODO prolly better default case than this likely related to above TODO
     }
 
     private func setupForStatus(_ status: SchedulingStatus) {
-        if schedulingStatus == .confirming || schedulingStatus == .choosing {
+        if isConfirming || isChoosing {
             dayLabel.text = daysDict[selectedDay]
         } else {
              dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
@@ -166,20 +167,28 @@ class SchedulingTimeViewController: UIViewController {
             titleLabel.text = "Pick a time to meet"
         }
 
-        if schedulingStatus == .confirming {
+        if isConfirming {
             availabilities = savedAvailabilities
         }
 
-        if isChoosing {
-            daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
-            if let firstDayShort = daysAbbrev.first {
-                selectedDay = firstDayShort
-            }
+        if schedulingStatus == .confirming || isChoosing {
+            removePassedDays()
         }
 
-        //if schedulingStatus == .confirming || isChoosing {
-        //    removePassedDays()
-        //}
+        if isChoosing {
+            removeUnavailableDays()
+        }
+
+    }
+
+    private func removePassedDays() {
+        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
+        daysAbbrev.removeSubrange(0..<dayIndex)
+    }
+
+    private func removeUnavailableDays() {
+        daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
     }
 
     private func setupViews() {
@@ -251,14 +260,6 @@ class SchedulingTimeViewController: UIViewController {
         view.addSubview(noTimesWorkButton)
     }
 
-
-    private func removePassedDays() {
-        // TODO this needs to update due to how choosing is
-        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
-        daysAbbrev.removeSubrange(0..<dayIndex)
-        selectedDay = daysAbbrev.first ?? "Su"
-    }
 
     private func changeTimes(for day: String) {
         if isChoosing, let times = matchAvailabilities[day] {
