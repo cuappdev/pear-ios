@@ -125,11 +125,46 @@ class SchedulingTimeViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
+        setupViews()
+        setupForStatus(schedulingStatus)
+        setupTimes()
+
+        setupErrorMessageAlert()
+        setupTimeSections()
+        setupConstraints()
+        updateNextButton()
+
+        if let firstDay = daysDict[selectedDay] {
+            changeTimes(for: firstDay)
+        }
+    }
+
+    private func setupTimes() {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
+        changeTimes(for: "Sunday") // TODO ???
+        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"] // TODO change
+        // TODO if removing days leaves you with no more days, we should prolly make it so the screen is blank...
+    }
 
-        removePassedDays()
+    private func setupForStatus(_ status: SchedulingStatus) {
+        if schedulingStatus == .confirming || schedulingStatus == .choosing {
+            dayLabel.text = daysDict[selectedDay]
+        } else {
+             dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
+        }
+
+        timeCollectionView.allowsMultipleSelection = !isChoosing
+
+        switch schedulingStatus {
+        case .pickingTypical:
+            titleLabel.text = "When are you free?"
+        case .confirming:
+            titleLabel.text = "Confirm your availability"
+        case .choosing:
+            titleLabel.text = "Pick a time to meet"
+        }
 
         if schedulingStatus == .confirming {
             availabilities = savedAvailabilities
@@ -142,18 +177,15 @@ class SchedulingTimeViewController: UIViewController {
             }
         }
 
+        //if schedulingStatus == .confirming || isChoosing {
+        //    removePassedDays()
+        //}
+    }
+
+    private func setupViews() {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
-
-        switch schedulingStatus {
-        case .pickingTypical:
-            titleLabel.text = "When are you free?"
-        case .confirming:
-            titleLabel.text = "Confirm your availability"
-        case .choosing:
-            titleLabel.text = "Pick a time to meet"
-        }
 
         titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
@@ -172,11 +204,6 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        if schedulingStatus == .confirming || schedulingStatus == .choosing {
-            dayLabel.text = daysDict[selectedDay]
-        } else {
-             dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
-        }
         dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
@@ -193,7 +220,6 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionViewLayout.scrollDirection = .horizontal
 
         timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
-        timeCollectionView.allowsMultipleSelection = !isChoosing
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
@@ -223,51 +249,30 @@ class SchedulingTimeViewController: UIViewController {
         noTimesWorkButton.titleLabel?.font = ._16CircularStdMedium
         noTimesWorkButton.addTarget(self, action: #selector(noTimesWorkPressed), for: .touchUpInside)
         view.addSubview(noTimesWorkButton)
-
-        setupErrorMessageAlert()
-        setupTimeSections()
-        setupConstraints()
-        updateNextButton()
-
-        if let firstDay = daysDict[selectedDay] {
-            //setupTimes(for: firstDay/*, isFirstTime: true*/)
-            changeTimes(for: firstDay)
-        }
-
     }
 
-    private func setupForStatus(_ status: SchedulingStatus) {
-        // TODO this should do all the setup that diffes based on [status]
-    }
-
-    private func setupViews() {
-        // TODO this should setup all the views
-    }
-
-    private func setupTimes() {
-        // TODO this should handle all the setup for times
-    }
 
     private func removePassedDays() {
+        // TODO this needs to update due to how choosing is
         daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
         daysAbbrev.removeSubrange(0..<dayIndex)
         selectedDay = daysAbbrev.first ?? "Su"
     }
 
-    private func changeTimes(for day: String/*, isFirstTime: Bool*/) {
+    private func changeTimes(for day: String) {
         if isChoosing, let times = matchAvailabilities[day] {
             afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
             eveningTimes = allEveningTimes.filter { times.contains($0) }
             morningTimes = allMorningTimes.filter { times.contains($0) }
         }
+
         morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
         eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
-        // Reset timeSections and timeCollectionView's constraints if it's not the first time `setupTimes` is called
-        //if !isFirstTime {
-            setupTimeSections()
-            setupTimeCollectionViewConstraints()
+
+        setupTimeSections()
+        setupTimeCollectionViewConstraints()
     }
 
     private func setupTimeSections() {
@@ -496,7 +501,6 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             selectedDay = daysAbbrev[indexPath.item]
             dayLabel.text  = isChoosing ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
             if isChoosing, let day = daysDict[selectedDay] {
-                //setupTimes(for: day/*, isFirstTime: false*/)
                 changeTimes(for: day)
             }
             timeCollectionView.reloadData()
