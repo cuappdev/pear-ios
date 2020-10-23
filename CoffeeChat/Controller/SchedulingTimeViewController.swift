@@ -8,6 +8,16 @@
 
 import UIKit
 
+enum SchedulingStatus {
+    /// If the user has no pear, they can input their typical availabilities
+    case pickingTypical
+    /// If the user reaches out first, they confirm their availabilities
+    case confirming
+    /// If the pear reached out first, the user chooses 1 time from the availabilities
+    case choosing
+
+}
+
 class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
@@ -28,7 +38,9 @@ class SchedulingTimeViewController: UIViewController {
     // TODO move these into setup method
     private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
     private let timeCellVerticalSpacing: CGFloat = 8
-    private var timeCollectionViewWidth: CGFloat { get { CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105)) }}
+    private var timeCollectionViewWidth: CGFloat {
+        get { CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105)) }
+    }
 
     // MARK: - Section
     private struct Section {
@@ -129,10 +141,6 @@ class SchedulingTimeViewController: UIViewController {
             }
         }
 
-        if let firstDay = daysDict[selectedDay] {
-            setupTimes(for: firstDay, isFirstTime: true)
-        }
-
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
@@ -211,6 +219,11 @@ class SchedulingTimeViewController: UIViewController {
         setupTimeSections()
         setupConstraints()
         updateNextButton()
+
+        if let firstDay = daysDict[selectedDay] {
+            setupTimes(for: firstDay/*, isFirstTime: true*/)
+        }
+
     }
 
     private func removePassedDays() {
@@ -220,7 +233,7 @@ class SchedulingTimeViewController: UIViewController {
         selectedDay = daysAbbrev.first ?? "Su"
     }
 
-    private func setupTimes(for day: String, isFirstTime: Bool) {
+    private func setupTimes(for day: String/*, isFirstTime: Bool*/) {
         if isPicking, let times = matchAvailabilities[day] {
             afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
             eveningTimes = allEveningTimes.filter { times.contains($0) }
@@ -230,10 +243,10 @@ class SchedulingTimeViewController: UIViewController {
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
         eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
         // Reset timeSections and timeCollectionView's constraints if it's not the first time `setupTimes` is called
-        if !isFirstTime {
+        //if !isFirstTime {
             setupTimeSections()
             setupTimeCollectionViewConstraints()
-        }
+        //}
     }
 
     private func setupTimeSections() {
@@ -326,10 +339,11 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         timeScrollView.view.contentSize = calculateTimesHeight()
+        print(timeScrollView.view.contentSize)
 
-        timeCollectionView.snp.makeConstraints { update in
-            update.top.equalTo(timeScrollView.view.snp.top)
-            update.size.equalTo(timeScrollView.view.contentSize)
+        timeCollectionView.snp.remakeConstraints { remake in
+            remake.top.equalTo(timeScrollView.view.snp.top)
+            remake.size.equalTo(timeScrollView.view.contentSize)
         }
 
     }
@@ -468,7 +482,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             selectedDay = daysAbbrev[indexPath.item]
             dayLabel.text  = isPicking ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
             if isPicking, let day = daysDict[selectedDay] {
-                setupTimes(for: day, isFirstTime: false)
+                setupTimes(for: day/*, isFirstTime: false*/)
             }
             timeCollectionView.reloadData()
         } else {
