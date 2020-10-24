@@ -33,7 +33,10 @@ class InterestsGroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeWrapperView<UITableView>(UITableView(frame: .zero, style: .plain), fadeColor: .backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView<UITableView>(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -63,17 +66,17 @@ class InterestsGroupsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        fadeTableView.view.clipsToBounds = true
-        fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.backgroundColor = .none
         fadeTableView.view.bounces = false
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.delegate = self
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorStyle = .none
         fadeTableView.view.showsHorizontalScrollIndicator = false
         fadeTableView.view.showsVerticalScrollIndicator = false
-        fadeTableView.view.separatorStyle = .none
-        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
-        fadeTableView.view.delegate = self
-        fadeTableView.view.dataSource = self
-        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
 
         titleLabel.text = "What do you most want\nto talk about?"

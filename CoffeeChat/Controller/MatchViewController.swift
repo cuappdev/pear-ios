@@ -45,7 +45,6 @@ class MatchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-        print("???")
     }
 
     override func viewDidLoad() {
@@ -166,7 +165,7 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        let timeVC = SchedulingTimeViewController(for: .choosing)
+        let timeVC = SchedulingTimeViewController(for: .confirming)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 }

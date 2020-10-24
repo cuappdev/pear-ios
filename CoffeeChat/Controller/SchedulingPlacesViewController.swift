@@ -52,12 +52,13 @@ class SchedulingPlacesViewController: UIViewController {
 
     // MARK: - Data Vars
     private var locationSections: [Section] = []
-    private var selectedCampusLocations = [String]()
-    private var selectedCtownLocations = [String]()
+    private var selectedCampusLocations: [String] = []
+    private var selectedCtownLocations: [String] = []
+    private var totalSelectedLocations: Int { get { selectedCampusLocations.count + selectedCtownLocations.count } }
 
     private let schedulingStatus: SchedulingStatus
     // Location user picked from match's locations
-    private var pickedLocation: String! // TODO optional
+    private var pickedLocation: String?
 
     // Data received from `SchedulingTimeViewController`
     private var availabilities: [String: [String]] = [:]
@@ -114,30 +115,59 @@ class SchedulingPlacesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
-        navigationController?.navigationBar.isHidden = true // TODO Remove this
 
-        titleLabel.font = ._24CircularStdMedium
+        setupViews()
+        setupForStatus()
+        setupConstraints()
+        updateNext()
+    }
+
+    // MARK: - Setup Functions
+    private func setupForStatus() {
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "Where do you prefer?"
         case .confirming:
             titleLabel.text = "Confirm preferred places"
+            preselectSavedLocations()
         case .choosing:
             titleLabel.text = "Pick a place to meet"
+            campusLocations = campusLocations.filter { matchLocations.contains($0) }
+            ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
         }
+    }
+
+    private func preselectSavedLocations() {
+        selectedCampusLocations = campusLocations.filter { savedLocations.contains($0) }
+        selectedCtownLocations = ctownLocations.filter { savedLocations.contains($0) }
+
+        for campusLocation in selectedCampusLocations {
+            guard let index = campusLocations.firstIndex(of: campusLocation) else { continue }
+            locationsCollectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .top)
+        }
+        for ctownLocation in selectedCtownLocations {
+            guard let index = ctownLocations.firstIndex(of: ctownLocation) else { continue }
+            locationsCollectionView.selectItem(at: IndexPath(item: index, section: 1), animated: false, scrollPosition: .top)
+        }
+
+        updateNext()
+    }
+
+    private func setupViews() {
+        titleLabel.font = ._24CircularStdMedium
         titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
-        var scheduledTimeMessage = ""
         var amPm = ""
         if Time.isAm(time: pickedTime.time) {
             amPm = "AM"
         } else if Time.isPm(time: pickedTime.time) {
             amPm = "PM"
         }
-        scheduledTimeMessage = "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = schedulingStatus == .choosing ? scheduledTimeMessage :  "Pick three"
+        infoLabel.text = schedulingStatus == .choosing
+            ? "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
+            : "Pick three"
         infoLabel.textColor = .greenGray
         view.addSubview(infoLabel)
 
@@ -155,8 +185,16 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionView.layer.masksToBounds = false
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
-        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier)
-        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier)
+        locationsCollectionView.register(
+            HeaderLabel.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: campusHeaderIdentifier
+        )
+        locationsCollectionView.register(
+            HeaderLabel.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: ctownHeaderIdentifier
+        )
         view.addSubview(locationsCollectionView)
 
         nextButton.setTitle("Finish", for: .normal)
@@ -172,24 +210,10 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        if schedulingStatus == .confirming {
-            selectedCampusLocations = campusLocations.filter { savedLocations.contains($0) }
-            selectedCtownLocations = ctownLocations.filter { savedLocations.contains($0) }
-        }
-
-        if schedulingStatus == .choosing {
-            campusLocations = campusLocations.filter { matchLocations.contains($0) }
-            ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
-        }
-
-        // Create Datasource for CollectionView
         locationSections = [
             .campus(campusLocations),
             .ctown(ctownLocations)
         ]
-
-        setupConstraints()
-        updateNext()
     }
 
     private func setupConstraints() {
@@ -230,12 +254,17 @@ class SchedulingPlacesViewController: UIViewController {
             make.width.equalTo(14)
             make.height.equalTo(24)
         }
-
     }
 
     // MARK: Button Action
     private func updateNext() {
-        let enable = selectedCtownLocations.count + selectedCampusLocations.count > 2 || pickedLocation != nil
+        let enable: Bool
+        if schedulingStatus == .choosing {
+            enable = pickedLocation != nil
+        } else {
+            enable = totalSelectedLocations > 2
+        }
+
         nextButton.isEnabled = enable
         if enable {
             nextButton.backgroundColor = .backgroundOrange
@@ -253,11 +282,11 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        navigationController?.pushViewController(MatchViewController(hasReachedOut: true), animated: true)
+        navigationController?.pushViewController(HomeViewController(), animated: true)
     }
 
     @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: false)
+        navigationController?.popViewController(animated: true)
     }
 
 }
@@ -265,44 +294,41 @@ class SchedulingPlacesViewController: UIViewController {
 // MARK: - UICollectionViewDelegate
 extension SchedulingPlacesViewController: UICollectionViewDelegate {
 
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        totalSelectedLocations < 3
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Only three locations can be selected
-        if selectedCampusLocations.count + selectedCtownLocations.count < 3 {
-            let section = locationSections[indexPath.section]
-            switch section {
-            case .campus(let locations):
-                let location = locations[indexPath.row]
-                if schedulingStatus == .choosing {
-                    pickedLocation = location
-                } else {
-                    selectedCampusLocations.append(location)
-                }
-            case .ctown(let locations):
-                let location = locations[indexPath.row]
-                if schedulingStatus == .choosing {
-                    pickedLocation = location
-                } else {
-                    selectedCtownLocations.append(location)
-                }
+        let selectedLocation: String
+
+        switch locationSections[indexPath.section] {
+        case .campus(let locations):
+            selectedLocation = locations[indexPath.row]
+            if schedulingStatus == .choosing {
+                pickedLocation = selectedLocation
+            } else {
+                selectedCampusLocations.append(selectedLocation)
             }
-            if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-                cell.changeSelection(selected: true)
+        case .ctown(let locations):
+            selectedLocation = locations[indexPath.row]
+            if schedulingStatus == .choosing {
+                pickedLocation = selectedLocation
+            } else {
+                selectedCtownLocations.append(selectedLocation)
             }
-            updateNext()
         }
+
+        updateNext()
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let section = locationSections[indexPath.section]
-        switch section {
+        switch locationSections[indexPath.section] {
         case .campus(let locations):
             selectedCampusLocations.removeAll { $0 == locations[indexPath.row] }
         case .ctown(let locations):
             selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-            cell.changeSelection(selected: false)
-        }
+
         updateNext()
     }
 
@@ -323,35 +349,48 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let location: String
+
         switch locationSections[indexPath.section] {
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            let location = locations[indexPath.row]
+
+            location = locations[indexPath.row]
             cell.configure(with: location, isPicking: schedulingStatus == .choosing)
-            if schedulingStatus == .confirming && savedLocations.contains(location) {
-                cell.changeSelection(selected: true)
+            //cell.isSelected = selectedCampusLocations.contains(location)
+            if selectedCampusLocations.contains(location) {
+                //collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+                //cell.contentView.backgroundColor = .pearGreen
             }
+
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
-            let location = locations[indexPath.row]
+
+            location = locations[indexPath.row]
             cell.configure(with: location, isPicking: schedulingStatus == .choosing)
-            if schedulingStatus == .confirming && savedLocations.contains(location) {
-                cell.changeSelection(selected: true)
+            //cell.isSelected = selectedCtownLocations.contains(location)
+            if selectedCtownLocations.contains(location) {
+                //collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+                //cell.contentView.backgroundColor = .pearGreen
             }
+
             return cell
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let isCampus = indexPath.section == 0
+
         let header = isCampus
             ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
             : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
+
         guard let headerView = header as? HeaderLabel else { return header }
         headerView.configure(with: isCampus ? "Campus" : "Collegetown")
+
         return headerView
     }
 
@@ -367,6 +406,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
             : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
+
         return CGSize(width: itemWidth, height: min(schedulingStatus == .choosing ? 50 : 43, itemHeight))
     }
 

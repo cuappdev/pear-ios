@@ -418,11 +418,11 @@ class SchedulingTimeViewController: UIViewController {
 
     @objc private func nextButtonPressed() {
         let placesVC = SchedulingPlacesViewController(status: schedulingStatus, availabilities: availabilities, pickedTime: pickedTime)
-        navigationController?.pushViewController(placesVC, animated: false)
+        navigationController?.pushViewController(placesVC, animated: true)
     }
 
     @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: false)
+        navigationController?.popViewController(animated: true)
     }
 
     @objc private func noTimesWorkPressed() {
