@@ -66,9 +66,9 @@ class GroupsViewController: UIViewController {
 
         fadeTableView.tableView.delegate = self
         fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self,
+                                         forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
-
 
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
@@ -171,7 +171,6 @@ class GroupsViewController: UIViewController {
         delegate?.nextPage(index: 3)
     }
 
-
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
            let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
@@ -184,14 +183,15 @@ class GroupsViewController: UIViewController {
                                              hometown: hometown,
                                              interests: interests,
                                              major: major,
-                                             pronouns: pronouns).observe { result in
-                switch result {
-                case .value(let response):
-                    print(response)
-                case .error(let error):
-                    print(error)
+                                             pronouns: pronouns)
+                .observe { result in
+                    switch result {
+                    case .value(let response):
+                        print(response)
+                    case .error(let error):
+                        print(error)
+                    }
                 }
-            }
         }
     }
 
@@ -201,13 +201,12 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedGroups.count
+        displayedGroups.count
     }
-
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.row])
@@ -225,7 +224,8 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)

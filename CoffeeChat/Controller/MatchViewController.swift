@@ -63,9 +63,20 @@ class MatchViewController: UIViewController {
         let year = 2020
         let pronouns = "He/Him"
         let hometown = "Ithaca, NY"
-        let user = User(clubs: [], firstName: firstName, googleID: "", graduationYear: "2020", hometown: hometown,
-                        interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
-                        pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
+        let user = User(clubs: [],
+                        firstName: firstName,
+                        googleID: "",
+                        graduationYear: "2020",
+                        hometown: hometown,
+                        interests: [],
+                        lastName: lastName,
+                        major: major,
+                        matches: [],
+                        netID: "",
+                        profilePictureURL: "",
+                        pronouns: "pronouns",
+                        facebook: "https://www.facebook.com",
+                        instagram: "https://www.instagram.com")
 
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
@@ -78,7 +89,8 @@ class MatchViewController: UIViewController {
             view.addSubview(reachOutButton)
         }
 
-        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date.distantFuture)) // TODO change based on chat status
+        // TODO change based on chat status
+        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
@@ -107,7 +119,8 @@ class MatchViewController: UIViewController {
         matchSummaryTableView.showsVerticalScrollIndicator = false
         matchSummaryTableView.isScrollEnabled = false
         matchSummaryTableView.dataSource = self
-        matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: MatchSummaryTableViewCell.reuseIdentifier)
+        matchSummaryTableView.register(MatchSummaryTableViewCell.self,
+                                       forCellReuseIdentifier: MatchSummaryTableViewCell.reuseIdentifier)
         view.addSubview(matchSummaryTableView)
     }
 
@@ -172,11 +185,12 @@ extension MatchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MatchSummaryTableViewCell.reuseIdentifier, for: indexPath) as? MatchSummaryTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MatchSummaryTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
+                MatchSummaryTableViewCell else { return UITableViewCell() }
         let summary = matchSummaries[indexPath.row]
         cell.configure(for: summary)
         return cell
     }
 
 }
-

@@ -114,7 +114,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
+
 }
 
 extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
@@ -165,9 +165,9 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             self.errorMessageVisualEffectView.alpha = 0
             self.errorMessageAlertView.alpha = 0
             self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { (_) in
+        }, completion: { _ in
             self.errorMessageAlertView.removeFromSuperview()
-        }
+        })
     }
 
 }

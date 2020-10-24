@@ -152,10 +152,16 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionView.dataSource = self
         locationsCollectionView.backgroundColor = .clear
         locationsCollectionView.layer.masksToBounds = false
-        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
-        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
-        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier)
-        locationsCollectionView.register(HeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self,
+                                         forCellWithReuseIdentifier: campusReuseIdentifier)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self,
+                                         forCellWithReuseIdentifier: ctownReuseIdentiifier)
+        locationsCollectionView.register(HeaderLabel.self,
+                                         forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                         withReuseIdentifier: campusHeaderIdentifier)
+        locationsCollectionView.register(HeaderLabel.self,
+                                         forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                         withReuseIdentifier: ctownHeaderIdentifier)
         view.addSubview(locationsCollectionView)
 
         nextButton.setTitle("Finish", for: .normal)
@@ -344,11 +350,17 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
         let isCampus = indexPath.section == 0
         let header = isCampus
-            ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderIdentifier, for: indexPath)
-            : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderIdentifier, for: indexPath)
+            ? collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                              withReuseIdentifier: campusHeaderIdentifier,
+                                                              for: indexPath)
+            : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                              withReuseIdentifier: ctownHeaderIdentifier,
+                                                              for: indexPath)
         guard let headerView = header as? HeaderLabel else { return header }
         headerView.configure(with: isCampus ? "Campus" : "Collegetown")
         return headerView
@@ -358,7 +370,9 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
 
 extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let headersSize = 2 * headerHeight
         let numberColumns: CGFloat = isPicking ? 1 : 2
         let numberRows = isPicking
@@ -369,8 +383,10 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: itemWidth, height: min(isPicking ? 50 : 43, itemHeight))
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
     }
 
 }

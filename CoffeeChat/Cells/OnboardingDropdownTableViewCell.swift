@@ -17,7 +17,7 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .backgroundLightGrayGreen
         selectionStyle = .none
-        
+
         label.textColor = .textGray
         label.font = ._20CircularStdBook
         label.textColor = .black

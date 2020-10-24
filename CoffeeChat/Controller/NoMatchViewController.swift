@@ -30,7 +30,6 @@ class NoMatchViewController: UIViewController {
         let subtitleLabelPadding: CGFloat = Constants.Onboarding.skipBottomPadding
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
 
-
         noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
         noMatchTitleLabel.numberOfLines = 2
         noMatchTitleLabel.sizeToFit()
@@ -79,7 +78,7 @@ class NoMatchViewController: UIViewController {
            make.size.equalTo(buttonSize)
            make.centerX.equalToSuperview()
            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
-       }
+        }
      }
 
      @objc private func availabilityButtonPressed() {

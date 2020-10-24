@@ -65,19 +65,28 @@ class DemographicsViewController: UIViewController {
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
         classSearchFields = (currentYear...gradYear).map { "\($0)" }
 
-        classDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields, textTemplate: "Class of")
+        classDropdownView = OnboardingSelectDropdownView(delegate: self,
+                                                         placeholder: "Class of...",
+                                                         tableData: classSearchFields,
+                                                         textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
+                                                         placeholder: "Major",
+                                                         tableData: majorSearchFields)
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
+                                                            placeholder: "Hometown",
+                                                            tableData: hometownSearchFields)
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
+                                                            placeholder: "Pronouns",
+                                                            tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
@@ -182,7 +191,8 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    /// Brings field view to the front of the screen and handles keyboard interactions when switching from select dropdowns to search.
+    /// Brings field view to the front of the screen and handles keyboard interactions
+    /// when switching from select dropdowns to search.
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
         if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView,
              activeDropdownView != dropdownView {
