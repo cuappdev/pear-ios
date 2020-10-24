@@ -34,8 +34,9 @@
 		4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152E23F7817B0095EC17 /* Interest.swift */; };
 		4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */; };
 		4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */; };
-		4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */; };
+		4FFF3B2323E9189F00C89C29 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		6ECBFAA1D792E019EC7B668C /* Pods_CoffeeChatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAAD8EC51B92AA399F9AEA1 /* Pods_CoffeeChatTests.framework */; };
+		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
 		A5C968DFB6CAEE7E6A7D1B61 /* Pods_CoffeeChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */; };
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D41FE85A246463E10048900F /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE859246463E10048900F /* UserSession.swift */; };
@@ -124,8 +125,8 @@
 		4FD8152E23F7817B0095EC17 /* Interest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interest.swift; sourceTree = "<group>"; };
 		4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
-		4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
 		593F0F3478D4151754C87BF5 /* Pods-CoffeeChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.debug.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.debug.xcconfig"; sourceTree = "<group>"; };
+		7E06B84F2543F15900D6B505 /* InterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
 		81FEA7165DB89192A88131C5 /* Pods_CoffeeChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoffeeChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98922448C68EFB9427BF895F /* Pods-CoffeeChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChat.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChat/Pods-CoffeeChat.release.xcconfig"; sourceTree = "<group>"; };
 		B1E6C709EAD522864EE176B7 /* Pods-CoffeeChatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoffeeChatTests.release.xcconfig"; path = "Target Support Files/Pods-CoffeeChatTests/Pods-CoffeeChatTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -297,7 +298,6 @@
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
 				4F12A70F2419925C00AEA21C /* EditingViewController.swift */,
 				D480EC0523E2470000513063 /* MatchViewController.swift */,
-				4FFF3B2223E9189F00C89C29 /* InterestsViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
@@ -305,6 +305,7 @@
 				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
 				303F81A124394F95002937CD /* ProfileMenuViewController.swift */,
 				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
+				7E06B84F2543F15900D6B505 /* InterestsViewController.swift */,
 				D42961832525F1C800C677C3 /* InterestsGroupsViewController.swift */,
 				D429619F2526246600C677C3 /* HomeViewController.swift */,
 				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
@@ -722,8 +723,8 @@
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
-				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
-				4FFF3B2323E9189F00C89C29 /* InterestsViewController.swift in Sources */,
+				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
+				4FFF3B2323E9189F00C89C29 /* (null) in Sources */,
 				D47FF1852459424C00808A9A /* Response.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
