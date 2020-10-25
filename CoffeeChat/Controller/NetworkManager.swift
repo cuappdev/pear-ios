@@ -18,11 +18,11 @@ class NetworkManager {
     private init() {}
 
     func pingServer() -> Future<Response<String>> {
-        return networking(Endpoint.pingServer()).decode()
+        networking(Endpoint.pingServer()).decode()
     }
 
     func createUser(idToken: String) -> Future<Response<UserSession>> {
-        return networking(Endpoint.createUser(idToken: idToken)).decode()
+        networking(Endpoint.createUser(idToken: idToken)).decode()
     }
 
     func updateUser(clubs: [String],
@@ -31,32 +31,32 @@ class NetworkManager {
                     interests: [String],
                     major: String,
                     pronouns: String) -> Future<Response<UserSession>> {
-        return networking(Endpoint.updateUser(clubs: clubs,
-                                              graduationYear: graduationYear,
-                                              hometown: hometown,
-                                              interests: interests,
-                                              major: major,
-                                              pronouns: pronouns)).decode()
+        networking(Endpoint.updateUser(clubs: clubs,
+                                       graduationYear: graduationYear,
+                                       hometown: hometown,
+                                       interests: interests,
+                                       major: major,
+                                       pronouns: pronouns)).decode()
     }
 
     func getUser() -> Future<Response<User>> {
-        return networking(Endpoint.getUser()).decode()
+        networking(Endpoint.getUser()).decode()
     }
 
     func getUserClubs() -> Future<Response<[String]>> {
-        return networking(Endpoint.getUserClubs()).decode()
+        networking(Endpoint.getUserClubs()).decode()
     }
 
     func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Future<Response<Matching>> {
-        return networking(Endpoint.getUserMatchings(netIDs: netIDs, schedule: schedule)).decode()
+        networking(Endpoint.getUserMatchings(netIDs: netIDs, schedule: schedule)).decode()
     }
 
     func getUserMajor() -> Future<Response<String>> {
-        return networking(Endpoint.getUserMajor()).decode()
+        networking(Endpoint.getUserMajor()).decode()
     }
 
     func getUserInterests() -> Future<Response<[String]>> {
-        return networking(Endpoint.getUserInterests()).decode()
+        networking(Endpoint.getUserInterests()).decode()
     }
 
     // TODO: Update response body

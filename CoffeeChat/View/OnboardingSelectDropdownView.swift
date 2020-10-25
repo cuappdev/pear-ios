@@ -49,7 +49,7 @@ class OnboardingSelectDropdownView: UIView {
         dropdownButton.contentHorizontalAlignment = .left
         dropdownButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0) // Shift placeholder into place.
         dropdownButton.layer.shadowColor = UIColor.black.cgColor
-        dropdownButton.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        dropdownButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         dropdownButton.layer.shadowOpacity = 0.15
         dropdownButton.layer.shadowRadius = 2
         dropdownButton.addTarget(self, action: #selector(toggleDropDown), for: .touchUpInside)
@@ -111,11 +111,11 @@ class OnboardingSelectDropdownView: UIView {
 
 extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        44
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

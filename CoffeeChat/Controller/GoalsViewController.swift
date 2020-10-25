@@ -55,7 +55,8 @@ class GoalsViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = true
-        tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        tableView.register(SimpleOnboardingTableViewCell.self,
+                           forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
 
         titleLabel.text = "How do you want to use\nPear?"
@@ -131,7 +132,6 @@ class GoalsViewController: UIViewController {
         }
     }
 
-
     // MARK: - Next and Previous Buttons
     private func updateNext() {
         nextButton.isEnabled = selectedGoals.count > 0
@@ -159,11 +159,11 @@ class GoalsViewController: UIViewController {
 extension GoalsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return goals.count
+        goals.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -184,11 +184,12 @@ extension GoalsViewController: UITableViewDelegate {
 extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as? SimpleOnboardingTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
+                SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let goal = goals[indexPath.row]
         cell.configure(with: goal)
         return cell
     }
 
 }
-

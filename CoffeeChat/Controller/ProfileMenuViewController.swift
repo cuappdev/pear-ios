@@ -128,11 +128,13 @@ class ProfileMenuViewController: UIViewController {
 extension ProfileMenuViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuOptions.count
+        menuOptions.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       guard let cell = tableView.dequeueReusableCell(withIdentifier: menuOptionCellReuseId, for: indexPath) as? MenuOptionTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: menuOptionCellReuseId,
+                                                       for: indexPath) as?
+            MenuOptionTableViewCell else { return UITableViewCell() }
         let option = menuOptions[indexPath.row]
         cell.configure(for: option)
         return cell
@@ -152,7 +154,7 @@ extension ProfileMenuViewController: UITableViewDataSource {
 extension ProfileMenuViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        60
     }
 
 }

@@ -72,7 +72,7 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = fieldsCornerRadius
         searchBar.layer.shadowColor = UIColor.black.cgColor
-        searchBar.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         searchBar.layer.shadowOpacity = 0.15
         searchBar.layer.shadowRadius = 2
         searchBar.searchTextPositionAdjustment = UIOffset(horizontal: -6, vertical: 0)
@@ -118,11 +118,11 @@ class OnboardingSearchDropdownView: UIView {
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        44
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resultsTableData.count
+        resultsTableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -74,20 +74,44 @@ class SchedulingTimeViewController: UIViewController {
 
     private var availabilities: [String: [String]] = [:]
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-    private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
+    private let daysDict = [
+        "Su": "Sunday",
+        "M": "Monday",
+        "Tu": "Tuesday",
+        "W": "Wednesday",
+        "Th": "Thursday",
+        "F": "Friday",
+        "Sa": "Saturday"
+    ]
     private var selectedDay: String = "Su"
 
     // Whether user is confirming their own availabilities
     private var isConfirming: Bool
     // TODO: Change values after connecting to backend
-    private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private var savedAvailabilities: [String: [String]] = [
+        "Monday": ["5:30", "6:00", "6:30"],
+        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
+        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
+        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
+    ]
 
     // Whether user is picking a time from match's availabilities
     private var isPicking: Bool
     // Time user picked from match's availabilities
     private var pickedTime: (day: String, time: String) = (day: "", time: "")
     // TODO: Change values after connecting to backend
-    private var matchAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30", "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private var matchAvailabilities: [String: [String]] = [
+        "Monday": ["5:30", "6:00", "6:30"],
+        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
+        "Friday": [
+            "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+            "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"
+        ],
+        "Saturday": [
+            "2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30",
+            "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"
+        ]
+    ]
     private let matchFirstName: String = "Ezra"
 
     init(isConfirming: Bool, isPicking: Bool) {
@@ -344,7 +368,10 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        let placesVC = SchedulingPlacesViewController(isConfirming: isConfirming, isPicking: isPicking, availabilities: availabilities, pickedTime: pickedTime)
+        let placesVC = SchedulingPlacesViewController(isConfirming: isConfirming,
+                                                      isPicking: isPicking,
+                                                      availabilities: availabilities,
+                                                      pickedTime: pickedTime)
         navigationController?.pushViewController(placesVC, animated: false)
     }
 
@@ -361,16 +388,19 @@ class SchedulingTimeViewController: UIViewController {
 extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return collectionView == dayCollectionView ? 1 : timeSections.count
+        collectionView == dayCollectionView ? 1 : timeSections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionView == dayCollectionView ? daysAbbrev.count : timeSections[section].items.count
+        collectionView == dayCollectionView ? daysAbbrev.count : timeSections[section].items.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId,
+                                                                for: indexPath) as?
+                    SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = daysAbbrev[indexPath.item]
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
@@ -387,7 +417,9 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId,
+                                                                for: indexPath) as?
+                    SchedulingTimeCollectionViewCell else { return UICollectionViewCell() }
             switch item {
             case .header(let header):
                 cell.configure(for: header, isHeader: true)
@@ -460,12 +492,15 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
 extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == dayCollectionView {
             return CGSize(width: 36, height: 48)
         } else {
             let itemCount = CGFloat(timeSections[indexPath.section].items.count)
-            let itemWidth = timeCollectionView.frame.width / CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
+            let itemWidth = timeCollectionView.frame.width /
+                CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
             let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
             return CGSize(width: itemWidth, height: min(36, itemHeight))
         }
@@ -483,10 +518,10 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
             self.errorMessageVisualEffectView.alpha = 0
             self.errorMessageAlertView.alpha = 0
             self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { (_) in
+        }, completion: { _ in
             self.errorMessageAlertView.removeFromSuperview()
             self.errorMessageVisualEffectView.removeFromSuperview()
-        }
+        })
     }
 
 }

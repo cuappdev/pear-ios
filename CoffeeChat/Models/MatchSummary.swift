@@ -9,10 +9,10 @@
 import Foundation
 
 class MatchSummary {
-    
+
     let title: String
     let detail: String
-    
+
     init(title: String, detail: String) {
         self.title = title
         self.detail = detail
