@@ -125,8 +125,8 @@ class SchedulingTimeViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
 
         setupViews()
-        setupForStatus(schedulingStatus)
         setupDaysAndTimes()
+        setupForStatus(schedulingStatus)
 
         setupErrorMessageAlert()
         setupTimeSections()
@@ -134,10 +134,18 @@ class SchedulingTimeViewController: UIViewController {
         updateNextButton()
     }
 
+    // MARK: - Setup
     private func setupDaysAndTimes() {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
+
+        if isConfirming || isChoosing {
+            removePassedDays()
+        }
+        if isChoosing {
+            removeUnavailableDays()
+        }
 
         guard let firstDay = daysAbbrev.first else {
             fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
@@ -147,41 +155,20 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupForStatus(_ status: SchedulingStatus) {
-        timeCollectionView.allowsMultipleSelection = !isChoosing
-        if isConfirming || isChoosing {
-            dayLabel.text = daysDict[selectedDay]
-        } else {
-             dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
-        }
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "When are you free?"
+             dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
         case .confirming:
             titleLabel.text = "Confirm your availability"
+            dayLabel.text = daysDict[selectedDay]
+            availabilities = savedAvailabilities
         case .choosing:
             titleLabel.text = "Pick a time to meet"
+            dayLabel.text = daysDict[selectedDay]
         }
 
-        if isConfirming {
-            availabilities = savedAvailabilities
-        }
-
-        if isConfirming || isChoosing {
-            removePassedDays()
-        }
-        if isChoosing {
-            removeUnavailableDays()
-        }
-    }
-
-    private func removePassedDays() {
-        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
-        daysAbbrev.removeSubrange(0..<dayIndex)
-    }
-
-    private func removeUnavailableDays() {
-        daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
+        timeCollectionView.allowsMultipleSelection = !isChoosing
     }
 
     private func setupViews() {
@@ -251,22 +238,6 @@ class SchedulingTimeViewController: UIViewController {
         noTimesWorkButton.titleLabel?.font = ._16CircularStdMedium
         noTimesWorkButton.addTarget(self, action: #selector(noTimesWorkPressed), for: .touchUpInside)
         view.addSubview(noTimesWorkButton)
-    }
-
-
-    private func changeTimes(for day: String) {
-        if isChoosing, let times = matchAvailabilities[day] {
-            afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
-            eveningTimes = allEveningTimes.filter { times.contains($0) }
-            morningTimes = allMorningTimes.filter { times.contains($0) }
-        }
-
-        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
-
-        setupTimeSections()
-        setupTimeCollectionViewConstraints()
     }
 
     private func setupTimeSections() {
@@ -368,6 +339,33 @@ class SchedulingTimeViewController: UIViewController {
         return CGSize(width: timeCollectionViewWidth, height: cellsHeight + interitemHeight)
     }
 
+    // MARK: - Time Related
+    private func changeTimes(for day: String) {
+        if isChoosing, let times = matchAvailabilities[day] {
+            afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
+            eveningTimes = allEveningTimes.filter { times.contains($0) }
+            morningTimes = allMorningTimes.filter { times.contains($0) }
+        }
+
+        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
+
+        setupTimeSections()
+        setupTimeCollectionViewConstraints()
+    }
+
+    private func removePassedDays() {
+        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
+        daysAbbrev.removeSubrange(0..<dayIndex)
+    }
+
+    private func removeUnavailableDays() {
+        daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
+    }
+
+    // MARK: - Error Message
     private func setupErrorMessageAlert() {
         errorMessageAlertView = MessageAlertView(
             delegate: self,
@@ -398,6 +396,7 @@ class SchedulingTimeViewController: UIViewController {
         })
     }
 
+    // MARK: - Buttons
     private func updateNextButton() {
         let timeCount = availabilities.map({ $0.value.count }).reduce(0, +)
         nextButton.isEnabled = !availabilities.isEmpty && timeCount > 0 || pickedTime.day != "" && pickedTime.time != ""

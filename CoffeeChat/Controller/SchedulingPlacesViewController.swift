@@ -394,7 +394,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
         let headersSize = 2 * headerHeight
         let numberColumns: CGFloat = schedulingStatus == .choosing ? 1 : 2
         let numberRows = schedulingStatus == .choosing
-            ? CGFloat(campusLocations.count + ctownLocations.count)
+            ? CGFloat(totalSelectedLocations)
             : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing

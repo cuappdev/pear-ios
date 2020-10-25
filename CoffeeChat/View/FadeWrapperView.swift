@@ -47,6 +47,7 @@ class FadeWrapperView<T: UIView>: UIView {
         leftFadeView.isUserInteractionEnabled = false
         rightFadeView.isUserInteractionEnabled = false
         topFadeView.isUserInteractionEnabled = false
+
         addSubview(bottomFadeView)
         addSubview(leftFadeView)
         addSubview(rightFadeView)
