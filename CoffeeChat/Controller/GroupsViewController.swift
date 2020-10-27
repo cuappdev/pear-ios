@@ -34,7 +34,10 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -64,11 +67,16 @@ class GroupsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.separatorStyle = .none
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.delegate = self
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
-
 
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
@@ -143,7 +151,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = searchText.isEmpty
             ? groups
             : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        fadeTableView.tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
     // MARK: - Next and Previous Buttons
@@ -171,7 +179,6 @@ class GroupsViewController: UIViewController {
         delegate?.nextPage(index: 3)
     }
 
-
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
            let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
@@ -184,14 +191,15 @@ class GroupsViewController: UIViewController {
                                              hometown: hometown,
                                              interests: interests,
                                              major: major,
-                                             pronouns: pronouns).observe { result in
-                switch result {
-                case .value(let response):
-                    print(response)
-                case .error(let error):
-                    print(error)
+                                             pronouns: pronouns)
+                .observe { result in
+                    switch result {
+                    case .value(let response):
+                        print(response)
+                    case .error(let error):
+                        print(error)
+                    }
                 }
-            }
         }
     }
 
@@ -201,13 +209,12 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedGroups.count
+        displayedGroups.count
     }
-
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.row])
@@ -225,7 +232,8 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)

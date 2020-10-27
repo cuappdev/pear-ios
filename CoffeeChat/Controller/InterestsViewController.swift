@@ -14,7 +14,10 @@ class InterestsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let nextButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen
+    )
     private let titleLabel = UILabel()
 
     // MARK: - Data
@@ -60,9 +63,14 @@ class InterestsViewController: UIViewController {
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.delegate = self
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
         nextButton.setTitle("Next", for: .normal)
@@ -119,7 +127,6 @@ class InterestsViewController: UIViewController {
         }
     }
 
-
     /// Updates the enabled state of next button based on the state of selectedInterests.
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
@@ -144,11 +151,11 @@ class InterestsViewController: UIViewController {
 extension InterestsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
+        64
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return interests.count
+        interests.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -167,8 +174,8 @@ extension InterestsViewController: UITableViewDelegate {
 extension InterestsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
         OnboardingTableViewCell else { return UITableViewCell() }
         let data = interests[indexPath.row]
         cell.configure(with: data)

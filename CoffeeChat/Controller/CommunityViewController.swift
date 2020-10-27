@@ -101,7 +101,7 @@ class CommunityViewController: UIViewController {
 
         setupConstraints()
     }
-
+    
     private func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(23)

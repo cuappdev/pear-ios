@@ -18,7 +18,7 @@ class TabPageViewController: UIPageViewController {
     override init(
         transitionStyle style: UIPageViewController.TransitionStyle,
         navigationOrientation: UIPageViewController.NavigationOrientation,
-        options: [UIPageViewController.OptionsKey : Any]? = nil
+        options: [UIPageViewController.OptionsKey: Any]? = nil
     ) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }

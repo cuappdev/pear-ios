@@ -23,7 +23,7 @@ class SchedulingTimeCollectionViewCell: UICollectionViewCell {
 
         label.font = ._16CircularStdBook
         contentView.addSubview(label)
-    
+
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }

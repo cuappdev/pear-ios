@@ -33,7 +33,10 @@ class InterestsGroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -63,9 +66,14 @@ class InterestsGroupsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.delegate = self
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
         titleLabel.text = "What do you most want\nto talk about?"
@@ -142,7 +150,7 @@ class InterestsGroupsViewController: UIViewController {
         displayedInterestsGroups = searchText.isEmpty
             ? interestsGroups
             : interestsGroups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        fadeTableView.tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
     // MARK: - Next and Previous Buttons
@@ -173,7 +181,7 @@ class InterestsGroupsViewController: UIViewController {
 extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let _ = interestsGroups[indexPath.row].subtitle {
+        if interestsGroups[indexPath.row].subtitle != nil {
             return 61
         } else {
             return 54
@@ -181,9 +189,8 @@ extension InterestsGroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedInterestsGroups.count
+        displayedInterestsGroups.count
     }
-
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedInterestsGroups.append(displayedInterestsGroups[indexPath.row])
@@ -201,8 +208,8 @@ extension InterestsGroupsViewController: UITableViewDelegate {
 extension InterestsGroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedInterestsGroups[indexPath.row]
         cell.configure(with: data)
