@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 transitionStyle: UIPageViewController.TransitionStyle.scroll,
                 navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
             )
-            let rootVC = onboardingVC
+            let rootVC = onboardingCompleted ? homeVC : onboardingVC
             let navigationController = UINavigationController(rootViewController: rootVC)
             window.rootViewController = navigationController
         } else {

@@ -54,11 +54,9 @@ class EditDemographicsViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
-
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen
@@ -216,8 +214,6 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save values to backend.
-        print("save pressed")
-
     }
 
     @objc private func uploadPhotoPressed() {
