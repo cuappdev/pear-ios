@@ -43,7 +43,7 @@ class ConnectSocialMediaViewController: UIViewController {
         instaTextField.font = ._20CircularStdBook
         instaTextField.backgroundColor = .white
         instaTextField.layer.cornerRadius = 8
-        instaTextField.textColor = .textBlack
+        instaTextField.textColor = .black
         instaTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
         instaTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         instaTextField.layer.shadowOpacity = 1
@@ -64,7 +64,7 @@ class ConnectSocialMediaViewController: UIViewController {
         // fill with previously saved socials from backend
         fbTextField.text = "http://www.facebook.co..."
         fbTextField.font = ._20CircularStdBook
-        fbTextField.textColor = .textBlack
+        fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
         fbTextField.layer.cornerRadius = 8
         fbTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor

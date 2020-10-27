@@ -23,7 +23,7 @@ class SchedulingTimeCollectionViewCell: UICollectionViewCell {
 
         label.font = ._16CircularStdBook
         contentView.addSubview(label)
-    
+
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
@@ -39,7 +39,7 @@ class SchedulingTimeCollectionViewCell: UICollectionViewCell {
             layer.shadowOpacity = 0
             layer.shadowRadius = 0
         } else {
-            label.textColor = .textBlack
+            label.textColor = .black
             contentView.layer.cornerRadius = 10
             contentView.backgroundColor = .white
             layer.shadowColor = UIColor.black.cgColor

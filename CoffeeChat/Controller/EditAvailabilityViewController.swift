@@ -185,7 +185,7 @@ class EditAvailabilityViewController: UIViewController {
         
         scheduleTimeLabel.font = ._20CircularStdBook
         scheduleTimeLabel.text = "When are you free?"
-        scheduleTimeLabel.textColor = .textBlack
+        scheduleTimeLabel.textColor = .black
         contentView.addSubview(scheduleTimeLabel)
         
         let dayCollectionViewLayout = UICollectionViewFlowLayout()
@@ -204,7 +204,7 @@ class EditAvailabilityViewController: UIViewController {
         
         guard let day = daysDict[selectedDay] else { return }
         dayLabel.text = "Every \(day)"
-        dayLabel.textColor = .textBlack
+        dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         contentView.addSubview(dayLabel)
         
@@ -224,7 +224,7 @@ class EditAvailabilityViewController: UIViewController {
         
         scheduleLocationLabel.text = "Where do you prefer?"
         scheduleLocationLabel.font = ._20CircularStdBook
-        scheduleLocationLabel.textColor = .textBlack
+        scheduleLocationLabel.textColor = .black
         editScrollView.addSubview(scheduleLocationLabel)
         
         scheduleLocationSubLabel.text = "pick three"
@@ -438,7 +438,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
                 let location = locations[indexPath.item]
                 cell.configure(with: location, isPicking: false)
                 if savedLocations.contains(location) {
-                    cell.changeSelection(selected: true)
+                    cell.isSelected = true
                     locationsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 }
                 return cell
@@ -447,7 +447,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
                 let location = locations[indexPath.item]
                 cell.configure(with: location, isPicking: false)
                 if savedLocations.contains(location) {
-                    cell.changeSelection(selected: true)
+                    cell.isSelected = true
                     locationsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 }
                 return cell
@@ -511,7 +511,7 @@ extension EditAvailabilityViewController: UICollectionViewDelegate {
                     }
                 }
                 if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-                    cell.changeSelection(selected: true)
+                    cell.isSelected = true
                 }
             }
         }
@@ -536,7 +536,7 @@ extension EditAvailabilityViewController: UICollectionViewDelegate {
                 selectedCtownLocations.removeAll { $0 == locations[indexPath.row] }
             }
             if let cell = collectionView.cellForItem(at: indexPath) as? SchedulingPlaceCollectionViewCell {
-                cell.changeSelection(selected: false)
+                cell.isSelected = false
             }
         }
     }

@@ -14,14 +14,15 @@ class GoalsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var goals: [String: Bool] = [
-        "Just chatting": false,
-        "Finding my people": false,
-        "Meeting someone different": false,
-        "Learning from mentors": false,
-        "Guiding mentees": false,
-        "Not sure yet": false
+    private var goals: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "Just chatting", subtitle: nil),
+        SimpleOnboardingCell(name: "Finding my people", subtitle: nil),
+        SimpleOnboardingCell(name: "Meeting someone different", subtitle: nil),
+        SimpleOnboardingCell(name: "Learning from mentors", subtitle: nil),
+        SimpleOnboardingCell(name: "Guiding mentees", subtitle: nil),
+        SimpleOnboardingCell(name: "Not sure yet", subtitle: nil)
     ]
+    private var selectedGoals: [String] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
@@ -54,7 +55,8 @@ class GoalsViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = true
-        tableView.register(GoalTableViewCell.self, forCellReuseIdentifier: GoalTableViewCell.reuseIdentifier)
+        tableView.register(SimpleOnboardingTableViewCell.self,
+                           forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
 
         titleLabel.text = "How do you want to use\nPear?"
@@ -68,7 +70,7 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Ready for Pear", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -78,7 +80,7 @@ class GoalsViewController: UIViewController {
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
-        skipButton.setTitle("I'll add later", for: .normal)
+        skipButton.setTitle("Skip", for: .normal)
         skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
@@ -130,12 +132,13 @@ class GoalsViewController: UIViewController {
         }
     }
 
-
     // MARK: - Next and Previous Buttons
-    /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
-        nextButton.isEnabled = goals.filter{$0.value}.count > 0
+        nextButton.isEnabled = selectedGoals.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        skipButton.isEnabled = !nextButton.isEnabled
+        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {
@@ -143,15 +146,11 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 4)
     }
 
     @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        delegate?.nextPage(index: 4)
     }
 
 }
@@ -160,22 +159,22 @@ class GoalsViewController: UIViewController {
 extension GoalsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 54
+        54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return goals.count
+        goals.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let goal = Array(goals)[indexPath.row].key
-        goals[goal]?.toggle()
+        let goal = goals[indexPath.row]
+        selectedGoals.append(goal.name)
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let goal = Array(goals)[indexPath.row].key
-        goals[goal]?.toggle()
+        let goal = goals[indexPath.row]
+        selectedGoals.removeAll { $0 == goal.name }
         updateNext()
     }
 
@@ -185,11 +184,12 @@ extension GoalsViewController: UITableViewDelegate {
 extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: GoalTableViewCell.reuseIdentifier, for: indexPath) as? GoalTableViewCell else { return UITableViewCell() }
-        let goal = Array(goals)[indexPath.row].key
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
+                SimpleOnboardingTableViewCell else { return UITableViewCell() }
+        let goal = goals[indexPath.row]
         cell.configure(with: goal)
         return cell
     }
 
 }
-

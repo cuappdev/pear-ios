@@ -13,30 +13,31 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private var selectedGroups: [Group] = []
-
     // TODO: change when networking with backend
-    private var groups: [Group] = [
-        Group(name: "Apple", image: ""),
-        Group(name: "banana", image: ""),
-        Group(name: "Cornell AppDev", image: ""),
-        Group(name: "dandelion", image: ""),
-        Group(name: "giraffe", image: ""),
-        Group(name: "heap", image: ""),
-        Group(name: "Igloo", image: ""),
-        Group(name: "Jeans", image: "")
+    private var displayedGroups: [SimpleOnboardingCell] = []
+    private var groups: [SimpleOnboardingCell] = [
+        SimpleOnboardingCell(name: "AppDev", subtitle: nil),
+        SimpleOnboardingCell(name: "DTI", subtitle: nil),
+        SimpleOnboardingCell(name: "Guac Magazine", subtitle: nil),
+        SimpleOnboardingCell(name: "GCC", subtitle: nil),
+        SimpleOnboardingCell(name: "GVC", subtitle: nil),
+        SimpleOnboardingCell(name: "CUABS", subtitle: nil),
+        SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
+        SimpleOnboardingCell(name: "CUSD", subtitle: nil)
     ]
-    private var displayedGroups: [Group] = []
+    private var selectedGroups: [SimpleOnboardingCell] = []
     private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let clubLabel = UILabel()
-    private let greetingLabel = UILabel()
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -57,24 +58,31 @@ class GroupsViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
+        searchBar.placeholder = "Search"
         searchBar.searchTextField.backgroundColor = .backgroundWhite
-        searchBar.searchTextField.textColor = .textBlack
-        searchBar.searchTextField.font = ._20CircularStdBook
+        searchBar.searchTextField.textColor = .black
+        searchBar.searchTextField.font = ._16CircularStdBook
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.separatorStyle = .none
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.delegate = self
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
 
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
 
-        nextButton.setTitle("Almost there", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -96,16 +104,12 @@ class GroupsViewController: UIViewController {
     }
 
     private func setupConstraints() {
+        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(clubLabel)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
-        }
-
-        searchBar.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(48)
-            make.size.equalTo(CGSize(width: 295, height: 42))
         }
 
         clubLabel.snp.makeConstraints { make in
@@ -114,10 +118,16 @@ class GroupsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
 
+        searchBar.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(clubLabel.snp.bottom).offset(searchBarTopPadding)
+            make.size.equalTo(CGSize(width: 295, height: 40))
+        }
+
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(295)
-            make.top.equalTo(searchBar.snp.bottom).offset(24)
+            make.top.equalTo(searchBar.snp.bottom).offset(17)
             make.bottom.equalTo(nextButton.snp.top).offset(-57)
         }
 
@@ -135,56 +145,13 @@ class GroupsViewController: UIViewController {
     }
 
     // MARK: - Search Bar
-    /// Updates the search bar text based on currently selected Groups.
-    private func updateSearchBarText() {
-        if selectedGroups.isEmpty {
-            searchBar.text = ""
-            return
-        }
-
-        // Number of characters before list is considered "too long" and shortened to "..."
-        let maxChar = 20
-        let wordLong = 15
-
-        let listString = (selectedGroups.map { $0.name }).joined(separator: ", ")
-        let lastComma = listString.lastIndex(of: ",")
-
-        if let comma = lastComma {
-            let lastWordLength = listString.count - comma.utf16Offset(in: listString) - 2
-            if listString.count < maxChar {
-                searchBar.text = "\(listString), "
-            } else if listString.count > maxChar && lastWordLength < wordLong { // Last word is short enough to show
-                searchBar.text = "...\(listString.suffix(from: comma)), "
-            } else { // Both the entire string and the last word are too long to display
-                searchBar.text = "..., "
-            }
-        } else if listString.count < maxChar { // listString is one item, and show it if its short
-            searchBar.text = "\(listString), "
-        }
-    }
-
-    /// Retrieves user typed search text from searchBar
-    private func getSearchText(from searchText: String) -> String {
-        guard let lastGroupName = selectedGroups.last?.name else { return searchBar.text ?? "" }
-        let result: String
-        if searchText.contains(lastGroupName) { // Search for text after listing
-            result = searchText.components(separatedBy: lastGroupName + ", ").last ?? ""
-        } else if searchText.contains("..., ") { // Search for text after ..., "
-            result = searchText.components(separatedBy: "..., ").last ?? ""
-        } else if searchText.contains(", ") { // User backspaced into the previous list item
-            result = searchText.components(separatedBy: ", ").last ?? ""
-        } else { // User is deleting list, and should show all options
-          result = ""
-        }
-        return result.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
 
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
         displayedGroups = searchText.isEmpty
             ? groups
             : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        fadeTableView.tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
     // MARK: - Next and Previous Buttons
@@ -192,6 +159,9 @@ class GroupsViewController: UIViewController {
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
+        skipButton.isEnabled = selectedGroups.count == 0
+        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func backButtonPressed() {
@@ -209,7 +179,6 @@ class GroupsViewController: UIViewController {
         delegate?.nextPage(index: 3)
     }
 
-
     private func updateUser() {
         if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
            let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
@@ -222,14 +191,15 @@ class GroupsViewController: UIViewController {
                                              hometown: hometown,
                                              interests: interests,
                                              major: major,
-                                             pronouns: pronouns).observe { result in
-                switch result {
-                case .value(let response):
-                    print(response)
-                case .error(let error):
-                    print(error)
+                                             pronouns: pronouns)
+                .observe { result in
+                    switch result {
+                    case .value(let response):
+                        print(response)
+                    case .error(let error):
+                        print(error)
+                    }
                 }
-            }
         }
     }
 
@@ -239,28 +209,20 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedGroups.count
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+        displayedGroups.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedGroups.append(displayedGroups[indexPath.row])
-        updateSearchBarText()
-        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
-        updateSearchBarText()
-        filterTableView(searchText: getSearchText(from: searchBar.text ?? ""))
         updateNext()
     }
 
@@ -270,9 +232,9 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-            OnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
-        OnboardingTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
+                SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
@@ -288,7 +250,7 @@ extension GroupsViewController: UITableViewDataSource {
 extension GroupsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filterTableView(searchText: getSearchText(from: searchText))
+        filterTableView(searchText: searchText)
     }
 
 }

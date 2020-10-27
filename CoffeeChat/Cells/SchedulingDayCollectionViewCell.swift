@@ -30,7 +30,7 @@ class SchedulingDayCollectionViewCell: UICollectionViewCell {
         dayBackgroundView.layer.cornerRadius = backgroundViewSize.width / 2
         contentView.addSubview(dayBackgroundView)
 
-        dayLabel.textColor = .textBlack
+        dayLabel.textColor = .black
         dayLabel.font = ._16CircularStdBook
         contentView.addSubview(dayLabel)
 

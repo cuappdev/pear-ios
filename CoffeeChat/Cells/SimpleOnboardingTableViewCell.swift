@@ -1,5 +1,5 @@
 //
-//  GoalTableViewCell.swift
+//  SimpleOnboardingTableViewCell.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 9/16/20.
@@ -8,12 +8,15 @@
 
 import UIKit
 
-class GoalTableViewCell: UITableViewCell {
+class SimpleOnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let backdropView = UIView()
+    private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
-    static let reuseIdentifier = "GoalTableViewCell"
+
+    // MARK: Private Data Vars
+    static let reuseIdentifier = "SimpleOnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,9 +35,13 @@ class GoalTableViewCell: UITableViewCell {
         backdropView.layer.masksToBounds = true
         contentView.addSubview(backdropView)
 
-        titleLabel.textColor = .textBlack
+        titleLabel.textColor = .black
         titleLabel.font = ._16CircularStdBook
         backdropView.addSubview(titleLabel)
+
+        subtitleLabel.textColor = .greenGray
+        subtitleLabel.font = ._12CircularStdBook
+        backdropView.addSubview(subtitleLabel)
 
         setupConstraints()
     }
@@ -50,14 +57,31 @@ class GoalTableViewCell: UITableViewCell {
             make.top.bottom.equalToSuperview().inset(5)
         }
 
-        titleLabel.snp.remakeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(8)
-            make.centerY.equalToSuperview()
-        }
     }
 
-    func configure(with goal: String) {
-        titleLabel.text = goal
+    func configure(with item: SimpleOnboardingCell) {
+        titleLabel.text = item.name
+        var showSubtitle = false
+
+        if let subtitle = item.subtitle {
+            subtitleLabel.text = subtitle
+            showSubtitle = true
+        }
+
+        subtitleLabel.isHidden = !showSubtitle
+        titleLabel.snp.remakeConstraints { remake in
+            remake.leading.trailing.equalToSuperview().inset(8)
+            if showSubtitle {
+                remake.top.equalToSuperview().offset(8)
+            } else {
+                remake.centerY.equalToSuperview()
+            }
+        }
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(titleLabel)
+            make.top.equalTo(titleLabel.snp.bottom)
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -66,4 +90,3 @@ class GoalTableViewCell: UITableViewCell {
     }
 
 }
-

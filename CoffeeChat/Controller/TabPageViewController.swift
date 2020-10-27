@@ -12,13 +12,13 @@ class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
     private let communityViewController = CommunityViewController()
-    private let matchViewController = MatchViewController()
+    private let matchViewController = MatchViewController(hasReachedOut: false)
     private var pages: [UIViewController] = [UIViewController]()
 
     override init(
         transitionStyle style: UIPageViewController.TransitionStyle,
         navigationOrientation: UIPageViewController.NavigationOrientation,
-        options: [UIPageViewController.OptionsKey : Any]? = nil
+        options: [UIPageViewController.OptionsKey: Any]? = nil
     ) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }

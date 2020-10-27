@@ -1,13 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "onboardingBackground1x.png",
       "idiom" : "universal",
-      "filename" : "onboardingBackground_1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "onboardingBackground_2x.png",
       "scale" : "2x"
     },
     {
@@ -16,7 +15,7 @@
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

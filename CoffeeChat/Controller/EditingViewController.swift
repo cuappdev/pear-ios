@@ -88,7 +88,8 @@ class EditingViewController: UIViewController {
 
     private var sections: [Section] = []
 
-    // moreSection refers to the categories the user has not selected. Selecting something in this section would add it to `yourSection`.
+    // moreSection refers to the categories the user has not selected.
+    // Selecting something in this section would add it to `yourSection`.
     private var moreSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
@@ -102,7 +103,8 @@ class EditingViewController: UIViewController {
         get { moreSection?.filteredItems.count ?? 0 }
     }
 
-    // yourSection refers to the categories the user has already selected or is saved in UserDefaults. Deselecting a cell here would move it to moreSection.
+    // yourSection refers to the categories the user has already selected or is saved in UserDefaults.
+    // Deselecting a cell here would move it to moreSection.
     private var yourSection: Section? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
@@ -116,7 +118,6 @@ class EditingViewController: UIViewController {
     private var yourSectionSize: Int {
         get { yourSection?.filteredItems.count ?? 0 }
     }
-
 
     // Initialization
     init(isShowingGroups: Bool) {
@@ -198,6 +199,11 @@ class EditingViewController: UIViewController {
         sections = [yourSection, moreSection]
 
         setupNavigationBar()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     private func setupNavigationBar() {
@@ -300,7 +306,6 @@ extension EditingViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
-
         switch itemType {
         case .interest(let interest):
             cell.configure(with: interest)
@@ -318,7 +323,7 @@ extension EditingViewController: UITableViewDataSource {
         let headerView = EditHeaderView()
         let section = sections[section]
         let labelTitle: String
-        let labelSubtext : String
+        let labelSubtext: String
 
         switch section.type {
         case .yours:
@@ -368,19 +373,19 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return SectionType.allCases.count
+        SectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        76
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return isShowingGroups && section == 1 ? 128 : 86
+        isShowingGroups && section == 1 ? 128 : 86
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return yourSectionSize > numRowsShownWhenCollapsed && section == 0 ? 64 : 0
+        yourSectionSize > numRowsShownWhenCollapsed && section == 0 ? 64 : 0
     }
 
 }
@@ -408,7 +413,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         let primaryAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont._20CircularStdMedium as Any,
             .paragraphStyle: style,
-            .foregroundColor: UIColor.textBlack
+            .foregroundColor: UIColor.black
         ]
         let secondaryAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont._12CircularStdBook as Any,
@@ -445,7 +450,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         searchBar.backgroundImage = UIImage()
 
         searchBar.searchTextField.backgroundColor = .backgroundWhite
-        searchBar.searchTextField.textColor = .textBlack
+        searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
         searchBar.searchTextField.clearButtonMode = .never
 
