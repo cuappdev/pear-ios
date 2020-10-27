@@ -32,6 +32,7 @@ extension UIColor {
     static let backgroundOrange = colorFromCode(0xFFAC5F)
     static let defaultGrey = colorFromCode(0xC4C4C4)
     static let inactiveGreen = colorFromCode(0x99A899)
+    static let paleGreen = colorFromCode(0xE0ECE2)
     static let pearGreen = colorFromCode(0xABDD5B)
     static let pearYellow = colorFromCode(0xF0F9B3)
 

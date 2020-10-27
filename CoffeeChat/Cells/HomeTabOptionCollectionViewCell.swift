@@ -11,7 +11,7 @@ import UIKit
 class HomeTabOptionCollectionViewCell: UICollectionViewCell {
 
     private let tabLabel = UILabel()
-    static let reuseIdentifier = "TabCellReuseIdentifier"
+    static let reuseIdentifier = "HomeTabOptionCollectionViewCell"
 
     override var isSelected: Bool {
         didSet {
