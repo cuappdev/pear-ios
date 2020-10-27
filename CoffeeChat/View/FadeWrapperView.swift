@@ -17,7 +17,7 @@ enum FadePosition {
     case top
 }
 
-class FadeWrapperView<T: UIView>: UIView {
+class FadeWrapperView<T: UIScrollView>: UIView {
 
     // MARK: Public Vars
     let view: T
@@ -33,17 +33,20 @@ class FadeWrapperView<T: UIView>: UIView {
     private let rightFadeView = UIView()
     private let topFadeView = UIView()
 
-
     init(_ view: T, fadeColor: UIColor) {
         self.view = view
         self.fadeColor = fadeColor
-        self.transparentColor = UIColor(cgColor: fadeColor.withAlphaComponent(0).cgColor)
+        self.transparentColor = fadeColor.withAlphaComponent(0)
         super.init(frame: .zero)
         setupViews()
     }
 
     private func setupViews() {
         addSubview(view)
+
+        view.bounces = false
+        view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = false
 
         bottomFadeView.isUserInteractionEnabled = false
         leftFadeView.isUserInteractionEnabled = false
@@ -119,17 +122,17 @@ class FadeWrapperView<T: UIView>: UIView {
 
         switch direction {
         case .bottom:
-            gradientLayer.startPoint =  bottomEdge
-            gradientLayer.endPoint =    topEdge
+            gradientLayer.startPoint    = bottomEdge
+            gradientLayer.endPoint      = topEdge
         case .left:
-            gradientLayer.startPoint =  leftEdge
-            gradientLayer.endPoint =    rightEdge
+            gradientLayer.startPoint    = leftEdge
+            gradientLayer.endPoint      = rightEdge
         case .right:
-            gradientLayer.startPoint =  rightEdge
-            gradientLayer.endPoint =    leftEdge
+            gradientLayer.startPoint    = rightEdge
+            gradientLayer.endPoint      = leftEdge
         case .top:
-            gradientLayer.startPoint =  topEdge
-            gradientLayer.endPoint =    bottomEdge
+            gradientLayer.startPoint    = topEdge
+            gradientLayer.endPoint      = bottomEdge
         }
 
         view.layer.addSublayer(gradientLayer)

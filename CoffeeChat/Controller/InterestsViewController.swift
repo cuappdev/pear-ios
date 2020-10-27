@@ -14,7 +14,7 @@ class InterestsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let nextButton = UIButton()
-    private let fadeTableView = FadeWrapperView<UITableView>(
+    private let fadeTableView = FadeWrapperView(
         UITableView(frame: .zero, style: .plain),
         fadeColor: .backgroundLightGreen
     )
@@ -65,15 +65,12 @@ class InterestsViewController: UIViewController {
 
         fadeTableView.view.allowsMultipleSelection = true
         fadeTableView.view.backgroundColor = .none
-        fadeTableView.view.bounces = false
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.dataSource = self
         fadeTableView.view.delegate = self
         fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
-        fadeTableView.view.showsHorizontalScrollIndicator = false
-        fadeTableView.view.showsVerticalScrollIndicator = false
         view.addSubview(fadeTableView)
 
         nextButton.setTitle("Next", for: .normal)

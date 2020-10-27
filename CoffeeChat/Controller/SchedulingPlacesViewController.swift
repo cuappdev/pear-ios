@@ -59,6 +59,7 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private let schedulingStatus: SchedulingStatus
+    private let isChoosing: Bool
     // Location user picked from match's locations
     private var pickedLocation: String?
 
@@ -102,6 +103,7 @@ class SchedulingPlacesViewController: UIViewController {
 
     init(status: SchedulingStatus, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
         self.schedulingStatus = status
+        isChoosing = status == .choosing
         switch schedulingStatus {
         case .choosing:
             self.pickedTime = pickedTime
@@ -120,22 +122,25 @@ class SchedulingPlacesViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
 
         setupViews()
+        setupLocationSections()
         setupForStatus()
         setupConstraints()
         updateNext()
     }
 
     // MARK: - Setup Functions
-    private func setupForStatus() {
-        if schedulingStatus == .choosing {
-            campusLocations = campusLocations.filter { matchLocations.contains($0) }
-            ctownLocations = ctownLocations.filter { matchLocations.contains($0) }
+    private func setupLocationSections() {
+        if isChoosing {
+            campusLocations = campusLocations.filter(matchLocations.contains)
+            ctownLocations = ctownLocations.filter(matchLocations.contains)
         }
         locationSections = [
             .campus(campusLocations),
             .ctown(ctownLocations)
         ]
+    }
 
+    private func setupForStatus() {
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "Where do you prefer?"
@@ -168,14 +173,9 @@ class SchedulingPlacesViewController: UIViewController {
         titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
-        var amPm = ""
-        if Time.isAm(time: pickedTime.time) {
-            amPm = "AM"
-        } else if Time.isPm(time: pickedTime.time) {
-            amPm = "PM"
-        }
+        let amPm = Time.isAm(time: pickedTime.time) ? "AM" : "PM"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = schedulingStatus == .choosing
+        infoLabel.text = isChoosing
             ? "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
             : "Pick three"
         infoLabel.textColor = .greenGray
@@ -224,9 +224,9 @@ class SchedulingPlacesViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: schedulingStatus == .choosing ? 60 : 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isChoosing ? 60 : 30)
         let collectionViewPadding = 30
-        let collectionViewSidePadding = schedulingStatus == .choosing ? 80 : 32
+        let collectionViewSidePadding = isChoosing ? 80 : 32
         let infoPadding = 3
         let nextButtonSize = CGSize(width: 175, height: 50)
         let topPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
@@ -264,12 +264,7 @@ class SchedulingPlacesViewController: UIViewController {
 
     // MARK: Button Action
     private func updateNext() {
-        let enable: Bool
-        if schedulingStatus == .choosing {
-            enable = pickedLocation != nil
-        } else {
-            enable = totalSelectedLocations > 2
-        }
+        let enable = isChoosing ? pickedLocation != nil : totalSelectedLocations > 2
 
         nextButton.isEnabled = enable
         if enable {
@@ -310,14 +305,14 @@ extension SchedulingPlacesViewController: UICollectionViewDelegate {
         switch locationSections[indexPath.section] {
         case .campus(let locations):
             selectedLocation = locations[indexPath.row]
-            if schedulingStatus == .choosing {
+            if isChoosing {
                 pickedLocation = selectedLocation
             } else {
                 selectedCampusLocations.append(selectedLocation)
             }
         case .ctown(let locations):
             selectedLocation = locations[indexPath.row]
-            if schedulingStatus == .choosing {
+            if isChoosing {
                 pickedLocation = selectedLocation
             } else {
                 selectedCtownLocations.append(selectedLocation)
@@ -363,14 +358,14 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
 
             location = locations[indexPath.row]
-            cell.configure(with: location, isPicking: schedulingStatus == .choosing)
+            cell.configure(with: location, isPicking: isChoosing)
             return cell
         case .ctown(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
 
             location = locations[indexPath.row]
-            cell.configure(with: location, isPicking: schedulingStatus == .choosing)
+            cell.configure(with: location, isPicking: isChoosing)
             return cell
         }
     }
@@ -394,14 +389,14 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let headersSize = 2 * headerHeight
-        let numberColumns: CGFloat = schedulingStatus == .choosing ? 1 : 2
-        let numberRows = schedulingStatus == .choosing
+        let numberColumns: CGFloat = isChoosing ? 1 : 2
+        let numberRows = isChoosing
             ? CGFloat(totalSelectedLocations)
             : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let itemWidth = (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
 
-        return CGSize(width: itemWidth, height: min(schedulingStatus == .choosing ? 50 : 43, itemHeight))
+        return CGSize(width: itemWidth, height: min(isChoosing ? 50 : 43, itemHeight))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {

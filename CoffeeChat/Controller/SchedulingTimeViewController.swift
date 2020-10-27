@@ -107,8 +107,6 @@ class SchedulingTimeViewController: UIViewController {
     private let schedulingStatus: SchedulingStatus
     private var isChoosing: Bool { get { schedulingStatus == .choosing } }
     private var isConfirming: Bool { get { schedulingStatus == .confirming } }
-    private var isPickingTypical: Bool { get { schedulingStatus == .pickingTypical } }
-
 
     init(for status: SchedulingStatus) {
         self.schedulingStatus = status
@@ -126,7 +124,7 @@ class SchedulingTimeViewController: UIViewController {
 
         setupViews()
         setupDaysAndTimes()
-        setupForStatus(schedulingStatus)
+        setupForStatus()
 
         setupErrorMessageAlert()
         setupTimeSections()
@@ -154,7 +152,7 @@ class SchedulingTimeViewController: UIViewController {
         changeTimes(for: daysDict[firstDay] ?? "Sunday")
     }
 
-    private func setupForStatus(_ status: SchedulingStatus) {
+    private func setupForStatus() {
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "When are you free?"
@@ -216,12 +214,11 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         timeCollectionView.isScrollEnabled = false
 
-        timeScrollView = FadeWrapperView<UIScrollView>(UIScrollView(), fadeColor: .backgroundLightGreen)
+        timeScrollView = FadeWrapperView(UIScrollView(), fadeColor: .backgroundLightGreen)
         timeScrollView.fadePositions = [.top, .bottom]
         timeScrollView.view.addSubview(timeCollectionView)
         timeScrollView.view.isScrollEnabled = true
         timeScrollView.view.delegate = self
-        timeScrollView.view.showsVerticalScrollIndicator = false
         timeScrollView.view.contentInset = UIEdgeInsets(top: timeScrollView.fadeInsets.top, left: 0, bottom: timeScrollView.fadeInsets.bottom, right: 0)
         view.addSubview(timeScrollView)
 

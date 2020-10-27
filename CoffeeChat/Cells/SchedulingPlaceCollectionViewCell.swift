@@ -20,7 +20,6 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .clear
         self.layer.masksToBounds = false
 
         contentView.backgroundColor = .backgroundWhite

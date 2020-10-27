@@ -70,9 +70,6 @@ class GroupsViewController: UIViewController {
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
-        fadeTableView.view.bounces = false
-        fadeTableView.view.showsHorizontalScrollIndicator = false
-        fadeTableView.view.showsVerticalScrollIndicator = false
         fadeTableView.view.separatorStyle = .none
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.delegate = self
