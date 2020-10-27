@@ -57,8 +57,7 @@ class EditDemographicsViewController: UIViewController {
         
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen

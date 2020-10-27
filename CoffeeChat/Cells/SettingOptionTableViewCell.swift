@@ -12,8 +12,9 @@ class SettingOptionTableViewCell: UITableViewCell {
 
     private let optionImageView = UIImageView()
     private let optionLabel = UILabel()
+    static let settingsReuseIdentifier = "settingsReuseIdentifier"
     private let switchView = UISwitch()
-    
+
     weak var delegate: PausePearDelegate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -49,7 +50,6 @@ class SettingOptionTableViewCell: UITableViewCell {
             make.leading.equalTo(optionImageView.snp.trailing).offset(20)
             make.centerY.equalToSuperview()
         }
-        
     }
     
     func configure(for option: SettingOption) {

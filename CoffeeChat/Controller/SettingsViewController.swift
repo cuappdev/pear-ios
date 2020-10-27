@@ -10,7 +10,7 @@ import GoogleSignIn
 import UIKit
 
 protocol PausePearDelegate: class {
-    func pausePearAction(data: String)
+    func pausePearAction(state: String)
     func presentPausePear()
     func removePausePear()
 }
@@ -26,13 +26,12 @@ class SettingsViewController: UIViewController {
     
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
-        SettingOption(image: "pausePear", text: "Pause Pear", hasSwitch: true, switchOn: false),
-        SettingOption(image: "editAvailability", text: "Edit Availabilities", hasSwitch: false, switchOn: false),
-        SettingOption(image: "socialMedia", text: "Connect Social Media", hasSwitch: false, switchOn: false),
-        SettingOption(image: "aboutPear", text: "About Pear", hasSwitch: false, switchOn: false),
-        SettingOption(image: "logout", text: "Log Out", hasSwitch: false, switchOn: false)
+        SettingOption(hasSwitch: true, image: "pausePear", switchOn: false, text: "Pause Pear"),
+        SettingOption(hasSwitch: false, image: "editAvailability", switchOn: false, text: "Edit Availabilities"),
+        SettingOption(hasSwitch: false, image: "socialMedia", switchOn: false, text: "Connect Social Media"),
+        SettingOption(hasSwitch: false, image: "aboutPear", switchOn: false, text: "About Pear"),
+        SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out")
     ]
-    let settingsReuseIdentifier = "settingsReuseIdentifier"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +44,7 @@ class SettingsViewController: UIViewController {
         settingsTableView.allowsSelection = true
         settingsTableView.delegate = self
         settingsTableView.dataSource = self
-        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: settingsReuseIdentifier)
+        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier)
         view.addSubview(settingsTableView)
         
         setupNavigationBar()
@@ -65,8 +64,7 @@ class SettingsViewController: UIViewController {
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
     
     private func setupPausePear() {
@@ -107,7 +105,7 @@ extension SettingsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = settingsTableView.dequeueReusableCell(withIdentifier: settingsReuseIdentifier, for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
+        guard let cell = settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier, for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
         let setting = settingOptions[indexPath.row]
         cell.configure(for: setting)
         cell.selectionStyle = .none
@@ -161,7 +159,7 @@ extension SettingsViewController: PausePearDelegate {
         })
     }
     
-    func pausePearAction(data: String) {
+    func pausePearAction(state: String) {
         // TODO: pause pear action after selecting a time
     }
     

@@ -8,17 +8,11 @@
 
 import Foundation
 
-class SettingOption {
+struct SettingOption {
 
     let hasSwitch: Bool
     let image: String
     var switchOn: Bool
     let text: String
     
-    init(image: String, text: String, hasSwitch: Bool, switchOn: Bool) {
-        self.image = image
-        self.text = text
-        self.hasSwitch = hasSwitch
-        self.switchOn = switchOn
-    }
 }

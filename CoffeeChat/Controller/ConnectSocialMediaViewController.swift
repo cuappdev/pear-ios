@@ -49,12 +49,11 @@ class ConnectSocialMediaViewController: UIViewController {
         instaTextField.layer.shadowOpacity = 1
         instaTextField.layer.shadowRadius = 4
         view.addSubview(instaTextField)
-        
-        
-        let instaicon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        instaicon.image = UIImage(named: "instagramIcon")
+
+        let instaIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
+        instaIcon.image = UIImage(named: "instagramIcon")
         let instaViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
-        instaViewL.addSubview(instaicon)
+        instaViewL.addSubview(instaIcon)
         instaTextField.leftView = instaViewL
         instaTextField.leftViewMode = .always
         
@@ -74,10 +73,10 @@ class ConnectSocialMediaViewController: UIViewController {
         fbTextField.layer.shadowRadius = 4
         view.addSubview(fbTextField)
         
-        let fbicon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        fbicon.image = UIImage(named: "facebookIcon")
+        let fbIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
+        fbIcon.image = UIImage(named: "facebookIcon")
         let facebookViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
-        facebookViewL.addSubview(fbicon)
+        facebookViewL.addSubview(fbIcon)
         fbTextField.leftView = facebookViewL
         fbTextField.leftViewMode = .always
 
@@ -91,7 +90,6 @@ class ConnectSocialMediaViewController: UIViewController {
     
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
@@ -101,8 +99,7 @@ class ConnectSocialMediaViewController: UIViewController {
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen

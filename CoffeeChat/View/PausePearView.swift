@@ -19,6 +19,7 @@ class PausePearView: UIView {
     
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
+    private var selectedState: String = ""
     
     init(delegate: PausePearDelegate) {
         super.init(frame: .zero)
@@ -71,7 +72,6 @@ class PausePearView: UIView {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = ._16CircularStdBook
     }
-
     
     private func setupConstraints() {
         let weekButtonSize = CGSize(width: 110, height: 40)
@@ -110,11 +110,13 @@ class PausePearView: UIView {
     
     @objc private func buttonAction(button: UIButton) {
         if let pauseTime = button.titleLabel?.text {
-            delegate?.pausePearAction(data: pauseTime)
+            delegate?.pausePearAction(state: pauseTime)
+            selectedState = pauseTime
             oneWeekButton.backgroundColor = .white
             twoWeekButton.backgroundColor = .white
             threeWeekButton.backgroundColor = .white
             button.backgroundColor = .pearGreen
+            cancelPause()
         }
     }
     

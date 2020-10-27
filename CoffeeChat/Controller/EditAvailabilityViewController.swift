@@ -265,7 +265,6 @@ class EditAvailabilityViewController: UIViewController {
     
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
@@ -275,8 +274,7 @@ class EditAvailabilityViewController: UIViewController {
             make.size.equalTo(CGSize(width: 10, height: 20))
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen

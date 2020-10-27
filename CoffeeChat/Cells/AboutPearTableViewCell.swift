@@ -11,6 +11,7 @@ import UIKit
 class AboutPearTableViewCell: UITableViewCell {
 
     private let paragraphLabel = UILabel()
+    static let aboutReuseId = "aboutReuseId"
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -33,20 +34,27 @@ class AboutPearTableViewCell: UITableViewCell {
     }
     
     func configure(for aboutParagraph: AboutParagraph) {
-        let boldText = aboutParagraph.bold
-        let boldTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: UIFont.getFont(.bold, size: 16)]
-        let boldAttributedText = NSMutableAttributedString(string: boldText, attributes: boldTextAttributes)
-        
-        let regularText = aboutParagraph.regular
-        let regularTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: UIFont.getFont(.book, size: 16)]
-        let regularAttributedText = NSMutableAttributedString(string: regularText, attributes: regularTextAttributes)
-        
-        boldAttributedText.append(regularAttributedText)
-        paragraphLabel.attributedText = boldAttributedText
+        paragraphLabel.attributedText = NSMutableAttributedString().boldFont16(aboutParagraph.bold).regularFont16(aboutParagraph.regular)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+fileprivate extension NSMutableAttributedString {
+
+    func boldFont16(_ value: String) -> NSMutableAttributedString {
+        let attributes: [NSAttributedString.Key: UIFont] = [.font: UIFont.getFont(.bold, size: 16)]
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+
+    func regularFont16(_ value: String) -> NSMutableAttributedString {
+        let attributes: [NSAttributedString.Key: UIFont] = [.font: UIFont.getFont(.book, size: 16)]
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
     }
     
 }

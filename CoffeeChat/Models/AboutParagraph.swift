@@ -8,14 +8,9 @@
 
 import Foundation
 
-class AboutParagraph {
+struct AboutParagraph {
     
     let bold: String
     let regular: String
-    
-    init(bold: String, regular: String) {
-        self.bold = bold
-        self.regular = regular
-    }
     
 }

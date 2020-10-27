@@ -28,10 +28,6 @@ class AboutPearViewController: UIViewController {
         AboutParagraph(bold: "Meet at ", regular: "the chosen time and place, and now you have one new friend at Cornell!"),
         AboutParagraph(bold: "", regular: "You can pause pairings at any time in Settings.")
     ]
-    let aboutReuseId = "aboutReuseId"
-    private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
-    private let screenHeight = UIScreen.main.bounds.height
-    private let screenWidth = UIScreen.main.bounds.width
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +35,7 @@ class AboutPearViewController: UIViewController {
         
         backgroundImage.image = UIImage(named: "settingsBackground")
         backgroundImage.contentMode =  .scaleAspectFill
-        self.view.insertSubview(backgroundImage, at: 0)
+        view.insertSubview(backgroundImage, at: 0)
         
         aboutLabel.text = "Pear was created to help Cornell\nstudents meet new people and\nform meaningful connections."
         aboutLabel.textAlignment = .center
@@ -54,7 +50,7 @@ class AboutPearViewController: UIViewController {
         aboutTableView.dataSource = self
         aboutTableView.backgroundColor = .clear
         aboutTableView.isScrollEnabled = false
-        aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: aboutReuseId)
+        aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: AboutPearTableViewCell.aboutReuseId)
         view.addSubview(aboutTableView)
 
         feedbackButton.setTitle("Send Feedback", for: .normal)
@@ -78,7 +74,6 @@ class AboutPearViewController: UIViewController {
     
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
@@ -147,7 +142,7 @@ class AboutPearViewController: UIViewController {
             make.top.equalTo(visitWebsiteButton.snp.bottom).offset(12)
         }
     }
-
+    
 }
 
 extension AboutPearViewController: UITableViewDataSource {
@@ -157,7 +152,7 @@ extension AboutPearViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = aboutTableView.dequeueReusableCell(withIdentifier: aboutReuseId, for: indexPath) as? AboutPearTableViewCell else { return UITableViewCell() }
+        guard let cell = aboutTableView.dequeueReusableCell(withIdentifier: AboutPearTableViewCell.aboutReuseId, for: indexPath) as? AboutPearTableViewCell else { return UITableViewCell() }
         let paragraph = aboutParagraphs[indexPath.row]
         cell.configure(for: paragraph)
         return cell
