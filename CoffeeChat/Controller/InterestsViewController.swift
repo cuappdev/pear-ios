@@ -14,7 +14,10 @@ class InterestsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let nextButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen
+    )
     private let titleLabel = UILabel()
 
     // MARK: - Data
@@ -60,10 +63,14 @@ class InterestsViewController: UIViewController {
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(OnboardingTableViewCell.self,
-                                         forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.delegate = self
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
         nextButton.setTitle("Next", for: .normal)

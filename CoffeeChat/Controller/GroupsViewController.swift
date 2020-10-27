@@ -34,7 +34,10 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeTableView(fadeColor: UIColor.backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -64,10 +67,15 @@ class GroupsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
 
-        fadeTableView.tableView.delegate = self
-        fadeTableView.tableView.dataSource = self
-        fadeTableView.tableView.register(SimpleOnboardingTableViewCell.self,
-                                         forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.separatorStyle = .none
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.delegate = self
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
 
         clubLabel.text = "What are you a part of?"
@@ -143,7 +151,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = searchText.isEmpty
             ? groups
             : groups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        fadeTableView.tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
     // MARK: - Next and Previous Buttons

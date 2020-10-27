@@ -90,7 +90,24 @@ class MatchViewController: UIViewController {
         }
 
         // TODO change based on chat status
-        meetupStatusView = MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
+        let sampleUser = User(
+            clubs: [],
+            firstName: "Ezra",
+            googleID: "",
+            graduationYear: "2024",
+            hometown: "Ithaca",
+            interests: [],
+            lastName: "Cornell",
+            major: "CS",
+            matches: [],
+            netID: "ec1",
+            profilePictureURL: "",
+            pronouns: "He/Him",
+            facebook: "",
+            instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
+        meetupStatusView = hasReachedOut
+            ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
+            : MeetupStatusView(for: .respondingTo(sampleUser))
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
@@ -174,7 +191,7 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        let timeVC = SchedulingTimeViewController(isConfirming: true, isPicking: false)
+        let timeVC = SchedulingTimeViewController(for: .confirming)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 }

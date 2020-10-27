@@ -8,9 +8,19 @@
 
 import UIKit
 
+enum SchedulingStatus {
+    /// If the user has no pear, they can input their typical availabilities
+    case pickingTypical
+    /// If the user reaches out first, they confirm their availabilities
+    case confirming
+    /// If the pear reached out first, the user chooses 1 time from the availabilities
+    case choosing
+}
+
 class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
+    // TODO make some of these optional rather than force unwrapped
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
@@ -21,7 +31,15 @@ class SchedulingTimeViewController: UIViewController {
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
     private var timeCollectionView: UICollectionView!
+    private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
+
+    // MARK: - Sizing
+    private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
+    private let timeCellVerticalSpacing: CGFloat = 8
+    private var timeCollectionViewWidth: CGFloat {
+        get { CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105)) }
+    }
 
     // MARK: - Section
     private struct Section {
@@ -85,8 +103,6 @@ class SchedulingTimeViewController: UIViewController {
     ]
     private var selectedDay: String = "Su"
 
-    // Whether user is confirming their own availabilities
-    private var isConfirming: Bool
     // TODO: Change values after connecting to backend
     private var savedAvailabilities: [String: [String]] = [
         "Monday": ["5:30", "6:00", "6:30"],
@@ -95,8 +111,6 @@ class SchedulingTimeViewController: UIViewController {
         "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
     ]
 
-    // Whether user is picking a time from match's availabilities
-    private var isPicking: Bool
     // Time user picked from match's availabilities
     private var pickedTime: (day: String, time: String) = (day: "", time: "")
     // TODO: Change values after connecting to backend
@@ -114,9 +128,13 @@ class SchedulingTimeViewController: UIViewController {
     ]
     private let matchFirstName: String = "Ezra"
 
-    init(isConfirming: Bool, isPicking: Bool) {
-        self.isConfirming = isConfirming
-        self.isPicking = isPicking
+    // MARK: ViewController State
+    private let schedulingStatus: SchedulingStatus
+    private var isChoosing: Bool { get { schedulingStatus == .choosing } }
+    private var isConfirming: Bool { get { schedulingStatus == .confirming } }
+
+    init(for status: SchedulingStatus) {
+        self.schedulingStatus = status
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -129,32 +147,58 @@ class SchedulingTimeViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
+        setupViews()
+        setupDaysAndTimes()
+        setupForStatus()
+
+        setupErrorMessageAlert()
+        setupTimeSections()
+        setupConstraints()
+        updateNextButton()
+    }
+
+    // MARK: - Setup
+    private func setupDaysAndTimes() {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
 
-        if isConfirming {
+        if isConfirming || isChoosing {
+            removePassedDays()
+        }
+        if isChoosing {
+            removeUnavailableDays()
+        }
+
+        guard let firstDay = daysAbbrev.first else {
+            fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
+        }
+        selectedDay = firstDay
+        changeTimes(for: daysDict[firstDay] ?? "Sunday")
+    }
+
+    private func setupForStatus() {
+        switch schedulingStatus {
+        case .pickingTypical:
+            titleLabel.text = "When are you free?"
+             dayLabel.text = "Every \(daysDict[selectedDay] ?? "")"
+        case .confirming:
+            titleLabel.text = "Confirm your availability"
+            dayLabel.text = daysDict[selectedDay]
             availabilities = savedAvailabilities
+        case .choosing:
+            titleLabel.text = "Pick a time to meet"
+            dayLabel.text = daysDict[selectedDay]
         }
 
-        if isPicking {
-            daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
-            if let firstDayShort = daysAbbrev.first {
-                selectedDay = firstDayShort
-            }
-        }
+        timeCollectionView.allowsMultipleSelection = !isChoosing
+    }
 
-        if let firstDay = daysDict[selectedDay] {
-            setupTimes(for: firstDay, isFirstTime: true)
-        }
-
-        backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
+    private func setupViews() {
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        titleLabel.text = isConfirming
-            ? "Confirm your availability"
-            : isPicking ? "Pick a time to meet": "When are you free?"
         titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         view.addSubview(titleLabel)
@@ -172,9 +216,6 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        dayLabel.text = isPicking || isConfirming
-            ? daysDict[selectedDay] ?? ""
-            : "Every \(daysDict[selectedDay] ?? "")"
         dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
@@ -191,12 +232,20 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionViewLayout.scrollDirection = .horizontal
 
         timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
-        timeCollectionView.allowsMultipleSelection = !isPicking
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
+        timeCollectionView.clipsToBounds = false
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
-        view.addSubview(timeCollectionView)
+        timeCollectionView.isScrollEnabled = false
+
+        timeScrollView = FadeWrapperView(UIScrollView(), fadeColor: .backgroundLightGreen)
+        timeScrollView.fadePositions = [.top, .bottom]
+        timeScrollView.view.addSubview(timeCollectionView)
+        timeScrollView.view.isScrollEnabled = true
+        timeScrollView.view.delegate = self
+        timeScrollView.view.contentInset = UIEdgeInsets(top: timeScrollView.fadeInsets.top, left: 0, bottom: timeScrollView.fadeInsets.bottom, right: 0)
+        view.addSubview(timeScrollView)
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
@@ -211,27 +260,6 @@ class SchedulingTimeViewController: UIViewController {
         noTimesWorkButton.titleLabel?.font = ._16CircularStdMedium
         noTimesWorkButton.addTarget(self, action: #selector(noTimesWorkPressed), for: .touchUpInside)
         view.addSubview(noTimesWorkButton)
-
-        setupErrorMessageAlert()
-        setupTimeSections()
-        setupConstraints()
-        updateNextButton()
-    }
-
-    func setupTimes(for day: String, isFirstTime: Bool) {
-        if isPicking, let times = matchAvailabilities[day] {
-            afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
-            eveningTimes = allEveningTimes.filter { times.contains($0) }
-            morningTimes = allMorningTimes.filter { times.contains($0) }
-        }
-        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
-        // Reset timeSections and timeCollectionView's constraints if it's not the first time `setupTimes` is called
-        if !isFirstTime {
-            setupTimeSections()
-            setupTimeCollectionViewConstraints()
-        }
     }
 
     private func setupTimeSections() {
@@ -253,7 +281,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private func setupConstraints() {
         let backButtonPadding = LayoutHelper.shared.getCustomHorizontalPadding(size: 30)
-        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isPicking ? 60 : 30)
+        let bottomPadding = LayoutHelper.shared.getCustomVerticalPadding(size: isChoosing ? 60 : 30)
         let titleLabelPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 50)
         let dayCollectionViewWidth = daysAbbrev.count * 45
 
@@ -270,7 +298,7 @@ class SchedulingTimeViewController: UIViewController {
         }
 
         dayCollectionView.snp.makeConstraints { make in
-            if isPicking {
+            if isChoosing {
                 make.top.equalTo(infoLabel.snp.bottom).offset(15)
             } else {
                 make.top.equalTo(titleLabel.snp.bottom).offset(20)
@@ -291,7 +319,7 @@ class SchedulingTimeViewController: UIViewController {
             make.size.equalTo(nextButtonSize)
         }
 
-        if isPicking {
+        if isChoosing {
             infoLabel.snp.makeConstraints { make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(5)
                 make.leading.trailing.equalToSuperview()
@@ -309,16 +337,57 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupTimeCollectionViewConstraints() {
-        let timeCollectionViewWidth = timeSections.count * 105
-
-        timeCollectionView.snp.updateConstraints { update in
+        timeScrollView.snp.updateConstraints { update in
             update.top.equalTo(dayLabel.snp.bottom).offset(8)
             update.bottom.equalTo(nextButton.snp.top).offset(-20)
             update.centerX.equalToSuperview()
             update.width.equalTo(timeCollectionViewWidth)
         }
+
+        timeScrollView.view.contentSize = calculateTimesHeight()
+
+        timeCollectionView.snp.remakeConstraints { remake in
+            remake.top.equalTo(timeScrollView.view.snp.top)
+            remake.size.equalTo(timeScrollView.view.contentSize)
+        }
+
     }
 
+    private func calculateTimesHeight() -> CGSize {
+        // +1 is due to the header
+        let longestTimeCount = CGFloat(max(morningTimes.count, afternoonTimes.count, eveningTimes.count)) + 1
+        let cellsHeight = timeCellSize.height * longestTimeCount
+        let interitemHeight = timeCellVerticalSpacing * (longestTimeCount - 1)
+        return CGSize(width: timeCollectionViewWidth, height: cellsHeight + interitemHeight)
+    }
+
+    // MARK: - Time Related
+    private func changeTimes(for day: String) {
+        if isChoosing, let times = matchAvailabilities[day] {
+            afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
+            eveningTimes = allEveningTimes.filter { times.contains($0) }
+            morningTimes = allMorningTimes.filter { times.contains($0) }
+        }
+
+        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
+
+        setupTimeSections()
+        setupTimeCollectionViewConstraints()
+    }
+
+    private func removePassedDays() {
+        daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
+        daysAbbrev.removeSubrange(0..<dayIndex)
+    }
+
+    private func removeUnavailableDays() {
+        daysAbbrev = daysAbbrev.filter { matchAvailabilities[daysDict[$0] ?? ""] != nil }
+    }
+
+    // MARK: - Error Message
     private func setupErrorMessageAlert() {
         errorMessageAlertView = MessageAlertView(
             delegate: self,
@@ -368,15 +437,14 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        let placesVC = SchedulingPlacesViewController(isConfirming: isConfirming,
-                                                      isPicking: isPicking,
+        let placesVC = SchedulingPlacesViewController(status: schedulingStatus,
                                                       availabilities: availabilities,
                                                       pickedTime: pickedTime)
-        navigationController?.pushViewController(placesVC, animated: false)
+        navigationController?.pushViewController(placesVC, animated: true)
     }
 
     @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: false)
+        navigationController?.popViewController(animated: true)
     }
 
     @objc private func noTimesWorkPressed() {
@@ -405,7 +473,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
             cell.configure(for: day)
             // Update cell color based on whether there's availability for a day
             if let day = daysDict[day] {
-                let isAvailable = isPicking ? pickedTime.day == day : availabilities[day] != nil
+                let isAvailable = isChoosing ? pickedTime.day == day : availabilities[day] != nil
                 cell.updateBackgroundColor(isAvailable: isAvailable)
             }
             // Select item if day is the selected day
@@ -429,7 +497,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
                 cell.isUserInteractionEnabled = true
                 // Select time(s) that was previously selected for a day
                 if let day = daysDict[selectedDay] {
-                    if isPicking,
+                    if isChoosing,
                         pickedTime.time == time && pickedTime.day == day {
                         timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
@@ -451,16 +519,16 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = daysAbbrev[indexPath.item]
-            dayLabel.text  = isPicking ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
-            if isPicking, let day = daysDict[selectedDay] {
-                setupTimes(for: day, isFirstTime: false)
+            dayLabel.text  = isChoosing ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
+            if isChoosing, let day = daysDict[selectedDay] {
+                changeTimes(for: day)
             }
             timeCollectionView.reloadData()
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
             guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
-            if isPicking {
+            if isChoosing {
                 pickedTime = (day: day, time: time)
             } else {
                 if availabilities[day] == nil {
@@ -492,17 +560,11 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
 extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == dayCollectionView {
             return CGSize(width: 36, height: 48)
         } else {
-            let itemCount = CGFloat(timeSections[indexPath.section].items.count)
-            let itemWidth = timeCollectionView.frame.width /
-                CGFloat(timeSections.count) - sectionInsets.left - sectionInsets.right
-            let itemHeight = timeCollectionView.frame.height / itemCount - interitemSpacing
-            return CGSize(width: itemWidth, height: min(36, itemHeight))
+            return timeCellSize
         }
     }
 
