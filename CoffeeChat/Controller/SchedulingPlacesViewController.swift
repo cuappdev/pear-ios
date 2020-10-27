@@ -54,7 +54,9 @@ class SchedulingPlacesViewController: UIViewController {
     private var locationSections: [Section] = []
     private var selectedCampusLocations: [String] = []
     private var selectedCtownLocations: [String] = []
-    private var totalSelectedLocations: Int { get { selectedCampusLocations.count + selectedCtownLocations.count } }
+    private var totalSelectedLocations: Int {
+        selectedCampusLocations.count + selectedCtownLocations.count
+    }
 
     private let schedulingStatus: SchedulingStatus
     // Location user picked from match's locations

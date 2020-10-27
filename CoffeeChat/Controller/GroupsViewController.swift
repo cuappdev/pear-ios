@@ -34,7 +34,10 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
-    private let fadeTableView = FadeWrapperView<UITableView>(UITableView(frame: .zero, style: .plain), fadeColor: .backgroundLightGreen)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(),
+        fadeColor: .backgroundLightGreen
+    )
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate

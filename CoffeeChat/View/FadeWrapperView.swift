@@ -8,6 +8,8 @@
 
 import UIKit
 
+/// The locations of the fade effects on the view.
+/// .top means the fade is applied on the top of the view, .left means the fade is on the left side, and so on
 enum FadePosition {
     case bottom
     case left
@@ -17,15 +19,15 @@ enum FadePosition {
 
 class FadeWrapperView<T: UIView>: UIView {
 
-    // MARK: Public View Vars
+    // MARK: Public Vars
     let view: T
     var fadeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 26, right: 0)
     var fadePositions: [FadePosition] = [.top, .bottom]
 
-    // MARK: Private View Vars
     private let fadeColor: UIColor
     private let transparentColor: UIColor
 
+    // MARK: Private View Vars
     private let bottomFadeView = UIView()
     private let leftFadeView = UIView()
     private let rightFadeView = UIView()
@@ -110,19 +112,24 @@ class FadeWrapperView<T: UIView>: UIView {
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [fadeColor.cgColor, transparentColor.cgColor]
 
+        let topEdge = CGPoint(x: 0.5, y: 0)
+        let bottomEdge = CGPoint(x: 0.5, y: 1)
+        let leftEdge = CGPoint(x: 0, y: 0.5)
+        let rightEdge = CGPoint(x: 1, y: 0.5)
+
         switch direction {
         case .bottom:
-            gradientLayer.startPoint =  CGPoint(x: 0.5, y: 1)
-            gradientLayer.endPoint =    CGPoint(x: 0.5, y: 0)
+            gradientLayer.startPoint =  bottomEdge
+            gradientLayer.endPoint =    topEdge
         case .left:
-            gradientLayer.startPoint =  CGPoint(x: 0, y: 0.5)
-            gradientLayer.endPoint =    CGPoint(x: 1, y: 0.5)
+            gradientLayer.startPoint =  leftEdge
+            gradientLayer.endPoint =    rightEdge
         case .right:
-            gradientLayer.startPoint =  CGPoint(x: 1, y: 0.5)
-            gradientLayer.endPoint =    CGPoint(x: 0, y: 0.5)
+            gradientLayer.startPoint =  rightEdge
+            gradientLayer.endPoint =    leftEdge
         case .top:
-            gradientLayer.startPoint =  CGPoint(x: 0.5, y: 0)
-            gradientLayer.endPoint =    CGPoint(x: 0.5, y: 1)
+            gradientLayer.startPoint =  topEdge
+            gradientLayer.endPoint =    bottomEdge
         }
 
         view.layer.addSublayer(gradientLayer)
