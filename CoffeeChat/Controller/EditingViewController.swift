@@ -400,7 +400,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
     private var searchBar: UISearchBar?
 
     /// Callback when search text is changed
-    var searchDelegate: ((String?) -> Void)?
+    weak var searchDelegate: ((String?) -> Void)?
 
     func configure(with title: String, info: String, shouldIncludeSearchBar: Bool) {
         setupText(title: title, info: info)
@@ -514,7 +514,7 @@ private class EditFooterView: UIButton {
     private let label = UILabel()
     private let stackView = UIStackView()
 
-    var delegate: ((Bool) -> Void)?
+    weak var delegate: ((Bool) -> Void)?
 
     init(isShowingGroups: Bool) {
         self.isShowingGroups = isShowingGroups
