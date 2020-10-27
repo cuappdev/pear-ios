@@ -110,12 +110,11 @@ class PausePearView: UIView {
     
     @objc private func buttonAction(button: UIButton) {
         if let pauseTime = button.titleLabel?.text {
-            delegate?.pausePearAction(state: pauseTime)
             selectedState = pauseTime
-            oneWeekButton.backgroundColor = .white
-            twoWeekButton.backgroundColor = .white
-            threeWeekButton.backgroundColor = .white
-            button.backgroundColor = .pearGreen
+            oneWeekButton.backgroundColor = selectedState == "1 Week" ? .pearGreen : .white
+            twoWeekButton.backgroundColor = selectedState == "2 Weeks" ? .pearGreen : .white
+            threeWeekButton.backgroundColor = selectedState == "3 Weeks" ? .pearGreen : .white
+            delegate?.pausePearAction(state: selectedState)
             cancelPause()
         }
     }
