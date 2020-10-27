@@ -52,9 +52,9 @@ class EditDemographicsViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.getFont(.medium, size: 24),
+            .font: UIFont.getFont(.medium, size: 24)
         ]
-        
+
         backButton.setImage(UIImage(named: "back_arrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         backBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -85,7 +85,7 @@ class EditDemographicsViewController: UIViewController {
         uploadPhotoButton.backgroundColor = .white
         uploadPhotoButton.layer.cornerRadius = 16
         uploadPhotoButton.layer.shadowColor = UIColor.black.cgColor
-        uploadPhotoButton.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        uploadPhotoButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         uploadPhotoButton.layer.shadowOpacity = 0.15
         uploadPhotoButton.layer.shadowRadius = 2
         editScrollView.addSubview(uploadPhotoButton)
@@ -104,7 +104,7 @@ class EditDemographicsViewController: UIViewController {
         nameTextField.leftViewMode = .always
         nameTextField.layer.cornerRadius = 8
         nameTextField.layer.shadowColor = UIColor.black.cgColor
-        nameTextField.layer.shadowOffset = CGSize(width: 0.0 , height: 2.0)
+        nameTextField.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         nameTextField.layer.shadowOpacity = 0.15
         nameTextField.layer.shadowRadius = 2
         editScrollView.addSubview(nameTextField)
@@ -114,22 +114,31 @@ class EditDemographicsViewController: UIViewController {
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
         classSearchFields = (currentYear...gradYear).map { "\($0)" }
 
-        classDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Class of...", tableData: classSearchFields, textTemplate: "Class of")
+        classDropdownView = OnboardingSelectDropdownView(delegate: self,
+                                                         placeholder: "Class of...",
+                                                         tableData: classSearchFields,
+                                                         textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
         classDropdownView.setSelectValue(value: year)
         editScrollView.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Major", tableData: majorSearchFields)
+        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
+                                                         placeholder: "Major",
+                                                         tableData: majorSearchFields)
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
         majorDropdownView.setSelectValue(value: major)
         editScrollView.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self, placeholder: "Hometown", tableData: hometownSearchFields)
+        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
+                                                            placeholder: "Hometown",
+                                                            tableData: hometownSearchFields)
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
         hometownDropdownView.setSelectValue(value: hometown)
         editScrollView.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self, placeholder: "Pronouns", tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
+                                                            placeholder: "Pronouns",
+                                                            tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
         pronounsDropdownView.setSelectValue(value: pronouns)
         editScrollView.addSubview(pronounsDropdownView)
@@ -237,7 +246,8 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    /// Brings field view to the front of the screen and handles keyboard interactions when switching from select dropdowns to search.
+    /// Brings field view to the front of the screen and handles keyboard interactions
+    /// when switching from select dropdowns to search.
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
         if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView,
             activeDropdownView != dropdownView {
@@ -276,9 +286,12 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
     }
 }
 
-extension EditDemographicsViewController:  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+extension EditDemographicsViewController: UIImagePickerControllerDelegate,
+                                          UINavigationControllerDelegate,
+                                          UITextFieldDelegate {
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         profileImageView.image = image
         dismiss(animated: true, completion: nil)

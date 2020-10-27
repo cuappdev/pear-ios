@@ -23,33 +23,33 @@ class MatchSummaryTableViewCell: UITableViewCell {
         titleLabel.textColor = .textGreen
         titleLabel.font = ._20CircularStdBook
         contentView.addSubview(titleLabel)
-        
+
         detailLabel.textColor = .black
         detailLabel.font = ._20CircularStdMedium
         detailLabel.numberOfLines = 0
         contentView.addSubview(detailLabel)
-        
+
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(10)
             make.leading.trailing.equalToSuperview()
         }
-        
+
         detailLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
             make.bottom.equalToSuperview().inset(10)
             make.leading.trailing.equalToSuperview()
         }
     }
-    
+
     func configure(for matchSummary: MatchSummary) {
         titleLabel.text = matchSummary.title
         detailLabel.text = matchSummary.detail
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

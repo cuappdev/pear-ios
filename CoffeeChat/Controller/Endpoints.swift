@@ -27,7 +27,7 @@ extension Endpoint {
 
     /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
-        return Endpoint(path: "/general/hello/")
+        Endpoint(path: "/general/hello/")
     }
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
@@ -58,12 +58,12 @@ extension Endpoint {
 
     /// [GET] Get information about the user
     static func getUser() -> Endpoint {
-        return Endpoint(path: "/user/")
+        Endpoint(path: "/user/")
     }
 
     /// [GET] Get clubs of the user
     static func getUserClubs() -> Endpoint {
-        return Endpoint(path: "/user/clubs/")
+        Endpoint(path: "/user/clubs/")
     }
 
     /// [POST] Get matchings of the user
@@ -74,12 +74,12 @@ extension Endpoint {
 
     /// [GET] Get major of the user
     static func getUserMajor() -> Endpoint {
-        return Endpoint(path: "/user/majors/")
+        Endpoint(path: "/user/majors/")
     }
 
     /// [GET] Get interests of the user
     static func getUserInterests() -> Endpoint {
-        return Endpoint(path: "/user/interests/")
+        Endpoint(path: "/user/interests/")
     }
 
 }

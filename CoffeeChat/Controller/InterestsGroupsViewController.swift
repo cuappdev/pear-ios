@@ -181,7 +181,7 @@ class InterestsGroupsViewController: UIViewController {
 extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let _ = interestsGroups[indexPath.row].subtitle {
+        if interestsGroups[indexPath.row].subtitle != nil {
             return 61
         } else {
             return 54
@@ -189,9 +189,8 @@ extension InterestsGroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedInterestsGroups.count
+        displayedInterestsGroups.count
     }
-
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedInterestsGroups.append(displayedInterestsGroups[indexPath.row])
@@ -209,8 +208,8 @@ extension InterestsGroupsViewController: UITableViewDelegate {
 extension InterestsGroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier:
-                                                        SimpleOnboardingTableViewCell.reuseIdentifier, for: indexPath) as?
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedInterestsGroups[indexPath.row]
         cell.configure(with: data)

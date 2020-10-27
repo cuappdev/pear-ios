@@ -50,4 +50,3 @@ extension UIFont {
         return UIFont(name: fontString, size: size)!
     }
 }
-

@@ -53,7 +53,7 @@ class EditInterestViewController: UIViewController {
     }
     private var moreCount: Int {
         get {
-            return moreSection?.items.count ?? 0
+            moreSection?.items.count ?? 0
         }
     }
     private var yourSection: Section? {
@@ -65,7 +65,7 @@ class EditInterestViewController: UIViewController {
     }
     private var yourCount: Int {
         get {
-            return yourSection?.items.count ?? 0
+            yourSection?.items.count ?? 0
         }
     }
 
@@ -114,7 +114,6 @@ class EditInterestViewController: UIViewController {
             Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
             Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
         ]
-
 
         let yourSection = Section(type: .yours, items: yourInterests.map { ItemType.interest($0) })
         let moreSection = Section(type: .more, items: moreInterests.map { ItemType.interest($0) })
@@ -216,7 +215,9 @@ extension EditInterestViewController: UITableViewDataSource {
 
         switch itemType {
         case .interest(let interest):
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier, for: indexPath) as? OnboardingTableViewCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier,
+                                                           for: indexPath) as?
+                    OnboardingTableViewCell else { return UITableViewCell() }
             cell.configure(with: interest)
             cell.changeColor(isSelected: section.type == .yours)
             cell.selectionChangesAppearence(false)
@@ -233,7 +234,8 @@ extension EditInterestViewController: UITableViewDataSource {
         switch sections[section].type {
         case .yours:
             headerView = yourCount == 0
-              ? EditHeaderView(with: "Your Interests", info: "Select at least one interest so we can better help you find a pair!")
+              ? EditHeaderView(with: "Your Interests",
+                               info: "Select at least one interest so we can better help you find a pair!")
               : EditHeaderView(with: "Your Interests", info: "Tap to deselect")
         case .more:
             headerView = EditHeaderView(with: "More Interests", info: "Tap to select")
@@ -256,19 +258,19 @@ extension EditInterestViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        2
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        76
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 64
+        64
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (yourSection?.items.count ?? 0) > hideAfter && section == 0 ? 64 : 0
+        (yourSection?.items.count ?? 0) > hideAfter && section == 0 ? 64 : 0
     }
 
 }
@@ -331,7 +333,7 @@ private class EditFooterView: UIButton {
     private let label = UILabel()
     private let arrowView = UIImageView()
 
-    var delegate: ((Bool) -> Void)?
+    weak var delegate: ((Bool) -> Void)?
 
     convenience init(with text: String) {
         self.init(frame: .zero)

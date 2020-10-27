@@ -63,9 +63,20 @@ class MatchViewController: UIViewController {
         let year = 2020
         let pronouns = "He/Him"
         let hometown = "Ithaca, NY"
-        let user = User(clubs: [], firstName: firstName, googleID: "", graduationYear: "2020", hometown: hometown,
-                        interests: [], lastName: lastName, major: major, matches: [], netID: "", profilePictureURL: "",
-                        pronouns: "pronouns", facebook: "https://www.facebook.com", instagram: "https://www.instagram.com")
+        let user = User(clubs: [],
+                        firstName: firstName,
+                        googleID: "",
+                        graduationYear: "2020",
+                        hometown: hometown,
+                        interests: [],
+                        lastName: lastName,
+                        major: major,
+                        matches: [],
+                        netID: "",
+                        profilePictureURL: "",
+                        pronouns: "pronouns",
+                        facebook: "https://www.facebook.com",
+                        instagram: "https://www.instagram.com")
 
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
@@ -79,7 +90,21 @@ class MatchViewController: UIViewController {
         }
 
         // TODO change based on chat status
-        let sampleUser = User(clubs: [], firstName: "Ezra", googleID: "", graduationYear: "2024", hometown: "Ithaca", interests: [], lastName: "Cornell", major: "CS", matches: [], netID: "ec1", profilePictureURL: "", pronouns: "He/Him", facebook: "", instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
+        let sampleUser = User(
+            clubs: [],
+            firstName: "Ezra",
+            googleID: "",
+            graduationYear: "2024",
+            hometown: "Ithaca",
+            interests: [],
+            lastName: "Cornell",
+            major: "CS",
+            matches: [],
+            netID: "ec1",
+            profilePictureURL: "",
+            pronouns: "He/Him",
+            facebook: "",
+            instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
         meetupStatusView = hasReachedOut
             ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
             : MeetupStatusView(for: .respondingTo(sampleUser))
@@ -111,7 +136,8 @@ class MatchViewController: UIViewController {
         matchSummaryTableView.showsVerticalScrollIndicator = false
         matchSummaryTableView.isScrollEnabled = false
         matchSummaryTableView.dataSource = self
-        matchSummaryTableView.register(MatchSummaryTableViewCell.self, forCellReuseIdentifier: MatchSummaryTableViewCell.reuseIdentifier)
+        matchSummaryTableView.register(MatchSummaryTableViewCell.self,
+                                       forCellReuseIdentifier: MatchSummaryTableViewCell.reuseIdentifier)
         view.addSubview(matchSummaryTableView)
     }
 
@@ -176,11 +202,12 @@ extension MatchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MatchSummaryTableViewCell.reuseIdentifier, for: indexPath) as? MatchSummaryTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MatchSummaryTableViewCell.reuseIdentifier,
+                                                       for: indexPath) as?
+                MatchSummaryTableViewCell else { return UITableViewCell() }
         let summary = matchSummaries[indexPath.row]
         cell.configure(for: summary)
         return cell
     }
 
 }
-
