@@ -13,7 +13,7 @@ class CommunityUserTableViewCell: UITableViewCell {
     // MARK: - Private View Vars
     private let containerView = UIView()
     private let informationLabel = UILabel()
-    private var interestsCollectionView: SelfSizingCollectionView!
+    private let interestsCollectionView = SelfSizingCollectionView()
     private let profileImageView = UIImageView()
     private let nameLabel = UILabel()
 
@@ -48,14 +48,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         informationLabel.textColor = .greenGray
         containerView.addSubview(informationLabel)
 
-        let tagsCollectionViewLayout = LeftAlignedFlowLayout()
-        tagsCollectionViewLayout.minimumInteritemSpacing = 4
-        tagsCollectionViewLayout.minimumLineSpacing = 4
-
-        interestsCollectionView = SelfSizingCollectionView(
-            // Setting width allows collectionView to self size and roll over to new lines when necessary
-            frame: CGRect(x: 0, y: 0, width: frame.width, height: 0),
-            collectionViewLayout: tagsCollectionViewLayout)
+        interestsCollectionView.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
         interestsCollectionView.dataSource = self
         interestsCollectionView.delegate = self
         interestsCollectionView.backgroundColor = .clear
@@ -118,6 +111,7 @@ class CommunityUserTableViewCell: UITableViewCell {
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return interests.count
     }
@@ -129,9 +123,11 @@ extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionVi
         cell.configure(with: interest)
         return cell
     }
+    
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
+    
     func calculateNecessaryWidth(text: String) -> CGFloat {
         let label = UILabel()
         label.text = text
@@ -139,9 +135,10 @@ extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
         label.sizeToFit()
         return label.frame.width
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalHorizontalPadding: CGFloat = 16
         return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item]) + totalHorizontalPadding, height: 19)
     }
+    
 }

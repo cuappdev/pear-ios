@@ -6,7 +6,6 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class InterestTagCollectionViewCell: UICollectionViewCell {
@@ -14,7 +13,6 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
     // MARK: - Private View Vars
     private let interestTagLabel = UILabel()
 
-    // MARK: - Private Data Vars
     static let reuseIdentifier = "InterestTagCollectionViewCell"
 
     override init(frame: CGRect) {

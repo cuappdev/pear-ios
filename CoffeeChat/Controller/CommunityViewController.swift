@@ -82,7 +82,7 @@ class CommunityViewController: UIViewController {
         searchBar.searchTextField.clearButtonMode = .never
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
-        searchBar.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        searchBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
         searchBar.layer.shadowOpacity = 1
         searchBar.layer.shadowRadius = 4
         searchBar.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -103,10 +103,9 @@ class CommunityViewController: UIViewController {
     }
 
     private func setupConstraints() {
-
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(23)
-            make.leading.trailing.equalTo(communityTableView)
+            make.leading.trailing.equalToSuperview().inset(24)
             make.height.equalTo(40)
         }
 
@@ -116,22 +115,18 @@ class CommunityViewController: UIViewController {
             make.bottom.equalToSuperview()
         }
     }
-
 }
 
-extension CommunityViewController: UITableViewDelegate {
-
-}
+extension CommunityViewController: UITableViewDelegate {}
 
 extension CommunityViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommunityUserTableViewCell.reuseIdentifier, for: indexPath) as? CommunityUserTableViewCell else {
-            return UITableViewCell()
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommunityUserTableViewCell.reuseIdentifier, for: indexPath) as? CommunityUserTableViewCell else { return UITableViewCell() }
         let user = users[indexPath.row]
         cell.configure(with: user)
         return cell
