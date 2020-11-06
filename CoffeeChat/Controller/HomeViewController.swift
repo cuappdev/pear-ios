@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     private let profileButton = UIButton()
     private var tabCollectionView: UICollectionView!
     private var tabContainerView: UIView!
-    private var tabPageViewController: TabPageViewController!
+    private var tabPageViewController: TabPageViewController?
     let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
@@ -25,9 +25,6 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .backgroundLightGreen
-
-        tabPageViewController = TabPageViewController()
-        addChild(tabPageViewController)
 
         profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
@@ -40,8 +37,6 @@ class HomeViewController: UIViewController {
 
         tabContainerView = UIView()
         view.addSubview(tabContainerView)
-        tabPageViewController.view.frame = tabContainerView.frame
-        tabContainerView.addSubview(tabPageViewController.view)
 
         let tabLayout = UICollectionViewFlowLayout()
         tabLayout.minimumInteritemSpacing = 0
@@ -61,7 +56,44 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
+        // TODO change to actual user
+        let myself = SubUser(
+            firstName: "Phillip",
+            googleID: "pnor",
+            graduationYear: "2022",
+            hometown: "East Windsor",
+            lastName: "O'Reggio",
+            netID: "pno3",
+            profilePictureURL: "?",
+            pronouns: "He/Him"
+        )
+        NetworkManager.shared.getMatching(user: myself).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    self.setupTabPageViewController(with: value.data)
+                }
+            case .error:
+                print("Failed to get the matching for user")
+            }
+        }
+
         setUpConstraints()
+    }
+
+    private func setupTabPageViewController(with matching: Matching?) {
+        tabPageViewController = TabPageViewController(matching: matching)
+        if let tabPageViewController = tabPageViewController {
+            addChild(tabPageViewController)
+
+            tabPageViewController.view.frame = tabContainerView.frame
+            tabContainerView.addSubview(tabPageViewController.view)
+            tabPageViewController.view.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+        self.view.updateConstraints()
     }
 
     @objc private func profilePressed() {
@@ -112,7 +144,7 @@ extension HomeViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeTabIndex = indexPath.item
-        tabPageViewController.setViewController(to: indexPath.item)
+        tabPageViewController?.setViewController(to: indexPath.item)
         tabCollectionView.reloadData()
     }
 

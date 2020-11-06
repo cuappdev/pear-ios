@@ -97,6 +97,8 @@ class MeetupStatusView: UIView {
         messageTextView.font = UIFont._16CircularStdMedium
         messageTextView.isEditable = false
         messageTextView.isScrollEnabled = false
+        messageTextView.showsHorizontalScrollIndicator = false
+        messageTextView.showsVerticalScrollIndicator = false
         messageTextView.textColor = .black
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = .zero

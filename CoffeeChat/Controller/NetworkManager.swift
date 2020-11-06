@@ -76,7 +76,7 @@ class NetworkManager {
     // - Other person chooses one time, making the matching now ACTIVE and size == 1
 
     // Get all matchings that involve this user
-    func getMatchings(user: SubUser) -> Future<Response<Matching>> {
+    func getMatching(user: SubUser) -> Future<Response<Matching?>> {
         let request = networking(Endpoint.pingServer())
 
         let dummySchedule = [

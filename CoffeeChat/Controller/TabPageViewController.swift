@@ -12,19 +12,20 @@ class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
     private let communityViewController = CommunityViewController()
-    private let matchViewController = NoMatchViewController()//MatchViewController(hasReachedOut: false)
+    private let matchViewController: UIViewController
     private var pages: [UIViewController] = [UIViewController]()
 
-    override init(
-        transitionStyle style: UIPageViewController.TransitionStyle,
-        navigationOrientation: UIPageViewController.NavigationOrientation,
-        options: [UIPageViewController.OptionsKey: Any]? = nil
-    ) {
+    init(matching: Matching?) {
+        if let matching = matching {
+            matchViewController = MatchViewController(hasReachedOut: true)
+        } else {
+            matchViewController = NoMatchViewController()
+        }
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
