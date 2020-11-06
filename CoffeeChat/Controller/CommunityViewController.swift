@@ -101,7 +101,7 @@ class CommunityViewController: UIViewController {
 
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(23)
@@ -120,9 +120,9 @@ class CommunityViewController: UIViewController {
 extension CommunityViewController: UITableViewDelegate {}
 
 extension CommunityViewController: UITableViewDataSource {
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        users.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -142,5 +142,3 @@ extension CommunityViewController: UISearchBarDelegate {
     }
 
 }
-
-

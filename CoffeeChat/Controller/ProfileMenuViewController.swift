@@ -122,11 +122,10 @@ class ProfileMenuViewController: UIViewController {
     func pushEditingGroupsViewController() {
         navigationController?.pushViewController(EditingViewController(isShowingGroups: true), animated: false)
     }
-    
+
     func pushSettingsViewController() {
         navigationController?.pushViewController(SettingsViewController(), animated: false)
     }
-    
 
 }
 

@@ -12,7 +12,7 @@ class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
     private let communityViewController = CommunityViewController()
-    private let matchViewController = MatchViewController(hasReachedOut: false)
+    private let matchViewController = NoMatchViewController()//MatchViewController(hasReachedOut: false)
     private var pages: [UIViewController] = [UIViewController]()
 
     override init(

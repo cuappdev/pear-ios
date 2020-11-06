@@ -9,8 +9,8 @@
 import Foundation
 
 struct AboutParagraph {
-    
+
     let bold: String
     let regular: String
-    
+
 }

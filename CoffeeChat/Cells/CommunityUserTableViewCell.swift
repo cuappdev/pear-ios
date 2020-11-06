@@ -111,9 +111,9 @@ class CommunityUserTableViewCell: UITableViewCell {
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return interests.count
+        interests.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -123,11 +123,11 @@ extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionVi
         cell.configure(with: interest)
         return cell
     }
-    
+
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
-    
+
     func calculateNecessaryWidth(text: String) -> CGFloat {
         let label = UILabel()
         label.text = text
@@ -135,10 +135,10 @@ extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
         label.sizeToFit()
         return label.frame.width
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalHorizontalPadding: CGFloat = 16
         return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item]) + totalHorizontalPadding, height: 19)
     }
-    
+
 }

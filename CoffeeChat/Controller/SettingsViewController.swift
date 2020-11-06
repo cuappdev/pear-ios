@@ -23,7 +23,7 @@ class SettingsViewController: UIViewController {
     private var pauseBlurEffect: UIBlurEffect!
     private var pauseVisualEffectView: UIVisualEffectView!
     private var pausePearView: PausePearView!
-    
+
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
         SettingOption(hasSwitch: true, image: "pausePear", switchOn: false, text: "Pause Pear"),
@@ -32,12 +32,12 @@ class SettingsViewController: UIViewController {
         SettingOption(hasSwitch: false, image: "aboutPear", switchOn: false, text: "About Pear"),
         SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out")
     ]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Settings"
         view.backgroundColor = .backgroundLightGreen
-        
+
         settingsTableView.backgroundColor = .backgroundLightGreen
         settingsTableView.separatorStyle = .none
         settingsTableView.showsVerticalScrollIndicator = false
@@ -46,13 +46,13 @@ class SettingsViewController: UIViewController {
         settingsTableView.dataSource = self
         settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier)
         view.addSubview(settingsTableView)
-        
+
         setupNavigationBar()
         setupPausePear()
-        
+
         setupConstraints()
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage()
@@ -66,53 +66,55 @@ class SettingsViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
-    
+
     private func setupPausePear() {
         pausePearView = PausePearView(delegate: self)
         pauseBlurEffect = UIBlurEffect(style: .regular)
         pauseVisualEffectView = UIVisualEffectView(effect: pauseBlurEffect)
     }
-    
+
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
-    
+
     private func setupConstraints() {
         settingsTableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(28)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
-    
+
     private func pushAboutPearViewController() {
         navigationController?.pushViewController(AboutPearViewController(), animated: true)
     }
-    
+
     private func pushEditAvailabilitiesViewController() {
         navigationController?.pushViewController(EditAvailabilityViewController(), animated: true)
     }
-    
+
     private func pushConnectSocialMediaViewController() {
         navigationController?.pushViewController(ConnectSocialMediaViewController(), animated: true)
     }
-    
+
 }
 
 extension SettingsViewController: UITableViewDataSource {
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingOptions.count
+        settingOptions.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier, for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
+        guard let cell =
+                settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier,
+                        for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
         let setting = settingOptions[indexPath.row]
         cell.configure(for: setting)
         cell.selectionStyle = .none
         cell.delegate = self
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let option = settingOptions[indexPath.row]
         if option.text == "About Pear" {
@@ -127,30 +129,30 @@ extension SettingsViewController: UITableViewDataSource {
             self.view.window?.makeKeyAndVisible()
         }
     }
-    
+
 }
 
 extension SettingsViewController: UITableViewDelegate {
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         62
     }
-    
+
 }
 
 extension SettingsViewController: PausePearDelegate {
-    
+
     func presentPausePear() {
         pauseVisualEffectView.frame = self.view.frame
         view.addSubview(pauseVisualEffectView)
         view.addSubview(pausePearView)
-        
+
         pausePearView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.height.equalTo(305)
             make.width.equalTo(295)
         }
-        
+
         UIView.animate(withDuration: 0.3, animations: {
             self.pausePearView.transform = .init(scaleX: 1.5, y: 1.5)
             self.pauseVisualEffectView.alpha = 1
@@ -158,11 +160,11 @@ extension SettingsViewController: PausePearDelegate {
             self.pausePearView.transform = .identity
         })
     }
-    
+
     func pausePearAction(state: String) {
         // TODO: pause pear action after selecting a time
     }
-    
+
     func removePausePear() {
         UIView.animate(withDuration: 0.15) {
             self.pauseVisualEffectView.alpha = 0
@@ -172,5 +174,5 @@ extension SettingsViewController: PausePearDelegate {
             self.pausePearView.removeFromSuperview()
         }
     }
-    
+
 }
