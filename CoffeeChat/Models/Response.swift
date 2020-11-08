@@ -15,3 +15,9 @@ struct Response<T: Codable>: Codable {
     var success: Bool
 
 }
+
+struct SuccessResponse: Codable {
+    
+    var success: Bool
+    
+}

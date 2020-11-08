@@ -24,10 +24,30 @@ extension Endpoint {
         Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
+    
+    static var standardHeaders: [String: String] {
+        if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return [:]
+        }
+    }
+
+    static var updateHeaders: [String: String] {
+        if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return [:]
+        }
+    }
 
     /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
         Endpoint(path: "/general/hello/")
+    }
+    
+    static func refreshUserToken(token: String) -> Endpoint {
+        return Endpoint(path: "/refresh/", headers: updateHeaders)
     }
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
@@ -36,24 +56,41 @@ extension Endpoint {
         return Endpoint(path: "/auth/login/", body: body)
     }
 
-    /// [POST] Update information about the user
-    static func updateUser(
-        clubs: [String],
+    /// [POST] Update demographics information about the user
+    static func updateUserDemographics(
         graduationYear: String,
         hometown: String,
-        interests: [String],
         major: String,
-        pronouns: String
+        pronouns: String,
+        picture: String
     ) -> Endpoint {
-        let body = UserUpdateBody(
-            clubs: clubs,
+        let body = UserUpdateDemographicsBody(
             graduationYear: graduationYear,
             hometown: hometown,
-            interests: interests,
             major: major,
-            pronouns: pronouns
+            pronouns: pronouns,
+            profilePictureURL: picture
         )
-        return Endpoint(path: "/user/update/", body: body)
+        print(standardHeaders)
+        return Endpoint(path: "/user/updateDemographics/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update interests information about the user
+    static func updateUserInterests(
+        interests: [String]
+    ) -> Endpoint {
+        let body = UserUpdateInterestsBody(
+            interests: interests
+        )
+        print(standardHeaders)
+        return Endpoint(path: "/user/updateInterests/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update oganizations information about the user
+    static func updateUserOrganizations(organizations: [String]) -> Endpoint {
+        let body = UserUpdateOrganizationsBody(clubs: organizations)
+        print(standardHeaders)
+        return Endpoint(path: "/user/updateOrganizations/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user

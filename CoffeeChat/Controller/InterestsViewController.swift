@@ -92,7 +92,10 @@ class InterestsViewController: UIViewController {
     @objc func nextButtonPressed() {
         delegate?.nextPage(index: 2)
         let userInterests = selectedInterests.map { $0.name }
-        userDefaults.set(userInterests, forKey: Constants.UserDefaults.userInterests)
+        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { ans in
+            print("interests")
+            print(ans)
+        }
         delegate?.nextPage(index: 2)
     }
 

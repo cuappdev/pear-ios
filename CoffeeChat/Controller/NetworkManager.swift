@@ -20,23 +20,35 @@ class NetworkManager {
     func pingServer() -> Future<Response<String>> {
         networking(Endpoint.pingServer()).decode()
     }
+    
+    func refreshUserSession(token: String) -> Future<Response<UserSession>> {
+        print("just in netwokring")
+        print(networking(Endpoint.refreshUserToken(token: token)))
+        return networking(Endpoint.refreshUserToken(token: token)).decode()
+    }
 
     func createUser(idToken: String) -> Future<Response<UserSession>> {
         networking(Endpoint.createUser(idToken: idToken)).decode()
     }
-
-    func updateUser(clubs: [String],
-                    graduationYear: String,
-                    hometown: String,
-                    interests: [String],
-                    major: String,
-                    pronouns: String) -> Future<Response<UserSession>> {
-        networking(Endpoint.updateUser(clubs: clubs,
-                                       graduationYear: graduationYear,
-                                       hometown: hometown,
-                                       interests: interests,
-                                       major: major,
-                                       pronouns: pronouns)).decode()
+    
+    func updateUserDemographics(graduationYear: String,
+                                major: String,
+                                hometown: String,
+                                pronouns: String,
+                                picture: String) -> Future<SuccessResponse> {
+        return networking(Endpoint.updateUserDemographics(graduationYear: graduationYear,
+                                                            hometown: hometown,
+                                                            major: major,
+                                                            pronouns: pronouns,
+                                                            picture: picture)).decode()
+    }
+    
+    func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {
+        return networking(Endpoint.updateUserInterests(interests: interests)).decode()
+    }
+    
+    func updateUserOrganizations(organizations: [String]) -> Future<SuccessResponse> {
+        return networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
     }
 
     func getUser() -> Future<Response<User>> {

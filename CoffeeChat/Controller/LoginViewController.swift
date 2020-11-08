@@ -103,18 +103,6 @@ class LoginViewController: UIViewController {
         })
     }
 
-    private func createUser(idToken: String) {
-        NetworkManager.shared.createUser(idToken: idToken).observe { result in
-            switch result {
-            case .value(let response):
-                // TODO: Add user creation handling
-                print(response)
-            case .error(let error):
-                print(error)
-            }
-        }
-    }
-
 }
 
 extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
@@ -135,27 +123,46 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             return
         }
 
+        print("we are here")
+        
         if let userId = user.userID,
-            let idToken = user.authentication.idToken,
-            let userFirstName = user.profile.givenName,
-            let userFullName = user.profile.name {
+           let idToken = user.authentication.idToken,
+           let userFirstName = user.profile.givenName,
+           let userFullName = user.profile.name,
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 300){
             userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            createUser(idToken: idToken)
-        }
-
-        let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-
-        if onboardingCompleted {
+            userDefaults.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
+            NetworkManager.shared.createUser(idToken: idToken).observe { result in
+                switch result {
+                case .value(let response):
+                    // TODO: Add user creation handling
+                    let userSession = response.data
+                    print("Login: \(userSession)")
+                    UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                    UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
+                    UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
+//                    let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+//                    if onboardingCompleted {
+//                    let homeVC = HomeViewController()
+//                    self.navigationController?.pushViewController(homeVC, animated: false)
+//                    } else {
+//                        let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+//                        self.navigationController?.pushViewController(onboardingVC, animated: false)
+//                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            if onboardingCompleted {
             let homeVC = HomeViewController()
-            navigationController?.pushViewController(homeVC, animated: false)
-        } else {
-            let onboardingVC = OnboardingPageViewController(
-                transitionStyle: UIPageViewController.TransitionStyle.scroll,
-                navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
-            )
-            navigationController?.pushViewController(onboardingVC, animated: false)
+            self.navigationController?.pushViewController(homeVC, animated: false)
+            } else {
+                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                self.navigationController?.pushViewController(onboardingVC, animated: false)
+            }
         }
     }
 
@@ -165,9 +172,9 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             self.errorMessageVisualEffectView.alpha = 0
             self.errorMessageAlertView.alpha = 0
             self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
+        }) { (_) in
             self.errorMessageAlertView.removeFromSuperview()
-        })
+        }
     }
 
 }

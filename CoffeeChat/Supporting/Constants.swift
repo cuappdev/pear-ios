@@ -28,6 +28,9 @@ struct Constants {
     }
 
     struct UserDefaults {
+        static let accessToken = "accessToken"
+        static let refreshToken = "refreshToken"
+        static let sessionExpiration = "sessionExpiration"
         static let onboardingCompletion = "onboardingCompletion"
         static let userClubs = "userClubs"
         static let userFirstName = "userFirstName"
@@ -38,6 +41,7 @@ struct Constants {
         static let userId = "userId"
         static let userInterests = "userInterests"
         static let userMajor = "userMajor"
+        static let userProfilePictureURL = "userProfilePictureURL"
         static let userPronouns = "userPronouns"
     }
 

@@ -11,11 +11,9 @@ import Foundation
 struct UserSession: Codable {
 
     // TODO: Implement user session
-//    let accessToken: String
-//    let active: Bool
-//    let refreshToken: String
-//    let sessionExpiration: String
-
-    let errors: [String]
+    let accessToken: String
+    let active: Bool
+    let refreshToken: String
+    let sessionExpiration: String
 
 }
