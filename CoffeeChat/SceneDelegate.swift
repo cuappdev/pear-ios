@@ -24,18 +24,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
 
         let window = UIWindow(windowScene: scene)
-        
-//        let navigationController = UINavigationController(rootViewController: LoginViewController())
-//        window.rootViewController = navigationController
-//        self.window = window
-//        window.makeKeyAndVisible()
-//        return
-        
+        let navigationController = UINavigationController(rootViewController: LoginViewController())
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
-//            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
+//            let onboardingCompleted = false
+            let assignedMatch = false
+            let homeVC = HomeViewController()
+            let noMatchVC = NoMatchViewController()
+            let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            let matchVC = assignedMatch ? homeVC : noMatchVC
+            let rootVC = onboardingCompleted ? matchVC : onboardingVC
             guard let unwrappedToken = refreshToken else {
                 // Ask user to sign in if they have not signed in before.
                 let navigationController = UINavigationController(rootViewController: LoginViewController())
@@ -45,37 +46,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return
             }
             print("Unwrapped Token: \(unwrappedToken)")
-            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
-                switch result {
-                case .value(let response):
-                    print("refresh user session success")
-                    let userSession = response.data
-                    print(userSession)
-                    UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                    UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                    UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
-                case .error(let error):
+            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        // TODO: Add user creation handling
+                        print("refresh user session success")
+                        let userSession = response.data
+                        print(userSession)
+                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
+                        UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
+                        navigationController.pushViewController(rootVC, animated: false)
+                    case .error(let error):
                     // TODO: Handle error
-                    print("refresh user session failure")
-                    print(error)
-                    // Ask user to sign in if they have not signed in before.
+                        print("Refresh user session failure \(error)")
+                    }
                 }
             }
-            let onboardingCompleted = false
-            let assignedMatch = false
-            let homeVC = HomeViewController()
-            let noMatchVC = NoMatchViewController()
-            let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-            let matchVC = assignedMatch ? homeVC : noMatchVC
-            let rootVC = onboardingCompleted ? matchVC : onboardingVC
-            let navigationController = UINavigationController(rootViewController: rootVC)
-            window.rootViewController = navigationController
-        } else {
-            // Ask user to sign in if they have not signed in before.
-            let navigationController = UINavigationController(rootViewController: LoginViewController())
-            window.rootViewController = navigationController
         }
-        
+        window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()
     }

@@ -170,39 +170,14 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let userGroups = selectedGroups.map { $0.name }
-        NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { ans in
-            print("groups")
-            print(ans)
+        NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { sucesssResponse in
+            print("Update groups success response \(sucesssResponse)")
         }
         delegate?.nextPage(index: 3)
     }
 
     @objc func skipButtonPressed() {
         delegate?.nextPage(index: 3)
-    }
-
-    private func updateUser() {
-//        if let clubs = userDefaults.array(forKey: Constants.UserDefaults.userClubs) as? [String],
-//           let graduationYear = userDefaults.string(forKey: Constants.UserDefaults.userGraduationYear),
-//           let hometown = userDefaults.string(forKey: Constants.UserDefaults.userHometown),
-//           let interests = userDefaults.array(forKey: Constants.UserDefaults.userInterests) as? [String],
-//           let major = userDefaults.string(forKey: Constants.UserDefaults.userMajor),
-//           let pronouns = userDefaults.string(forKey: Constants.UserDefaults.userPronouns) {
-//            NetworkManager.shared.updateUser(clubs: clubs,
-//                                             graduationYear: graduationYear,
-//                                             hometown: hometown,
-//                                             interests: interests,
-//                                             major: major,
-//                                             pronouns: pronouns)
-//                .observe { result in
-//                    switch result {
-//                    case .value(let response):
-//                        print(response)
-//                    case .error(let error):
-//                        print(error)
-//                    }
-//                }
-//        }
     }
 
 }

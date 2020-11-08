@@ -62,16 +62,15 @@ extension Endpoint {
         hometown: String,
         major: String,
         pronouns: String,
-        picture: String
+        profilePictureURL: String
     ) -> Endpoint {
         let body = UserUpdateDemographicsBody(
             graduationYear: graduationYear,
             hometown: hometown,
             major: major,
             pronouns: pronouns,
-            profilePictureURL: picture
+            profilePictureURL: profilePictureURL
         )
-        print(standardHeaders)
         return Endpoint(path: "/user/updateDemographics/", headers: standardHeaders, body: body)
     }
     
@@ -82,7 +81,6 @@ extension Endpoint {
         let body = UserUpdateInterestsBody(
             interests: interests
         )
-        print(standardHeaders)
         return Endpoint(path: "/user/updateInterests/", headers: standardHeaders, body: body)
     }
     

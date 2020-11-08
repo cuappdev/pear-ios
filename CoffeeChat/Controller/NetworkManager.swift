@@ -35,12 +35,12 @@ class NetworkManager {
                                 major: String,
                                 hometown: String,
                                 pronouns: String,
-                                picture: String) -> Future<SuccessResponse> {
+                                profilePictureURL: String) -> Future<SuccessResponse> {
         return networking(Endpoint.updateUserDemographics(graduationYear: graduationYear,
                                                             hometown: hometown,
                                                             major: major,
                                                             pronouns: pronouns,
-                                                            picture: picture)).decode()
+                                                            profilePictureURL: profilePictureURL)).decode()
     }
     
     func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {

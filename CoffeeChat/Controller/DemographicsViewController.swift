@@ -103,19 +103,19 @@ class DemographicsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        /// Save onboarding information to user defaults, for user creation later.
-        let graduationYear = fieldValues[fieldMap[0]]!
-        let major = fieldValues[fieldMap[1]]!
-        let hometown = fieldValues[fieldMap[2]]!
-        let pronouns = fieldValues[fieldMap[3]]!
-        NetworkManager.shared.updateUserDemographics(graduationYear: graduationYear,
-                                              major: major,
-                                              hometown: hometown,
-                                              pronouns: pronouns,
-                                              picture: "").observe { ans in
-                                                print(ans)
+        if let graduationYear = fieldValues[fieldMap[0]],
+           let major = fieldValues[fieldMap[1]],
+           let hometown = fieldValues[fieldMap[2]],
+           let pronouns = fieldValues[fieldMap[3]] {
+            NetworkManager.shared.updateUserDemographics(graduationYear: graduationYear,
+                                                  major: major,
+                                                  hometown: hometown,
+                                                  pronouns: pronouns,
+                                                  profilePictureURL: "").observe { successResponse in
+                                                    print("Update demographics success response \(successResponse)")
+            }
+            delegate?.nextPage(index: 1)
         }
-        delegate?.nextPage(index: 1)
     }
 
     private func setUpConstraints() {

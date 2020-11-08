@@ -92,9 +92,8 @@ class InterestsViewController: UIViewController {
     @objc func nextButtonPressed() {
         delegate?.nextPage(index: 2)
         let userInterests = selectedInterests.map { $0.name }
-        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { ans in
-            print("interests")
-            print(ans)
+        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { successResponse in
+            print("Update interests success response \(successResponse)")
         }
         delegate?.nextPage(index: 2)
     }

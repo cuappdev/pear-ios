@@ -122,9 +122,12 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             self.showErrorMessageAlertView()
             return
         }
-
-        print("we are here")
         
+        let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        let homeVC = HomeViewController()
+        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+        let loginVC = LoginViewController()
+
         if let userId = user.userID,
            let idToken = user.authentication.idToken,
            let userFirstName = user.profile.givenName,
@@ -134,34 +137,27 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
             userDefaults.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
-            NetworkManager.shared.createUser(idToken: idToken).observe { result in
-                switch result {
-                case .value(let response):
-                    // TODO: Add user creation handling
-                    let userSession = response.data
-                    print("Login: \(userSession)")
-                    UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                    UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                    UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
-//                    let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-//                    if onboardingCompleted {
-//                    let homeVC = HomeViewController()
-//                    self.navigationController?.pushViewController(homeVC, animated: false)
-//                    } else {
-//                        let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-//                        self.navigationController?.pushViewController(onboardingVC, animated: false)
-//                    }
-                case .error(let error):
-                    print(error)
+            NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
+                guard let `self` = self else { return }
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        // TODO: Add user creation handling
+                        let userSession = response.data
+                        print("Login User Session \(userSession)")
+                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
+                        UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
+                        if onboardingCompleted {
+                            self.navigationController?.pushViewController(homeVC, animated: false)
+                        } else {
+                            self.navigationController?.pushViewController(onboardingVC, animated: false)
+                        }
+                    case .error(let error):
+                        print(error)
+                        self.navigationController?.pushViewController(loginVC, animated: false)
+                    }
                 }
-            }
-            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            if onboardingCompleted {
-            let homeVC = HomeViewController()
-            self.navigationController?.pushViewController(homeVC, animated: false)
-            } else {
-                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                self.navigationController?.pushViewController(onboardingVC, animated: false)
             }
         }
     }
