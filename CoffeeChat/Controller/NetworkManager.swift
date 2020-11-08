@@ -22,8 +22,6 @@ class NetworkManager {
     }
     
     func refreshUserSession(token: String) -> Future<Response<UserSession>> {
-        print("just in netwokring")
-        print(networking(Endpoint.refreshUserToken(token: token)))
         return networking(Endpoint.refreshUserToken(token: token)).decode()
     }
 

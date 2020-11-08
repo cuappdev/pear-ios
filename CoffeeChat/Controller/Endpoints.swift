@@ -87,7 +87,6 @@ extension Endpoint {
     /// [POST] Update oganizations information about the user
     static func updateUserOrganizations(organizations: [String]) -> Endpoint {
         let body = UserUpdateOrganizationsBody(clubs: organizations)
-        print(standardHeaders)
         return Endpoint(path: "/user/updateOrganizations/", headers: standardHeaders, body: body)
     }
 

@@ -30,8 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Onboard user if they haven't done so yet, otherwise bring to home.
             let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
-//            let onboardingCompleted = false
-            let assignedMatch = false
+            let assignedMatch = true
             let homeVC = HomeViewController()
             let noMatchVC = NoMatchViewController()
             let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
@@ -45,22 +44,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window.makeKeyAndVisible()
                 return
             }
-            print("Unwrapped Token: \(unwrappedToken)")
-            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { [weak self] result in
+            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
                         // TODO: Add user creation handling
-                        print("refresh user session success")
                         let userSession = response.data
-                        print(userSession)
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         navigationController.pushViewController(rootVC, animated: false)
                     case .error(let error):
                     // TODO: Handle error
-                        print("Refresh user session failure \(error)")
+                        print(error)
                     }
                 }
             }
