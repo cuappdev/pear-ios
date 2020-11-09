@@ -30,19 +30,35 @@ enum ChatStatus {
 
     // TODO change when matching responses change
     static func forMatching(matching: Matching) -> ChatStatus {
-        return .finished
-        if matching.active {
-            // finished date passed: finished
-            // coming up: chatScheduled
+        let matchDaySchedule = matching.schedule.first
+        let matchPear = matching.users[1]
+        if let matchDaySchedule = matchDaySchedule, matching.active {
+            if matching.schedule.first!.hasPassed() {
+                // finished date passed: finished
+                return .finished
+            } else {
+                // coming up: chatScheduled
+                return .chatScheduled(matchPear, matchDaySchedule.getDate())
+            }
             // TODO can't differntiate yet: cancelled
+            return .cancelled(matchPear)
         } else {
-            if matching.schedule.first!.times.isEmpty { // nobody started flow
-                // Show no banner: planned
-                // if its been 3 days since the match began (3 days after sunday, so wednesday): noResponses
-            } else { // someone started the flow
+            if let matchDaySchedule = matchDaySchedule {
                 // TODO can't distinguish who started it so
                 // If user already reached out: waitingOn
                 // If user has to reach: respondingTo
+
+                return respondingTo(matchPear)
+                //return waitingOn(matchPear)
+            } else { // nobody started the flow
+                // if its been 3 days since the match began (3 days after sunday, so wednesday): noResponses
+                if Time.daysSinceMatching > 3 {
+                    return .noResponses
+                } else {
+                    // Show no banner: planned
+                    return .planning
+                }
+
             }
         }
     }
@@ -85,7 +101,9 @@ class MatchViewController: UIViewController {
 
     init(matching: Matching) {
         self.matching = matching
+        print("Matching: \(matching)")
         self.chatStatus = ChatStatus.forMatching(matching: matching)
+        print("Chat Status: \(self.chatStatus)")
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -140,25 +158,12 @@ class MatchViewController: UIViewController {
             view.addSubview(reachOutButton)
         }
 
-        // TODO change based on chat status
-        // let sampleUser = User(
-        //     clubs: [],
-        //     firstName: "Ezra",
-        //     googleID: "",
-        //     graduationYear: "2024",
-        //     hometown: "Ithaca",
-        //     interests: [],
-        //     lastName: "Cornell",
-        //     major: "CS",
-        //     matches: [],
-        //     netID: "ec1",
-        //     profilePictureURL: "",
-        //     pronouns: "He/Him",
-        //     facebook: "",
-        //     instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
-        //meetupStatusView = hasReachedOut
-        //    ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
-        //    : MeetupStatusView(for: .respondingTo(sampleUser))
+        switch chatStatus {
+        case .noResponses, .waitingOn, .respondingTo, .finished, .cancelled, .chatScheduled:
+            meetupStatusView = MeetupStatusView(for: chatStatus)
+        default:
+            break
+        }
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }

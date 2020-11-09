@@ -24,12 +24,20 @@ enum Weekday: String {
 
 class Time {
 
+    static let matchDay: Weekday = .sunday
     static let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
     static let pmTimes = [
         "12:00", "12:30", "1:00", "1:30", "2:00", "2:30",
         "3:00", "3:30", "4:00", "4:30", "5:00", "5:30",
         "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"
     ]
+
+    /// Returns the number of days its been since matches have been assigned
+    static var daysSinceMatching: Int {
+        let lastSunday = getWeekday(searchDirection: .backward, weekday: .sunday, time: 0)
+        let today = Date()
+        return Calendar.current.dateComponents([.day], from: lastSunday, to: today).day ?? 0
+    }
 
     static func isAm(time: String) -> Bool {
         amTimes.contains(time)
@@ -62,8 +70,50 @@ class Time {
         return false
     }
 
-    static func next(_ weekday: Weekday, time: Float) -> Date {
-        // Set today to have time specified by [time]
+    /// Returns the `Date` corresponding to next `weekday` at the time specified by `time`
+    static func next(_ weekday: Weekday, at time: Float) -> Date {
+        getWeekday(searchDirection: .forward, weekday: weekday, time: time)
+    }
+
+}
+
+// MARK: Helper Functinos
+extension Time {
+
+    /**
+    Converts a float time to 2 integers representing hours and minutes.
+    Only returns either on the hour times or half hours
+
+    # Example:
+    time = 0 -> 12:00 AM
+    time = 1 -> 1:00 AM
+    time = 13.5 -> 1:30 PM
+    time = 23.5 -> 11:30 PM
+    */
+    private static func floatTimeToHoursMinutes(time: Float) -> (hours: Int, minutes: Int) {
+        let hours = Int(time)
+        let minutes = time.rounded() > time ? 30 : 0
+        return (hours, minutes)
+    }
+
+    private static func getWeekDaysInEnglish() -> [String] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: "en_US_POSIX")
+        return calendar.weekdaySymbols
+    }
+
+    /**
+    Returns the next or previous `weekday` with a time based on `time`
+    The search for the weekday includes today.
+    # Example:
+    If today is Monday 3:00 PM, `getWeekday(.forward, .sunday, 2)` returns next sunday (6 days from now) at 2:00 AM
+    If today is Sunday 5:00 PM, `getWeekday(.forward, .sunday, 18)` returns **today** at 6:00 PM
+
+    If today is Tuesday 3:00 PM, `getWeekday(.backward, .sunday, 2)` returns the previous sunday (2 days ago) at 2:00 AM
+    If today is Sunday 5:00 PM, `getWeekday(.backward, .sunday, 13)` returns **today** at 1:00 PM
+    */
+    private static func getWeekday(searchDirection: Calendar.SearchDirection, weekday: Weekday, time: Float) -> Date {
+        // Set today to have time specified by `time`
         let rightNow = Date()
         let hoursMinutes = Time.floatTimeToHoursMinutes(time: time)
         guard let todayWithTime = Calendar.current.date(
@@ -81,12 +131,15 @@ class Time {
             """)
         }
 
-        // If todayWithTime hasn't passed yet, return it
-        if rightNow <= todayWithTime {
+        // Depending on the search direction and time, the next/previous day might be today with a different time
+        if
+            searchDirection == .forward && todayWithTime > rightNow ||
+            searchDirection == .backward && todayWithTime < rightNow
+        {
             return todayWithTime
         }
 
-        // Move date to the next weekday
+        // Move date to the next/previous weekday
         let dayName = weekday.rawValue
         let weekdaysName = Time.getWeekDaysInEnglish().map { $0.lowercased() }
         guard var searchWeekdayIndex = weekdaysName.firstIndex(of: dayName) else {
@@ -101,36 +154,18 @@ class Time {
             after: todayWithTime,
             matching: nextDateComponent,
             matchingPolicy: .nextTime,
-            direction: .forward
+            direction: searchDirection
         ) else {
             fatalError("""
             A date could not be found that matches the components using the current Calendar:
             calendar: \(calendar)
             dateComponents: \(nextDateComponent)
             matchingPolicy: \(Calendar.MatchingPolicy.nextTime)
-            direction: \(Calendar.SearchDirection.forward)
+            direction: \(searchDirection)
             """)
         }
 
         return date
-    }
-}
-
-// MARK: Helper Functinos
-extension Time {
-
-    /// Converts a float time to 2 integers representing hours and minutes.
-    /// Currenlty only returns either on the hour times or half hours
-    private static func floatTimeToHoursMinutes(time: Float) -> (hours: Int, minutes: Int) {
-        let hours = Int(time)
-        let minutes = time.rounded() > time ? 30 : 0
-        return (hours, minutes)
-    }
-
-    private static func getWeekDaysInEnglish() -> [String] {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Locale(identifier: "en_US_POSIX")
-        return calendar.weekdaySymbols
     }
 
 }
