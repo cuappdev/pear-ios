@@ -59,6 +59,14 @@ class NetworkManager {
         networking(Endpoint.getUserInterests()).decode()
     }
 
+    func getUsers() -> Future<Response<[CommunityUser]>> {
+        networking(Endpoint.getUsers()).decode()
+    }
+
+    func searchUsers(query: String) -> Future<Response<[CommunityUser]>> {
+        networking(Endpoint.searchUsers(query: query)).decode()
+    }
+
     // TODO: Update response body
 //    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
 //        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
