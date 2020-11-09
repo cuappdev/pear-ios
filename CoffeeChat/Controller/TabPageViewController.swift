@@ -17,7 +17,7 @@ class TabPageViewController: UIPageViewController {
 
     init(matching: Matching?) {
         if let matching = matching {
-            matchViewController = MatchViewController(hasReachedOut: true)
+            matchViewController = MatchViewController(matching: matching)
         } else {
             matchViewController = NoMatchViewController()
         }
@@ -35,7 +35,7 @@ class TabPageViewController: UIPageViewController {
     }
 
     func setViewController(to index: Int) {
-        let direction: UIPageViewController.NavigationDirection = (index == 1) ? .forward : .reverse
+        let direction: UIPageViewController.NavigationDirection = index == 1 ? .forward : .reverse
         self.setViewControllers([pages[index]], direction: direction, animated: true, completion: nil)
     }
 

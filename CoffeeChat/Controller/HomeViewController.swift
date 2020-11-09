@@ -59,10 +59,12 @@ class HomeViewController: UIViewController {
         // TODO change to actual user
         let myself = SubUser(
             firstName: "Phillip",
+            facebook: "https://www.facebook.com",
             googleID: "pnor",
             graduationYear: "2022",
             hometown: "East Windsor",
             lastName: "O'Reggio",
+            instagram: "https://www.instagram.com",
             netID: "pno3",
             profilePictureURL: "?",
             pronouns: "He/Him"

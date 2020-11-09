@@ -9,16 +9,66 @@
 import GoogleSignIn
 import UIKit
 
+enum ChatStatus {
+    /// No one has reached out yet
+    case planning
+    /// No one has reached out in 3 days
+    case noResponses
+
+    /// User already reached out and is waiting on pair
+    case waitingOn(SubUser)
+    /// Pair already reached out, and user is responding
+    case respondingTo(SubUser)
+
+    /// The chat date has passed
+    case finished
+    /// The chat has been cancelled
+    case cancelled(SubUser)
+
+    /// Chat has been scheduled and is coming up
+    case chatScheduled(SubUser, Date)
+
+    // TODO change when matching responses change
+    static func forMatching(matching: Matching) -> ChatStatus {
+        return .finished
+        if matching.active {
+            // finished date passed: finished
+            // coming up: chatScheduled
+            // TODO can't differntiate yet: cancelled
+        } else {
+            if matching.schedule.first!.times.isEmpty { // nobody started flow
+                // Show no banner: planned
+                // if its been 3 days since the match began (3 days after sunday, so wednesday): noResponses
+            } else { // someone started the flow
+                // TODO can't distinguish who started it so
+                // If user already reached out: waitingOn
+                // If user has to reach: respondingTo
+            }
+        }
+    }
+
+}
+
 class MatchViewController: UIViewController {
 
-    private let hasReachedOut: Bool
+    private let matching: Matching
+    private let chatStatus: ChatStatus
+    private var hasReachedOut: Bool {
+        get {
+            switch chatStatus {
+            case .chatScheduled, .waitingOn, .finished, .cancelled:
+                return true
+            default:
+                return false
+            }
+        }
+    }
 
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
-
     private var meetupStatusView: MeetupStatusView?
     private var reachOutButton = UIButton()
 
@@ -33,8 +83,9 @@ class MatchViewController: UIViewController {
         MatchSummary(title: "He is also part of...", detail: "EzraBox")
     ]
 
-    init(hasReachedOut: Bool) {
-        self.hasReachedOut = hasReachedOut
+    init(matching: Matching) {
+        self.matching = matching
+        self.chatStatus = ChatStatus.forMatching(matching: matching)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -90,24 +141,24 @@ class MatchViewController: UIViewController {
         }
 
         // TODO change based on chat status
-        let sampleUser = User(
-            clubs: [],
-            firstName: "Ezra",
-            googleID: "",
-            graduationYear: "2024",
-            hometown: "Ithaca",
-            interests: [],
-            lastName: "Cornell",
-            major: "CS",
-            matches: [],
-            netID: "ec1",
-            profilePictureURL: "",
-            pronouns: "He/Him",
-            facebook: "",
-            instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
-        meetupStatusView = hasReachedOut
-            ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
-            : MeetupStatusView(for: .respondingTo(sampleUser))
+        // let sampleUser = User(
+        //     clubs: [],
+        //     firstName: "Ezra",
+        //     googleID: "",
+        //     graduationYear: "2024",
+        //     hometown: "Ithaca",
+        //     interests: [],
+        //     lastName: "Cornell",
+        //     major: "CS",
+        //     matches: [],
+        //     netID: "ec1",
+        //     profilePictureURL: "",
+        //     pronouns: "He/Him",
+        //     facebook: "",
+        //     instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
+        //meetupStatusView = hasReachedOut
+        //    ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
+        //    : MeetupStatusView(for: .respondingTo(sampleUser))
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }

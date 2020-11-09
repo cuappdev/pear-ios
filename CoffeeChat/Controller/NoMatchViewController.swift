@@ -79,18 +79,6 @@ class NoMatchViewController: UIViewController {
            make.centerX.equalToSuperview()
            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
         }
-
-        let subuser = SubUser(
-            firstName: "",
-            googleID: "",
-            graduationYear: "",
-            hometown: "",
-            lastName: "",
-            netID: "",
-            profilePictureURL: "",
-            pronouns: ""
-        )
-
      }
 
     @objc private func availabilityButtonPressed() {

@@ -7,15 +7,6 @@
 
 import UIKit
 
-enum ChatStatus {
-    case chatScheduled(User, Date)
-    case waitingOn(User)
-    case respondingTo(User)
-    case finished
-    case cancelled(User)
-    case noResponses
-}
-
 class MeetupStatusView: UIView {
 
     // - MARK: Private View Vars
@@ -54,6 +45,9 @@ class MeetupStatusView: UIView {
             setupForNoResponses()
         case .finished:
             setupForChatFinished()
+        default:
+            print("There is no meetupStatusView for \(status) so returning the one for .noResponses")
+            setupForNoResponses()
         }
     }
 
@@ -145,21 +139,21 @@ class MeetupStatusView: UIView {
 
     // MARK: Different View States
 
-    private func setupForResponding(to user: User) {
+    private func setupForResponding(to user: SubUser) {
         statusImageView.image = UIImage(named: "newPear")
         statusLabel.text = "New Pear"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("\(user.firstName) wants to meet you! Pick a time that works for both of you.")
     }
 
-    private func setupForWaiting(for user: User) {
+    private func setupForWaiting(for user: SubUser) {
         statusImageView.image = UIImage(named: "reachedOut")
         statusLabel.text = "Reached out"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("Just waiting on \(user.firstName) to pick a time and place!")
     }
 
-    private func setupForChatScheduled(on date: Date, for user: User) {
+    private func setupForChatScheduled(on date: Date, for user: SubUser) {
         statusImageView.image = UIImage(named: "scheduled")
         statusLabel.text = "Chat scheduled"
 
@@ -201,7 +195,7 @@ class MeetupStatusView: UIView {
             .normalFont("Hope your chat went well! Now you have one more friend at Cornell 😊")
     }
 
-    private func setupForChatCancelled(with user: User) {
+    private func setupForChatCancelled(with user: SubUser) {
         statusImageView.image = UIImage(named: "cancelled")
         statusLabel.text = "Cancelled"
 
