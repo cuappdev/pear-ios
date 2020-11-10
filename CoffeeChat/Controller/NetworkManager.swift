@@ -79,13 +79,14 @@ class NetworkManager {
     func getMatching(user: SubUser) -> Future<Response<Matching?>> {
         let request = networking(Endpoint.pingServer())
 
-        let dummySchedule = [
-            DaySchedule(day: "Sunday", times: []),
-            DaySchedule(day: "Monday", times: []),
-            DaySchedule(day: "Wednesday", times: []),
-            DaySchedule(day: "Friday", times: [])
-        ]
-        let dummyMatch = Matching(active: true, schedule: dummySchedule, users: [user, user])
+        //let dummySchedule = [
+        //    DaySchedule(day: "Sunday", times: [10, 11, 12, 13, 14]),
+        //    DaySchedule(day: "Monday", times: [15, 16.5, 17]),
+        //    DaySchedule(day: "Wednesday", times: [19, 20.5]),
+        //    DaySchedule(day: "Friday", times: [10, 20.5])
+        //]
+        let dummySchedule: [DaySchedule] = []
+        let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user, user])
 
         return request.transformed { _ in
             Response(data: dummyMatch, success: true)

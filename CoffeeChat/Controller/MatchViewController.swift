@@ -104,6 +104,7 @@ class MatchViewController: UIViewController {
         print("Matching: \(matching)")
         self.chatStatus = ChatStatus.forMatching(matching: matching)
         print("Chat Status: \(self.chatStatus)")
+        print("Days since the matching: \(Time.daysSinceMatching)")
         super.init(nibName: nil, bundle: nil)
     }
 

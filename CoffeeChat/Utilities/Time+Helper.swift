@@ -112,11 +112,21 @@ extension Time {
     If today is Tuesday 3:00 PM, `getWeekday(.backward, .sunday, 2)` returns the previous sunday (2 days ago) at 2:00 AM
     If today is Sunday 5:00 PM, `getWeekday(.backward, .sunday, 13)` returns **today** at 1:00 PM
     */
+    // TODO this doesn't work...
     private static func getWeekday(searchDirection: Calendar.SearchDirection, weekday: Weekday, time: Float) -> Date {
+        let calendar = Calendar.current
+        // Get the day of week index of the weekday
+        let dayName = weekday.rawValue
+        let weekdaysName = Time.getWeekDaysInEnglish().map { $0.lowercased() }
+        guard var searchWeekdayIndex = weekdaysName.firstIndex(of: dayName) else {
+            fatalError("weekday symbol should be in the form \(weekdaysName)")
+        }
+        searchWeekdayIndex += 1
+
         // Set today to have time specified by `time`
         let rightNow = Date()
         let hoursMinutes = Time.floatTimeToHoursMinutes(time: time)
-        guard let todayWithTime = Calendar.current.date(
+        guard let todayWithTime = calendar.date(
             bySettingHour: hoursMinutes.hours,
             minute: hoursMinutes.minutes,
             second: 0,
@@ -124,7 +134,7 @@ extension Time {
         ) else {
             fatalError("""
             A date could not be found that matches the components using the current Calendar:
-            calendar: \(Calendar.current)
+            calendar: \(calendar)
             hours: \(hoursMinutes.hours)
             minutes: \(hoursMinutes.minutes)
             base date: \(rightNow)
@@ -133,20 +143,14 @@ extension Time {
 
         // Depending on the search direction and time, the next/previous day might be today with a different time
         if
-            searchDirection == .forward && todayWithTime > rightNow ||
-            searchDirection == .backward && todayWithTime < rightNow
+            searchWeekdayIndex == calendar.component(.weekday, from: rightNow) &&
+            (searchDirection == .forward && todayWithTime > rightNow ||
+            searchDirection == .backward && todayWithTime < rightNow)
         {
             return todayWithTime
         }
 
         // Move date to the next/previous weekday
-        let dayName = weekday.rawValue
-        let weekdaysName = Time.getWeekDaysInEnglish().map { $0.lowercased() }
-        guard var searchWeekdayIndex = weekdaysName.firstIndex(of: dayName) else {
-            fatalError("weekday symbol should be in the form \(weekdaysName)")
-        }
-        searchWeekdayIndex += 1
-        let calendar = Calendar(identifier: .gregorian)
         var nextDateComponent = calendar.dateComponents([.hour, .minute, .second], from: todayWithTime)
         nextDateComponent.weekday = searchWeekdayIndex
 
