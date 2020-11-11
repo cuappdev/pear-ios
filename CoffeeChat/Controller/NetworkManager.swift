@@ -22,7 +22,7 @@ class NetworkManager {
     }
     
     func refreshUserSession(token: String) -> Future<Response<UserSession>> {
-        return networking(Endpoint.refreshUserToken(token: token)).decode()
+        networking(Endpoint.refreshUserToken(token: token)).decode()
     }
 
     func createUser(idToken: String) -> Future<Response<UserSession>> {

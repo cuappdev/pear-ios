@@ -12,7 +12,6 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-
         let baseURL = Keys.serverURL
 
         #if LOCAL
