@@ -93,7 +93,7 @@ class InterestsViewController: UIViewController {
         delegate?.nextPage(index: 2)
         let userInterests = selectedInterests.map { $0.name }
         NetworkManager.shared.updateUserInterests(interests: userInterests).observe { [weak self] result in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):

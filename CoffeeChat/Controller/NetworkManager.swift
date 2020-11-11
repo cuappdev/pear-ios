@@ -29,24 +29,27 @@ class NetworkManager {
         networking(Endpoint.createUser(idToken: idToken)).decode()
     }
     
-    func updateUserDemographics(graduationYear: String,
-                                major: String,
-                                hometown: String,
-                                pronouns: String,
-                                profilePictureURL: String) -> Future<SuccessResponse> {
-        return networking(Endpoint.updateUserDemographics(graduationYear: graduationYear,
-                                                            hometown: hometown,
-                                                            major: major,
-                                                            pronouns: pronouns,
-                                                            profilePictureURL: profilePictureURL)).decode()
+    func updateUserDemographics(
+        graduationYear: String,
+        major: String,
+        hometown: String,
+        pronouns: String,
+        profilePictureURL: String) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserDemographics(
+                    graduationYear: graduationYear,
+                    hometown: hometown,
+                    major: major,
+                    pronouns: pronouns,
+                    profilePictureURL: profilePictureURL)
+        ).decode()
     }
     
     func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {
-        return networking(Endpoint.updateUserInterests(interests: interests)).decode()
+        networking(Endpoint.updateUserInterests(interests: interests)).decode()
     }
     
     func updateUserOrganizations(organizations: [String]) -> Future<SuccessResponse> {
-        return networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
+        networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
     }
 
     func getUser() -> Future<Response<User>> {

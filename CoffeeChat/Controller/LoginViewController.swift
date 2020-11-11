@@ -132,13 +132,13 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
            let idToken = user.authentication.idToken,
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 300){
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 300) {
             userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
             userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
             userDefaults.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
-                guard let `self` = self else { return }
+                guard let self = self else { return }
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
@@ -148,12 +148,9 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
-                        if onboardingCompleted {
-                            self.navigationController?.pushViewController(homeVC, animated: false)
-                        } else {
-                            self.navigationController?.pushViewController(onboardingVC, animated: false)
-                        }
-                    case .error(let error):
+                        let vc = onboardingCompleted ? homeVC : onboardingVC
+                        self.navigationController?.pushViewController(vc, animated: false)
+                    case .error(let _):
                         self.navigationController?.pushViewController(loginVC, animated: false)
                     }
                 }
@@ -167,7 +164,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             self.errorMessageVisualEffectView.alpha = 0
             self.errorMessageAlertView.alpha = 0
             self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { (_) in
+        }) { _ in
             self.errorMessageAlertView.removeFromSuperview()
         }
     }

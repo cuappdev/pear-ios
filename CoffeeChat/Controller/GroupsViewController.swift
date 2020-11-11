@@ -171,7 +171,7 @@ class GroupsViewController: UIViewController {
     @objc func nextButtonPressed() {
         let userGroups = selectedGroups.map { $0.name }
         NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { [weak self] result in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):

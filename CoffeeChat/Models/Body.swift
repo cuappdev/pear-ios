@@ -16,13 +16,13 @@ struct UserSessionBody: Codable {
 
 }
 
-struct UserUpdateOrganizationsBody: Codable {
+struct UpdateUserOrganizationsBody: Codable {
 
     let clubs: [String]
     
 }
 
-struct UserUpdateDemographicsBody: Codable {
+struct UpdateUserDemographicsBody: Codable {
     
     let graduationYear: String
     let hometown: String
@@ -32,7 +32,7 @@ struct UserUpdateDemographicsBody: Codable {
     
 }
 
-struct UserUpdateInterestsBody: Codable {
+struct UpdateUserInterestsBody: Codable {
     
     let interests: [String]
     
@@ -42,11 +42,5 @@ struct MatchingBody: Codable {
 
     let netIDs: [String]
     let schedule: [DaySchedule]
-
-}
-
-struct ErrorBody: Codable {
-
-    var errors: [String]
 
 }
