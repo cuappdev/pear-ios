@@ -11,13 +11,13 @@ import FutureNova
 
 struct Response<T: Codable>: Codable {
 
-    var data: T
-    var success: Bool
+    let data: T
+    let success: Bool
 
 }
 
 struct SuccessResponse: Codable {
     
-    var success: Bool
+    let success: Bool
     
 }

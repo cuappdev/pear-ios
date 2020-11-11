@@ -15,31 +15,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = scene as? UIWindowScene else { return }
-
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
-
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoginViewController())
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
-//            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let onboardingCompleted = false
+            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
             let assignedMatch = true
-            let homeVC = HomeViewController()
-            let noMatchVC = NoMatchViewController()
-            let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-            let matchVC = assignedMatch ? homeVC : noMatchVC
-            let rootVC = onboardingCompleted ? matchVC : onboardingVC
+            let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
+            let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
             guard let unwrappedToken = refreshToken else {
                 // Ask user to sign in if they have not signed in before.
-                let navigationController = UINavigationController(rootViewController: LoginViewController())
                 window.rootViewController = navigationController
                 self.window = window
                 window.makeKeyAndVisible()
