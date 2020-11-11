@@ -107,14 +107,25 @@ class DemographicsViewController: UIViewController {
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]] {
-            NetworkManager.shared.updateUserDemographics(graduationYear: graduationYear,
-                                                  major: major,
-                                                  hometown: hometown,
-                                                  pronouns: pronouns,
-                                                  profilePictureURL: "").observe { successResponse in
-                                                    print("Update demographics success response \(successResponse)")
+            NetworkManager.shared.updateUserDemographics(
+                graduationYear: graduationYear,
+                major: major,
+                hometown: hometown,
+                pronouns: pronouns,
+                profilePictureURL: "").observe { [weak self] result in
+                    guard let `self` = self else { return }
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .value(let response):
+                            print("Update demographics success response \(response)")
+                            if response.success {
+                                self.delegate?.nextPage(index: 1)
+                            }
+                        case .error(let error):
+                            print(error)
+                        }
+                    }
             }
-            delegate?.nextPage(index: 1)
         }
     }
 

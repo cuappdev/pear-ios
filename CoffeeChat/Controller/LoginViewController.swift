@@ -144,6 +144,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                     case .value(let response):
                         // TODO: Add user creation handling
                         let userSession = response.data
+                        print(userSession)
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)

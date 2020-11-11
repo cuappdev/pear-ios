@@ -71,7 +71,7 @@ extension Endpoint {
             pronouns: pronouns,
             profilePictureURL: profilePictureURL
         )
-        return Endpoint(path: "/user/updateDemographics/", headers: standardHeaders, body: body)
+        return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
     }
     
     /// [POST] Update interests information about the user
@@ -81,13 +81,13 @@ extension Endpoint {
         let body = UserUpdateInterestsBody(
             interests: interests
         )
-        return Endpoint(path: "/user/updateInterests/", headers: standardHeaders, body: body)
+        return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
     
     /// [POST] Update oganizations information about the user
     static func updateUserOrganizations(organizations: [String]) -> Endpoint {
         let body = UserUpdateOrganizationsBody(clubs: organizations)
-        return Endpoint(path: "/user/updateOrganizations/", headers: standardHeaders, body: body)
+        return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user

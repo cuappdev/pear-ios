@@ -92,10 +92,20 @@ class InterestsViewController: UIViewController {
     @objc func nextButtonPressed() {
         delegate?.nextPage(index: 2)
         let userInterests = selectedInterests.map { $0.name }
-        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { successResponse in
-            print("Update interests success response \(successResponse)")
+        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { [weak self] result in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update interests success response \(response)")
+                    if response.success {
+                        self.delegate?.nextPage(index: 2)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
         }
-        delegate?.nextPage(index: 2)
     }
 
     private func setupConstraints() {

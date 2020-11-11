@@ -170,10 +170,20 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let userGroups = selectedGroups.map { $0.name }
-        NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { sucesssResponse in
-            print("Update groups success response \(sucesssResponse)")
+        NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { [weak self] result in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update organizations success response \(response)")
+                    if response.success {
+                        self.delegate?.nextPage(index: 3)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
         }
-        delegate?.nextPage(index: 3)
     }
 
     @objc func skipButtonPressed() {
