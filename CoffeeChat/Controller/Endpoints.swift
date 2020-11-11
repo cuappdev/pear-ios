@@ -47,7 +47,7 @@ extension Endpoint {
     }
     
     static func refreshUserToken(token: String) -> Endpoint {
-        return Endpoint(path: "/refresh/", headers: updateHeaders)
+        Endpoint(path: "/refresh/", headers: updateHeaders)
     }
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
@@ -75,12 +75,8 @@ extension Endpoint {
     }
     
     /// [POST] Update interests information about the user
-    static func updateUserInterests(
-        interests: [String]
-    ) -> Endpoint {
-        let body = UserUpdateInterestsBody(
-            interests: interests
-        )
+    static func updateUserInterests(interests: [String]) -> Endpoint {
+        let body = UserUpdateInterestsBody(interests: interests)
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
     
