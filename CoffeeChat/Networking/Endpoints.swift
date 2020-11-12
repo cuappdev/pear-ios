@@ -12,7 +12,6 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-
         let baseURL = Keys.serverURL
 
         #if LOCAL
@@ -24,10 +23,30 @@ extension Endpoint {
         Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
+    
+    static var standardHeaders: [String: String] {
+        if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return [:]
+        }
+    }
+
+    static var updateHeaders: [String: String] {
+        if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken) {
+            return ["Authorization": "Bearer \(token)"]
+        } else {
+            return [:]
+        }
+    }
 
     /// [GET] Check if server application is running
     static func pingServer() -> Endpoint {
         Endpoint(path: "/general/hello/")
+    }
+    
+    static func refreshUserToken(token: String) -> Endpoint {
+        Endpoint(path: "/refresh/", headers: updateHeaders)
     }
 
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist
@@ -36,24 +55,34 @@ extension Endpoint {
         return Endpoint(path: "/auth/login/", body: body)
     }
 
-    /// [POST] Update information about the user
-    static func updateUser(
-        clubs: [String],
+    /// [POST] Update demographics information about the user
+    static func updateUserDemographics(
         graduationYear: String,
         hometown: String,
-        interests: [String],
         major: String,
-        pronouns: String
+        pronouns: String,
+        profilePictureURL: String
     ) -> Endpoint {
-        let body = UserUpdateBody(
-            clubs: clubs,
+        let body = UpdateUserDemographicsBody(
             graduationYear: graduationYear,
             hometown: hometown,
-            interests: interests,
             major: major,
-            pronouns: pronouns
+            pronouns: pronouns,
+            profilePictureURL: profilePictureURL
         )
-        return Endpoint(path: "/user/update/", body: body)
+        return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update interests information about the user
+    static func updateUserInterests(interests: [String]) -> Endpoint {
+        let body = UpdateUserInterestsBody(interests: interests)
+        return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update oganizations information about the user
+    static func updateUserOrganizations(organizations: [String]) -> Endpoint {
+        let body = UpdateUserOrganizationsBody(clubs: organizations)
+        return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user
