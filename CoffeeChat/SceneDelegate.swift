@@ -12,42 +12,47 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-    private let userDefaults = UserDefaults.standard
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new
-        // (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = scene as? UIWindowScene else { return }
-
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
-
         let window = UIWindow(windowScene: scene)
-        guard let signIn = GIDSignIn.sharedInstance() else {
-            let navigationController = UINavigationController(rootViewController: LoginViewController())
-            window.rootViewController = navigationController
-            return
-        }
-        if signIn.hasPreviousSignIn() {
+        let navigationController = UINavigationController(rootViewController: LoginViewController())
+        if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
-            let onboardingCompleted = userDefaults.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let homeVC = HomeViewController()
-            let onboardingVC = OnboardingPageViewController(
-                transitionStyle: UIPageViewController.TransitionStyle.scroll,
-                navigationOrientation: UIPageViewController.NavigationOrientation.horizontal
-            )
-            let rootVC = onboardingCompleted ? homeVC : onboardingVC
-            let navigationController = UINavigationController(rootViewController: rootVC)
-            window.rootViewController = navigationController
-        } else {
-            // Ask user to sign in if they have not signed in before.
-            let navigationController = UINavigationController(rootViewController: LoginViewController())
-            window.rootViewController = navigationController
+            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
+            let assignedMatch = true
+            let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
+            let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            guard let unwrappedToken = refreshToken else {
+                // Ask user to sign in if they have not signed in before.
+                window.rootViewController = navigationController
+                self.window = window
+                window.makeKeyAndVisible()
+                return
+            }
+            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        // TODO: Add user creation handling
+                        let userSession = response.data
+                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
+                        UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
+                        navigationController.pushViewController(rootVC, animated: false)
+                    case .error(let error):
+                    // TODO: Handle error
+                        print(error)
+                    }
+                }
+            }
         }
+        window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()
     }
