@@ -89,7 +89,7 @@ extension Endpoint {
 
     /// [GET] Get searched users
     static func searchUsers(query: String) -> Endpoint {
-        return Endpoint(path: "/user/search/",queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
+        Endpoint(path: "/user/search/",queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
     }
 
 }
