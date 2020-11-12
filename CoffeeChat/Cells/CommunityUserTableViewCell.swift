@@ -98,11 +98,13 @@ class CommunityUserTableViewCell: UITableViewCell {
     }
 
     func configure(with user: CommunityUser) {
-        if let firstName = user.firstName, let lastName = user.lastName, let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
-            nameLabel.text = "\(firstName) \(lastName)"
-            informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
-            interests = userInterests
-            interestsCollectionView.reloadData()
+    if let firstName = user.firstName, let lastName = user.lastName {
+        nameLabel.text = "\(firstName) \(lastName)"
+            if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
+                informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
+                interests = userInterests
+            }
+                interestsCollectionView.reloadData()
         }
     }
 
