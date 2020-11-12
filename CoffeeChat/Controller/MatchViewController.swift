@@ -68,6 +68,7 @@ enum ChatStatus {
 class MatchViewController: UIViewController {
 
     private let matching: Matching
+    private let pair: SubUser
     private let chatStatus: ChatStatus
     private var hasReachedOut: Bool {
         get {
@@ -101,6 +102,7 @@ class MatchViewController: UIViewController {
 
     init(matching: Matching) {
         self.matching = matching
+        self.pair = matching.users[1]
         print("Matching: \(matching)")
         self.chatStatus = ChatStatus.forMatching(matching: matching)
         print("Chat Status: \(self.chatStatus)")
@@ -127,27 +129,6 @@ class MatchViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
 
         // TODO: Remove after connecting to backend. These are temp values.
-        let firstName = "Ezra"
-        let lastName = "Cornell"
-        let major = "Government"
-        let year = 2020
-        let pronouns = "He/Him"
-        let hometown = "Ithaca, NY"
-        let user = User(clubs: [],
-                        firstName: firstName,
-                        googleID: "",
-                        graduationYear: "2020",
-                        hometown: hometown,
-                        interests: [],
-                        lastName: lastName,
-                        major: major,
-                        matches: [],
-                        netID: "",
-                        profilePictureURL: "",
-                        pronouns: "pronouns",
-                        facebook: "https://www.facebook.com",
-                        instagram: "https://www.instagram.com")
-
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitleColor(.white, for: .normal)
@@ -173,13 +154,14 @@ class MatchViewController: UIViewController {
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        matchNameLabel.text = "\(firstName)\n\(lastName)"
+        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
-        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)\n\(pronouns)"
+        let major = "[TODO MAJOR]" // Get this from the matching struct or a new netwokring call
+        matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)"
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook
         matchDemographicsLabel.numberOfLines = 0
@@ -248,8 +230,17 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        let timeVC = SchedulingTimeViewController(for: .confirming)
-        navigationController?.pushViewController(timeVC, animated: true)
+        let schedulingVC: SchedulingTimeViewController
+        switch chatStatus {
+        case .planning, .noResponses:
+            schedulingVC = SchedulingTimeViewController(for: .confirming)
+        case .waitingOn, .respondingTo:
+            schedulingVC = SchedulingTimeViewController(for: .choosing)
+        default:
+            print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
+            schedulingVC = SchedulingTimeViewController(for: .pickingTypical)
+        }
+        navigationController?.pushViewController(schedulingVC, animated: true)
     }
 }
 

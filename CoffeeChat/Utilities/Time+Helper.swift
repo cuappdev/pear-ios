@@ -24,7 +24,9 @@ enum Weekday: String {
 
 class Time {
 
+    /// Day of the week matches are first assigned
     static let matchDay: Weekday = .sunday
+
     static let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
     static let pmTimes = [
         "12:00", "12:30", "1:00", "1:30", "2:00", "2:30",
@@ -115,7 +117,8 @@ extension Time {
     // TODO this doesn't work...
     private static func getWeekday(searchDirection: Calendar.SearchDirection, weekday: Weekday, time: Float) -> Date {
         let calendar = Calendar.current
-        // Get the day of week index of the weekday
+
+        // Get the index of the `weekday`
         let dayName = weekday.rawValue
         let weekdaysName = Time.getWeekDaysInEnglish().map { $0.lowercased() }
         guard var searchWeekdayIndex = weekdaysName.firstIndex(of: dayName) else {
