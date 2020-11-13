@@ -21,18 +21,6 @@ class CommunityViewController: UIViewController {
 
         view.backgroundColor = .backgroundLightGreen
 
-        NetworkManager.shared.getUsers().observe { (response) in
-            switch response {
-            case .value(let value):
-                print("success")
-                print(value.success)
-                print(value.data)
-            case .error(let error):
-                print("error")
-                print(error)
-            }
-        }
-
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
@@ -65,7 +53,7 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        NetworkManager.shared.getUsers().observe { (response) in
+        NetworkManager.shared.getUsers().observe { response in
             switch response {
             case .value(let value):
                 guard value.success else { return }
@@ -115,7 +103,7 @@ extension CommunityViewController: UITableViewDataSource {
 extension CommunityViewController: UISearchBarDelegate {
 
     private func searchUsers(query: String) {
-        NetworkManager.shared.searchUsers(query: query).observe { (response) in
+        NetworkManager.shared.searchUsers(query: query).observe { response in
             switch response {
             case .value(let value):
                 guard value.success else { return }
@@ -124,14 +112,13 @@ extension CommunityViewController: UISearchBarDelegate {
                     self.communityTableView.reloadData()
                 }
             case .error(let error):
-                print("error")
                 print(error)
             }
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count < 1 {
+        if searchText.isEmpty {
             getUsers()
         } else {
             searchUsers(query: searchText)
