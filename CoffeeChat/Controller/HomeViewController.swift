@@ -7,6 +7,11 @@
 //
 import SideMenu
 import UIKit
+import FutureNova
+
+enum NetworkingError: Error {
+    case failed(_ msg: String)
+}
 
 class HomeViewController: UIViewController {
 
@@ -56,28 +61,25 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        // TODO change to actual user
-        let myself = SubUser(
-            firstName: "Phillip",
-            facebook: "https://www.facebook.com",
-            googleID: "pnor",
-            graduationYear: "2022",
-            hometown: "East Windsor",
-            lastName: "O'Reggio",
-            instagram: "https://www.instagram.com",
-            netID: "pno3",
-            profilePictureURL: "?",
-            pronouns: "He/Him"
-        )
-        NetworkManager.shared.getMatching(user: myself).observe { response in
+        // TODO change to user paired with from backend
+
+        NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
+            if response.success {
+                return NetworkManager.shared.getMatching(user: response.data)
+            } else {
+                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
+            }
+        }.observe { response in
+            let matchResult: Matching?
             switch response {
             case .value(let value):
-                guard value.success else { return }
-                DispatchQueue.main.async {
-                    self.setupTabPageViewController(with: value.data)
-                }
+                matchResult = value.success ? value.data : nil
             case .error:
                 print("Failed to get the matching for user")
+                matchResult = nil
+            }
+            DispatchQueue.main.async {
+                self.setupTabPageViewController(with: matchResult)
             }
         }
 

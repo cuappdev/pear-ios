@@ -20,7 +20,7 @@ class NetworkManager {
     func pingServer() -> Future<Response<String>> {
         networking(Endpoint.pingServer()).decode()
     }
-    
+
     func refreshUserSession(token: String) -> Future<Response<UserSession>> {
         networking(Endpoint.refreshUserToken(token: token)).decode()
     }
@@ -28,7 +28,7 @@ class NetworkManager {
     func createUser(idToken: String) -> Future<Response<UserSession>> {
         networking(Endpoint.createUser(idToken: idToken)).decode()
     }
-    
+
     func updateUserDemographics(
         graduationYear: String,
         major: String,
@@ -43,11 +43,11 @@ class NetworkManager {
                     profilePictureURL: profilePictureURL)
         ).decode()
     }
-    
+
     func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserInterests(interests: interests)).decode()
     }
-    
+
     func updateUserOrganizations(organizations: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
     }
@@ -97,17 +97,16 @@ class NetworkManager {
     // - Other person chooses one time, making the matching now ACTIVE and size == 1
 
     // Get all matchings that involve this user
-    func getMatching(user: SubUser) -> Future<Response<Matching?>> {
+    func getMatching(user: User) -> Future<Response<Matching?>> {
         let request = networking(Endpoint.pingServer())
 
-        //let dummySchedule = [
-        //    DaySchedule(day: "Sunday", times: [10, 11, 12, 13, 14]),
-        //    DaySchedule(day: "Monday", times: [15, 16.5, 17]),
-        //    DaySchedule(day: "Wednesday", times: [19, 20.5]),
-        //    DaySchedule(day: "Friday", times: [10, 20.5])
-        //]
-        let dummySchedule: [DaySchedule] = []
-        let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user, user])
+        let dummySchedule = [
+            DaySchedule(day: "Sunday", times: [10, 11, 12, 13, 14]),
+            DaySchedule(day: "Monday", times: [15, 16.5, 17]),
+            DaySchedule(day: "Wednesday", times: [19, 20.5]),
+            DaySchedule(day: "Friday", times: [10, 20.5])
+        ]
+        let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user.toSubUser(), user.toSubUser()])
 
         return request.transformed { _ in
             Response(data: dummyMatch, success: true)

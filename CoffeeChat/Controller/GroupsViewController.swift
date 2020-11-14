@@ -181,6 +181,8 @@ class GroupsViewController: UIViewController {
                     }
                 case .error(let error):
                     print(error)
+                    // TODO delete this
+                    self.delegate?.nextPage(index: 3)
                 }
             }
         }

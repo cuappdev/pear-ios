@@ -25,4 +25,18 @@ struct User: Codable {
     let facebook: String?
     let instagram: String?
 
+    func toSubUser() -> SubUser {
+        SubUser(
+            firstName: self.firstName,
+            facebook: self.facebook,
+            googleID: self.googleID,
+            graduationYear: self.graduationYear,
+            hometown: self.hometown,
+            lastName: self.lastName,
+            instagram: self.instagram,
+            netID: self.netID,
+            profilePictureURL: self.profilePictureURL,
+            pronouns: self.pronouns
+        )
+    }
 }
