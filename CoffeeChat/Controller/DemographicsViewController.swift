@@ -17,7 +17,7 @@ class DemographicsViewController: UIViewController {
     private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
-    private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
+    private var majorSearchFields: [String] = []
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
     private let userDefaults = UserDefaults.standard
 
@@ -100,6 +100,8 @@ class DemographicsViewController: UIViewController {
         view.addSubview(nextButton)
 
         setUpConstraints()
+        getUser()
+        getMajors()
     }
 
     @objc private func nextButtonPressed() {
@@ -127,6 +129,27 @@ class DemographicsViewController: UIViewController {
                     }
             }
         }
+    }
+    
+    private func getMajors() {
+        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print(response)
+                    if response.success {
+                        self.majorDropdownView.tableData = response.data
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private func getUser() {
+        
     }
 
     private func setUpConstraints() {

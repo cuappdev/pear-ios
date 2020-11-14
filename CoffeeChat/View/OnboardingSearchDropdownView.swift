@@ -42,7 +42,7 @@ class OnboardingSearchDropdownView: UIView {
     private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
-    private var tableData: [String]
+    var tableData: [String]
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
