@@ -15,58 +15,7 @@ class CommunityViewController: UIViewController {
     private let searchBar = UISearchBar()
 
     // MARK: - Private Data Vars
-    // TODO: Replace with backend values
-    private let users: [User] = [
-        User(
-            clubs: ["AppDev"],
-            firstName: "Lucy",
-            googleID: "12345",
-            graduationYear: "2021",
-            hometown: "Boston, MA",
-            interests: ["Art", "AppDev", "DTI"],
-            lastName: "Xu",
-            major: "Computer Science",
-            matches: nil,
-            netID: "llx2",
-            profilePictureURL: "",
-            pronouns: "She/her",
-            facebook: nil,
-            instagram: nil
-        ),
-        User(
-            clubs: ["AppDev"],
-            firstName: "Cindy",
-            googleID: "12345",
-            graduationYear: "2022",
-            hometown: "Boston, MA",
-            interests: ["Art", "Art", "Netflix", "Netflix", "Writing", "Art", "Netflix", "Netflix", "Art", "Art"],
-            lastName: "Huang",
-            major: "Computer Science",
-            matches: nil,
-            netID: "llx2",
-            profilePictureURL: "",
-            pronouns: "She/her",
-            facebook: nil,
-            instagram: nil
-        ),
-        User(
-            clubs: ["AppDev"],
-            firstName: "Manish",
-            googleID: "12345",
-            graduationYear: "2021",
-            hometown: "Boston, MA",
-            interests: ["Art", "ABC", "Chill", "Box", "Long", "Array"],
-            lastName: "Shah",
-            major: "Computer Science",
-            matches: nil,
-            netID: "llx2",
-            profilePictureURL: "",
-            pronouns: "He/Him",
-            facebook: nil,
-            instagram: nil
-        )
-    ]
-
+    private var users: [CommunityUser] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -99,9 +48,25 @@ class CommunityViewController: UIViewController {
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
 
+        getUsers()
         setupConstraints()
     }
 
+    private func getUsers() {
+        NetworkManager.shared.getUsers().observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    self.users = value.data
+                    self.communityTableView.reloadData()
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
+    }
+    
     private func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(23)
@@ -137,8 +102,27 @@ extension CommunityViewController: UITableViewDataSource {
 // MARK: - SearchBarDelegate
 extension CommunityViewController: UISearchBarDelegate {
 
+    private func searchUsers(query: String) {
+        NetworkManager.shared.searchUsers(query: query).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    self.users = value.data
+                    self.communityTableView.reloadData()
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
+    }
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO: Implement search and filter
+        if searchText.isEmpty {
+            getUsers()
+        } else {
+            searchUsers(query: searchText)
+        }
     }
 
 }
