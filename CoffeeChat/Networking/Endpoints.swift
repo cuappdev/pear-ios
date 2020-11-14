@@ -120,5 +120,20 @@ extension Endpoint {
     static func searchUsers(query: String) -> Endpoint {
         Endpoint(path: "/user/search/",queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
     }
+    
+    /// [GET] Get all student groups
+    static func getAllGroups() -> Endpoint {
+        Endpoint(path: "/group/all/", headers: standardHeaders)
+    }
+    
+    /// [GET] Get all interests
+    static func getAllInterests() -> Endpoint {
+        Endpoint(path: "/interest/all/", headers: standardHeaders)
+    }
+    
+    /// [GET] Get all majors
+    static func getAllMajors() -> Endpoint {
+        Endpoint(path: "/major/all/", headers: standardHeaders)
+    }
 
 }

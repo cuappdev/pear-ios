@@ -84,5 +84,16 @@ class NetworkManager {
 //    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
 //        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
 //    }
-
+    
+    func getAllGroups() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllGroups()).decode()
+    }
+    
+    func getAllInterests() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllInterests()).decode()
+    }
+    
+    func getAllMajors() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllMajors()).decode()
+    }
 }
