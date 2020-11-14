@@ -97,11 +97,15 @@ class CommunityUserTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with user: User) {
-        nameLabel.text = "\(user.firstName) \(user.lastName)"
-        informationLabel.text = "\(user.major) · \(user.graduationYear) · \(user.hometown) · \(user.pronouns)"
-        interests = user.interests
-        interestsCollectionView.reloadData()
+    func configure(with user: CommunityUser) {
+    if let firstName = user.firstName, let lastName = user.lastName {
+        nameLabel.text = "\(firstName) \(lastName)"
+            if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
+                informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
+                interests = userInterests
+            }
+                interestsCollectionView.reloadData()
+        }
     }
 
     required init?(coder: NSCoder) {
