@@ -9,6 +9,10 @@
 import Foundation
 import FutureNova
 
+enum NetworkingError: Error {
+    case failed(_ msg: String)
+}
+
 class NetworkManager {
 
     static let shared: NetworkManager = NetworkManager()
@@ -85,19 +89,10 @@ class NetworkManager {
 //        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
 //    }
 
-    // TODO: replace with an actual networking calls
-    // ASSUMING about matching...
-    //
-    // - Matching.active = true if it has been sheduled and ready to go
-    // - Matching.active = false if it still needs to be scheduled
-    //
-    // An unscheduled matching
-    // - has 0 entries in schedule starting out
-    // - 1 person puts up their array of DaySchedule, making it have size > 0
-    // - Other person chooses one time, making the matching now ACTIVE and size == 1
-
+    // TODO: replace with real networking calls for matchings/availibilities
     // Get all matchings that involve this user
     func getMatching(user: User) -> Future<Response<Matching?>> {
+        // Right now, just replaces the result of pinging the server with `dummySchedule`
         let request = networking(Endpoint.pingServer())
 
         let dummySchedule = [
@@ -113,8 +108,10 @@ class NetworkManager {
         }
     }
 
+    // TODO: replace with real networking calls for matchings/availibilities
     // Update a matching with available times and place
     func updateMatching(matching: Matching, schedule: [DaySchedule]) -> Future<Response<Matching>> {
+        // Just replaces server ping with an arbitrary matching
         let request = networking(Endpoint.pingServer())
         return request.transformed { _ in
             let newMatching = Matching(active: false, schedule: schedule, users: matching.users)
@@ -122,8 +119,10 @@ class NetworkManager {
         }
     }
 
+    // TODO: replace with real networking calls for matchings/availibilities
     // Update a matching with chosen time and place
     func updateMatching(matching: Matching, for time: DaySchedule) -> Future<Response<Matching>> {
+        // Just replaces server ping with an arbitrary matching
         let request = networking(Endpoint.pingServer())
         return request.transformed { _ in
             let newMatching = Matching(active: false, schedule: [time], users: matching.users)

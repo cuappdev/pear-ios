@@ -114,7 +114,6 @@ extension Time {
     If today is Tuesday 3:00 PM, `getWeekday(.backward, .sunday, 2)` returns the previous sunday (2 days ago) at 2:00 AM
     If today is Sunday 5:00 PM, `getWeekday(.backward, .sunday, 13)` returns **today** at 1:00 PM
     */
-    // TODO this doesn't work...
     private static func getWeekday(searchDirection: Calendar.SearchDirection, weekday: Weekday, time: Float) -> Date {
         let calendar = Calendar.current
 

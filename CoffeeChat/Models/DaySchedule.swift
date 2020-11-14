@@ -22,7 +22,6 @@ struct DaySchedule: Codable {
     /// Returns true if the date corresponding to the day and first time in times has passed for this week
     // "This week" is determined by getting the next occurence of the date with getDate and seeing if its after saturday
     func hasPassed() -> Bool {
-        // TODO
         let nextSunday = Time.next(.sunday, at: 0)
         let matchDate = getDate()
         return matchDate >= nextSunday

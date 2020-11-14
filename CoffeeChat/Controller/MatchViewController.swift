@@ -29,33 +29,25 @@ enum ChatStatus {
     case chatScheduled(SubUser, Date)
 
     // TODO change when matching responses change
+    // The current Matching doesn't hold enough information to distinguish between all states, so this function will
+    // change in the near future
     static func forMatching(matching: Matching) -> ChatStatus {
         let matchDaySchedule = matching.schedule.first
         let matchPear = matching.users[1]
         if let matchDaySchedule = matchDaySchedule, matching.active {
             if matching.schedule.first!.hasPassed() {
-                // finished date passed: finished
                 return .finished
             } else {
-                // coming up: chatScheduled
                 return .chatScheduled(matchPear, matchDaySchedule.getDate())
             }
-            // TODO can't differntiate yet: cancelled
             return .cancelled(matchPear)
         } else {
             if let matchDaySchedule = matchDaySchedule {
-                // TODO can't distinguish who started it so
-                // If user already reached out: waitingOn
-                // If user has to reach: respondingTo
-
                 return respondingTo(matchPear)
-                //return waitingOn(matchPear)
-            } else { // nobody started the flow
-                // if its been 3 days since the match began (3 days after sunday, so wednesday): noResponses
+            } else {
                 if Time.daysSinceMatching > 3 {
                     return .noResponses
                 } else {
-                    // Show no banner: planned
                     return .planning
                 }
 
@@ -103,10 +95,7 @@ class MatchViewController: UIViewController {
     init(matching: Matching) {
         self.matching = matching
         self.pair = matching.users[1]
-        print("Matching: \(matching)")
         self.chatStatus = ChatStatus.forMatching(matching: matching)
-        print("Chat Status: \(self.chatStatus)")
-        print("Days since the matching: \(Time.daysSinceMatching)")
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -128,7 +117,6 @@ class MatchViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .backgroundLightGreen
 
-        // TODO: Remove after connecting to backend. These are temp values.
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitleColor(.white, for: .normal)
@@ -160,7 +148,7 @@ class MatchViewController: UIViewController {
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
-        let major = "[TODO MAJOR]" // Get this from the matching struct or a new netwokring call
+        let major = "???" // TODO update with info from User, not SubUser
         matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)"
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook

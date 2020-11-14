@@ -9,10 +9,6 @@ import SideMenu
 import UIKit
 import FutureNova
 
-enum NetworkingError: Error {
-    case failed(_ msg: String)
-}
-
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -60,8 +56,6 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowOpacity = 1
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
-
-        // TODO change to user paired with from backend
 
         NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
             if response.success {
