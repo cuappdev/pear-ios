@@ -145,7 +145,20 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 4)
+        NetworkManager.shared.updateUserGoals(goals: selectedGoals).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update goals success response \(response)")
+                    if response.success {
+                        self.delegate?.nextPage(index: 4)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {

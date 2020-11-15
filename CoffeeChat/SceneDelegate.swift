@@ -37,7 +37,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window.makeKeyAndVisible()
                 return
             }
-            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
+            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { [weak self] result in
+                guard let self = self else { return }
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
@@ -47,6 +48,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         navigationController.pushViewController(rootVC, animated: false)
+                        window.rootViewController = navigationController
+                        self.window = window
+                        window.makeKeyAndVisible()
                     case .error(let error):
                     // TODO: Handle error
                         print(error)
@@ -54,10 +58,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
-        
-        window.rootViewController = navigationController
-        self.window = window
-        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -17,7 +17,6 @@ class DemographicsViewController: UIViewController {
     private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
-    private var majorSearchFields: [String] = []
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
     // MARK: - Private View Vars
@@ -73,7 +72,7 @@ class DemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: majorSearchFields)
+                                                         tableData: [])
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
@@ -107,13 +106,14 @@ class DemographicsViewController: UIViewController {
         if let graduationYear = fieldValues[fieldMap[0]],
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
-           let pronouns = fieldValues[fieldMap[3]] {
+           let pronouns = fieldValues[fieldMap[3]],
+           let profilePictureURL = UserDefaults.standard.url(forKey: Constants.UserDefaults.userProfilePictureURL) {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "").observe { [weak self] result in
+                profilePictureURL: "\(profilePictureURL)").observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
@@ -156,6 +156,23 @@ class DemographicsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         print(response.data)
+                        let user = response.data
+                        let major = user.major
+                        let graduationYear = user.graduationYear
+                        let hometown = user.hometown
+                        let pronouns = user.pronouns
+                        if major != "" {
+                            self.majorDropdownView.setTitle(title: user.major)
+                        }
+                        if graduationYear != "" {
+                            self.classDropdownView.setTitle(title: user.graduationYear)
+                        }
+                        if hometown != "" {
+                            self.hometownDropdownView.setTitle(title: user.hometown)
+                        }
+                        if pronouns != "" {
+                            self.pronounsDropdownView.setTitle(title: user.pronouns)
+                        }
                     }
                 case .error(let error):
                     print(error)

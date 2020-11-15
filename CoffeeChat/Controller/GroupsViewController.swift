@@ -15,16 +15,7 @@ class GroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "AppDev", subtitle: nil),
-        SimpleOnboardingCell(name: "DTI", subtitle: nil),
-        SimpleOnboardingCell(name: "Guac Magazine", subtitle: nil),
-        SimpleOnboardingCell(name: "GCC", subtitle: nil),
-        SimpleOnboardingCell(name: "GVC", subtitle: nil),
-        SimpleOnboardingCell(name: "CUABS", subtitle: nil),
-        SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
-        SimpleOnboardingCell(name: "CUSD", subtitle: nil)
-    ]
+    private var groups: [SimpleOnboardingCell] = []
     private var selectedGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -100,6 +91,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = groups
 
         setupConstraints()
+        getAllGroups()
     }
 
     private func setupConstraints() {
@@ -169,7 +161,7 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let userGroups = selectedGroups.map { $0.name }
-        NetworkManager.shared.updateUserOrganizations(organizations: userGroups).observe { [weak self] result in
+        NetworkManager.shared.updateUserGroups(groups: userGroups).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
@@ -187,6 +179,28 @@ class GroupsViewController: UIViewController {
 
     @objc func skipButtonPressed() {
         delegate?.nextPage(index: 3)
+    }
+    
+    private func getAllGroups() {
+        NetworkManager.shared.getAllGroups().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                print(result)
+                switch result {
+                case .value(let response):
+                    print(response)
+                    if response.success {
+                        let groups = response.data
+                        self.groups = groups.map { return SimpleOnboardingCell(name: $0, subtitle: nil) }
+                        self.displayedGroups = self.groups
+                        self.fadeTableView.view.reloadData()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+            
+        }
     }
 
 }

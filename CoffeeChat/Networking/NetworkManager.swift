@@ -48,8 +48,16 @@ class NetworkManager {
         networking(Endpoint.updateUserInterests(interests: interests)).decode()
     }
     
-    func updateUserOrganizations(organizations: [String]) -> Future<SuccessResponse> {
-        networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
+    func updateUserGroups(groups: [String]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserGroups(groups: groups)).decode()
+    }
+    
+    func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserGoals(goals: goals)).decode()
+    }
+    
+    func updateUserSocialMedia(facebook: String, instagram: String) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram)).decode()
     }
 
     func getUser(netId: String) -> Future<Response<User>> {

@@ -107,6 +107,12 @@ class OnboardingSelectDropdownView: UIView {
         dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
         dropdownButton.setTitleColor(.black, for: .normal)
     }
+    
+    func setTitle(title: String) {
+        dropdownButton.setTitle("\(textTemplate) \(title)", for: .normal)
+        dropdownButton.setTitleColor(.black, for: .normal)
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: title)
+    }
 }
 
 extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSource {

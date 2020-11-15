@@ -114,6 +114,11 @@ class OnboardingSearchDropdownView: UIView {
     func setSelectValue(value: String) {
         searchBar.text = value
     }
+    
+    func setTitle(title: String) {
+        searchBar.text = title
+        delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: title)
+    }
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {

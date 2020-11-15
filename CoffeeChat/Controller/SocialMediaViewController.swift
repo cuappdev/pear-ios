@@ -179,9 +179,22 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
+        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update social media success response \(response)")
+                    if response.success {
+                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {

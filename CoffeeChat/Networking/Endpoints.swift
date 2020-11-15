@@ -79,10 +79,22 @@ extension Endpoint {
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
     
-    /// [POST] Update oganizations information about the user
-    static func updateUserOrganizations(organizations: [String]) -> Endpoint {
-        let body = UpdateUserOrganizationsBody(clubs: organizations)
-        return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
+    /// [POST] Update groups information about the user
+    static func updateUserGroups(groups: [String]) -> Endpoint {
+        let body = UpdateUserGroupsBody(groups: groups)
+        return Endpoint(path: "/user/groups/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update goals information about the user
+    static func updateUserGoals(goals: [String]) -> Endpoint {
+        let body = UpdateUserGoalsBody(goals: goals)
+        return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update goals information about the user
+    static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
+        let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
+        return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user
