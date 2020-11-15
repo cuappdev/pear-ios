@@ -16,7 +16,7 @@ class DemographicsViewController: UIViewController {
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend
-    private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
+    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
     // MARK: - Private View Vars
@@ -136,9 +136,8 @@ class DemographicsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-//                    print(response)
                     if response.success {
-                        self.majorDropdownView.tableData = response.data
+                        self.majorDropdownView.setTableData(tableData: response.data)
                     }
                 case .error(let error):
                     print(error)
@@ -155,7 +154,6 @@ class DemographicsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        print(response.data)
                         let user = response.data
                         let major = user.major
                         let graduationYear = user.graduationYear

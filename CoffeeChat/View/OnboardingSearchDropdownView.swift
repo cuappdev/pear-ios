@@ -42,7 +42,7 @@ class OnboardingSearchDropdownView: UIView {
     private var placeholder: String
     private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
-    var tableData: [String]
+    private var tableData: [String]
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -113,6 +113,10 @@ class OnboardingSearchDropdownView: UIView {
     /// Set text of field if value already exists.
     func setSelectValue(value: String) {
         searchBar.text = value
+    }
+    
+    func setTableData(tableData: [String]) {
+        self.tableData = tableData
     }
     
     func setTitle(title: String) {

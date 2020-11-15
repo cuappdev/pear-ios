@@ -82,6 +82,7 @@ class InterestsViewController: UIViewController {
         view.addSubview(nextButton)
 
         setupConstraints()
+        getUserInterests()
     }
 
     @objc func backButtonPressed() {
@@ -135,6 +136,23 @@ class InterestsViewController: UIViewController {
             make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
+        }
+    }
+    
+    private func getUserInterests() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        // TODO: Fix interest model in backend before using to populate screen
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
         }
     }
 

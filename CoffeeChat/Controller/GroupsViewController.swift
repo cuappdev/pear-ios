@@ -92,6 +92,7 @@ class GroupsViewController: UIViewController {
 
         setupConstraints()
         getAllGroups()
+        getUserGroups()
     }
 
     private func setupConstraints() {
@@ -203,6 +204,26 @@ class GroupsViewController: UIViewController {
         }
     }
 
+    private func getUserGroups() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        // TODO: Fix interest model in backend before using to populate screen
+                        let userGroups = response.data.groups
+                        self.selectedGroups = userGroups.map { return SimpleOnboardingCell(name: $0, subtitle: nil)}
+                        self.fadeTableView.view.reloadData()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - TableViewDelegate
