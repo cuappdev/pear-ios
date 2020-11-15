@@ -212,6 +212,7 @@ class SocialMediaViewController: UIViewController {
                         if let instagram = response.data.instagram {
                             self.instagramTextField.text = instagram
                         }
+                        self.updateNext()
                     }
                 case .error(let error):
                     print(error)

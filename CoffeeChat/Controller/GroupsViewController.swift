@@ -87,6 +87,10 @@ class GroupsViewController: UIViewController {
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         displayedGroups = groups
 
@@ -182,6 +186,10 @@ class GroupsViewController: UIViewController {
         delegate?.nextPage(index: 3)
     }
     
+    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        searchBar.resignFirstResponder()
+    }
+    
     private func getAllGroups() {
         NetworkManager.shared.getAllGroups().observe { [weak self] result in
             guard let self = self else { return }
@@ -215,6 +223,7 @@ class GroupsViewController: UIViewController {
                         let userGroups = response.data.groups
                         self.selectedGroups = userGroups.map { return SimpleOnboardingCell(name: $0, subtitle: nil)}
                         self.fadeTableView.view.reloadData()
+                        self.updateNext()
                     }
                 case .error(let error):
                     print(error)

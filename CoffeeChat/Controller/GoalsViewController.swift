@@ -177,6 +177,7 @@ class GoalsViewController: UIViewController {
                         let userGoals = response.data.goals
                         self.selectedGoals = userGoals.map { return $0 }
                         self.tableView.reloadData()
+                        self.updateNext()
                     }
                 case .error(let error):
                     print(error)

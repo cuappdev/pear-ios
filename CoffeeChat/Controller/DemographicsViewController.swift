@@ -77,7 +77,7 @@ class DemographicsViewController: UIViewController {
         view.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "Hometown",
+                                                            placeholder: "State",
                                                             tableData: hometownSearchFields)
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
