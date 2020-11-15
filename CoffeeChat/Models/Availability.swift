@@ -8,11 +8,9 @@
 
 import Foundation
 
-// TODO: Update struct after backend changes
 struct Availability: Codable {
 
     let day: String
     let times: [Double]
-    let users: [SubUser]
 
 }
