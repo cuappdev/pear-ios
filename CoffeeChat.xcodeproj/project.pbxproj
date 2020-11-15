@@ -83,6 +83,7 @@
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
 		D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */; };
 		D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */; };
+		D4C5E7112560A331009038CD /* Availability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C5E7102560A331009038CD /* Availability.swift */; };
 		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
 		D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */; };
 		D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */; };
@@ -193,6 +194,7 @@
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUserTableViewCell.swift; sourceTree = "<group>"; };
 		D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDemographicsViewController.swift; sourceTree = "<group>"; };
+		D4C5E7102560A331009038CD /* Availability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Availability.swift; sourceTree = "<group>"; };
 		D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemographicsViewController.swift; sourceTree = "<group>"; };
 		D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoMatchViewController.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				D41FE85F246464240048900F /* DaySchedule.swift */,
 				D41FE861246464310048900F /* SubUser.swift */,
 				D42961882526012400C677C3 /* SimpleOnboardingCell.swift */,
+				D4C5E7102560A331009038CD /* Availability.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -791,6 +794,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4C5E7112560A331009038CD /* Availability.swift in Sources */,
 				5030DCFA2532C1D300374F7B /* SettingOptionTableViewCell.swift in Sources */,
 				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
 				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,

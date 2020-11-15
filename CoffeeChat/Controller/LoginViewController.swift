@@ -20,9 +20,6 @@ class LoginViewController: UIViewController {
     private let logoImageView = UIImageView()
     private let welcomeLabel = UILabel()
 
-    // MARK: - Private Data Vars
-    private let userDefaults = UserDefaults.standard
-
     // MARK: - Private Constants
     private let loginButtonSize = CGSize(width: 202, height: 50)
     private let logoSize = CGSize(width: 146, height: 146)
@@ -128,15 +125,16 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let loginVC = LoginViewController()
 
-        if let userId = user.userID,
-           let idToken = user.authentication.idToken,
+        if let idToken = user.authentication.idToken,
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
+           let userEmail = user.profile.email,
            let userProfilePictureURL = user.profile.imageURL(withDimension: 300) {
-            userDefaults.set(userId, forKey: Constants.UserDefaults.userId)
-            userDefaults.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
-            userDefaults.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            userDefaults.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
+            let userNetId = userEmail[..<userEmail.firstIndex(of: "@")!]
+            UserDefaults.standard.set(userNetId, forKey: Constants.UserDefaults.userNetId)
+            UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
+            UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
+            UserDefaults.standard.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
@@ -150,7 +148,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         let vc = onboardingCompleted ? homeVC : onboardingVC
                         self.navigationController?.pushViewController(vc, animated: false)
-                    case .error(let _):
+                    case .error( _):
                         self.navigationController?.pushViewController(loginVC, animated: false)
                     }
                 }

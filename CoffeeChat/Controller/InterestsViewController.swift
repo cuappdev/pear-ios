@@ -40,7 +40,6 @@ class InterestsViewController: UIViewController {
         Interest(name: "TV & Film", categories: "", image: "tvfilm")
     ]
     private var selectedInterests: [Interest] = []
-    private let userDefaults = UserDefaults.standard
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate

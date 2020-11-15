@@ -52,8 +52,8 @@ class NetworkManager {
         networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
     }
 
-    func getUser() -> Future<Response<User>> {
-        networking(Endpoint.getUser()).decode()
+    func getUser(netId: String) -> Future<Response<User>> {
+        networking(Endpoint.getUser(netId: netId)).decode()
     }
 
     func getUserClubs() -> Future<Response<[String]>> {

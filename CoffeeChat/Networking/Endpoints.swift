@@ -86,8 +86,8 @@ extension Endpoint {
     }
 
     /// [GET] Get information about the user
-    static func getUser() -> Endpoint {
-        Endpoint(path: "/user/")
+    static func getUser(netId: String) -> Endpoint {
+        Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
     /// [GET] Get clubs of the user
@@ -118,7 +118,7 @@ extension Endpoint {
 
     /// [GET] Get searched users
     static func searchUsers(query: String) -> Endpoint {
-        Endpoint(path: "/user/search/",queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
+        Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
     }
     
     /// [GET] Get all student groups

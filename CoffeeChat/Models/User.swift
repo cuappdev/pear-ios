@@ -10,19 +10,21 @@ import Foundation
 
 struct User: Codable {
 
-    let clubs: [String]
+    let availabilities: [Availability]
     let firstName: String
+    let goals: [String]
     let googleID: String
     let graduationYear: String
+    let groups: [String]
     let hometown: String
     let interests: [String]
     let lastName: String
     let major: String
-    let matches: [Matching]?
     let netID: String
     let profilePictureURL: String
     let pronouns: String
     let facebook: String?
     let instagram: String?
+    let talkingPoints: [String]
 
 }

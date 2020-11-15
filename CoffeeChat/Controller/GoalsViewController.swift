@@ -23,7 +23,6 @@ class GoalsViewController: UIViewController {
         SimpleOnboardingCell(name: "Not sure yet", subtitle: nil)
     ]
     private var selectedGoals: [String] = []
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()

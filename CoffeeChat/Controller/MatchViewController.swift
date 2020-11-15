@@ -63,21 +63,24 @@ class MatchViewController: UIViewController {
         let year = 2020
         let pronouns = "He/Him"
         let hometown = "Ithaca, NY"
-        let user = User(clubs: [],
-                        firstName: firstName,
-                        googleID: "",
-                        graduationYear: "2020",
-                        hometown: hometown,
-                        interests: [],
-                        lastName: lastName,
-                        major: major,
-                        matches: [],
-                        netID: "",
-                        profilePictureURL: "",
-                        pronouns: "pronouns",
-                        facebook: "https://www.facebook.com",
-                        instagram: "https://www.instagram.com")
-
+        let user = User(
+            availabilities: [],
+            firstName: "Ezra",
+            goals: [],
+            googleID: "Ezra",
+            graduationYear: "2024",
+            groups: ["AppDev"],
+            hometown: "Boston, MA",
+            interests: ["Dancing"],
+            lastName: "Cornell",
+            major: "CS",
+            netID: "llx2",
+            profilePictureURL: "",
+            pronouns: "He/Him",
+            facebook: nil,
+            instagram: "https://www.instagram.com/cornelluniversity/?hl=en",
+            talkingPoints: ["Dancing"]
+        )
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitleColor(.white, for: .normal)
@@ -91,20 +94,22 @@ class MatchViewController: UIViewController {
 
         // TODO change based on chat status
         let sampleUser = User(
-            clubs: [],
+            availabilities: [],
             firstName: "Ezra",
-            googleID: "",
+            goals: [],
+            googleID: "Ezra",
             graduationYear: "2024",
-            hometown: "Ithaca",
-            interests: [],
+            groups: ["AppDev"],
+            hometown: "Boston, MA",
+            interests: ["Dancing"],
             lastName: "Cornell",
             major: "CS",
-            matches: [],
-            netID: "ec1",
+            netID: "llx2",
             profilePictureURL: "",
             pronouns: "He/Him",
-            facebook: "",
-            instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
+            facebook: nil,
+            instagram: "https://www.instagram.com/cornelluniversity/?hl=en",
+            talkingPoints: ["Dancing"])
         meetupStatusView = hasReachedOut
             ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
             : MeetupStatusView(for: .respondingTo(sampleUser))

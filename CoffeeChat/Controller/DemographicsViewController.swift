@@ -19,7 +19,6 @@ class DemographicsViewController: UIViewController {
     private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -53,7 +52,7 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         navigationController?.navigationBar.isHidden = true
 
-        titleLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
+        titleLabel.text = "Hi \(UserDefaults.standard.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
         titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         titleLabel.textAlignment = .center
@@ -137,7 +136,7 @@ class DemographicsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print(response)
+//                    print(response)
                     if response.success {
                         self.majorDropdownView.tableData = response.data
                     }
@@ -149,7 +148,20 @@ class DemographicsViewController: UIViewController {
     }
     
     private func getUser() {
-        
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        print(response.data)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     private func setUpConstraints() {

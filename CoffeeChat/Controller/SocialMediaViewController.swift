@@ -12,7 +12,6 @@ class SocialMediaViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -180,13 +179,13 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         let homeVC = HomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }
 
     @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         let homeVC = HomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }

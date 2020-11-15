@@ -37,7 +37,7 @@ struct Constants {
         static let userGraduationYear = "userGraduationYear"
         static let userHometown = "userHometown"
         static let userIdToken = "userIdToken"
-        static let userId = "userId"
+        static let userNetId = "userNetId"
         static let userMajor = "userMajor"
         static let userProfilePictureURL = "userProfilePictureURL"
         static let userPronouns = "userPronouns"

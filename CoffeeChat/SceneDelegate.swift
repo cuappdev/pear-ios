@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoginViewController())
+        
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
@@ -53,6 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
+        
         window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()

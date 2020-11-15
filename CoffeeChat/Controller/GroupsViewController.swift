@@ -26,7 +26,6 @@ class GroupsViewController: UIViewController {
         SimpleOnboardingCell(name: "CUSD", subtitle: nil)
     ]
     private var selectedGroups: [SimpleOnboardingCell] = []
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()

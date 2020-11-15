@@ -25,7 +25,6 @@ class InterestsGroupsViewController: UIViewController {
         SimpleOnboardingCell(name: "Design and Tech Initiative", subtitle: nil)
     ]
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
