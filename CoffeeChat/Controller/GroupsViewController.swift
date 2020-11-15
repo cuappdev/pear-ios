@@ -212,7 +212,6 @@ class GroupsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        // TODO: Fix interest model in backend before using to populate screen
                         let userGroups = response.data.groups
                         self.selectedGroups = userGroups.map { return SimpleOnboardingCell(name: $0, subtitle: nil)}
                         self.fadeTableView.view.reloadData()

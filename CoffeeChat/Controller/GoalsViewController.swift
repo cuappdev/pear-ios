@@ -86,6 +86,7 @@ class GoalsViewController: UIViewController {
         view.addSubview(skipButton)
 
         setupConstraints()
+        getUserGoals()
     }
 
     private func setupConstraints() {
@@ -165,6 +166,24 @@ class GoalsViewController: UIViewController {
         delegate?.nextPage(index: 4)
     }
 
+    private func getUserGoals() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let userGoals = response.data.goals
+                        self.selectedGoals = userGoals.map { return $0 }
+                        self.tableView.reloadData()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
 }
 
 // MARK: TableViewDelegate
