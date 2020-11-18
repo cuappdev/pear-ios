@@ -15,43 +15,43 @@ enum ChatStatus {
     /// No one has reached out in 3 days
     case noResponses
 
-    /// User already reached out and is waiting on pair
+    /// User already reached out and is waiting on `SubUser`
     case waitingOn(SubUser)
-    /// Pair already reached out, and user is responding
+    /// `SubUser` already reached out, and user is responding
     case respondingTo(SubUser)
 
     /// The chat date has passed
     case finished
-    /// The chat has been cancelled
+    /// The chat has been cancelled with `SubUser`
     case cancelled(SubUser)
 
-    /// Chat has been scheduled and is coming up
+    /// Chat between the User and `SubUser` has been scheduled and is coming up on `Date`
     case chatScheduled(SubUser, Date)
 
     // TODO change when matching responses change
     // The current Matching doesn't hold enough information to distinguish between all states, so this function will
     // change in the near future
     static func forMatching(matching: Matching) -> ChatStatus {
-        let matchDaySchedule = matching.schedule.first
-        let matchPear = matching.users[1]
-        if let matchDaySchedule = matchDaySchedule, matching.active {
-            if matching.schedule.first!.hasPassed() {
-                return .finished
-            } else {
-                return .chatScheduled(matchPear, matchDaySchedule.getDate())
-            }
-            return .cancelled(matchPear)
-        } else {
-            if let matchDaySchedule = matchDaySchedule {
-                return respondingTo(matchPear)
-            } else {
-                if Time.daysSinceMatching > 3 {
-                    return .noResponses
-                } else {
-                    return .planning
-                }
+        print(matching.schedule.first!.nextCorrespondingDate!)
+        return .chatScheduled(matching.users[1], matching.schedule.first!.nextCorrespondingDate!)
 
-            }
+        guard matching.users.count > 1 else {
+            print("Attempted to extract a pear for a matching with only 1 person: returning .planning as the ChatStatus")
+            return .planning
+        }
+        let matchPear = matching.users[1]
+
+        guard let matchDaySchedule = matching.schedule.first,
+            let matchTime = matchDaySchedule.nextCorrespondingDate else {
+            return Time.daysSinceMatching > 3 ? .noResponses : .planning
+        }
+
+        if matching.active {
+            return matchDaySchedule.hasPassed
+            ? .finished
+            : .chatScheduled(matchPear, matchTime)
+        } else {
+            return respondingTo(matchPear)
         }
     }
 
@@ -59,17 +59,14 @@ enum ChatStatus {
 
 class MatchViewController: UIViewController {
 
-    private let matching: Matching
     private let pair: SubUser
     private let chatStatus: ChatStatus
     private var hasReachedOut: Bool {
-        get {
-            switch chatStatus {
-            case .chatScheduled, .waitingOn, .finished, .cancelled:
-                return true
-            default:
-                return false
-            }
+        switch chatStatus {
+        case .chatScheduled, .waitingOn, .finished, .cancelled:
+            return true
+        default:
+            return false
         }
     }
 
@@ -93,7 +90,6 @@ class MatchViewController: UIViewController {
     ]
 
     init(matching: Matching) {
-        self.matching = matching
         self.pair = matching.users[1]
         self.chatStatus = ChatStatus.forMatching(matching: matching)
         super.init(nibName: nil, bundle: nil)

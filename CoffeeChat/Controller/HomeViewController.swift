@@ -5,16 +5,19 @@
 //  Created by Lucy Xu on 10/1/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
+import FutureNova
 import SideMenu
 import UIKit
-import FutureNova
 
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let profileButton = UIButton()
+    /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
+    /// View that holds `tabPageViewController` below the pill view
     private var tabContainerView: UIView!
+    /// View Controller who's contents are shown below
     private var tabPageViewController: TabPageViewController?
     let profileButtonSize = CGSize(width: 35, height: 35)
 
@@ -57,25 +60,47 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
-            if response.success {
-                return NetworkManager.shared.getMatching(user: response.data)
-            } else {
-                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
-            }
-        }.observe { response in
-            let matchResult: Matching?
-            switch response {
-            case .value(let value):
-                matchResult = value.success ? value.data : nil
-            case .error:
-                print("Failed to get the matching for user")
-                matchResult = nil
-            }
-            DispatchQueue.main.async {
-                self.setupTabPageViewController(with: matchResult)
-            }
-        }
+let user = User(
+    clubs: [],
+    firstName: "A",
+    googleID: "A",
+    graduationYear: "A",
+    hometown: "A",
+    interests: [],
+    lastName: "A",
+    major: "A",
+    matches: nil,
+    netID: "A",
+    profilePictureURL: "A",
+    pronouns: "A",
+    facebook: nil,
+    instagram: nil
+    )
+        let dummySchedule = [
+            DaySchedule(day: "Monday", times: [10, 11, 12, 13, 14])
+        ]
+        let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user.toSubUser(), user.toSubUser()])
+        self.setupTabPageViewController(with: dummyMatch)
+
+        // NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
+        //     if response.success {
+        //         return NetworkManager.shared.getMatching(user: response.data)
+        //     } else {
+        //         return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
+        //     }
+        // }.observe { response in
+        //     let matchResult: Matching?
+        //     switch response {
+        //     case .value(let value):
+        //         matchResult = value.success ? value.data : nil
+        //     case .error:
+        //         print("Failed to get the matching for user")
+        //         matchResult = nil
+        //     }
+        //     DispatchQueue.main.async {
+        //         self.setupTabPageViewController(with: matchResult)
+        //     }
+        // }
 
         setUpConstraints()
     }

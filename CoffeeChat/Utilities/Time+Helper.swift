@@ -8,21 +8,25 @@
 
 import Foundation
 
-enum Weekday: String {
-    case monday, tuesday, wednesday, thursday, friday, saturday, sunday
+enum Weekday: String, CaseIterable {
 
-    static func fromString(_ day: String) -> Weekday {
-        let day = day.lowercased()
-        if let weekday = Weekday(rawValue: day) {
-            return weekday
-        } else {
-            print("Tried to create a Weekday with \(day); returning .monday instead")
-            return .monday
-        }
+    case monday = "Monday"
+    case tuesday = "Tuesday"
+    case wednesday = "Wednesday"
+    case thursday = "Thursday"
+    case friday = "Friday"
+    case saturday = "Saturday"
+    case sunday = "Sunday"
+
+    var calendarIndex: Int {
+        Self.allCases.firstIndex(of: self)! + 1
     }
 }
 
 class Time {
+
+    /// We only work with Gregorian Calendar times
+    static let calendar = Calendar(identifier: .gregorian)
 
     /// Day of the week matches are first assigned
     static let matchDay: Weekday = .sunday
@@ -38,7 +42,7 @@ class Time {
     static var daysSinceMatching: Int {
         let lastSunday = getWeekday(searchDirection: .backward, weekday: .sunday, time: 0)
         let today = Date()
-        return Calendar.current.dateComponents([.day], from: lastSunday, to: today).day ?? 0
+        return Time.calendar.dateComponents([.day], from: lastSunday, to: today).day ?? 0
     }
 
     static func isAm(time: String) -> Bool {
@@ -59,14 +63,10 @@ class Time {
     If today is October 4th 1:00 AM and the meeting is October 5th 11:00 PM this returns true
     */
     static func isTommorow(_ date: Date) -> Bool {
-        let calendar = Calendar.current
-        if
-            let today = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: Date()),
-            let meetingDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)
-        {
-            if let dayDifference = calendar.dateComponents([.day], from: today, to: meetingDate).day {
-                return dayDifference <= 1
-            }
+        if let today = Time.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: Date()),
+            let meetingDate = Time.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date),
+            let dayDifference = Time.calendar.dateComponents([.day], from: today, to: meetingDate).day {
+            return dayDifference <= 1
         }
 
         return false
@@ -87,10 +87,10 @@ extension Time {
     Only returns either on the hour times or half hours
 
     # Example:
-    time = 0 -> 12:00 AM
-    time = 1 -> 1:00 AM
-    time = 13.5 -> 1:30 PM
-    time = 23.5 -> 11:30 PM
+    time = 0 -> (0, 30) (for 12:00 AM)
+    time = 1 -> (1, 0) (for 1:00 AM)
+    time = 13.5 -> (13, 30) (for 1:30 PM)
+    time = 23.5 -> (23, 30) (for 11:30 PM)
     */
     private static func floatTimeToHoursMinutes(time: Float) -> (hours: Int, minutes: Int) {
         let hours = Int(time)
@@ -99,9 +99,7 @@ extension Time {
     }
 
     private static func getWeekDaysInEnglish() -> [String] {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Locale(identifier: "en_US_POSIX")
-        return calendar.weekdaySymbols
+        Time.calendar.weekdaySymbols
     }
 
     /**
@@ -115,37 +113,29 @@ extension Time {
     If today is Sunday 5:00 PM, `getWeekday(.backward, .sunday, 13)` returns **today** at 1:00 PM
     */
     private static func getWeekday(searchDirection: Calendar.SearchDirection, weekday: Weekday, time: Float) -> Date {
-        let calendar = Calendar.current
-
         // Get the index of the `weekday`
-        let dayName = weekday.rawValue
-        let weekdaysName = Time.getWeekDaysInEnglish().map { $0.lowercased() }
-        guard var searchWeekdayIndex = weekdaysName.firstIndex(of: dayName) else {
-            fatalError("weekday symbol should be in the form \(weekdaysName)")
-        }
-        searchWeekdayIndex += 1
-
         // Set today to have time specified by `time`
         let rightNow = Date()
         let hoursMinutes = Time.floatTimeToHoursMinutes(time: time)
-        guard let todayWithTime = calendar.date(
+        guard let todayWithTime = Time.calendar.date(
             bySettingHour: hoursMinutes.hours,
             minute: hoursMinutes.minutes,
             second: 0,
             of: rightNow
         ) else {
-            fatalError("""
+            print("""
             A date could not be found that matches the components using the current Calendar:
-            calendar: \(calendar)
+            calendar: \(Time.calendar)
             hours: \(hoursMinutes.hours)
             minutes: \(hoursMinutes.minutes)
             base date: \(rightNow)
+            Returning right now as Date
             """)
+            return Date()
         }
 
         // Depending on the search direction and time, the next/previous day might be today with a different time
-        if
-            searchWeekdayIndex == calendar.component(.weekday, from: rightNow) &&
+        if weekday.calendarIndex == Time.calendar.component(.weekday, from: rightNow) &&
             (searchDirection == .forward && todayWithTime > rightNow ||
             searchDirection == .backward && todayWithTime < rightNow)
         {
@@ -153,22 +143,25 @@ extension Time {
         }
 
         // Move date to the next/previous weekday
-        var nextDateComponent = calendar.dateComponents([.hour, .minute, .second], from: todayWithTime)
-        nextDateComponent.weekday = searchWeekdayIndex
+        var nextDateComponent = Time.calendar.dateComponents([.hour, .minute, .second], from: todayWithTime)
+        nextDateComponent.weekday = weekday.calendarIndex
 
-        guard let date = calendar.nextDate(
+        guard let date = Time.calendar.nextDate(
             after: todayWithTime,
             matching: nextDateComponent,
             matchingPolicy: .nextTime,
             direction: searchDirection
         ) else {
-            fatalError("""
+            print("""
             A date could not be found that matches the components using the current Calendar:
-            calendar: \(calendar)
+            calendar: \(Time.calendar)
             dateComponents: \(nextDateComponent)
             matchingPolicy: \(Calendar.MatchingPolicy.nextTime)
             direction: \(searchDirection)
+            Returning right now as Date
             """)
+            print("!!!!!")
+            return Date()
         }
 
         return date
