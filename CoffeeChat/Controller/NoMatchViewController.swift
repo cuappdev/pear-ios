@@ -69,6 +69,7 @@ class NoMatchViewController: UIViewController {
         }
 
         surprisedPearImageView.snp.makeConstraints { make in
+            make.top.equalTo(noMatchTitleLabel.snp.bottom).offset(imageBottomPadding)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(noMatchLabel.snp.top).offset(-imageBottomPadding)
             make.width.equalTo(imageWidth)
