@@ -131,20 +131,22 @@ extension Time {
             base date: \(rightNow)
             Returning right now as Date
             """)
+            print("erroring and returning default")
             return Date()
         }
 
         // Depending on the search direction and time, the next/previous day might be today with a different time
         if weekday.calendarIndex == Time.calendar.component(.weekday, from: rightNow) &&
             (searchDirection == .forward && todayWithTime > rightNow ||
-            searchDirection == .backward && todayWithTime < rightNow)
-        {
+            searchDirection == .backward && todayWithTime < rightNow) {
+            print("returning today with time")
             return todayWithTime
         }
 
         // Move date to the next/previous weekday
-        var nextDateComponent = Time.calendar.dateComponents([.hour, .minute, .second], from: todayWithTime)
+        var nextDateComponent = Time.calendar.dateComponents([.weekday], from: todayWithTime)
         nextDateComponent.weekday = weekday.calendarIndex
+        print(weekday.calendarIndex)
 
         guard let date = Time.calendar.nextDate(
             after: todayWithTime,
@@ -160,10 +162,11 @@ extension Time {
             direction: \(searchDirection)
             Returning right now as Date
             """)
-            print("!!!!!")
+            print("Couldn't find satisfiable date")
             return Date()
         }
 
+        print("returning a basic sol")
         return date
     }
 

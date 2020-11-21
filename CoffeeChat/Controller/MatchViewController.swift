@@ -32,7 +32,9 @@ enum ChatStatus {
     // The current Matching doesn't hold enough information to distinguish between all states, so this function will
     // change in the near future
     static func forMatching(matching: Matching) -> ChatStatus {
+        print("----------")
         print(matching.schedule.first!.nextCorrespondingDate!)
+
         return .chatScheduled(matching.users[1], matching.schedule.first!.nextCorrespondingDate!)
 
         guard matching.users.count > 1 else {
