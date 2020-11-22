@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
         SettingOption(hasSwitch: false, image: "editAvailability", switchOn: false, text: "Edit Time Availabilities"),
-        SettingOption(hasSwitch: false, image: "editAvailability", switchOn: false, text: "Edit Location Availabilities"),
+        SettingOption(hasSwitch: false, image: "location", switchOn: false, text: "Edit Location Availabilities"),
         SettingOption(hasSwitch: false, image: "socialMedia", switchOn: false, text: "Connect Social Media"),
         SettingOption(hasSwitch: false, image: "aboutPear", switchOn: false, text: "About Pear"),
         SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out")
