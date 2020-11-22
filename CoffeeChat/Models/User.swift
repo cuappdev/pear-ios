@@ -10,7 +10,7 @@ import Foundation
 
 struct User: Codable {
 
-    let availabilities: [Availability]
+    let availabilities: [DaySchedule]
     let firstName: String
     let goals: [String]
     let googleID: String

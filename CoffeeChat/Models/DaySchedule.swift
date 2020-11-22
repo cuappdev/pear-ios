@@ -11,6 +11,6 @@ import Foundation
 struct DaySchedule: Codable {
 
     let day: String
-    let times: [Int]
+    let times: [Double]
 
 }
