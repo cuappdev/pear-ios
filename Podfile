@@ -9,9 +9,6 @@ use_frameworks!
     # User Data
     pod 'GoogleSignIn'
 
-    # UI Frameworks
-    pod 'SnapKit'
-
     # Networking
     pod 'SwiftyJSON'
     pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'

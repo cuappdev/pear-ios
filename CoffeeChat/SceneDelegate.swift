@@ -20,6 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoginViewController())
+        window.rootViewController = navigationController
+        self.window = window
+        window.makeKeyAndVisible()
         
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
@@ -29,15 +32,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let assignedMatch = true
             let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
             let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-            guard let unwrappedToken = refreshToken else {
-                // Ask user to sign in if they have not signed in before.
-                window.rootViewController = navigationController
-                self.window = window
-                window.makeKeyAndVisible()
-                return
-            }
-            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { [weak self] result in
-                guard let self = self else { return }
+            guard let unwrappedToken = refreshToken else { return }
+            NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):

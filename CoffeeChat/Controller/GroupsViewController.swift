@@ -197,7 +197,6 @@ class GroupsViewController: UIViewController {
                 print(result)
                 switch result {
                 case .value(let response):
-                    print(response)
                     if response.success {
                         let groups = response.data
                         self.groups = groups.map { return SimpleOnboardingCell(name: $0, subtitle: nil) }
@@ -208,7 +207,6 @@ class GroupsViewController: UIViewController {
                     print(error)
                 }
             }
-            
         }
     }
 
