@@ -77,7 +77,7 @@ let user = User(
     instagram: nil
     )
         let dummySchedule = [
-            DaySchedule(day: "Monday", times: [10, 11, 12, 13, 14])
+            DaySchedule(day: "Saturday", times: [10])
         ]
         let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user.toSubUser(), user.toSubUser()])
         self.setupTabPageViewController(with: dummyMatch)

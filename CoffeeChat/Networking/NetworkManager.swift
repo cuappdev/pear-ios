@@ -96,9 +96,9 @@ class NetworkManager {
         let request = networking(Endpoint.pingServer())
 
         let dummySchedule = [
-            DaySchedule(day: "Sunday", times: [10, 11, 12, 13, 14]),
-            DaySchedule(day: "Monday", times: [15, 16.5, 17]),
-            DaySchedule(day: "Wednesday", times: [19, 20.5]),
+            //DaySchedule(day: "Sunday", times: [10, 11, 12, 13, 14]),
+            //DaySchedule(day: "Monday", times: [15, 16.5, 17]),
+            //DaySchedule(day: "Wednesday", times: [19, 20.5]),
             DaySchedule(day: "Friday", times: [10, 20.5])
         ]
         let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user.toSubUser(), user.toSubUser()])

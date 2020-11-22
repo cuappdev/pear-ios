@@ -10,13 +10,13 @@ import Foundation
 
 enum Weekday: String, CaseIterable {
 
+    case sunday = "Sunday"
     case monday = "Monday"
     case tuesday = "Tuesday"
     case wednesday = "Wednesday"
     case thursday = "Thursday"
     case friday = "Friday"
     case saturday = "Saturday"
-    case sunday = "Sunday"
 
     var calendarIndex: Int {
         Self.allCases.firstIndex(of: self)! + 1
@@ -136,20 +136,28 @@ extension Time {
         }
 
         // Depending on the search direction and time, the next/previous day might be today with a different time
-        if weekday.calendarIndex == Time.calendar.component(.weekday, from: rightNow) &&
-            (searchDirection == .forward && todayWithTime > rightNow ||
-            searchDirection == .backward && todayWithTime < rightNow) {
+        let df = DateFormatter()
+        df.timeZone = .current
+        df.dateFormat = "(MM-dd) HH:mm"
+
+        print("search direction: \(searchDirection)")
+        print("comparing calendar component: \(Time.calendar.component(.weekday, from: todayWithTime))")
+        print("weekday.calendarIndex: \(weekday.calendarIndex)")
+        print("comparing todayWithTime (\(df.string(from: todayWithTime)) with rightNow (\(df.string(from: rightNow))")
+        if weekday.calendarIndex == Time.calendar.component(.weekday, from: todayWithTime) &&
+            ((searchDirection == .forward && todayWithTime > rightNow) ||
+            (searchDirection == .backward && todayWithTime < rightNow)) {
             print("returning today with time")
             return todayWithTime
         }
 
         // Move date to the next/previous weekday
-        var nextDateComponent = Time.calendar.dateComponents([.weekday], from: todayWithTime)
+        var nextDateComponent = Time.calendar.dateComponents([.hour, .minute], from: todayWithTime)
         nextDateComponent.weekday = weekday.calendarIndex
         print(weekday.calendarIndex)
 
         guard let date = Time.calendar.nextDate(
-            after: todayWithTime,
+            after: rightNow,
             matching: nextDateComponent,
             matchingPolicy: .nextTime,
             direction: searchDirection
@@ -166,7 +174,9 @@ extension Time {
             return Date()
         }
 
-        print("returning a basic sol")
+        print("rightNow: \(df.string(from: rightNow))")
+        print("returning a basic sol: \(df.string(from: date))")
+        print("rightNow before date? \(rightNow < date)")
         return date
     }
 
