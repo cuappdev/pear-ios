@@ -17,18 +17,18 @@ class SelfSizingCollectionView: UICollectionView {
         tagsCollectionViewLayout.minimumLineSpacing = 4
         super.init(frame: frame, collectionViewLayout: tagsCollectionViewLayout)
     }
-    
+
     override var intrinsicContentSize: CGSize {
-        return self.collectionViewLayout.collectionViewContentSize
+        self.collectionViewLayout.collectionViewContentSize
     }
-    
+
     override func reloadData() {
         super.reloadData()
         self.invalidateIntrinsicContentSize()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }

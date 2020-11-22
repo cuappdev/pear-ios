@@ -17,7 +17,7 @@ struct Response<T: Codable>: Codable {
 }
 
 struct SuccessResponse: Codable {
-    
+
     let success: Bool
-    
+
 }

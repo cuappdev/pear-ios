@@ -9,16 +9,69 @@
 import GoogleSignIn
 import UIKit
 
+enum ChatStatus {
+    /// No one has reached out yet
+    case planning
+    /// No one has reached out in 3 days
+    case noResponses
+
+    /// User already reached out and is waiting on `SubUser`
+    case waitingOn(SubUser)
+    /// `SubUser` already reached out, and user is responding
+    case respondingTo(SubUser)
+
+    /// The chat date has passed
+    case finished
+    /// The chat has been cancelled with `SubUser`
+    case cancelled(SubUser)
+
+    /// Chat between the User and `SubUser` has been scheduled and is coming up on `Date`
+    case chatScheduled(SubUser, Date)
+
+    // TODO change when matching responses change
+    // The current Matching doesn't hold enough information to distinguish between all states, so this function will
+    // change in the near future
+    static func forMatching(matching: Matching) -> ChatStatus {
+        guard matching.users.count > 1 else {
+            print("Attempted to extract a pear for a matching with only 1 person: returning .planning as the ChatStatus")
+            return .planning
+        }
+        let matchPear = matching.users[1]
+
+        guard let matchDaySchedule = matching.schedule.first,
+            let matchTime = matchDaySchedule.nextCorrespondingDate else {
+            return Time.daysSinceMatching > 3 ? .noResponses : .planning
+        }
+
+        if matching.active {
+            return matchDaySchedule.hasPassed
+            ? .finished
+            : .chatScheduled(matchPear, matchTime)
+        } else {
+            return respondingTo(matchPear)
+        }
+    }
+
+}
+
 class MatchViewController: UIViewController {
 
-    private let hasReachedOut: Bool
+    private let pair: SubUser
+    private let chatStatus: ChatStatus
+    private var hasReachedOut: Bool {
+        switch chatStatus {
+        case .chatScheduled, .waitingOn, .finished, .cancelled:
+            return true
+        default:
+            return false
+        }
+    }
 
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
     private let matchSummaryTableView = UITableView()
-
     private var meetupStatusView: MeetupStatusView?
     private var reachOutButton = UIButton()
 
@@ -33,8 +86,9 @@ class MatchViewController: UIViewController {
         MatchSummary(title: "He is also part of...", detail: "EzraBox")
     ]
 
-    init(hasReachedOut: Bool) {
-        self.hasReachedOut = hasReachedOut
+    init(matching: Matching) {
+        self.pair = matching.users[1]
+        self.chatStatus = ChatStatus.forMatching(matching: matching)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,28 +110,6 @@ class MatchViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .backgroundLightGreen
 
-        // TODO: Remove after connecting to backend. These are temp values.
-        let firstName = "Ezra"
-        let lastName = "Cornell"
-        let major = "Government"
-        let year = 2020
-        let pronouns = "He/Him"
-        let hometown = "Ithaca, NY"
-        let user = User(clubs: [],
-                        firstName: firstName,
-                        googleID: "",
-                        graduationYear: "2020",
-                        hometown: hometown,
-                        interests: [],
-                        lastName: lastName,
-                        major: major,
-                        matches: [],
-                        netID: "",
-                        profilePictureURL: "",
-                        pronouns: "pronouns",
-                        facebook: "https://www.facebook.com",
-                        instagram: "https://www.instagram.com")
-
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitleColor(.white, for: .normal)
@@ -89,25 +121,12 @@ class MatchViewController: UIViewController {
             view.addSubview(reachOutButton)
         }
 
-        // TODO change based on chat status
-        let sampleUser = User(
-            clubs: [],
-            firstName: "Ezra",
-            googleID: "",
-            graduationYear: "2024",
-            hometown: "Ithaca",
-            interests: [],
-            lastName: "Cornell",
-            major: "CS",
-            matches: [],
-            netID: "ec1",
-            profilePictureURL: "",
-            pronouns: "He/Him",
-            facebook: "",
-            instagram: "https://www.instagram.com/cornelluniversity/?hl=en")
-        meetupStatusView = hasReachedOut
-            ? MeetupStatusView(for: .chatScheduled(user, Date.distantFuture))
-            : MeetupStatusView(for: .respondingTo(sampleUser))
+        switch chatStatus {
+        case .noResponses, .waitingOn, .respondingTo, .finished, .cancelled, .chatScheduled:
+            meetupStatusView = MeetupStatusView(for: chatStatus)
+        default:
+            break
+        }
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
@@ -116,13 +135,14 @@ class MatchViewController: UIViewController {
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        matchNameLabel.text = "\(firstName)\n\(lastName)"
+        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
-        matchDemographicsLabel.text = "\(major) \(year)\nFrom \(hometown)\n\(pronouns)"
+        let major = "???" // TODO update with info from User, not SubUser
+        matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)"
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook
         matchDemographicsLabel.numberOfLines = 0
@@ -191,8 +211,17 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        let timeVC = SchedulingTimeViewController(for: .confirming)
-        navigationController?.pushViewController(timeVC, animated: true)
+        let schedulingVC: SchedulingTimeViewController
+        switch chatStatus {
+        case .planning, .noResponses:
+            schedulingVC = SchedulingTimeViewController(for: .confirming)
+        case .waitingOn, .respondingTo:
+            schedulingVC = SchedulingTimeViewController(for: .choosing)
+        default:
+            print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
+            schedulingVC = SchedulingTimeViewController(for: .pickingTypical)
+        }
+        navigationController?.pushViewController(schedulingVC, animated: true)
     }
 }
 

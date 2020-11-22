@@ -19,23 +19,23 @@ struct UserSessionBody: Codable {
 struct UpdateUserOrganizationsBody: Codable {
 
     let clubs: [String]
-    
+
 }
 
 struct UpdateUserDemographicsBody: Codable {
-    
+
     let graduationYear: String
     let hometown: String
     let major: String
     let pronouns: String
     let profilePictureURL: String
-    
+
 }
 
 struct UpdateUserInterestsBody: Codable {
-    
+
     let interests: [String]
-    
+
 }
 
 struct MatchingBody: Codable {

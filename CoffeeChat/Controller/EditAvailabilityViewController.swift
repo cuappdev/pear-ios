@@ -42,7 +42,7 @@ private class LocationHeaderLabel: UICollectionReusableView {
 }
 
 class EditAvailabilityViewController: UIViewController {
-    
+
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let contentView = UIView(frame: .zero)
@@ -55,7 +55,7 @@ class EditAvailabilityViewController: UIViewController {
     private let scheduleTimeLabel = UILabel()
     private let scheduleLocationSubLabel = UILabel()
     private var timeCollectionView: UICollectionView!
-    
+
     // MARK: - Time CollectionView Sections
     private struct TimeSection {
         let type: SectionType
@@ -67,11 +67,11 @@ class EditAvailabilityViewController: UIViewController {
         case evening = "Evening"
         case morning = "Morning"
     }
-    
+
     private enum ItemType {
         case header(String)
         case time(String)
-        
+
         func getTime() -> String? {
             switch self {
             case .time(let time):
@@ -81,60 +81,73 @@ class EditAvailabilityViewController: UIViewController {
             }
         }
     }
-    
+
     private var timeSections: [TimeSection] = []
-    
+
     // MARK: - Time Data Vars
     private let timeInteritemSpacing: CGFloat = 4
     private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
     private let dayCellReuseId = "dayCellReuseIdentifier"
     private let timeCellReuseId = "timeCellReuseIdentifier"
-    
+
     // All possible times available for parts of a day
     private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
     private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
     private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
-    
+
     // For times presented to user for parts of a day
     private var afternoonTimes: [String] = []
     private var eveningTimes: [String] = []
     private var morningTimes: [String] = []
-    
+
     // For section items with a header and times
     private var afternoonItems: [ItemType] = []
     private var eveningItems: [ItemType] = []
     private var morningItems: [ItemType] = []
-    
+
     private var availabilities: [String: [String]] = [:]
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-    private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
+    private let daysDict = [
+        "Su": "Sunday",
+        "M": "Monday",
+        "Tu": "Tuesday",
+        "W": "Wednesday",
+        "Th": "Thursday",
+        "F": "Friday",
+        "Sa": "Saturday"
+    ]
     private var selectedDay: String = "Su"
 
     // TODO: Change values after connecting to backend and get user's saved availabilities
-    private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private var savedAvailabilities: [String: [String]] = [
+        "Monday": ["5:30", "6:00", "6:30"],
+        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
+        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
+        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
+    ]
 
     // MARK: - Location CollectionView Sections
     private enum LocationSection {
         case campus([String])
         case ctown([String])
     }
-    
+
     // MARK: - Location Data Vars
     private let campusReuseId = "campusReuseIdentifier"
     private let campusHeaderId = "campusHeaderIdentifier"
     private let ctownReuseId = "ctownReuseIdentiifier"
     private let ctownHeaderId = "ctownHeaderIdentifier"
     private let defaultHeaderId = "defaultHeaderIdentifier"
-    
+
     private var locationSections: [LocationSection] = []
     private var selectedCampusLocations: [String] = []
     private var selectedCtownLocations: [String] = []
-    
+
     private let headerHeight: CGFloat = 50
     private let locationinteritemSpacing: CGFloat = 12
     private let locationLineSpacing: CGFloat = 12
-    
+
     // TODO: Replace with networking when available
     private var campusLocations = [
         "Atrium Cafe",
@@ -160,7 +173,7 @@ class EditAvailabilityViewController: UIViewController {
         "Cafe Jennie",
         "Mango Mango"
     ]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -170,28 +183,28 @@ class EditAvailabilityViewController: UIViewController {
         morningTimes = allMorningTimes
         availabilities = savedAvailabilities
         setupNavigationBar()
-        
+
         editScrollView = UIScrollView()
         editScrollView.backgroundColor = .clear
         editScrollView.layoutIfNeeded()
         editScrollView.showsVerticalScrollIndicator = false
         view.addSubview(editScrollView)
-        
+
         editScrollView.addSubview(contentView)
-        
+
         if let firstDay = daysDict[selectedDay] {
             setupTimes(for: firstDay, isFirstTime: true)
         }
-        
+
         scheduleTimeLabel.font = ._20CircularStdBook
         scheduleTimeLabel.text = "When are you free?"
         scheduleTimeLabel.textColor = .black
         contentView.addSubview(scheduleTimeLabel)
-        
+
         let dayCollectionViewLayout = UICollectionViewFlowLayout()
         dayCollectionViewLayout.minimumInteritemSpacing = timeInteritemSpacing
         dayCollectionViewLayout.scrollDirection = .horizontal
-        
+
         dayCollectionView = UICollectionView(frame: .zero, collectionViewLayout: dayCollectionViewLayout)
         dayCollectionView.allowsSelection = true
         dayCollectionView.backgroundColor = .clear
@@ -201,18 +214,18 @@ class EditAvailabilityViewController: UIViewController {
         dayCollectionView.register(DefaultHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: defaultHeaderId)
         dayCollectionView.showsHorizontalScrollIndicator = false
         contentView.addSubview(dayCollectionView)
-        
+
         guard let day = daysDict[selectedDay] else { return }
         dayLabel.text = "Every \(day)"
         dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         contentView.addSubview(dayLabel)
-        
+
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = timeInteritemSpacing
         timeCollectionViewLayout.sectionInset = sectionInsets
         timeCollectionViewLayout.scrollDirection = .horizontal
-        
+
         timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
         timeCollectionView.allowsMultipleSelection = true
         timeCollectionView.backgroundColor = .clear
@@ -221,21 +234,21 @@ class EditAvailabilityViewController: UIViewController {
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
         timeCollectionView.register(DefaultHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: defaultHeaderId)
         contentView.addSubview(timeCollectionView)
-        
+
         scheduleLocationLabel.text = "Where do you prefer?"
         scheduleLocationLabel.font = ._20CircularStdBook
         scheduleLocationLabel.textColor = .black
         editScrollView.addSubview(scheduleLocationLabel)
-        
+
         scheduleLocationSubLabel.text = "pick three"
         scheduleLocationSubLabel.font = ._16CircularStdBook
         scheduleLocationSubLabel.textColor = .greenGray
         contentView.addSubview(scheduleLocationSubLabel)
-        
+
         let locationsCollectionViewLayout = UICollectionViewFlowLayout()
         locationsCollectionViewLayout.minimumLineSpacing = locationLineSpacing
         locationsCollectionViewLayout.minimumInteritemSpacing = locationinteritemSpacing
-            
+
         locationsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: locationsCollectionViewLayout)
         locationsCollectionView.allowsMultipleSelection = true
         locationsCollectionView.showsVerticalScrollIndicator = false
@@ -250,10 +263,10 @@ class EditAvailabilityViewController: UIViewController {
         locationsCollectionView.register(LocationHeaderLabel.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderId)
         locationsCollectionView.isScrollEnabled = false
         contentView.addSubview(locationsCollectionView)
-        
+
         selectedCampusLocations = campusLocations.filter {savedLocations.contains($0)}
         selectedCtownLocations = ctownLocations.filter {savedLocations.contains($0)}
-        
+
         locationSections = [
             .campus(campusLocations),
             .ctown(ctownLocations)
@@ -262,7 +275,7 @@ class EditAvailabilityViewController: UIViewController {
 
         setupConstraints()
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.titleTextAttributes = [
@@ -275,7 +288,7 @@ class EditAvailabilityViewController: UIViewController {
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        
+
         saveBarButtonItem.title = "Save"
         saveBarButtonItem.tintColor = .darkGreen
         saveBarButtonItem.target = self
@@ -285,15 +298,15 @@ class EditAvailabilityViewController: UIViewController {
         ], for: .normal)
         navigationItem.rightBarButtonItem = saveBarButtonItem
     }
-    
+
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
-    
+
     @objc private func saveAvailability() {
         // TODO: save new availability
     }
-    
+
     private func setupTimes(for day: String, isFirstTime: Bool) {
         morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
         afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
@@ -302,48 +315,48 @@ class EditAvailabilityViewController: UIViewController {
             setupTimeSections()
         }
     }
-    
+
     private func setupTimeSections() {
         let morningSection = TimeSection(type: .morning, items: morningItems)
         let afternoonSection = TimeSection(type: .afternoon, items: afternoonItems)
         let eveningSection = TimeSection(type: .morning, items: eveningItems)
-        
+
         timeSections = [morningSection, afternoonSection, eveningSection]
     }
-    
+
     private func setupConstraints() {
         let dayCollectionViewWidth = daysAbbrev.count * 45
         let collectionViewPadding = 30
         let collectionViewSidePadding = 32
         let numberofLocationRows = CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
         let scrollHeight = view.frame.height + (numberofLocationRows * 50)
-        
+
         editScrollView.snp.makeConstraints { make in
             make.left.right.top.bottom.equalTo(view)
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.left.right.top.bottom.equalTo(editScrollView)
             make.height.equalTo(scrollHeight)
         }
-        
+
         scheduleTimeLabel.snp.makeConstraints { make in
             make.top.equalTo(editScrollView.snp.top).offset(20)
             make.centerX.equalTo(editScrollView.snp.centerX)
         }
-        
+
         dayCollectionView.snp.makeConstraints { make in
             make.top.equalTo(scheduleTimeLabel.snp.bottom).offset(20)
             make.centerX.equalTo(editScrollView.snp.centerX)
             make.height.equalTo(50)
             make.width.equalTo(dayCollectionViewWidth)
         }
-        
+
         dayLabel.snp.makeConstraints { make in
             make.top.equalTo(dayCollectionView.snp.bottom).offset(10)
             make.centerX.equalTo(editScrollView.snp.centerX)
         }
-        
+
         timeCollectionView.snp.makeConstraints { make in
             let timeCollectionViewWidth = timeSections.count * 105
             let timeCollectionViewHeight = 400
@@ -352,17 +365,17 @@ class EditAvailabilityViewController: UIViewController {
             make.width.equalTo(timeCollectionViewWidth)
             make.centerX.equalTo(editScrollView.snp.centerX)
         }
-        
+
         scheduleLocationLabel.snp.makeConstraints { make in
             make.top.equalTo(timeCollectionView.snp.bottom).offset(55)
             make.centerX.equalTo(editScrollView.snp.centerX)
         }
-        
+
         scheduleLocationSubLabel.snp.makeConstraints { make in
             make.top.equalTo(scheduleLocationLabel.snp.bottom).offset(5)
             make.centerX.equalTo(editScrollView.snp.centerX)
         }
-        
+
         locationsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(scheduleLocationSubLabel.snp.bottom).offset(5)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(collectionViewSidePadding)
@@ -371,11 +384,11 @@ class EditAvailabilityViewController: UIViewController {
         }
 
     }
-    
+
 }
 
 extension EditAvailabilityViewController: UICollectionViewDataSource {
-    
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if collectionView == dayCollectionView {
             return 1
@@ -384,7 +397,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
         }
         return 2
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == dayCollectionView {
             return daysAbbrev.count
@@ -396,7 +409,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
         case .ctown(let locations): return locations.count
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
@@ -423,15 +436,14 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
                 cell.configure(for: time, isHeader: false)
                 cell.isUserInteractionEnabled = true
                 if let day = daysDict[selectedDay] {
-                    if let dayAvailability = availabilities[day],                         dayAvailability.contains(time) {
+                    if let dayAvailability = availabilities[day], dayAvailability.contains(time) {
                         timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                         cell.isSelected = true
                     }
                 }
             }
             return cell
-        }
-        else {
+        } else {
             switch locationSections[indexPath.section] {
             case .campus(let locations):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseId, for: indexPath) as? SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
@@ -454,7 +466,7 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
             }
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if collectionView == locationsCollectionView {
             if indexPath.section == 0 {
@@ -472,11 +484,11 @@ extension EditAvailabilityViewController: UICollectionViewDataSource {
         guard let headerView = defaultHeader as? DefaultHeader else { return defaultHeader }
         return headerView
     }
-    
+
 }
 
 extension EditAvailabilityViewController: UICollectionViewDelegate {
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
             selectedDay = daysAbbrev[indexPath.item]
@@ -490,8 +502,7 @@ extension EditAvailabilityViewController: UICollectionViewDelegate {
             guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
             if availabilities[day] == nil {
                 availabilities[day] = [time]
-            }
-            else {
+            } else {
                 availabilities[day]?.append(time)
             }
             dayCollectionView.reloadData()
@@ -516,7 +527,7 @@ extension EditAvailabilityViewController: UICollectionViewDelegate {
             }
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if collectionView == timeCollectionView {
             let section = timeSections[indexPath.section]
@@ -557,7 +568,7 @@ extension EditAvailabilityViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: itemWidth, height: 42)
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if collectionView == locationsCollectionView {
             return CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
@@ -566,4 +577,4 @@ extension EditAvailabilityViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 0, height: 0)
     }
 }
-    
+
