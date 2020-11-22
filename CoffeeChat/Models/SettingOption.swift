@@ -14,5 +14,5 @@ struct SettingOption {
     let image: String
     var switchOn: Bool
     let text: String
-    
+
 }

@@ -5,6 +5,7 @@
 //  Created by Lucy Xu on 10/1/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
+import FutureNova
 import SideMenu
 import UIKit
 
@@ -12,9 +13,12 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let profileButton = UIButton()
+    /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
+    /// View that holds `tabPageViewController` below the pill view
     private var tabContainerView: UIView!
-    private var tabPageViewController: TabPageViewController!
+    /// View Controller who's contents are shown below
+    private var tabPageViewController: TabPageViewController?
     let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
@@ -25,9 +29,6 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .backgroundLightGreen
-
-        tabPageViewController = TabPageViewController()
-        addChild(tabPageViewController)
 
         profileButton.backgroundColor = .inactiveGreen
         profileButton.layer.cornerRadius = profileButtonSize.width/2
@@ -40,8 +41,6 @@ class HomeViewController: UIViewController {
 
         tabContainerView = UIView()
         view.addSubview(tabContainerView)
-        tabPageViewController.view.frame = tabContainerView.frame
-        tabContainerView.addSubview(tabPageViewController.view)
 
         let tabLayout = UICollectionViewFlowLayout()
         tabLayout.minimumInteritemSpacing = 0
@@ -60,8 +59,44 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowOpacity = 1
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
+        
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+
+        NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
+            if response.success {
+                return NetworkManager.shared.getMatching(user: response.data)
+            } else {
+                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
+            }
+        }.observe { response in
+            let matchResult: Matching?
+            switch response {
+            case .value(let value):
+                matchResult = value.success ? value.data : nil
+            case .error:
+                print("Failed to get the matching for user")
+                matchResult = nil
+            }
+            DispatchQueue.main.async {
+                self.setupTabPageViewController(with: matchResult)
+            }
+        }
 
         setUpConstraints()
+    }
+
+    private func setupTabPageViewController(with matching: Matching?) {
+        tabPageViewController = TabPageViewController(matching: matching)
+        if let tabPageViewController = tabPageViewController {
+            addChild(tabPageViewController)
+
+            tabPageViewController.view.frame = tabContainerView.frame
+            tabContainerView.addSubview(tabPageViewController.view)
+            tabPageViewController.view.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+        view.updateConstraints()
     }
 
     @objc private func profilePressed() {
@@ -100,7 +135,7 @@ class HomeViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -112,7 +147,7 @@ extension HomeViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeTabIndex = indexPath.item
-        tabPageViewController.setViewController(to: indexPath.item)
+        tabPageViewController?.setViewController(to: indexPath.item)
         tabCollectionView.reloadData()
     }
 

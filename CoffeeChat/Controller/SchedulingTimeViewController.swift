@@ -145,7 +145,6 @@ class SchedulingTimeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
-        navigationController?.navigationBar.isHidden = true
 
         setupViews()
         setupDaysAndTimes()
@@ -156,6 +155,12 @@ class SchedulingTimeViewController: UIViewController {
         setupConstraints()
         updateNextButton()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
 
     // MARK: - Setup
     private func setupDaysAndTimes() {

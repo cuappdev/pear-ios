@@ -23,7 +23,7 @@ extension Endpoint {
         Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
-    
+
     static var standardHeaders: [String: String] {
         if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
             return ["Authorization": "Bearer \(token)"]
@@ -44,7 +44,7 @@ extension Endpoint {
     static func pingServer() -> Endpoint {
         Endpoint(path: "/general/hello/")
     }
-    
+
     static func refreshUserToken(token: String) -> Endpoint {
         Endpoint(path: "/refresh/", headers: updateHeaders)
     }
@@ -72,7 +72,7 @@ extension Endpoint {
         )
         return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update interests information about the user
     static func updateUserInterests(interests: [String]) -> Endpoint {
         let body = UpdateUserInterestsBody(interests: interests)
@@ -95,6 +95,12 @@ extension Endpoint {
     static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
         let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
         return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
+    }
+
+    /// [POST] Update oganizations information about the user
+    static func updateUserOrganizations(organizations: [String]) -> Endpoint {
+        let body = UpdateUserGroupsBody(groups: organizations)
+        return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user
