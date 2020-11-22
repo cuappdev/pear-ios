@@ -51,13 +51,22 @@ class NetworkManager {
     func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserInterests(interests: interests)).decode()
     }
+    
+    func updateUserGroups(groups: [String]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserGroups(groups: groups)).decode()
+    }
+    
+    func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserGoals(goals: goals)).decode()
+    }
+    
+    func updateUserSocialMedia(facebook: String, instagram: String) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram)).decode()
 
-    func updateUserOrganizations(organizations: [String]) -> Future<SuccessResponse> {
-        networking(Endpoint.updateUserOrganizations(organizations: organizations)).decode()
     }
 
-    func getUser() -> Future<Response<User>> {
-        networking(Endpoint.getUser()).decode()
+    func getUser(netId: String) -> Future<Response<User>> {
+        networking(Endpoint.getUser(netId: netId)).decode()
     }
 
     func getUserClubs() -> Future<Response<[String]>> {
@@ -83,11 +92,18 @@ class NetworkManager {
     func searchUsers(query: String) -> Future<Response<[CommunityUser]>> {
         networking(Endpoint.searchUsers(query: query)).decode()
     }
-
-    // TODO: Update response body
-//    func updateUser(firstName: String, lastName: String, netID: String) -> Future<Response<User>> {
-//        return networking(Endpoint.updateUser(firstName: firstName, lastName: lastName, netID: netID)).decode()
-//    }
+    
+    func getAllGroups() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllGroups()).decode()
+    }
+    
+    func getAllInterests() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllInterests()).decode()
+    }
+    
+    func getAllMajors() -> Future<Response<[String]>> {
+        networking(Endpoint.getAllMajors()).decode()
+    }
 
     // TODO: replace with real networking calls for matchings/availibilities
     // Get all matchings that involve this user
@@ -129,4 +145,5 @@ class NetworkManager {
             return Response(data: newMatching, success: true)
         }
     }
+    
 }

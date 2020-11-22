@@ -114,6 +114,15 @@ class OnboardingSearchDropdownView: UIView {
     func setSelectValue(value: String) {
         searchBar.text = value
     }
+    
+    func setTableData(tableData: [String]) {
+        self.tableData = tableData
+    }
+    
+    func setTitle(title: String) {
+        searchBar.text = title
+        delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
+    }
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -137,7 +146,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         let selectedText = resultsTableData[indexPath.row]
         searchBar.text = selectedText
         tableView.isHidden = true
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: true, valueSelected: selectedText)
+        delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)
         delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 
@@ -150,7 +159,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
         resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate?.updateSelectedFields(tag: self.tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
+        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height

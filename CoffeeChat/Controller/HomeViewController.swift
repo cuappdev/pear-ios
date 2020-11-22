@@ -59,8 +59,10 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowOpacity = 1
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
+        
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
-        NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
+        NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
             if response.success {
                 return NetworkManager.shared.getMatching(user: response.data)
             } else {

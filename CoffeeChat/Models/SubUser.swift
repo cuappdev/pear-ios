@@ -10,15 +10,16 @@ import Foundation
 
 struct SubUser: Codable {
 
-    let facebook: String?
     let firstName: String
     let googleID: String
     let graduationYear: String
     let hometown: String
-    let instagram: String?
     let lastName: String
+    let major: String
     let netID: String
     let profilePictureURL: String
     let pronouns: String
+    let facebook: String?
+    let instagram: String?
 
 }

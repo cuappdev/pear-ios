@@ -127,6 +127,7 @@ class MatchViewController: UIViewController {
         default:
             break
         }
+
         if let meetupStatusView = meetupStatusView {
             view.addSubview(meetupStatusView)
         }
