@@ -98,10 +98,6 @@ extension Time {
         return (hours, minutes)
     }
 
-    private static func getWeekDaysInEnglish() -> [String] {
-        Time.calendar.weekdaySymbols
-    }
-
     /**
     Returns the next or previous `weekday` with a time based on `time`
     The search for the weekday includes today.
@@ -131,7 +127,6 @@ extension Time {
             base date: \(rightNow)
             Returning right now as Date
             """)
-            print("erroring and returning default")
             return Date()
         }
 
@@ -140,21 +135,15 @@ extension Time {
         df.timeZone = .current
         df.dateFormat = "(MM-dd) HH:mm"
 
-        print("search direction: \(searchDirection)")
-        print("comparing calendar component: \(Time.calendar.component(.weekday, from: todayWithTime))")
-        print("weekday.calendarIndex: \(weekday.calendarIndex)")
-        print("comparing todayWithTime (\(df.string(from: todayWithTime)) with rightNow (\(df.string(from: rightNow))")
         if weekday.calendarIndex == Time.calendar.component(.weekday, from: todayWithTime) &&
             ((searchDirection == .forward && todayWithTime > rightNow) ||
             (searchDirection == .backward && todayWithTime < rightNow)) {
-            print("returning today with time")
             return todayWithTime
         }
 
         // Move date to the next/previous weekday
         var nextDateComponent = Time.calendar.dateComponents([.hour, .minute], from: todayWithTime)
         nextDateComponent.weekday = weekday.calendarIndex
-        print(weekday.calendarIndex)
 
         guard let date = Time.calendar.nextDate(
             after: rightNow,
@@ -170,13 +159,9 @@ extension Time {
             direction: \(searchDirection)
             Returning right now as Date
             """)
-            print("Couldn't find satisfiable date")
             return Date()
         }
 
-        print("rightNow: \(df.string(from: rightNow))")
-        print("returning a basic sol: \(df.string(from: date))")
-        print("rightNow before date? \(rightNow < date)")
         return date
     }
 

@@ -60,47 +60,25 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-let user = User(
-    clubs: [],
-    firstName: "A",
-    googleID: "A",
-    graduationYear: "A",
-    hometown: "A",
-    interests: [],
-    lastName: "A",
-    major: "A",
-    matches: nil,
-    netID: "A",
-    profilePictureURL: "A",
-    pronouns: "A",
-    facebook: nil,
-    instagram: nil
-    )
-        let dummySchedule = [
-            DaySchedule(day: "Saturday", times: [10])
-        ]
-        let dummyMatch = Matching(active: false, schedule: dummySchedule, users: [user.toSubUser(), user.toSubUser()])
-        self.setupTabPageViewController(with: dummyMatch)
-
-        // NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
-        //     if response.success {
-        //         return NetworkManager.shared.getMatching(user: response.data)
-        //     } else {
-        //         return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
-        //     }
-        // }.observe { response in
-        //     let matchResult: Matching?
-        //     switch response {
-        //     case .value(let value):
-        //         matchResult = value.success ? value.data : nil
-        //     case .error:
-        //         print("Failed to get the matching for user")
-        //         matchResult = nil
-        //     }
-        //     DispatchQueue.main.async {
-        //         self.setupTabPageViewController(with: matchResult)
-        //     }
-        // }
+        NetworkManager.shared.getUser().chained { (response: Response<User>) -> Future<Response<Matching?>> in
+            if response.success {
+                return NetworkManager.shared.getMatching(user: response.data)
+            } else {
+                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
+            }
+        }.observe { response in
+            let matchResult: Matching?
+            switch response {
+            case .value(let value):
+                matchResult = value.success ? value.data : nil
+            case .error:
+                print("Failed to get the matching for user")
+                matchResult = nil
+            }
+            DispatchQueue.main.async {
+                self.setupTabPageViewController(with: matchResult)
+            }
+        }
 
         setUpConstraints()
     }
@@ -116,7 +94,7 @@ let user = User(
                 make.edges.equalToSuperview()
             }
         }
-        self.view.updateConstraints()
+        view.updateConstraints()
     }
 
     @objc private func profilePressed() {
