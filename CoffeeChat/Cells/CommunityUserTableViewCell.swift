@@ -105,8 +105,8 @@ class CommunityUserTableViewCell: UITableViewCell {
                 interests = userInterests
                 interestsCollectionView.reloadData()
             }
-            if let profilePictureURL = URL(string: user.profilePictureURL) {
-                profileImageView.kf.setImage(with: profilePictureURL)
+            if let profilePictureURL = user.profilePictureURL, let pictureURL = URL(string: profilePictureURL) {
+                profileImageView.kf.setImage(with: pictureURL)
             }
         }
     }
