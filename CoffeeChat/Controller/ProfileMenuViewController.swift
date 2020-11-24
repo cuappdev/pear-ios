@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import Kingfisher
 import UIKit
 
 class ProfileMenuViewController: UIViewController {
@@ -24,18 +25,27 @@ class ProfileMenuViewController: UIViewController {
         MenuOption(image: "settings", text: "Settings")
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
-
+    private var user: User!
+    
+    init(user: User) {
+        super.init(nibName: nil, bundle: nil)
+        self.user = user
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
-        // TODO: Remove after connecting to backend. These are temp values.
-        let firstName = "Ezra"
-        let lastName = "Cornell"
-        let major = "Government"
-        let year = 2020
-        let hometown = "Ithaca, NY"
+        let firstName = user.firstName
+        let lastName = user.lastName
+        let major = user.major
+        let year = user.graduationYear
+        let hometown = user.hometown
 
         editButton.backgroundColor = .backgroundWhite
         editButton.setTitle("Edit Info", for: .normal)
@@ -61,6 +71,11 @@ class ProfileMenuViewController: UIViewController {
 
         profileImageView.backgroundColor = .inactiveGreen
         profileImageView.layer.cornerRadius = profileImageSize.width/2
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.masksToBounds = true
+        if let profilePictureURL = URL(string: user.profilePictureURL) {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
