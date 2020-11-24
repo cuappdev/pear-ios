@@ -25,11 +25,11 @@ class ProfileMenuViewController: UIViewController {
         MenuOption(image: "settings", text: "Settings")
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
-    private var user: User!
+    private var user: User
     
     init(user: User) {
-        super.init(nibName: nil, bundle: nil)
         self.user = user
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
