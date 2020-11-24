@@ -14,7 +14,7 @@ class EditDemographicsViewController: UIViewController {
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
     private let fieldMap = [
-        "userName",
+        Constants.UserDefaults.userFullName,
         Constants.UserDefaults.userGraduationYear,
         Constants.UserDefaults.userMajor,
         Constants.UserDefaults.userHometown,
