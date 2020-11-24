@@ -63,9 +63,12 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowOpacity = 1
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
-        
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
+        setUpConstraints()
+    }
+    
+    private func getUserMatching() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
             if response.success {
                 let user = response.data
@@ -87,8 +90,6 @@ class HomeViewController: UIViewController {
                 self.setupTabPageViewController(with: matchResult)
             }
         }
-
-        setUpConstraints()
     }
 
     private func setupTabPageViewController(with matching: Matching?) {
@@ -142,6 +143,7 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
+        getUserMatching()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
