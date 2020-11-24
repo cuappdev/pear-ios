@@ -6,13 +6,14 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import FutureNova
+import Kingfisher
 import SideMenu
 import UIKit
 
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let profileButton = UIButton()
+    private let profileButton = UIButton(type: .custom)
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
     /// View that holds `tabPageViewController` below the pill view
@@ -24,6 +25,7 @@ class HomeViewController: UIViewController {
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
     private let tabs = ["Weekly Pear", "People"]
+    private var user: User?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +38,8 @@ class HomeViewController: UIViewController {
         profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         profileButton.layer.shadowOpacity = 0.15
         profileButton.layer.shadowRadius = 2
+        profileButton.layer.masksToBounds = true
+        profileButton.clipsToBounds = true
         profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
         view.addSubview(profileButton)
 
@@ -64,7 +68,9 @@ class HomeViewController: UIViewController {
 
         NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
             if response.success {
-                return NetworkManager.shared.getMatching(user: response.data)
+                let user = response.data
+                self.user = user
+                return NetworkManager.shared.getMatching(user: user)
             } else {
                 return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
             }
@@ -100,14 +106,15 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
-        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController())
+        guard let user = user else { return }
+        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
         menu.presentationStyle = presentationStyle
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
-        present(menu, animated: true, completion: nil)
+        present(menu, animated: true)
     }
 
     private func setUpConstraints() {

@@ -16,8 +16,8 @@ use_frameworks!
 
     # UI Frameworks
     pod 'IQKeyboardManagerSwift'
+    pod 'Kingfisher'
     pod 'SnapKit'
-
     pod 'SideMenu'
 
   target 'CoffeeChatTests' do

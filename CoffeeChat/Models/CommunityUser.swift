@@ -8,6 +8,7 @@
 
 import Foundation
 
+// TODO: Replace this with User
 struct CommunityUser: Codable {
 
     let clubs: [String]?
