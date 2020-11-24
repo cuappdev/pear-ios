@@ -106,16 +106,15 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
-        if let user = user {
-            let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
-            let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
-            presentationStyle.presentingEndAlpha = 0.85
-            menu.presentationStyle = presentationStyle
-            menu.leftSide = true
-            menu.statusBarEndAlpha = 0
-            menu.menuWidth = view.frame.width * 0.8
-            present(menu, animated: true, completion: nil)
-        }
+        guard let user = user else { return }
+        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
+        let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
+        presentationStyle.presentingEndAlpha = 0.85
+        menu.presentationStyle = presentationStyle
+        menu.leftSide = true
+        menu.statusBarEndAlpha = 0
+        menu.menuWidth = view.frame.width * 0.8
+        present(menu, animated: true)
     }
 
     private func setUpConstraints() {
