@@ -251,6 +251,7 @@ class EditDemographicsViewController: UIViewController {
     }
 
     @objc private func savePressed() {
+        // TODO: Save name to backend
         if let graduationYear = fieldValues[fieldMap[1]],
            let major = fieldValues[fieldMap[2]],
            let hometown = fieldValues[fieldMap[3]],
