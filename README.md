@@ -17,6 +17,20 @@ pod install
 ```
 
 3. Go to pinned messages in `#pear-ios` in Slack and download `Keys.plist` and `GoogleService-Info.plist` files. Place both files in `~/CoffeeChat/Supporting/`.
+
+>If you aren't an AppDev member, you can plug in your own `GoogleService-Info.plist` by generating one by following these [instructions](https://support.google.com/firebase/answer/7015592?hl=en). You will need to create a project within Firebase to this. You will also need a `Keys.plist` file in the project, which follows the following template.
+ 
+  ```
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs$
+  <plist version="1.0">
+  <dict>
+    <key>SERVER_URL</key>
+    <string>INSERT_SERVER_URL</string>
+  </dict>
+  </plist>
+  ```
+
 4. Open the `.xcworkspace` file.
 
 # Made by Cornell App Development
