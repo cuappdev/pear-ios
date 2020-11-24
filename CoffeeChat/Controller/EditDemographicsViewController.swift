@@ -21,7 +21,7 @@ class EditDemographicsViewController: UIViewController {
         Constants.UserDefaults.userPronouns
     ]
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
     private var user: User!
@@ -261,17 +261,19 @@ class EditDemographicsViewController: UIViewController {
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "\(user.profilePictureURL)").observe { result in
+                profilePictureURL: "\(user.profilePictureURL)").observe { [weak self] result in
+                    guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
                             print("Update demographics success response \(response)")
+                            self.navigationController?.popViewController(animated: true)
                         case .error(let error):
                             print(error)
                         }
                     }
+                }
             }
-        }
     }
 
     @objc private func uploadPhotoPressed() {
