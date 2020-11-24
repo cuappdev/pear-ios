@@ -11,18 +11,20 @@ import UIKit
 class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Vars
-    // TODO: Retrieve values from UserDefaults after saving from backend
-    private let name = "Lucy Xu"
-    private let year = "2021"
-    private let major = "Computer Science"
-    private let hometown = "Boston, MA"
-    private let pronouns = "She/Her/Hers"
-    // TODO: Update with networking values from backend
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
+    private let fieldMap = [
+        "userName",
+        Constants.UserDefaults.userGraduationYear,
+        Constants.UserDefaults.userMajor,
+        Constants.UserDefaults.userHometown,
+        Constants.UserDefaults.userPronouns
+    ]
+    private var fieldValues: [String: String] = [:] // Keep track of selected values
+    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private var user: User!
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -42,7 +44,21 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Constants
     private let textFieldHeight: CGFloat = 49
     private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
-
+    
+    init(user: User) {
+        super.init(nibName: nil, bundle: nil)
+        self.user = user
+        fieldValues[fieldMap[0]] = "\(user.firstName) \(user.lastName)"
+        fieldValues[fieldMap[1]] = user.graduationYear
+        fieldValues[fieldMap[2]] = user.major
+        fieldValues[fieldMap[3]] = user.hometown
+        fieldValues[fieldMap[4]] = user.pronouns
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -63,6 +79,8 @@ class EditDemographicsViewController: UIViewController {
         saveBarButtonItem.setTitleTextAttributes([
             .font: UIFont.getFont(.medium, size: 20)
         ], for: .normal)
+        saveBarButtonItem.target = self
+        saveBarButtonItem.action = #selector(savePressed)
         navigationItem.rightBarButtonItem = saveBarButtonItem
 
         editScrollView.isScrollEnabled = false
@@ -74,6 +92,9 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = 62.5
+        if let profilePictureURL = URL(string: user.profilePictureURL) {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
         editScrollView.addSubview(profileImageView)
 
         uploadPhotoButton.setTitle("Upload New Picture", for: .normal)
@@ -96,7 +117,7 @@ class EditDemographicsViewController: UIViewController {
         nameTextField.backgroundColor = .backgroundWhite
         nameTextField.textColor = .black
         nameTextField.font = ._20CircularStdBook
-        nameTextField.text = name
+        nameTextField.text = "\(user.firstName) \(user.lastName)"
         nameTextField.clearButtonMode = .never
         nameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
         nameTextField.leftViewMode = .always
@@ -117,34 +138,35 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: year)
+        classDropdownView.setSelectValue(value: user.graduationYear)
         editScrollView.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
                                                          tableData: majorSearchFields)
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
-        majorDropdownView.setSelectValue(value: major)
+        majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                             placeholder: "Hometown",
                                                             tableData: hometownSearchFields)
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
-        hometownDropdownView.setSelectValue(value: hometown)
+        hometownDropdownView.setSelectValue(value: user.hometown)
         editScrollView.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                             placeholder: "Pronouns",
                                                             tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
-        pronounsDropdownView.setSelectValue(value: pronouns)
+        pronounsDropdownView.setSelectValue(value: user.pronouns)
         editScrollView.addSubview(pronounsDropdownView)
 
         setupConstraints()
+        getMajors()
     }
 
-    func setupConstraints() {
+    private func setupConstraints() {
         let textFieldHeight: CGFloat = 49
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
@@ -207,13 +229,49 @@ class EditDemographicsViewController: UIViewController {
             make.height.equalTo(textFieldHeight)
         }
     }
+    
+    private func getMajors() {
+        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        self.majorDropdownView.setTableData(tableData: response.data)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
 
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
 
     @objc private func savePressed() {
-        // TODO: Save values to backend.
+        print("saved")
+        if let graduationYear = fieldValues[fieldMap[1]],
+           let major = fieldValues[fieldMap[2]],
+           let hometown = fieldValues[fieldMap[3]],
+           let pronouns = fieldValues[fieldMap[4]] {
+            NetworkManager.shared.updateUserDemographics(
+                graduationYear: graduationYear,
+                major: major,
+                hometown: hometown,
+                pronouns: pronouns,
+                profilePictureURL: "\(user.profilePictureURL)").observe { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .value(let response):
+                            print("Update demographics success response \(response)")
+                        case .error(let error):
+                            print(error)
+                        }
+                    }
+            }
+        }
     }
 
     @objc private func uploadPhotoPressed() {
@@ -234,6 +292,7 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
 
     func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String) {
         fieldsEntered[tag] = isSelected
+        if isSelected { fieldValues[fieldMap[tag]] = valueSelected }
     }
 
     /// Resizes search view based on input to search field.
