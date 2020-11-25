@@ -20,6 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoginViewController())
+        window.rootViewController = navigationController
+        self.window = window
+        window.makeKeyAndVisible()
+        
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
@@ -28,13 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let assignedMatch = true
             let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
             let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-            guard let unwrappedToken = refreshToken else {
-                // Ask user to sign in if they have not signed in before.
-                window.rootViewController = navigationController
-                self.window = window
-                window.makeKeyAndVisible()
-                return
-            }
+            guard let unwrappedToken = refreshToken else { return }
             NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -45,6 +43,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         navigationController.pushViewController(rootVC, animated: false)
+                        window.rootViewController = navigationController
+                        self.window = window
+                        window.makeKeyAndVisible()
                     case .error(let error):
                     // TODO: Handle error
                         print(error)
@@ -52,9 +53,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
-        window.rootViewController = navigationController
-        self.window = window
-        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

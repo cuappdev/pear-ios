@@ -23,7 +23,7 @@ extension Endpoint {
         Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
-    
+
     static var standardHeaders: [String: String] {
         if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
             return ["Authorization": "Bearer \(token)"]
@@ -44,7 +44,7 @@ extension Endpoint {
     static func pingServer() -> Endpoint {
         Endpoint(path: "/general/hello/")
     }
-    
+
     static func refreshUserToken(token: String) -> Endpoint {
         Endpoint(path: "/refresh/", headers: updateHeaders)
     }
@@ -72,22 +72,40 @@ extension Endpoint {
         )
         return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update interests information about the user
     static func updateUserInterests(interests: [String]) -> Endpoint {
         let body = UpdateUserInterestsBody(interests: interests)
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
     
+    /// [POST] Update groups information about the user
+    static func updateUserGroups(groups: [String]) -> Endpoint {
+        let body = UpdateUserGroupsBody(groups: groups)
+        return Endpoint(path: "/user/groups/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update goals information about the user
+    static func updateUserGoals(goals: [String]) -> Endpoint {
+        let body = UpdateUserGoalsBody(goals: goals)
+        return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
+    }
+    
+    /// [POST] Update goals information about the user
+    static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
+        let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
+        return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
+    }
+
     /// [POST] Update oganizations information about the user
     static func updateUserOrganizations(organizations: [String]) -> Endpoint {
-        let body = UpdateUserOrganizationsBody(clubs: organizations)
+        let body = UpdateUserGroupsBody(groups: organizations)
         return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Get information about the user
-    static func getUser() -> Endpoint {
-        Endpoint(path: "/user/")
+    static func getUser(netId: String) -> Endpoint {
+        Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
     /// [GET] Get clubs of the user
@@ -118,7 +136,22 @@ extension Endpoint {
 
     /// [GET] Get searched users
     static func searchUsers(query: String) -> Endpoint {
-        Endpoint(path: "/user/search/",queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
+        Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
+    }
+    
+    /// [GET] Get all student groups
+    static func getAllGroups() -> Endpoint {
+        Endpoint(path: "/group/all/", headers: standardHeaders)
+    }
+    
+    /// [GET] Get all interests
+    static func getAllInterests() -> Endpoint {
+        Endpoint(path: "/interest/all/", headers: standardHeaders)
+    }
+    
+    /// [GET] Get all majors
+    static func getAllMajors() -> Endpoint {
+        Endpoint(path: "/major/all/", headers: standardHeaders)
     }
 
 }

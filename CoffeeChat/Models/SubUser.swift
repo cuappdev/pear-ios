@@ -15,8 +15,11 @@ struct SubUser: Codable {
     let graduationYear: String
     let hometown: String
     let lastName: String
+    let major: String
     let netID: String
     let profilePictureURL: String
     let pronouns: String
+    let facebook: String?
+    let instagram: String?
 
 }

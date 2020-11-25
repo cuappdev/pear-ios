@@ -15,11 +15,9 @@ class DemographicsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    // TODO: Update with networking values from backend
-    private let hometownSearchFields = ["Boston, MA", "New York, NY", "Washington, DC", "Sacramento, CA", "Ithaca, NY"]
-    private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
+    // TODO: Update with networking values from backend (use states for now)
+    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -53,7 +51,7 @@ class DemographicsViewController: UIViewController {
     override func viewDidLoad() {
         navigationController?.navigationBar.isHidden = true
 
-        titleLabel.text = "Hi \(userDefaults.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
+        titleLabel.text = "Hi \(UserDefaults.standard.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
         titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         titleLabel.textAlignment = .center
@@ -74,12 +72,12 @@ class DemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: majorSearchFields)
+                                                         tableData: [])
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "Hometown",
+                                                            placeholder: "State",
                                                             tableData: hometownSearchFields)
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
@@ -100,19 +98,22 @@ class DemographicsViewController: UIViewController {
         view.addSubview(nextButton)
 
         setUpConstraints()
+        getUser()
+        getMajors()
     }
 
     @objc private func nextButtonPressed() {
         if let graduationYear = fieldValues[fieldMap[0]],
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
-           let pronouns = fieldValues[fieldMap[3]] {
+           let pronouns = fieldValues[fieldMap[3]],
+           let profilePictureURL = UserDefaults.standard.url(forKey: Constants.UserDefaults.userProfilePictureURL) {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "").observe { [weak self] result in
+                profilePictureURL: "\(profilePictureURL)").observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
@@ -125,6 +126,55 @@ class DemographicsViewController: UIViewController {
                             print(error)
                         }
                     }
+            }
+        }
+    }
+    
+    private func getMajors() {
+        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        self.majorDropdownView.setTableData(tableData: response.data)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private func getUser() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let user = response.data
+                        let major = user.major
+                        let graduationYear = user.graduationYear
+                        let hometown = user.hometown
+                        let pronouns = user.pronouns
+                        if major != "" {
+                            self.majorDropdownView.setTitle(title: user.major)
+                        }
+                        if graduationYear != "" {
+                            self.classDropdownView.setTitle(title: user.graduationYear)
+                        }
+                        if hometown != "" {
+                            self.hometownDropdownView.setTitle(title: user.hometown)
+                        }
+                        if pronouns != "" {
+                            self.pronounsDropdownView.setTitle(title: user.pronouns)
+                        }
+                    }
+                case .error(let error):
+                    print(error)
+                }
             }
         }
     }

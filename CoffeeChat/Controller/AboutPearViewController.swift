@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class AboutPearViewController: UIViewController {
-    
+
     // MARK: - Private View Vars
     private let aboutLabel = UILabel()
     private let aboutTableView = UITableView()
@@ -20,7 +20,7 @@ class AboutPearViewController: UIViewController {
     private let moreAppsButton = UIButton()
     private let settingsTableView = UITableView()
     private let visitWebsiteButton = UIButton()
-    
+
     // MARK: - Private Data Vars
     private let aboutParagraphs: [AboutParagraph] = [
         AboutParagraph(bold: "Get paired ", regular: "up with a new Cornell student like you, every week"),
@@ -28,21 +28,21 @@ class AboutPearViewController: UIViewController {
         AboutParagraph(bold: "Meet at ", regular: "the chosen time and place, and now you have one new friend at Cornell!"),
         AboutParagraph(bold: "", regular: "You can pause pairings at any time in Settings.")
     ]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "About Pear"
-        
+
         backgroundImage.image = UIImage(named: "settingsBackground")
         backgroundImage.contentMode =  .scaleAspectFill
         view.insertSubview(backgroundImage, at: 0)
-        
+
         aboutLabel.text = "Pear was created to help Cornell\nstudents meet new people and\nform meaningful connections."
         aboutLabel.textAlignment = .center
         aboutLabel.font = UIFont.getFont(.medium, size: 20)
         aboutLabel.numberOfLines = 0
         view.addSubview(aboutLabel)
-        
+
         aboutTableView.separatorStyle = .none
         aboutTableView.allowsSelection = false
         aboutTableView.showsVerticalScrollIndicator = false
@@ -67,11 +67,11 @@ class AboutPearViewController: UIViewController {
         moreAppsButton.addTarget(self, action: #selector(presentMoreApps), for: .touchUpInside)
         setButtonAppearance(button: moreAppsButton)
         view.addSubview(moreAppsButton)
-        
+
         setupConstraints()
         setupNavigationBar()
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.titleTextAttributes = [
@@ -85,7 +85,7 @@ class AboutPearViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
-    
+
     private func setButtonAppearance(button: UIButton) {
         button.layer.cornerRadius = 8
         button.setTitleColor(.black, for: .normal)
@@ -96,23 +96,23 @@ class AboutPearViewController: UIViewController {
         button.layer.shadowOpacity = 1
         button.layer.shadowRadius = 4
     }
-    
+
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
-    
+
     @objc private func sendFeedback() {
         // TODO
     }
-    
+
     @objc private func visitWebsite() {
         // TODO
     }
-    
+
     @objc private func presentMoreApps() {
         // TODO
     }
-    
+
     private func setupConstraints() {
         aboutLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(24)
@@ -142,7 +142,7 @@ class AboutPearViewController: UIViewController {
             make.top.equalTo(visitWebsiteButton.snp.bottom).offset(12)
         }
     }
-    
+
 }
 
 extension AboutPearViewController: UITableViewDataSource {
@@ -150,7 +150,7 @@ extension AboutPearViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         aboutParagraphs.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = aboutTableView.dequeueReusableCell(withIdentifier: AboutPearTableViewCell.aboutReuseId, for: indexPath) as? AboutPearTableViewCell else { return UITableViewCell() }
         let paragraph = aboutParagraphs[indexPath.row]
@@ -161,9 +161,9 @@ extension AboutPearViewController: UITableViewDataSource {
 }
 
 extension AboutPearViewController: UITableViewDelegate {
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         76
     }
-    
+
 }

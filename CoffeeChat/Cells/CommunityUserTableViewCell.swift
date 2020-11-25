@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import Kingfisher
 import UIKit
 
 class CommunityUserTableViewCell: UITableViewCell {
@@ -34,7 +35,6 @@ class CommunityUserTableViewCell: UITableViewCell {
         contentView.addSubview(containerView)
 
         profileImageView.layer.cornerRadius = 18
-        // TODO: Replace with actual profile image
         profileImageView.layer.backgroundColor = UIColor.gray.cgColor
         profileImageView.layer.masksToBounds = true
         profileImageView.clipsToBounds = true
@@ -98,13 +98,16 @@ class CommunityUserTableViewCell: UITableViewCell {
     }
 
     func configure(with user: CommunityUser) {
-    if let firstName = user.firstName, let lastName = user.lastName {
-        nameLabel.text = "\(firstName) \(lastName)"
+        if let firstName = user.firstName, let lastName = user.lastName {
+            nameLabel.text = "\(firstName) \(lastName)"
             if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
                 informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
                 interests = userInterests
-            }
                 interestsCollectionView.reloadData()
+            }
+            if let profilePictureURL = user.profilePictureURL, let pictureURL = URL(string: profilePictureURL) {
+                profileImageView.kf.setImage(with: pictureURL)
+            }
         }
     }
 
@@ -115,9 +118,9 @@ class CommunityUserTableViewCell: UITableViewCell {
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return interests.count
+        interests.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -127,11 +130,11 @@ extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionVi
         cell.configure(with: interest)
         return cell
     }
-    
+
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
-    
+
     func calculateNecessaryWidth(text: String) -> CGFloat {
         let label = UILabel()
         label.text = text
@@ -139,10 +142,10 @@ extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
         label.sizeToFit()
         return label.frame.width
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalHorizontalPadding: CGFloat = 16
         return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item]) + totalHorizontalPadding, height: 19)
     }
-    
+
 }

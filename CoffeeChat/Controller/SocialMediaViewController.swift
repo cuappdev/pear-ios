@@ -12,7 +12,6 @@ class SocialMediaViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -90,6 +89,7 @@ class SocialMediaViewController: UIViewController {
         view.addSubview(skipButton)
 
         setupConstraints()
+        getUserSocialMedia()
     }
 
     private func setSocialMediaTextField(socialMediaTextField: UITextField) {
@@ -180,13 +180,49 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
+        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
+        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update social media success response \(response)")
+                    if response.success {
+                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private func getUserSocialMedia() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        if let facebook = response.data.facebook {
+                            self.facebookTextField.text = facebook
+                        }
+                        if let instagram = response.data.instagram {
+                            self.instagramTextField.text = instagram
+                        }
+                        self.updateNext()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {
-        userDefaults.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         let homeVC = HomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
     }

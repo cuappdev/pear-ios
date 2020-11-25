@@ -16,26 +16,39 @@ struct UserSessionBody: Codable {
 
 }
 
-struct UpdateUserOrganizationsBody: Codable {
+struct UpdateUserGroupsBody: Codable {
 
-    let clubs: [String]
+    let groups: [String]
+    
+}
+
+struct UpdateUserGoalsBody: Codable {
+
+    let goals: [String]
+    
+}
+
+struct UpdateUserSocialMediaBody: Codable {
+    
+    let facebook: String
+    let instagram: String
     
 }
 
 struct UpdateUserDemographicsBody: Codable {
-    
+
     let graduationYear: String
     let hometown: String
     let major: String
     let pronouns: String
     let profilePictureURL: String
-    
+
 }
 
 struct UpdateUserInterestsBody: Codable {
-    
+
     let interests: [String]
-    
+
 }
 
 struct MatchingBody: Codable {

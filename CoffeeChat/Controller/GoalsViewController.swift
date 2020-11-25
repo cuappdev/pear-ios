@@ -23,7 +23,6 @@ class GoalsViewController: UIViewController {
         SimpleOnboardingCell(name: "Not sure yet", subtitle: nil)
     ]
     private var selectedGoals: [String] = []
-    private let userDefaults = UserDefaults.standard
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -87,6 +86,7 @@ class GoalsViewController: UIViewController {
         view.addSubview(skipButton)
 
         setupConstraints()
+        getUserGoals()
     }
 
     private func setupConstraints() {
@@ -146,13 +146,45 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 4)
+        NetworkManager.shared.updateUserGoals(goals: selectedGoals).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update goals success response \(response)")
+                    if response.success {
+                        self.delegate?.nextPage(index: 4)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {
         delegate?.nextPage(index: 4)
     }
 
+    private func getUserGoals() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let userGoals = response.data.goals
+                        self.selectedGoals = userGoals
+                        self.tableView.reloadData()
+                        self.updateNext()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
 }
 
 // MARK: TableViewDelegate

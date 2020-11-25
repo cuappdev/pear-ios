@@ -30,6 +30,10 @@ class NoMatchViewController: UIViewController {
         let subtitleLabelPadding: CGFloat = Constants.Onboarding.skipBottomPadding
         let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
 
+        surprisedPearImageView.image = UIImage(named: "surprisedPear")
+        surprisedPearImageView.contentMode = .scaleAspectFit
+        view.addSubview(surprisedPearImageView)
+
         noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
         noMatchTitleLabel.numberOfLines = 2
         noMatchTitleLabel.sizeToFit()
@@ -37,10 +41,6 @@ class NoMatchViewController: UIViewController {
         noMatchTitleLabel.textColor = .black
         noMatchTitleLabel.font = ._24CircularStdMedium
         view.addSubview(noMatchTitleLabel)
-
-        surprisedPearImageView.image = UIImage(named: "surprisedPear")
-        surprisedPearImageView.contentMode = .scaleAspectFit
-        view.addSubview(surprisedPearImageView)
 
         noMatchLabel.text = "In the meantime, tell me when you're\nusually free to make meeting up easier!"
         noMatchLabel.numberOfLines = 2
