@@ -11,6 +11,7 @@ import UIKit
 class SchedulingTimeCollectionViewCell: UICollectionViewCell {
 
     private let label = UILabel()
+    static let timeCellReuseId = "timeCellReuseIdentifier"
 
     override var isSelected: Bool {
         didSet {

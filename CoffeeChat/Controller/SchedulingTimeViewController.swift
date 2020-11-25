@@ -74,9 +74,6 @@ class SchedulingTimeViewController: UIViewController {
     private let interitemSpacing: CGFloat = 4
     private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
-    private let dayCellReuseId = "dayCellReuseIdentifier"
-    private let timeCellReuseId = "timeCellReuseIdentifier"
-
     // All possible times available for parts of a day
     private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
     private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
@@ -212,7 +209,7 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -236,7 +233,7 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
         timeCollectionView.clipsToBounds = false
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
         timeCollectionView.isScrollEnabled = false
 
         timeScrollView = FadeWrapperView(UIScrollView(), fadeColor: .backgroundLightGreen)
@@ -466,7 +463,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId,
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId,
                                                                 for: indexPath) as?
                     SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = daysAbbrev[indexPath.item]
@@ -485,7 +482,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
         } else {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId,
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId,
                                                                 for: indexPath) as?
                     SchedulingTimeCollectionViewCell else { return UICollectionViewCell() }
             switch item {

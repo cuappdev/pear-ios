@@ -49,9 +49,6 @@ class EditTimeAvailabilityViewController: UIViewController {
     // MARK: - Time Data Vars
     private let timeInteritemSpacing: CGFloat = 4
     private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-
-    private let dayCellReuseId = "dayCellReuseIdentifier"
-    private let timeCellReuseId = "timeCellReuseIdentifier"
     
     // All possible times available for parts of a day
     private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
@@ -74,7 +71,12 @@ class EditTimeAvailabilityViewController: UIViewController {
     private var selectedDay: String = "Su"
 
     // TODO: Change values after connecting to backend and get user's saved availabilities
-    private var savedAvailabilities: [String: [String]] = ["Monday": ["5:30", "6:00", "6:30"], "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",], "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"], "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]]
+    private var savedAvailabilities: [String: [String]] = [
+        "Monday": ["5:30", "6:00", "6:30"],
+        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",],
+        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
+        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +106,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
         
@@ -124,7 +126,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
         view.addSubview(timeCollectionView)
 
         setupTimeSections()
@@ -180,23 +182,21 @@ class EditTimeAvailabilityViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        let dayCollectionViewWidth = daysAbbrev.count * 45
-
         scheduleTimeLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.centerX.equalTo(view.snp.centerX)
+            make.centerX.equalToSuperview()
         }
         
         dayCollectionView.snp.makeConstraints { make in
             make.top.equalTo(scheduleTimeLabel.snp.bottom).offset(20)
-            make.centerX.equalTo(view.snp.centerX)
+            make.centerX.equalToSuperview()
             make.height.equalTo(50)
-            make.width.equalTo(dayCollectionViewWidth)
+            make.width.equalTo(daysAbbrev.count * 45)
         }
         
         dayLabel.snp.makeConstraints { make in
             make.top.equalTo(dayCollectionView.snp.bottom).offset(10)
-            make.centerX.equalTo(view.snp.centerX)
+            make.centerX.equalToSuperview()
         }
         
         timeCollectionView.snp.makeConstraints { make in
@@ -205,7 +205,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             make.top.equalTo(dayLabel.snp.bottom).offset(20)
             make.height.equalTo(timeCollectionViewHeight)
             make.width.equalTo(timeCollectionViewWidth)
-            make.centerX.equalTo(view.snp.centerX)
+            make.centerX.equalToSuperview()
         }
         
     }
@@ -232,7 +232,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = daysAbbrev[indexPath.item]
             cell.configure(for: day)
             if let day = daysDict[day] {
@@ -245,9 +245,10 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
             }
             return cell
         }
+
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.row]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
         switch item {
         case .header(let header):
             cell.configure(for: header, isHeader: true)
@@ -255,11 +256,10 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
         case .time(let time):
             cell.configure(for: time, isHeader: false)
             cell.isUserInteractionEnabled = true
-            if let day = daysDict[selectedDay] {
-                if let dayAvailability = availabilities[day],                         dayAvailability.contains(time) {
+            if let day = daysDict[selectedDay], let dayAvailability = availabilities[day], dayAvailability.contains(time) {
                     timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                     cell.isSelected = true
-                }
+
             }
         }
         return cell
@@ -282,8 +282,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDelegate {
             guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
             if availabilities[day] == nil {
                 availabilities[day] = [time]
-            }
-            else {
+            } else {
                 availabilities[day]?.append(time)
             }
             dayCollectionView.reloadData()
@@ -302,6 +301,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDelegate {
             dayCollectionView.reloadData()
         }
     }
+    
 }
 
 extension EditTimeAvailabilityViewController: UICollectionViewDelegateFlowLayout {
@@ -317,4 +317,3 @@ extension EditTimeAvailabilityViewController: UICollectionViewDelegateFlowLayout
     }
 
 }
-    
