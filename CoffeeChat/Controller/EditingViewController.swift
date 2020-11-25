@@ -156,35 +156,36 @@ class EditingViewController: UIViewController {
         // Setup Sections
         // TODO replace with actual data from backend
         let yourInterests: [Interest] = [
-            Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
-            Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
-            Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance")
+            Interest(name: "Art", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Business", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Dance", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil)
         ]
         let moreInterests: [Interest] = [
-            Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
-            Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
-            Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
-            Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
-            Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
-            Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
-            Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
-            Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
-            Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
-            Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
-            Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
-            Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
+            Interest(name: "Design", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Fashion", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Fitness", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Food", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Humanities", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Music", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Photography", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Reading", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Sustainability", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Technology", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "Travel", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
+            Interest(name: "TV & Film", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil)
         ]
+
         let yourGroups: [Group] = [
-            Group(name: "Apple", image: ""),
-            Group(name: "banana", image: ""),
-            Group(name: "Cornell AppDev", image: "")
+            Group(name: "Apple", imageURL: nil),
+            Group(name: "banana", imageURL: nil),
+            Group(name: "Cornell AppDev", imageURL: nil)
         ]
         let moreGroups: [Group] = [
-            Group(name: "dandelion", image: ""),
-            Group(name: "giraffe", image: ""),
-            Group(name: "heap", image: ""),
-            Group(name: "Igloo", image: ""),
-            Group(name: "Jeans", image: "")
+            Group(name: "dandelion", imageURL: nil),
+            Group(name: "giraffe", imageURL: nil),
+            Group(name: "heap", imageURL: nil),
+            Group(name: "Igloo", imageURL: nil),
+            Group(name: "Jeans", imageURL: nil)
         ]
 
         let yourSection: Section
@@ -313,7 +314,7 @@ extension EditingViewController: UITableViewDataSource {
             cell.configure(with: group)
         }
 
-        cell.changeColor(isSelected: section.type == .yours)
+        cell.changeColor(selected: section.type == .yours)
         cell.shouldSelectionChangeAppearence = false
 
         return cell
