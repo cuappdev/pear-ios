@@ -9,26 +9,6 @@
 import UIKit
 import SnapKit
 
-// MARK: - UICollectionView Header
-private class HeaderLabel: UICollectionReusableView {
-
-    private let label = UILabel()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        label.font = ._16CircularStdBook
-        self.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-    }
-
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
-    func configure(with text: String) { label.text = text }
-
-}
-
 class SchedulingPlacesViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -39,9 +19,7 @@ class SchedulingPlacesViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // Reuse Identifiers
-    private let campusReuseIdentifier = "campusReuseIdentifier"
     private let campusHeaderIdentifier = "campusHeaderIdentifier"
-    private let ctownReuseIdentiifier = "ctownReuseIdentiifier"
     private let ctownHeaderIdentifier = "ctownHeaderIdentifier"
 
     // MARK: - Collection View Sections
@@ -193,15 +171,15 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionView.dataSource = self
         locationsCollectionView.backgroundColor = .clear
         locationsCollectionView.layer.masksToBounds = false
-        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: campusReuseIdentifier)
-        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: ctownReuseIdentiifier)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.campusReuseId)
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.ctownReuseId)
         locationsCollectionView.register(
-            HeaderLabel.self,
+            LocationHeaderLabelView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: campusHeaderIdentifier
         )
         locationsCollectionView.register(
-            HeaderLabel.self,
+            LocationHeaderLabelView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: ctownHeaderIdentifier
         )
@@ -354,14 +332,14 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
 
         switch locationSections[indexPath.section] {
         case .campus(let locations):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: campusReuseIdentifier, for: indexPath) as?
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingPlaceCollectionViewCell.campusReuseId, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
 
             location = locations[indexPath.row]
             cell.configure(with: location, isPicking: isChoosing)
             return cell
         case .ctown(let locations):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ctownReuseIdentiifier, for: indexPath) as?
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingPlaceCollectionViewCell.ctownReuseId, for: indexPath) as?
             SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
 
             location = locations[indexPath.row]
@@ -381,7 +359,7 @@ extension SchedulingPlacesViewController: UICollectionViewDataSource {
             : collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                               withReuseIdentifier: ctownHeaderIdentifier,
                                                               for: indexPath)
-        guard let headerView = header as? HeaderLabel else { return header }
+        guard let headerView = header as? LocationHeaderLabelView else { return header }
         headerView.configure(with: isCampus ? "Campus" : "Collegetown")
         return headerView
     }

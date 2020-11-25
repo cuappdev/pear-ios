@@ -26,8 +26,8 @@ class SettingsViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
-        SettingOption(hasSwitch: true, image: "pausePear", switchOn: false, text: "Pause Pear"),
-        SettingOption(hasSwitch: false, image: "editAvailability", switchOn: false, text: "Edit Availabilities"),
+        SettingOption(hasSwitch: false, image: "editAvailability", switchOn: false, text: "Edit Time Availabilities"),
+        SettingOption(hasSwitch: false, image: "location", switchOn: false, text: "Edit Location Availabilities"),
         SettingOption(hasSwitch: false, image: "socialMedia", switchOn: false, text: "Connect Social Media"),
         SettingOption(hasSwitch: false, image: "aboutPear", switchOn: false, text: "About Pear"),
         SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out")
@@ -87,9 +87,13 @@ class SettingsViewController: UIViewController {
     private func pushAboutPearViewController() {
         navigationController?.pushViewController(AboutPearViewController(), animated: true)
     }
+    
+    private func pushEditTimeAvailabilitiesViewController() {
+        navigationController?.pushViewController(EditTimeAvailabilityViewController(), animated: true)
+    }
 
-    private func pushEditAvailabilitiesViewController() {
-        navigationController?.pushViewController(EditAvailabilityViewController(), animated: true)
+    private func pushEditLocationAvailabilitiesViewController() {
+        navigationController?.pushViewController(EditLocationAvailabilityViewController(), animated: true)
     }
 
     private func pushConnectSocialMediaViewController() {
@@ -119,8 +123,10 @@ extension SettingsViewController: UITableViewDataSource {
         let option = settingOptions[indexPath.row]
         if option.text == "About Pear" {
             pushAboutPearViewController()
-        } else if option.text == "Edit Availabilities" {
-            pushEditAvailabilitiesViewController()
+        } else if option.text == "Edit Time Availabilities" {
+            pushEditTimeAvailabilitiesViewController()
+        } else if option.text == "Edit Location Availabilities" {
+            pushEditLocationAvailabilitiesViewController()
         } else if option.text == "Connect Social Media" {
             pushConnectSocialMediaViewController()
         } else if option.text == "Log Out" {
