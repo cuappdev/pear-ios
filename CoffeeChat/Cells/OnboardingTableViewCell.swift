@@ -10,7 +10,7 @@ import UIKit
 
 class OnboardingTableViewCell: UITableViewCell {
 
-    enum LastShownItem {
+    private enum LastShownItem {
         case interest, group, nothing
     }
 
@@ -85,6 +85,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
         titleLabel.snp.remakeConstraints { make in
             make.leading.equalTo(interestImageView.snp.trailing).offset(8)
+            make.trailing.equalToSuperview().inset(12)
             if categoriesLabel.text != nil {
                 make.top.equalToSuperview().inset(8.5)
             } else {
@@ -101,8 +102,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
     func configure(with interest: Interest) {
         titleLabel.text = interest.name
-        categoriesLabel.text = interest.categories?.joined(separator: ", ") ?? ""
-        print("set categories to \(categoriesLabel.text)")
+        categoriesLabel.text = interest.categories?.joined(separator: ", ") ?? nil
         if let pictureString = interest.imageURL {
             interestImageView.kf.setImage(with: URL(string: pictureString))
         } else {

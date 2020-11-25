@@ -87,6 +87,7 @@ class EditingViewController: UIViewController {
     private var numRowsShownWhenCollapsed = 3
 
     private var sections: [Section] = []
+    private let user: User
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
@@ -120,9 +121,10 @@ class EditingViewController: UIViewController {
     }
 
     // Initialization
-    init(isShowingGroups: Bool) {
-        super.init(nibName: nil, bundle: nil)
+    init(user: User, isShowingGroups: Bool) {
+        self.user = user
         self.isShowingGroups = isShowingGroups
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -153,58 +155,81 @@ class EditingViewController: UIViewController {
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
 
-        // Setup Sections
-        // TODO replace with actual data from backend
-        let yourInterests: [Interest] = [
-            Interest(name: "Art", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Business", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Dance", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil)
-        ]
-        let moreInterests: [Interest] = [
-            Interest(name: "Design", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Fashion", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Fitness", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Food", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Humanities", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Music", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Photography", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Reading", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Sustainability", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Technology", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "Travel", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil),
-            Interest(name: "TV & Film", categories: ["lorem", "lorem", "lorem", "lorem", "lorem"], imageURL: nil)
-        ]
-
-        let yourGroups: [Group] = [
-            Group(name: "Apple", imageURL: nil),
-            Group(name: "banana", imageURL: nil),
-            Group(name: "Cornell AppDev", imageURL: nil)
-        ]
-        let moreGroups: [Group] = [
-            Group(name: "dandelion", imageURL: nil),
-            Group(name: "giraffe", imageURL: nil),
-            Group(name: "heap", imageURL: nil),
-            Group(name: "Igloo", imageURL: nil),
-            Group(name: "Jeans", imageURL: nil)
-        ]
-
-        let yourSection: Section
-        let moreSection: Section
-        if isShowingGroups {
-            yourSection = Section(type: .yours, items: yourGroups.map { .group($0) })
-            moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
-        } else {
-            yourSection = Section(type: .yours, items: yourInterests.map { .interest($0) })
-            moreSection = Section(type: .more, items: moreInterests.map { .interest($0) })
-        }
-        sections = [yourSection, moreSection]
-
+        setupSections()
         setupNavigationBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    private func setupSections() {
+        sections = [
+            Section(type: .yours, items: []),
+            Section(type: .more, items: [])
+        ]
+
+        if isShowingGroups {
+            let yourSection = Section(
+                type: .yours,
+                items: user.groups.map { .group(Group(name: $0, imageURL: nil)) }
+            )
+            NetworkManager.shared.getAllGroups().observe { [weak self] response in
+                guard let `self` = self else { return }
+                let moreGroups: [Group]
+
+                switch response {
+                case .value(let response):
+                    if response.success {
+                        moreGroups = response.data.map { Group(name: $0, imageURL: nil) }
+                    } else {
+                        print("Response was not a success, and couldn't get groups for error")
+                        moreGroups = []
+                    }
+                case .error:
+                    print("Could not get groups for user")
+                    moreGroups = []
+                }
+
+                let moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
+
+                self.sections = [yourSection, moreSection]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        } else {
+            let yourSection = Section(
+                type: .yours,
+                items: user.interests.map { .interest(Interest(name: $0, categories: nil, imageURL: nil)) }
+            )
+            NetworkManager.shared.getAllInterests().observe { [weak self] response in
+                guard let `self` = self else { return }
+                let moreInterests: [Interest]
+
+                switch response {
+                case .value(let response):
+                    if response.success {
+                        moreInterests = response.data.map { Interest(name: $0, categories: nil, imageURL: nil) }
+                    } else {
+                        print("Response was not a success, and couldn't get interests for error")
+                        moreInterests = []
+                    }
+                case .error:
+                    print("Could not get interest for user")
+                    moreInterests = []
+                }
+
+                let moreSection = Section(type: .more, items: moreInterests.map { .interest($0) })
+
+                self.sections = [yourSection, moreSection]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+
     }
 
     private func setupNavigationBar() {
