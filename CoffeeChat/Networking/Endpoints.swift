@@ -154,4 +154,10 @@ extension Endpoint {
         Endpoint(path: "/major/all/", headers: standardHeaders)
     }
 
+    /// [POST] Update user time availabilities
+    static func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Endpoint {
+        let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)
+        return Endpoint(path: "/user/availabilities/", headers: standardHeaders ,body: body)
+    }
+
 }

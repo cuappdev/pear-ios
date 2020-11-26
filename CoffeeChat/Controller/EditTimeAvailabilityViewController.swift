@@ -159,9 +159,36 @@ class EditTimeAvailabilityViewController: UIViewController {
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
+
+    private func stringTimeToFloat(time: String) -> Float {
+        let timeList = time.components(separatedBy: ":")
+        guard var hours = Float(timeList[0]) else { return 0.0 }
+        if Time.isPm(time: time) && hours < 8.0 {
+            hours += 12
+        }
+        guard let minutes = Float(timeList[1]) else { return 0.0 }
+        return (hours + (minutes/60.0))
+    }
     
     @objc private func saveAvailability() {
-        // TODO: save new availability
+        var schedule: [Schedule] = []
+        for (day, times) in availabilities {
+            let floatTimes = times.map({stringTimeToFloat(time: $0)})
+            let daySchedule = Schedule(day: day.lowercased(), times: floatTimes)
+            schedule.append(daySchedule)
+        }
+        NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    print("update time availabilities success")
+                    self.backPressed()
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
     }
     
     private func setupTimes(for day: String, isFirstTime: Bool) {

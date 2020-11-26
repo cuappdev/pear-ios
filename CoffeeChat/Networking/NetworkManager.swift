@@ -145,5 +145,9 @@ class NetworkManager {
             return Response(data: newMatching, success: true)
         }
     }
+
+    func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateTimeAvailabilities(savedAvailabilities: savedAvailabilities)).decode()
+    }
     
 }

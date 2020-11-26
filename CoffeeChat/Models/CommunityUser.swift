@@ -11,7 +11,7 @@ import Foundation
 // TODO: Replace this with User
 struct CommunityUser: Codable {
 
-    let clubs: [String]?
+    let groups: [String]?
     let firstName: String?
     let googleID: String?
     let graduationYear: String?
