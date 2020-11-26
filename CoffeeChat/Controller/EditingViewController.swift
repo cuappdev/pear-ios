@@ -120,7 +120,7 @@ class EditingViewController: UIViewController {
         get { yourSection?.filteredItems.count ?? 0 }
     }
 
-    // Initialization
+    // MARK: - Initialization
     init(user: User, isShowingGroups: Bool) {
         self.user = user
         self.isShowingGroups = isShowingGroups
@@ -182,7 +182,8 @@ class EditingViewController: UIViewController {
                 switch response {
                 case .value(let response):
                     if response.success {
-                        moreGroups = response.data.map { Group(name: $0, imageURL: nil) }
+                        let noDupeStrings = self.removeDuplicates(from: response.data)
+                        moreGroups = noDupeStrings.map { Group(name: $0, imageURL: nil) }
                     } else {
                         print("Response was not a success, and couldn't get groups for error")
                         moreGroups = []
@@ -211,7 +212,8 @@ class EditingViewController: UIViewController {
                 switch response {
                 case .value(let response):
                     if response.success {
-                        moreInterests = response.data.map { Interest(name: $0, categories: nil, imageURL: nil) }
+                        let noDupeStrings = self.removeDuplicates(from: response.data)
+                        moreInterests = noDupeStrings.map { Interest(name: $0, categories: nil, imageURL: nil) }
                     } else {
                         print("Response was not a success, and couldn't get interests for error")
                         moreInterests = []
@@ -259,6 +261,7 @@ class EditingViewController: UIViewController {
         navigationItem.rightBarButtonItem = saveBarButtonItem
     }
 
+    // MARK: - Button Action
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
@@ -308,6 +311,14 @@ class EditingViewController: UIViewController {
             }
         }
         navigationController?.popViewController(animated: true)
+    }
+
+    private func removeDuplicates(from strings: [String]) -> [String] {
+        var set: Set<String> = Set()
+        strings.forEach { set.insert($0) }
+        var arr = [String]()
+        set.forEach { arr.append($0) }
+        return arr.sorted()
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
@@ -546,7 +557,6 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
     }
 
     private func setupConstraints() {
-        let seachbarSize = CGSize(width: 290, height: 42)
         let stackPadding = 12
 
         label.snp.makeConstraints { make in
@@ -554,7 +564,8 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         }
 
         searchBar?.snp.makeConstraints { make in
-            make.size.equalTo(seachbarSize)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(42)
         }
 
         stackView.snp.makeConstraints { make in
