@@ -264,7 +264,49 @@ class EditingViewController: UIViewController {
     }
 
     @objc func savePressed() {
-        // TODO save favorites
+        if let yourSection = yourSection {
+            var interests: [Interest] = []
+            var groups: [Group] = []
+
+            for item in yourSection.items {
+                switch item {
+                case .interest(let interest):
+                    interests.append(interest)
+                case .group(let group):
+                    groups.append(group)
+                }
+            }
+
+            if interests.count > 0 {
+                NetworkManager.shared.updateUserInterests(interests: interests.map({ $0.name })).observe { result in
+                    switch result {
+                    case .value(let response):
+                        if response.success {
+                            print("Interests updated successfully")
+                        } else {
+                            print("Interests couldn't be updated")
+                        }
+                    case .error:
+                        print("Networking error when trying to update interests")
+                    }
+                }
+            }
+
+            if groups.count > 0 {
+                NetworkManager.shared.updateUserGroups(groups: groups.map { $0.name }).observe { result in
+                    switch result {
+                    case .value(let response):
+                        if response.success {
+                            print("Groups updated successfully")
+                        } else {
+                            print("Groups couldn't be updated")
+                        }
+                    case .error:
+                        print("Networking error when trying to update groups")
+                    }
+                }
+            }
+        }
         navigationController?.popViewController(animated: true)
     }
 

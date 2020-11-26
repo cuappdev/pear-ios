@@ -74,7 +74,7 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(fbTextField)
 
         let fbIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        fbIcon.image = UIImage(named: "facebookIcon")
+        fbIcon.image = UIImage(named: "facebookicon")
         let facebookViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         facebookViewL.addSubview(fbIcon)
         fbTextField.leftView = facebookViewL
