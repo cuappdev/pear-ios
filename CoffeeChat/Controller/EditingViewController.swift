@@ -180,7 +180,7 @@ class EditingViewController: UIViewController {
 
     private func setSectionsFromGroups() {
         NetworkManager.shared.getAllGroups().observe { [weak self] response in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
             switch response {
             case .value(let result):
                 guard result.success else {
@@ -204,7 +204,7 @@ class EditingViewController: UIViewController {
 
     private func setSectionsFromInterests() {
         NetworkManager.shared.getAllInterests().observe { [weak self] response in
-            guard let `self` = self else { return }
+            guard let self = self else { return }
             switch response {
             case .value(let result):
                 guard result.success else {
@@ -274,7 +274,7 @@ class EditingViewController: UIViewController {
             }
 
             if interests.count > 0 {
-                NetworkManager.shared.updateUserInterests(interests: interests.map({ $0.name })).observe { result in
+                NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
                     switch result {
                     case .value(let response):
                         if response.success {
@@ -289,7 +289,7 @@ class EditingViewController: UIViewController {
             }
 
             if groups.count > 0 {
-                NetworkManager.shared.updateUserGroups(groups: groups.map { $0.name }).observe { result in
+                NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
                     switch result {
                     case .value(let response):
                         if response.success {
@@ -306,7 +306,8 @@ class EditingViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    /// Remove duplicated entries in `yourStrings` and `moreStrings`
+    /// Remove duplicated entries in `yourStrings` and `moreStrings`. If a duplicate exists in both `yourStrings`
+    /// and `moreStrings`, duplicates are removed from `moreStrings`, so only 1 exists in `yourStrings`
     private func removeDuplicates(yourStrings: [String], moreStrings: [String]) -> (your: [String], more: [String]) {
         var set = Set<String>()
 

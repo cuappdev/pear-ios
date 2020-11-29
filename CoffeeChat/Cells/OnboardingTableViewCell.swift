@@ -11,7 +11,7 @@ import UIKit
 class OnboardingTableViewCell: UITableViewCell {
 
     private enum LastShownItem {
-        case interest, group, nothing
+        case interest, group, none
     }
 
     // MARK: Private View Vars
@@ -28,7 +28,7 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
-    private var lastShownItem: LastShownItem = .nothing
+    private var lastShownItem: LastShownItem = .none
 
     // Whether the cell should change its appearence when selected
     var shouldSelectionChangeAppearence = true
