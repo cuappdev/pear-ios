@@ -165,73 +165,66 @@ class EditingViewController: UIViewController {
     }
 
     private func setupSections() {
+        if isShowingGroups {
+            setSectionsFromGroups()
+        } else {
+            setSectionsFromInterests()
+        }
+
         sections = [
             Section(type: .yours, items: []),
             Section(type: .more, items: [])
         ]
+        tableView.reloadData()
+    }
 
-        if isShowingGroups {
-            let yourSection = Section(
-                type: .yours,
-                items: user.groups.map { .group(Group(name: $0, imageURL: nil)) }
-            )
-            NetworkManager.shared.getAllGroups().observe { [weak self] response in
-                guard let `self` = self else { return }
-                let moreGroups: [Group]
-
-                switch response {
-                case .value(let response):
-                    if response.success {
-                        let noDupeStrings = self.removeDuplicates(from: response.data)
-                        moreGroups = noDupeStrings.map { Group(name: $0, imageURL: nil) }
-                    } else {
-                        print("Response was not a success, and couldn't get groups for error")
-                        moreGroups = []
-                    }
-                case .error:
-                    print("Could not get groups for user")
-                    moreGroups = []
+    private func setSectionsFromGroups() {
+        NetworkManager.shared.getAllGroups().observe { [weak self] response in
+            guard let `self` = self else { return }
+            switch response {
+            case .value(let result):
+                guard result.success else {
+                    print("Response not successful when getting groups for user")
+                    return
                 }
 
-                let moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
-
-                self.sections = [yourSection, moreSection]
+                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
+                self.sections = [
+                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageURL: nil)) }),
+                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageURL: nil)) })
+                ]
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-            }
-        } else {
-            let yourSection = Section(
-                type: .yours,
-                items: user.interests.map { .interest(Interest(name: $0, categories: nil, imageURL: nil)) }
-            )
-            NetworkManager.shared.getAllInterests().observe { [weak self] response in
-                guard let `self` = self else { return }
-                let moreInterests: [Interest]
-
-                switch response {
-                case .value(let response):
-                    if response.success {
-                        let noDupeStrings = self.removeDuplicates(from: response.data)
-                        moreInterests = noDupeStrings.map { Interest(name: $0, categories: nil, imageURL: nil) }
-                    } else {
-                        print("Response was not a success, and couldn't get interests for error")
-                        moreInterests = []
-                    }
-                case .error:
-                    print("Could not get interest for user")
-                    moreInterests = []
-                }
-
-                let moreSection = Section(type: .more, items: moreInterests.map { .interest($0) })
-
-                self.sections = [yourSection, moreSection]
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            case .error:
+                print("Error when getting groups for user")
             }
         }
+    }
 
+    private func setSectionsFromInterests() {
+        NetworkManager.shared.getAllInterests().observe { [weak self] response in
+            guard let `self` = self else { return }
+            switch response {
+            case .value(let result):
+                guard result.success else {
+                    print("Response not successful when getting interests for user")
+                    return
+                }
+
+                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
+                let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageURL: nil)) }
+                self.sections = [
+                    Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
+                    Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+                ]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .error:
+                print("Error when getting groups for user")
+            }
+        }
     }
 
     private func setupNavigationBar() {
@@ -313,12 +306,22 @@ class EditingViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    private func removeDuplicates(from strings: [String]) -> [String] {
-        var set: Set<String> = Set()
-        strings.forEach { set.insert($0) }
-        var arr = [String]()
-        set.forEach { arr.append($0) }
-        return arr.sorted()
+    /// Remove duplicated entries in `yourStrings` and `moreStrings`
+    private func removeDuplicates(yourStrings: [String], moreStrings: [String]) -> (your: [String], more: [String]) {
+        var set = Set<String>()
+
+        yourStrings.forEach { set.insert($0) }
+        let yourList = Array(set).sorted()
+
+        var moreList: [String] = []
+        for string in moreStrings {
+            if set.insert(string).inserted {
+                moreList.append(string)
+            }
+        }
+        moreList.sort()
+
+        return (your: yourList, more: moreList)
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
@@ -407,7 +410,7 @@ extension EditingViewController: UITableViewDataSource {
         switch section.type {
         case .yours:
             labelTitle = isShowingGroups ? "Your Groups" : "Your Interests"
-            if yourSectionSize == 0 { // TODO disable save button
+            if yourSectionSize == 0 {
                 labelSubtext = isShowingGroups
                     ? "Select a group so we can better help you find a pair!"
                     : "Select at least one interest so we can better help you find a pair!"
@@ -443,6 +446,7 @@ extension EditingViewController: UITableViewDataSource {
             footerView.delegate = {
                 self.isCollapsed = $0
                 self.tableView.reloadData()
+                self.tableView.setNeedsLayout()
             }
 
             return footerView
