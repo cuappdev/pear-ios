@@ -260,46 +260,46 @@ class EditingViewController: UIViewController {
     }
 
     @objc func savePressed() {
-        if let yourSection = yourSection {
-            var interests: [Interest] = []
-            var groups: [Group] = []
+        guard let yourSection = yourSection else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+        var interests: [Interest] = []
+        var groups: [Group] = []
 
-            for item in yourSection.items {
-                switch item {
-                case .interest(let interest):
-                    interests.append(interest)
-                case .group(let group):
-                    groups.append(group)
+        for item in yourSection.items {
+            switch item {
+            case .interest(let interest):
+                interests.append(interest)
+            case .group(let group):
+                groups.append(group)
+            }
+        }
+
+        if isShowingGroups {
+            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        print("Groups updated successfully")
+                    } else {
+                        print("Groups couldn't be updated")
+                    }
+                case .error:
+                    print("Networking error when trying to update groups")
                 }
             }
-
-            if interests.count > 0 {
-                NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
-                    switch result {
-                    case .value(let response):
-                        if response.success {
-                            print("Interests updated successfully")
-                        } else {
-                            print("Interests couldn't be updated")
-                        }
-                    case .error:
-                        print("Networking error when trying to update interests")
+        } else {
+            NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        print("Interests updated successfully")
+                    } else {
+                        print("Interests couldn't be updated")
                     }
-                }
-            }
-
-            if groups.count > 0 {
-                NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
-                    switch result {
-                    case .value(let response):
-                        if response.success {
-                            print("Groups updated successfully")
-                        } else {
-                            print("Groups couldn't be updated")
-                        }
-                    case .error:
-                        print("Networking error when trying to update groups")
-                    }
+                case .error:
+                    print("Networking error when trying to update interests")
                 }
             }
         }
