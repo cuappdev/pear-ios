@@ -126,7 +126,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     @objc private func editPressed() {
-        let editDemographicsVC = EditDemographicsViewController()
+        let editDemographicsVC = EditDemographicsViewController(user: user)
         navigationController?.pushViewController(editDemographicsVC, animated: false)
     }
 
