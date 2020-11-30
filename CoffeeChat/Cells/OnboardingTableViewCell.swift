@@ -20,13 +20,14 @@ class OnboardingTableViewCell: UITableViewCell {
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
 
-    override var isSelected: Bool {
-        didSet {
-            if shouldSelectionChangeAppearence {
-                changeColor(selected: isSelected)
-            }
-        }
-    }
+    // override var isSelected: Bool {
+    //     didSet {
+    //         print("didSet was called: \(isSelected)")
+    //         if shouldSelectionChangeAppearence {
+    //             changeColor(selected: isSelected)
+    //         }
+    //     }
+    // }
 
     private var lastShownItem: LastShownItem = .none
 
@@ -127,6 +128,15 @@ class OnboardingTableViewCell: UITableViewCell {
             lastShownItem = .group
             setupConstraints()
         }
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        print("didSet was called: \(isSelected)")
+        if shouldSelectionChangeAppearence {
+            changeColor(selected: selected)
+        }
+        super.setSelected(selected, animated: animated)
+
     }
 
     func changeColor(selected: Bool) {
