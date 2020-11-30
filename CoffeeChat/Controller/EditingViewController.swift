@@ -166,9 +166,9 @@ class EditingViewController: UIViewController {
 
     private func setupSections() {
         if isShowingGroups {
-            setSectionsFromGroups()
+            setupSectionsFomGroups()
         } else {
-            setSectionsFromInterests()
+            setupSectionsFromInterests()
         }
 
         sections = [
@@ -178,7 +178,7 @@ class EditingViewController: UIViewController {
         tableView.reloadData()
     }
 
-    private func setSectionsFromGroups() {
+    private func setupSectionsFomGroups() {
         NetworkManager.shared.getAllGroups().observe { [weak self] response in
             guard let self = self else { return }
             switch response {
@@ -202,7 +202,7 @@ class EditingViewController: UIViewController {
         }
     }
 
-    private func setSectionsFromInterests() {
+    private func setupSectionsFromInterests() {
         NetworkManager.shared.getAllInterests().observe { [weak self] response in
             guard let self = self else { return }
             switch response {

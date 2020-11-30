@@ -20,15 +20,8 @@ class OnboardingTableViewCell: UITableViewCell {
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
 
-    // override var isSelected: Bool {
-    //     didSet {
-    //         print("didSet was called: \(isSelected)")
-    //         if shouldSelectionChangeAppearence {
-    //             changeColor(selected: isSelected)
-    //         }
-    //     }
-    // }
-
+    /// The type of item the cell was last showing. Used to determine if the cell needs to relayout its views for
+    /// the new item type.
     private var lastShownItem: LastShownItem = .none
 
     // Whether the cell should change its appearence when selected
