@@ -5,7 +5,6 @@
 //  Created by Lucy Xu on 1/29/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
-
 import GoogleSignIn
 import UIKit
 
@@ -67,9 +66,6 @@ class MatchViewController: UIViewController {
         }
     }
 
-    private var savedAvailabilities: [String: [String]] = [:]
-    private var matchAvailabilities: [String: [String]] = [:]
-
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
@@ -108,8 +104,6 @@ class MatchViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        getTimeAvailabilities(netID: "", user: true)
-        getTimeAvailabilities(netID: pair.netID, user: false)
     }
 
     private func setupViews() {
@@ -216,51 +210,16 @@ class MatchViewController: UIViewController {
 
     }
 
-    private func floatToStringTime(time: Float) -> String {
-        let hoursMins = Time.floatTimeToHoursMinutes(time: time)
-        var hoursInt = hoursMins.0
-        if hoursInt > 12 {
-            hoursInt -= 12
-        }
-        let hours = String(hoursInt)
-        let mins = String(hoursMins.1)
-        return "\(hours):\(mins)"
-    }
-
-    private func getTimeAvailabilities(netID: String, user: Bool) {
-        NetworkManager.shared.getTimeAvailabilities(netID: netID).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else { return }
-                var availabilities: [String: [String]] = [:]
-                for data in value.data.availabilities {
-                    availabilities[data.day.localizedCapitalized] = data.times.map({self.floatToStringTime(time: $0)})
-                }
-                if user {
-                    self.savedAvailabilities = availabilities
-                } else {
-                    self.matchAvailabilities = availabilities
-                }
-            case .error(let error):
-                print(error)
-            }
-        }
-    }
-
-    private func setUpAvailabilities() {
-
-    }
-
     @objc private func reachOutPressed() {
         let schedulingVC: SchedulingTimeViewController
         switch chatStatus {
         case .planning, .noResponses:
-            schedulingVC = SchedulingTimeViewController(for: .confirming, savedAvailabilities: savedAvailabilities, matchAvailabilities: matchAvailabilities)
+            schedulingVC = SchedulingTimeViewController(for: .confirming)
         case .waitingOn, .respondingTo:
-            schedulingVC = SchedulingTimeViewController(for: .choosing, savedAvailabilities: savedAvailabilities, matchAvailabilities: matchAvailabilities)
+            schedulingVC = SchedulingTimeViewController(for: .choosing)
         default:
             print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
-            schedulingVC = SchedulingTimeViewController(for: .pickingTypical, savedAvailabilities: savedAvailabilities, matchAvailabilities: matchAvailabilities)
+            schedulingVC = SchedulingTimeViewController(for: .pickingTypical)
         }
         navigationController?.pushViewController(schedulingVC, animated: true)
     }
