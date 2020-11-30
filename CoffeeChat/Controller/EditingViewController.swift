@@ -87,6 +87,7 @@ class EditingViewController: UIViewController {
     private var numRowsShownWhenCollapsed = 3
 
     private var sections: [Section] = []
+    private let user: User
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
@@ -119,10 +120,11 @@ class EditingViewController: UIViewController {
         get { yourSection?.filteredItems.count ?? 0 }
     }
 
-    // Initialization
-    init(isShowingGroups: Bool) {
-        super.init(nibName: nil, bundle: nil)
+    // MARK: - Initialization
+    init(user: User, isShowingGroups: Bool) {
+        self.user = user
         self.isShowingGroups = isShowingGroups
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -153,57 +155,76 @@ class EditingViewController: UIViewController {
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
 
-        // Setup Sections
-        // TODO replace with actual data from backend
-        let yourInterests: [Interest] = [
-            Interest(name: "Art", categories: "lorem, lorem, lorem, lorem, lorem", image: "art"),
-            Interest(name: "Business", categories: "lorem, lorem, lorem, lorem, lorem", image: "business"),
-            Interest(name: "Dance", categories: "lorem, lorem, lorem, lorem, lorem", image: "dance")
-        ]
-        let moreInterests: [Interest] = [
-            Interest(name: "Design", categories: "lorem, lorem, lorem, lorem, lorem", image: "design"),
-            Interest(name: "Fashion", categories: "lorem, lorem, lorem, lorem, lorem", image: "fashion"),
-            Interest(name: "Fitness", categories: "lorem, lorem, lorem, lorem, lorem", image: "fitness"),
-            Interest(name: "Food", categories: "lorem, lorem, lorem, lorem, lorem", image: "food"),
-            Interest(name: "Humanities", categories: "lorem, lorem, lorem, lorem, lorem", image: "humanities"),
-            Interest(name: "Music", categories: "lorem, lorem, lorem, lorem, lorem", image: "music"),
-            Interest(name: "Photography", categories: "lorem, lorem, lorem, lorem, lorem", image: "photography"),
-            Interest(name: "Reading", categories: "lorem, lorem, lorem, lorem, lorem", image: "reading"),
-            Interest(name: "Sustainability", categories: "lorem, lorem, lorem, lorem, lorem", image: "sustainability"),
-            Interest(name: "Technology", categories: "lorem, lorem, lorem, lorem, lorem", image: "tech"),
-            Interest(name: "Travel", categories: "lorem, lorem, lorem, lorem, lorem", image: "travel"),
-            Interest(name: "TV & Film", categories: "lorem, lorem, lorem, lorem, lorem", image: "tvfilm")
-        ]
-        let yourGroups: [Group] = [
-            Group(name: "Apple", image: ""),
-            Group(name: "banana", image: ""),
-            Group(name: "Cornell AppDev", image: "")
-        ]
-        let moreGroups: [Group] = [
-            Group(name: "dandelion", image: ""),
-            Group(name: "giraffe", image: ""),
-            Group(name: "heap", image: ""),
-            Group(name: "Igloo", image: ""),
-            Group(name: "Jeans", image: "")
-        ]
-
-        let yourSection: Section
-        let moreSection: Section
-        if isShowingGroups {
-            yourSection = Section(type: .yours, items: yourGroups.map { .group($0) })
-            moreSection = Section(type: .more, items: moreGroups.map { .group($0) })
-        } else {
-            yourSection = Section(type: .yours, items: yourInterests.map { .interest($0) })
-            moreSection = Section(type: .more, items: moreInterests.map { .interest($0) })
-        }
-        sections = [yourSection, moreSection]
-
+        setupSections()
         setupNavigationBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    private func setupSections() {
+        if isShowingGroups {
+            setupSectionsFomGroups()
+        } else {
+            setupSectionsFromInterests()
+        }
+
+        sections = [
+            Section(type: .yours, items: []),
+            Section(type: .more, items: [])
+        ]
+        tableView.reloadData()
+    }
+
+    private func setupSectionsFomGroups() {
+        NetworkManager.shared.getAllGroups().observe { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .value(let result):
+                guard result.success else {
+                    print("Response not successful when getting groups for user")
+                    return
+                }
+
+                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
+                self.sections = [
+                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageURL: nil)) }),
+                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageURL: nil)) })
+                ]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .error:
+                print("Error when getting groups for user")
+            }
+        }
+    }
+
+    private func setupSectionsFromInterests() {
+        NetworkManager.shared.getAllInterests().observe { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .value(let result):
+                guard result.success else {
+                    print("Response not successful when getting interests for user")
+                    return
+                }
+
+                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
+                let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageURL: nil)) }
+                self.sections = [
+                    Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
+                    Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+                ]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .error:
+                print("Error when getting groups for user")
+            }
+        }
     }
 
     private func setupNavigationBar() {
@@ -233,13 +254,75 @@ class EditingViewController: UIViewController {
         navigationItem.rightBarButtonItem = saveBarButtonItem
     }
 
+    // MARK: - Button Action
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
 
     @objc func savePressed() {
-        // TODO save favorites
+        guard let yourSection = yourSection else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+        var interests: [Interest] = []
+        var groups: [Group] = []
+
+        for item in yourSection.items {
+            switch item {
+            case .interest(let interest):
+                interests.append(interest)
+            case .group(let group):
+                groups.append(group)
+            }
+        }
+
+        if isShowingGroups {
+            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        print("Groups updated successfully")
+                    } else {
+                        print("Groups couldn't be updated")
+                    }
+                case .error:
+                    print("Networking error when trying to update groups")
+                }
+            }
+        } else {
+            NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        print("Interests updated successfully")
+                    } else {
+                        print("Interests couldn't be updated")
+                    }
+                case .error:
+                    print("Networking error when trying to update interests")
+                }
+            }
+        }
         navigationController?.popViewController(animated: true)
+    }
+
+    /// Remove duplicated entries in `yourStrings` and `moreStrings`. If a duplicate exists in both `yourStrings`
+    /// and `moreStrings`, duplicates are removed from `moreStrings`, so only 1 exists in `yourStrings`
+    private func removeDuplicates(yourStrings: [String], moreStrings: [String]) -> (your: [String], more: [String]) {
+        var set = Set<String>()
+
+        yourStrings.forEach { set.insert($0) }
+        let yourList = Array(set).sorted()
+
+        var moreList: [String] = []
+        for string in moreStrings {
+            if set.insert(string).inserted {
+                moreList.append(string)
+            }
+        }
+        moreList.sort()
+
+        return (your: yourList, more: moreList)
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
@@ -313,7 +396,7 @@ extension EditingViewController: UITableViewDataSource {
             cell.configure(with: group)
         }
 
-        cell.changeColor(isSelected: section.type == .yours)
+        cell.changeColor(selected: section.type == .yours)
         cell.shouldSelectionChangeAppearence = false
 
         return cell
@@ -328,7 +411,7 @@ extension EditingViewController: UITableViewDataSource {
         switch section.type {
         case .yours:
             labelTitle = isShowingGroups ? "Your Groups" : "Your Interests"
-            if yourSectionSize == 0 { // TODO disable save button
+            if yourSectionSize == 0 {
                 labelSubtext = isShowingGroups
                     ? "Select a group so we can better help you find a pair!"
                     : "Select at least one interest so we can better help you find a pair!"
@@ -364,6 +447,7 @@ extension EditingViewController: UITableViewDataSource {
             footerView.delegate = {
                 self.isCollapsed = $0
                 self.tableView.reloadData()
+                self.tableView.setNeedsLayout()
             }
 
             return footerView
@@ -377,7 +461,7 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        76
+        68
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -478,7 +562,6 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
     }
 
     private func setupConstraints() {
-        let seachbarSize = CGSize(width: 290, height: 42)
         let stackPadding = 12
 
         label.snp.makeConstraints { make in
@@ -486,7 +569,8 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         }
 
         searchBar?.snp.makeConstraints { make in
-            make.size.equalTo(seachbarSize)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(42)
         }
 
         stackView.snp.makeConstraints { make in

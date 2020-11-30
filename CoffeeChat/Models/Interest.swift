@@ -11,13 +11,7 @@ import Foundation
 struct Interest {
 
     let name: String
-    let categories: String
-    let image: String
-
-    init(name: String, categories: String, image: String) {
-        self.name = name
-        self.categories = categories
-        self.image = image
-    }
+    let categories: [String]?
+    let imageURL: String?
 
 }

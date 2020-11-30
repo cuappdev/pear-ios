@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
 
         setUpConstraints()
     }
-    
+
     private func getUserMatching() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in

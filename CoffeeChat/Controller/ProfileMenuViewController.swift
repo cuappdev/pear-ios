@@ -26,16 +26,16 @@ class ProfileMenuViewController: UIViewController {
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
     private var user: User
-    
+
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -131,11 +131,11 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditingViewController(isShowingGroups: false), animated: false)
+        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: false), animated: false)
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditingViewController(isShowingGroups: true), animated: false)
+        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: true), animated: false)
     }
 
     func pushSettingsViewController() {
