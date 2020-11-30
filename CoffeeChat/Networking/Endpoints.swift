@@ -154,6 +154,11 @@ extension Endpoint {
         Endpoint(path: "/major/all/", headers: standardHeaders)
     }
 
+    /// [GET] Get user time availabilities
+    static func getTimeAvailabilities(netID: String) -> Endpoint {
+        Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
+    }
+
     /// [POST] Update user time availabilities
     static func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Endpoint {
         let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)

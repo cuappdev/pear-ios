@@ -31,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
             let assignedMatch = true
             let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
-            let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                let rootVC = onboardingCompleted ? matchVC : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
             guard let unwrappedToken = refreshToken else { return }
             NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {

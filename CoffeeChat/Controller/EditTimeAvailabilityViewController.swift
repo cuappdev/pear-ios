@@ -70,13 +70,7 @@ class EditTimeAvailabilityViewController: UIViewController {
     private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
     private var selectedDay: String = "Su"
 
-    // TODO: Change values after connecting to backend and get user's saved availabilities
-    private var savedAvailabilities: [String: [String]] = [
-        "Monday": ["5:30", "6:00", "6:30"],
-        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30",],
-        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
-        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
-    ]
+    private var savedAvailabilities: [String: [String]] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,8 +79,8 @@ class EditTimeAvailabilityViewController: UIViewController {
         afternoonTimes = allAfternoonTimes
         eveningTimes = allEveningTimes
         morningTimes = allMorningTimes
-        availabilities = savedAvailabilities
         setupNavigationBar()
+        getTimeAvailabilities()
         
         if let firstDay = daysDict[selectedDay] {
             setupTimes(for: firstDay, isFirstTime: true)
@@ -169,6 +163,20 @@ class EditTimeAvailabilityViewController: UIViewController {
         guard let minutes = Float(timeList[1]) else { return 0.0 }
         return (hours + (minutes/60.0))
     }
+
+    private func floatToStringTime(time: Float) -> String {
+        let hoursMins = Time.floatTimeToHoursMinutes(time: time)
+        var hoursInt = hoursMins.0
+        if hoursInt > 12 {
+            hoursInt -= 12
+        }
+        let hours = String(hoursInt)
+        var mins = String(hoursMins.1)
+        if mins.count == 1 {
+            mins = "00"
+        }
+        return "\(hours):\(mins)"
+    }
     
     @objc private func saveAvailability() {
         var schedule: [Schedule] = []
@@ -184,6 +192,27 @@ class EditTimeAvailabilityViewController: UIViewController {
                 DispatchQueue.main.async {
                     print("update time availabilities success")
                     self.backPressed()
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
+    }
+
+    private func getTimeAvailabilities() {
+        NetworkManager.shared.getTimeAvailabilities(netID: "").observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                var userAvailabilities: [String: [String]] = [:]
+                for data in value.data.availabilities {
+                    userAvailabilities[data.day.localizedCapitalized] = data.times.map({self.floatToStringTime(time: $0)})
+                }
+                self.savedAvailabilities = userAvailabilities
+                DispatchQueue.main.async {
+                    self.availabilities = self.savedAvailabilities
+                    self.dayCollectionView.reloadData()
+                    self.timeCollectionView.reloadData()
                 }
             case .error(let error):
                 print(error)

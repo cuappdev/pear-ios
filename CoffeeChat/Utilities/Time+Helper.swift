@@ -92,7 +92,7 @@ extension Time {
     time = 13.5 -> (13, 30) (for 1:30 PM)
     time = 23.5 -> (23, 30) (for 11:30 PM)
     */
-    private static func floatTimeToHoursMinutes(time: Float) -> (hours: Int, minutes: Int) {
+    static func floatTimeToHoursMinutes(time: Float) -> (hours: Int, minutes: Int) {
         let hours = Int(time)
         let minutes = time.rounded() > time ? 30 : 0
         return (hours, minutes)

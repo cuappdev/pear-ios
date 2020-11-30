@@ -146,6 +146,10 @@ class NetworkManager {
         }
     }
 
+    func getTimeAvailabilities(netID: String) -> Future<Response<TimeAvailability>> {
+        networking(Endpoint.getTimeAvailabilities(netID: netID)).decode()
+    }
+
     func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Future<SuccessResponse> {
         networking(Endpoint.updateTimeAvailabilities(savedAvailabilities: savedAvailabilities)).decode()
     }

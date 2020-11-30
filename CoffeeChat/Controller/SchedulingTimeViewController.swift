@@ -101,28 +101,30 @@ class SchedulingTimeViewController: UIViewController {
     private var selectedDay: String = "Su"
 
     // TODO: Change values after connecting to backend
-    private var savedAvailabilities: [String: [String]] = [
-        "Monday": ["5:30", "6:00", "6:30"],
-        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
-        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
-        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
-    ]
+    private var savedAvailabilities: [String: [String]]
+//    private var savedAvailabilities: [String: [String]] = [
+//        "Monday": ["5:30", "6:00", "6:30"],
+//        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
+//        "Friday": ["1:30", "2:00", "5:30", "6:00", "6:30"],
+//        "Saturday": ["7:30", "11:00", "11:30", "12:00", "12:30"]
+//    ]
 
     // Time user picked from match's availabilities
     private var pickedTime: (day: String, time: String) = (day: "", time: "")
     // TODO: Change values after connecting to backend
-    private var matchAvailabilities: [String: [String]] = [
-        "Monday": ["5:30", "6:00", "6:30"],
-        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
-        "Friday": [
-            "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00",
-            "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"
-        ],
-        "Saturday": [
-            "2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30",
-            "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"
-        ]
-    ]
+    private var matchAvailabilities: [String: [String]]
+//    private var matchAvailabilities: [String: [String]] = [
+//        "Monday": ["5:30", "6:00", "6:30"],
+//        "Wednesday": ["10:30", "11:00", "11:30", "2:00", "2:30" ],
+//        "Friday": [
+//            "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+//            "12:30", "1:00", "1:30", "2:00", "5:30", "6:00", "6:30"
+//        ],
+//        "Saturday": [
+//            "2:00", "2:30", "3:00", "3:30", "5:30", "6:00", "6:30",
+//            "7:00", "7:30", "11:00", "11:30", "12:00", "12:30"
+//        ]
+//    ]
     private let matchFirstName: String = "Ezra"
 
     // MARK: ViewController State
@@ -130,8 +132,10 @@ class SchedulingTimeViewController: UIViewController {
     private var isChoosing: Bool { get { schedulingStatus == .choosing } }
     private var isConfirming: Bool { get { schedulingStatus == .confirming } }
 
-    init(for status: SchedulingStatus) {
+    init(for status: SchedulingStatus, savedAvailabilities: [String: [String]], matchAvailabilities: [String: [String]]) {
         self.schedulingStatus = status
+        self.savedAvailabilities = savedAvailabilities
+        self.matchAvailabilities = matchAvailabilities
         super.init(nibName: nil, bundle: nil)
     }
 

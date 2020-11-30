@@ -15,6 +15,7 @@ class NoMatchViewController: UIViewController {
     private let noMatchLabel = UILabel()
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImageView = UIImageView()
+    private var savedAvailabilities: [String: [String]] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,8 +83,35 @@ class NoMatchViewController: UIViewController {
         }
      }
 
+    private func floatToStringTime(time: Float) -> String {
+        let hoursMins = Time.floatTimeToHoursMinutes(time: time)
+        var hoursInt = hoursMins.0
+        if hoursInt > 12 {
+            hoursInt -= 12
+        }
+        let hours = String(hoursInt)
+        let mins = String(hoursMins.1)
+        return "\(hours):\(mins)"
+    }
+
+    private func getTimeAvailabilities(netID: String, user: Bool) {
+        NetworkManager.shared.getTimeAvailabilities(netID: netID).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                var availabilities: [String: [String]] = [:]
+                for data in value.data.availabilities {
+                    availabilities[data.day.localizedCapitalized] = data.times.map({self.floatToStringTime(time: $0)})
+                }
+                self.savedAvailabilities = availabilities
+            case .error(let error):
+                print(error)
+            }
+        }
+    }
+
     @objc private func availabilityButtonPressed() {
-        let timeVC = SchedulingTimeViewController(for: .pickingTypical)
+        let timeVC = SchedulingTimeViewController(for: .pickingTypical, savedAvailabilities: savedAvailabilities, matchAvailabilities: [:])
         navigationController?.pushViewController(timeVC, animated: true)
     }
 
