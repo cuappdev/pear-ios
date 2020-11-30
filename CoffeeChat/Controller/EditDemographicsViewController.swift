@@ -13,18 +13,11 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let fieldMap = [
-        Constants.UserDefaults.userFullName,
-        Constants.UserDefaults.userGraduationYear,
-        Constants.UserDefaults.userMajor,
-        Constants.UserDefaults.userHometown,
-        Constants.UserDefaults.userPronouns
-    ]
-    private var fieldValues: [String: String] = [:] // Keep track of selected values
     private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
     private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
     private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
-    private var user: User!
+    private var user: User
+    private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -46,13 +39,13 @@ class EditDemographicsViewController: UIViewController {
     private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
     
     init(user: User) {
-        super.init(nibName: nil, bundle: nil)
         self.user = user
-        fieldValues[fieldMap[0]] = "\(user.firstName) \(user.lastName)"
-        fieldValues[fieldMap[1]] = user.graduationYear
-        fieldValues[fieldMap[2]] = user.major
-        fieldValues[fieldMap[3]] = user.hometown
-        fieldValues[fieldMap[4]] = user.pronouns
+        demographics.name = "\(user.firstName) \(user.lastName)"
+        demographics.graduationYear = user.graduationYear
+        demographics.major = user.major
+        demographics.hometown = user.hometown
+        demographics.pronouns = user.pronouns
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -252,10 +245,10 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save name to backend
-        if let graduationYear = fieldValues[fieldMap[1]],
-           let major = fieldValues[fieldMap[2]],
-           let hometown = fieldValues[fieldMap[3]],
-           let pronouns = fieldValues[fieldMap[4]] {
+        if let graduationYear = demographics.graduationYear,
+           let major = demographics.major,
+           let hometown = demographics.hometown,
+           let pronouns = demographics.pronouns {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
@@ -294,7 +287,20 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
 
     func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String) {
         fieldsEntered[tag] = isSelected
-        if isSelected { fieldValues[fieldMap[tag]] = valueSelected }
+        if isSelected {
+            if tag == 1 {
+                demographics.graduationYear = valueSelected
+            }
+            if tag == 2 {
+                demographics.major = valueSelected
+            }
+            if tag == 3 {
+                demographics.hometown = valueSelected
+            }
+            if tag == 4 {
+                demographics.pronouns = valueSelected
+            }
+        }
     }
 
     /// Resizes search view based on input to search field.

@@ -236,7 +236,9 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
 
     func updateSelectedFields(tag: Int, isSelected: Bool, valueSelected: String) {
         fieldsEntered[tag] = isSelected
-        if isSelected { fieldValues[fieldMap[tag]] = valueSelected }
+        if isSelected {
+            fieldValues[fieldMap[tag]] = valueSelected
+        }
         let allFieldsEntered = !fieldsEntered.contains(false)
         nextButton.isEnabled = allFieldsEntered
         if nextButton.isEnabled {
