@@ -124,7 +124,6 @@ class OnboardingTableViewCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-        print("didSet was called: \(isSelected)")
         if shouldSelectionChangeAppearence {
             changeColor(selected: selected)
         }
