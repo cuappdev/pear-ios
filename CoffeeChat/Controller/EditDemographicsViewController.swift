@@ -114,6 +114,8 @@ class EditDemographicsViewController: UIViewController {
         nameTextField.clearButtonMode = .never
         nameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
         nameTextField.leftViewMode = .always
+        nameTextField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        nameTextField.rightViewMode = .always
         nameTextField.layer.cornerRadius = 8
         nameTextField.layer.shadowColor = UIColor.black.cgColor
         nameTextField.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
