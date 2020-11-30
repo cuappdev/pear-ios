@@ -16,9 +16,9 @@ class OnboardingTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let backdropView = UIView()
+    private let categoriesLabel = UILabel()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
-    private let categoriesLabel = UILabel()
 
     override var isSelected: Bool {
         didSet {
@@ -69,7 +69,6 @@ class OnboardingTableViewCell: UITableViewCell {
 
     private func setupConstraints() {
         let imageSize = CGSize(width: 22, height: 22)
-        let sidePadding: CGFloat = 12
 
         backdropView.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -79,7 +78,7 @@ class OnboardingTableViewCell: UITableViewCell {
 
         interestImageView.snp.remakeConstraints { make in
             make.size.equalTo(imageSize)
-            make.leading.equalToSuperview().inset(sidePadding)
+            make.leading.equalToSuperview().inset(12)
             make.centerY.equalToSuperview()
         }
 
