@@ -200,7 +200,7 @@ class EditTimeAvailabilityViewController: UIViewController {
     }
 
     private func getTimeAvailabilities() {
-        NetworkManager.shared.getTimeAvailabilities(netID: "").observe { response in
+        NetworkManager.shared.getTimeAvailabilities().observe { response in
             switch response {
             case .value(let value):
                 guard value.success else { return }
