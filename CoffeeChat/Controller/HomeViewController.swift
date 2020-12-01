@@ -20,7 +20,7 @@ class HomeViewController: UIViewController {
     private var tabContainerView: UIView!
     /// View Controller who's contents are shown below
     private var tabPageViewController: TabPageViewController?
-    let profileButtonSize = CGSize(width: 35, height: 35)
+    private let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
