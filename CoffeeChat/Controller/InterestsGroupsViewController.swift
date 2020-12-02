@@ -14,16 +14,7 @@ class InterestsGroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedInterestsGroups: [SimpleOnboardingCell] = []
-    private var interestsGroups: [SimpleOnboardingCell] = [
-        SimpleOnboardingCell(name: "Art", subtitle: "painting, crafts, embroidery..."),
-        SimpleOnboardingCell(name: "Business", subtitle: "entrepreneurship, finance, VC..."),
-        SimpleOnboardingCell(name: "Cornell AppDev", subtitle: nil),
-        SimpleOnboardingCell(name: "Bread Club", subtitle: nil),
-        SimpleOnboardingCell(name: "Cornell Venture Capital", subtitle: nil),
-        SimpleOnboardingCell(name: "Medium Design Collective", subtitle: nil),
-        SimpleOnboardingCell(name: "Women in Computing at Cornell", subtitle: nil),
-        SimpleOnboardingCell(name: "Design and Tech Initiative", subtitle: nil)
-    ]
+    private var interestsGroups: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -97,10 +88,53 @@ class InterestsGroupsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        displayedInterestsGroups = interestsGroups
-
         setupConstraints()
+        getAllGroups()
     }
+    
+    private func getAllGroups() {
+        NetworkManager.shared.getAllGroups().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+//                        print(response.data)
+                        let groups = response.data
+                        self.interestsGroups = groups.map {
+                            return SimpleOnboardingCell(name: $0, subtitle: nil)
+                        }
+                        self.getAllInterests()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private func getAllInterests() {
+        NetworkManager.shared.getAllInterests().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let interests = response.data.map {
+                            // TODO: Fix interest model in backend before using to populate screen
+                            return SimpleOnboardingCell(name: $0, subtitle: nil)
+                        }
+                        self.interestsGroups.append(contentsOf: interests)
+                        self.interestsGroups.sort(by: { $0.name < $1.name })
+                        self.displayedInterestsGroups = self.interestsGroups
+                        self.fadeTableView.view.reloadData()
+                        
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }    }
 
     private func setupConstraints() {
         let backSize = CGSize(width: 86, height: 20)
@@ -180,11 +214,7 @@ class InterestsGroupsViewController: UIViewController {
 extension InterestsGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if interestsGroups[indexPath.row].subtitle != nil {
-            return 61
-        } else {
-            return 54
-        }
+        return interestsGroups[indexPath.row].subtitle != nil ? 61 : 54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
