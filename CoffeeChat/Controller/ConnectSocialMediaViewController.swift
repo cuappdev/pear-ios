@@ -51,7 +51,7 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(instaTextField)
 
         let instaIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        instaIcon.image = UIImage(named: "instagramIcon")
+        instaIcon.image = UIImage(named: "instagram")
         let instaViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         instaViewL.addSubview(instaIcon)
         instaTextField.leftView = instaViewL

@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "dance1x.png",
       "idiom" : "universal",
-      "filename" : "dance.png",
       "scale" : "1x"
     },
     {
+      "filename" : "dance2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "dance3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

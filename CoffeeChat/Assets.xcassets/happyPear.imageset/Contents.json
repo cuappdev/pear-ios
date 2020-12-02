@@ -6,10 +6,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "happyPear2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "happyPear3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
