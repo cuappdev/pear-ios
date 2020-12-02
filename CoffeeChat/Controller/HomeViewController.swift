@@ -93,13 +93,14 @@ class HomeViewController: UIViewController {
                 matchResult = nil
             }
             DispatchQueue.main.async {
-                self.setupTabPageViewController(with: matchResult)
+                // TODO: Replace nil matching with actual matching after route is done
+                self.setupTabPageViewController(with: nil)
             }
         }
     }
 
     private func setupTabPageViewController(with matching: Matching?) {
-        tabPageViewController = TabPageViewController(matching: nil)
+        tabPageViewController = TabPageViewController(matching: matching)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
