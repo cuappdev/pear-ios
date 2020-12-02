@@ -189,7 +189,9 @@ class SocialMediaViewController: UIViewController {
                     print("Update social media success response \(response)")
                     if response.success {
                         UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                        let assignedMatch = false
+                        let matchVC = assignedMatch ? HomeViewController() : NoMatchViewController()
+                        self.navigationController?.pushViewController(matchVC, animated: true)
                     }
                 case .error(let error):
                     print(error)
