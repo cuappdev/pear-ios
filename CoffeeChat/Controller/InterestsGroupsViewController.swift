@@ -90,6 +90,29 @@ class InterestsGroupsViewController: UIViewController {
 
         setupConstraints()
         getAllGroups()
+        getUserTalkingPoints()
+    }
+    
+    private func getUserTalkingPoints() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let userTalkingPoints = response.data.talkingPoints.map {
+                            return SimpleOnboardingCell(name: $0, subtitle: nil)
+                        }
+                        self.selectedInterestsGroups = userTalkingPoints
+                        self.fadeTableView.view.reloadData()
+                        self.updateNext()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
     
     private func getAllGroups() {
@@ -99,7 +122,6 @@ class InterestsGroupsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-//                        print(response.data)
                         let groups = response.data
                         self.interestsGroups = groups.map {
                             return SimpleOnboardingCell(name: $0, subtitle: nil)
@@ -201,7 +223,22 @@ class InterestsGroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 5)
+        let talkingPoints = selectedInterestsGroups.map { return $0.name }
+        print(talkingPoints)
+        NetworkManager.shared.updateUserTalkingPoints(talkingPoints: talkingPoints).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    print("Update talking points success response \(response)")
+                    if response.success {
+                        self.delegate?.nextPage(index: 5)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {

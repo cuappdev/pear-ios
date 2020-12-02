@@ -102,6 +102,12 @@ extension Endpoint {
         let body = UpdateUserGroupsBody(groups: organizations)
         return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
+    
+    /// [POST] Update talking points information about the user
+    static func updateUserTalkingPoints(talkingPoints: [String]) -> Endpoint {
+        let body = UpdateUserTalkingPointsBody(talkingPoints: talkingPoints)
+        return Endpoint(path: "/user/talkingPoints/", headers: standardHeaders, body: body)
+    }
 
     /// [GET] Get information about the user
     static func getUser(netId: String) -> Endpoint {

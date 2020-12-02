@@ -28,6 +28,12 @@ struct UpdateUserGoalsBody: Codable {
     
 }
 
+struct UpdateUserTalkingPointsBody: Codable {
+    
+    let talkingPoints: [String]
+    
+}
+
 struct UpdateUserSocialMediaBody: Codable {
     
     let facebook: String

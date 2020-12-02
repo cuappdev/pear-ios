@@ -130,7 +130,6 @@ class InterestsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-//                        print(response.data)
                         self.selectedInterests = response.data.interests.map {
                             // TODO: Fix interest model in backend before using to populate screen
                             return Interest(name: $0, categories: [], imageURL: nil)
@@ -152,7 +151,6 @@ class InterestsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-//                        print(response.data)
                         self.interests = response.data.map {
                             // TODO: Fix interest model in backend before using to populate screen
                             return Interest(name: $0, categories: [], imageURL: nil)
