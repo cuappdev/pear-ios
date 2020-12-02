@@ -5,7 +5,6 @@
 //  Created by HAIYING WENG on 2/19/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
-
 import UIKit
 
 enum SchedulingStatus {

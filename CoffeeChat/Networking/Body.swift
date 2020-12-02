@@ -63,3 +63,16 @@ struct MatchingBody: Codable {
     let schedule: [DaySchedule]
 
 }
+
+struct UpdateTimeAvailabilitiesBody: Codable {
+
+    let schedule: [Schedule]
+
+}
+
+struct Schedule: Codable {
+
+    let day: String
+    let times: [Float]
+    
+}
