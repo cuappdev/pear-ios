@@ -1,5 +1,5 @@
 //
-//  InterestsGroupsViewController.swift
+//  TalkingPointsViewController.swift
 //  CoffeeChat
 //
 //  Created by Lucy Xu on 10/1/20.
@@ -8,13 +8,13 @@
 
 import UIKit
 
-class InterestsGroupsViewController: UIViewController {
+class TalkingPointsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var displayedInterestsGroups: [SimpleOnboardingCell] = []
-    private var interestsGroups: [SimpleOnboardingCell] = []
+    private var displayedTalkingPoints: [SimpleOnboardingCell] = []
+    private var talkingPoints: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -123,7 +123,7 @@ class InterestsGroupsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let groups = response.data
-                        self.interestsGroups = groups.map {
+                        self.talkingPoints = groups.map {
                             return SimpleOnboardingCell(name: $0, subtitle: nil)
                         }
                         self.getAllInterests()
@@ -146,9 +146,9 @@ class InterestsGroupsViewController: UIViewController {
                             // TODO: Fix interest model in backend before using to populate screen
                             return SimpleOnboardingCell(name: $0, subtitle: nil)
                         }
-                        self.interestsGroups.append(contentsOf: interests)
-                        self.interestsGroups.sort(by: { $0.name < $1.name })
-                        self.displayedInterestsGroups = self.interestsGroups
+                        self.talkingPoints.append(contentsOf: interests)
+                        self.talkingPoints.sort(by: { $0.name < $1.name })
+                        self.displayedTalkingPoints = self.talkingPoints
                         self.fadeTableView.view.reloadData()
                         
                     }
@@ -202,9 +202,9 @@ class InterestsGroupsViewController: UIViewController {
 
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
-        displayedInterestsGroups = searchText.isEmpty
-            ? interestsGroups
-            : interestsGroups.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        displayedTalkingPoints = searchText.isEmpty
+            ? talkingPoints
+            : talkingPoints.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         fadeTableView.view.reloadData()
     }
 
@@ -224,7 +224,6 @@ class InterestsGroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let talkingPoints = selectedInterestsGroups.map { return $0.name }
-        print(talkingPoints)
         NetworkManager.shared.updateUserTalkingPoints(talkingPoints: talkingPoints).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -248,36 +247,36 @@ class InterestsGroupsViewController: UIViewController {
 }
 
 // MARK: - TableViewDelegate
-extension InterestsGroupsViewController: UITableViewDelegate {
+extension TalkingPointsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return interestsGroups[indexPath.row].subtitle != nil ? 61 : 54
+        return talkingPoints[indexPath.row].subtitle != nil ? 61 : 54
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        displayedInterestsGroups.count
+        displayedTalkingPoints.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedInterestsGroups.append(displayedInterestsGroups[indexPath.row])
+        selectedInterestsGroups.append(displayedTalkingPoints[indexPath.row])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterestsGroups.removeAll { $0.name == displayedInterestsGroups[indexPath.row].name}
+        selectedInterestsGroups.removeAll { $0.name == displayedTalkingPoints[indexPath.row].name}
         updateNext()
     }
 
 }
 
 // MARK: - TableViewDataSource
-extension InterestsGroupsViewController: UITableViewDataSource {
+extension TalkingPointsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
                                                        for: indexPath) as?
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
-        let data = displayedInterestsGroups[indexPath.row]
+        let data = displayedTalkingPoints[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
         if selectedInterestsGroups.contains(where: { $0.name == data.name }) {
@@ -289,7 +288,7 @@ extension InterestsGroupsViewController: UITableViewDataSource {
 }
 
 // MARK: - SearchBarDelegate
-extension InterestsGroupsViewController: UISearchBarDelegate {
+extension TalkingPointsViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterTableView(searchText: searchText)
