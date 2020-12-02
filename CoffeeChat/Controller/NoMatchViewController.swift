@@ -30,17 +30,18 @@ class NoMatchViewController: UIViewController {
         view.addSubview(surprisedPearImageView)
 
         noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
-        noMatchTitleLabel.numberOfLines = 2
+        noMatchTitleLabel.numberOfLines = 0
         noMatchTitleLabel.sizeToFit()
         noMatchTitleLabel.textAlignment = .center
         noMatchTitleLabel.textColor = .black
         noMatchTitleLabel.font = ._24CircularStdMedium
         view.addSubview(noMatchTitleLabel)
 
-        noMatchLabel.text = "In the meantime, tell me when you're\nusually free to make meeting up easier!"
-        noMatchLabel.numberOfLines = 2
+        noMatchLabel.text = "In the meantime, tell me when you're usually free to make meeting up easier!"
+        noMatchLabel.numberOfLines = 0
         noMatchLabel.textAlignment = .center
         noMatchLabel.textColor = .greenGray
+        noMatchLabel.lineBreakMode = .byWordWrapping
         noMatchLabel.sizeToFit()
         noMatchLabel.font = ._16CircularStdMedium
         view.addSubview(noMatchLabel)
@@ -58,19 +59,20 @@ class NoMatchViewController: UIViewController {
     
     private func setupConstraints() {
         let buttonSize = CGSize(width: 225, height: 54)
-        let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 102)
+        let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
         let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
         let imageWidth = (UIScreen.main.bounds.width / 375) * 176
         let subtitleLabelPadding: CGFloat = Constants.Onboarding.skipBottomPadding
-        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 92)
+        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 76)
 
         noMatchTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(titleLabelPadding)
+            make.top.equalToSuperview().offset(titleLabelPadding)
         }
 
         noMatchLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
+            make.width.equalTo(293)
             make.bottom.equalTo(availabilityButton.snp.top).offset(-subtitleLabelPadding)
         }
 
