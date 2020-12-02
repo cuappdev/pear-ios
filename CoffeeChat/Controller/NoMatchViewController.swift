@@ -7,8 +7,8 @@
 //
 
 import Kingfisher
-import UIKit
 import SideMenu
+import UIKit
 
 class NoMatchViewController: UIViewController {
 
@@ -17,7 +17,7 @@ class NoMatchViewController: UIViewController {
     private let noMatchLabel = UILabel()
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImageView = UIImageView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -87,7 +87,7 @@ class NoMatchViewController: UIViewController {
            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
         }
     }
-    
+
     @objc private func availabilityButtonPressed() {
         let timeVC = SchedulingTimeViewController(for: .pickingTypical)
         navigationController?.pushViewController(timeVC, animated: true)
