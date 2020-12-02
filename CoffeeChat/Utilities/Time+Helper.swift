@@ -165,4 +165,45 @@ extension Time {
         return date
     }
 
+    /**
+     Converts a string representation of a time to a float.
+     If the time is a PM time, 12 hours are added.
+     The time must be an hour or half-hour time.
+
+     # Example:
+     time = "9:00" -> 9.0
+     time = "1:30" -> 13.5
+     */
+    static func stringTimeToFloat(time: String) -> Float {
+        let timeList = time.components(separatedBy: ":")
+        guard var hours = Float(timeList[0]) else { return 0.0 }
+        if Time.isPm(time: time) && hours < 9.0 {
+            hours += 12
+        }
+        guard let minutes = Float(timeList[1]) else { return 0.0 }
+        return (hours + (minutes/60.0))
+    }
+
+    /**
+     Converts a float time to a string representation of the time.
+     The time must be an hour or half-hour time.
+
+     # Example:
+     time = 16.5 -> "4:30"
+     time = 12.5 -> "12:30"
+     */
+    static func floatToStringTime(time: Float) -> String {
+        let hoursMins = Time.floatTimeToHoursMinutes(time: time)
+        var hoursInt = hoursMins.0
+        if hoursInt > 12 {
+            hoursInt -= 12
+        }
+        let hours = String(hoursInt)
+        var mins = String(hoursMins.1)
+        if mins.count == 1 {
+            mins = "00"
+        }
+        return "\(hours):\(mins)"
+    }
+
 }

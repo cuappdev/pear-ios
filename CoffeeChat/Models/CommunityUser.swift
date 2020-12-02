@@ -8,10 +8,9 @@
 
 import Foundation
 
-// TODO: Replace this with User
 struct CommunityUser: Codable {
 
-    let clubs: [String]?
+    let groups: [String]?
     let firstName: String?
     let googleID: String?
     let graduationYear: String?
@@ -25,5 +24,5 @@ struct CommunityUser: Codable {
     let pronouns: String?
     let facebook: String?
     let instagram: String?
-    
+
 }
