@@ -121,8 +121,10 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         }
         
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        let homeVC = HomeViewController()
-        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+        let assignedMatch = false
+        let homeVC = assignedMatch ? NoMatchViewController() : HomeViewController()
+//        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+        let onboardingCompleted = false
         let loginVC = LoginViewController()
 
         if let idToken = user.authentication.idToken,

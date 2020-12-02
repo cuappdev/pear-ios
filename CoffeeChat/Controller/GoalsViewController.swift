@@ -221,6 +221,9 @@ extension GoalsViewController: UITableViewDataSource {
                 SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let goal = goals[indexPath.row]
         cell.configure(with: goal)
+        if selectedGoals.contains(where: { $0 == goal.name }) {
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
         return cell
     }
 

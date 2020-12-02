@@ -22,23 +22,7 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
-    private var interests: [Interest] = [
-        Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageURL: nil),
-        Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageURL: nil),
-        Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageURL: nil),
-        Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageURL: nil),
-        Interest(name: "Fashion", categories: nil, imageURL: nil),
-        Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageURL: nil),
-        Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageURL: nil),
-        Interest(name: "Humanities", categories: ["history", "politics"], imageURL: nil),
-        Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageURL: nil),
-        Interest(name: "Photography", categories: ["digital", "analog"], imageURL: nil),
-        Interest(name: "Reading", categories: nil, imageURL: nil),
-        Interest(name: "Sustainability", categories: nil, imageURL: nil),
-        Interest(name: "Tech", categories: ["programming", "web/app development"], imageURL: nil),
-        Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageURL: nil),
-        Interest(name: "TV & Film", categories: nil, imageURL: nil)
-    ]
+    private var interests: [Interest] = []
     private var selectedInterests: [Interest] = []
 
     init(delegate: OnboardingPageDelegate) {
@@ -82,7 +66,6 @@ class InterestsViewController: UIViewController {
         view.addSubview(nextButton)
 
         setupConstraints()
-        getUserInterests()
     }
 
     @objc func backButtonPressed() {
@@ -147,7 +130,35 @@ class InterestsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        // TODO: Fix interest model in backend before using to populate screen
+//                        print(response.data)
+                        self.selectedInterests = response.data.interests.map {
+                            // TODO: Fix interest model in backend before using to populate screen
+                            return Interest(name: $0, categories: [], imageURL: nil)
+                        }
+                        self.updateNext()
+                        self.fadeTableView.view.reloadData()
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private func getAllInterests() {
+        NetworkManager.shared.getAllInterests().observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+//                        print(response.data)
+                        self.interests = response.data.map {
+                            // TODO: Fix interest model in backend before using to populate screen
+                            return Interest(name: $0, categories: [], imageURL: nil)
+                        }
+                        self.fadeTableView.view.reloadData()
+                        
                     }
                 case .error(let error):
                     print(error)
@@ -173,6 +184,12 @@ class InterestsViewController: UIViewController {
             nextButton.layer.shadowRadius = 0
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getUserInterests()
+        getAllInterests()
+        super.viewWillAppear(animated)
+    }
 
 }
 
@@ -193,7 +210,7 @@ extension InterestsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterests.removeAll { $0.name == interests[indexPath.row].name}
+        selectedInterests.removeAll { $0.name == interests[indexPath.row].name }
         updateNext()
     }
 
@@ -208,6 +225,9 @@ extension InterestsViewController: UITableViewDataSource {
         OnboardingTableViewCell else { return UITableViewCell() }
         let data = interests[indexPath.row]
         cell.configure(with: data)
+        if selectedInterests.contains(where: { $0.name == data.name }) {
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
         return cell
     }
 
