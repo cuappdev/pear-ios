@@ -95,8 +95,6 @@ class GroupsViewController: UIViewController {
         displayedGroups = groups
 
         setupConstraints()
-        getAllGroups()
-        getUserGroups()
     }
 
     private func setupConstraints() {
@@ -208,6 +206,12 @@ class GroupsViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getAllGroups()
+        getUserGroups()
+        super.viewWillAppear(animated)
     }
 
     private func getUserGroups() {

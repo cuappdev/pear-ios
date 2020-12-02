@@ -86,7 +86,11 @@ class GoalsViewController: UIViewController {
         view.addSubview(skipButton)
 
         setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         getUserGoals()
+        super.viewWillAppear(animated)
     }
 
     private func setupConstraints() {

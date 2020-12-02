@@ -89,8 +89,12 @@ class TalkingPointsViewController: UIViewController {
         view.addSubview(skipButton)
 
         setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         getAllGroups()
         getUserTalkingPoints()
+        super.viewWillAppear(animated)
     }
     
     private func getUserTalkingPoints() {
