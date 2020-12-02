@@ -121,8 +121,6 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         }
         
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        let assignedMatch = false
-        let homeVC = assignedMatch ? NoMatchViewController() : HomeViewController()
 //        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let onboardingCompleted = false
         let loginVC = LoginViewController()
@@ -148,7 +146,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
-                        let vc = onboardingCompleted ? homeVC : onboardingVC
+                        let vc = onboardingCompleted ? HomeViewController() : onboardingVC
                         self.navigationController?.pushViewController(vc, animated: false)
                     case .error:
                         self.navigationController?.pushViewController(loginVC, animated: false)

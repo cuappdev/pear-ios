@@ -69,10 +69,16 @@ class HomeViewController: UIViewController {
 
     private func getUserMatching() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
+        NetworkManager.shared.getUser(netId: netId).chained { [weak self] (response: Response<User>) -> Future<Response<Matching?>> in
+            guard let self = self else { return Promise<Response<Matching?>>(error: NetworkingError.failed("Self invalid")) }
             if response.success {
                 let user = response.data
                 self.user = user
+                DispatchQueue.main.async {
+                    if let profilePictureURL = URL(string: user.profilePictureURL) {
+                        self.profileButton.kf.setImage(with: profilePictureURL, for: .normal)
+                    }
+                }
                 return NetworkManager.shared.getMatching(user: user)
             } else {
                 return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
@@ -93,7 +99,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(with matching: Matching?) {
-        tabPageViewController = TabPageViewController(matching: matching)
+        tabPageViewController = TabPageViewController(matching: nil)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
