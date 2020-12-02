@@ -23,21 +23,21 @@ class InterestsViewController: UIViewController {
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
-        Interest(name: "Art", categories: "painting, crafts, embroidery...", image: "art"),
-        Interest(name: "Business", categories: "entrepreneurship, finance, VC...", image: "business"),
-        Interest(name: "Dance", categories: "urban, hip hop, ballet, swing...", image: "dance"),
-        Interest(name: "Design", categories: "UI/UX, graphic, print...", image: "design"),
-        Interest(name: "Fashion", categories: "", image: "fashion"),
-        Interest(name: "Fitness", categories: "working out, outdoors, basketball...", image: "fitness"),
-        Interest(name: "Food", categories: "cooking, eating, baking...", image: "food"),
-        Interest(name: "Humanities", categories: "history, politics...", image: "humanities"),
-        Interest(name: "Music", categories: "instruments, producing, acapella...", image: "music"),
-        Interest(name: "Photography", categories: "digital, analog...", image: "photography"),
-        Interest(name: "Reading", categories: "", image: "reading"),
-        Interest(name: "Sustainability", categories: "", image: "sustainability"),
-        Interest(name: "Tech", categories: "programming, web/app development...", image: "tech"),
-        Interest(name: "Travel", categories: "road trips, backpacking...", image: "travel"),
-        Interest(name: "TV & Film", categories: "", image: "tvfilm")
+        Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageURL: nil),
+        Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageURL: nil),
+        Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageURL: nil),
+        Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageURL: nil),
+        Interest(name: "Fashion", categories: nil, imageURL: nil),
+        Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageURL: nil),
+        Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageURL: nil),
+        Interest(name: "Humanities", categories: ["history", "politics"], imageURL: nil),
+        Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageURL: nil),
+        Interest(name: "Photography", categories: ["digital", "analog"], imageURL: nil),
+        Interest(name: "Reading", categories: nil, imageURL: nil),
+        Interest(name: "Sustainability", categories: nil, imageURL: nil),
+        Interest(name: "Tech", categories: ["programming", "web/app development"], imageURL: nil),
+        Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageURL: nil),
+        Interest(name: "TV & Film", categories: nil, imageURL: nil)
     ]
     private var selectedInterests: [Interest] = []
 
@@ -138,7 +138,7 @@ class InterestsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
-    
+
     private func getUserInterests() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in

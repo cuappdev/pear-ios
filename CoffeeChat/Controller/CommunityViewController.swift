@@ -48,7 +48,6 @@ class CommunityViewController: UIViewController {
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
 
-        getUsers()
         setupConstraints()
     }
 
@@ -79,6 +78,11 @@ class CommunityViewController: UIViewController {
             make.top.equalTo(searchBar.snp.bottom).offset(20)
             make.bottom.equalToSuperview()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getUsers()
     }
 }
 

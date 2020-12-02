@@ -51,15 +51,15 @@ class NetworkManager {
     func updateUserInterests(interests: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserInterests(interests: interests)).decode()
     }
-    
+
     func updateUserGroups(groups: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserGroups(groups: groups)).decode()
     }
-    
+
     func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserGoals(goals: goals)).decode()
     }
-    
+
     func updateUserSocialMedia(facebook: String, instagram: String) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram)).decode()
 
@@ -92,15 +92,15 @@ class NetworkManager {
     func searchUsers(query: String) -> Future<Response<[CommunityUser]>> {
         networking(Endpoint.searchUsers(query: query)).decode()
     }
-    
+
     func getAllGroups() -> Future<Response<[String]>> {
         networking(Endpoint.getAllGroups()).decode()
     }
-    
+
     func getAllInterests() -> Future<Response<[String]>> {
         networking(Endpoint.getAllInterests()).decode()
     }
-    
+
     func getAllMajors() -> Future<Response<[String]>> {
         networking(Endpoint.getAllMajors()).decode()
     }
@@ -153,5 +153,5 @@ class NetworkManager {
     func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Future<SuccessResponse> {
         networking(Endpoint.updateTimeAvailabilities(savedAvailabilities: savedAvailabilities)).decode()
     }
-    
+
 }

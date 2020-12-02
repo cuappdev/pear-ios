@@ -74,14 +74,14 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(fbTextField)
 
         let fbIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        fbIcon.image = UIImage(named: "facebookIcon")
-        let facebookViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
-        facebookViewL.addSubview(fbIcon)
-        fbTextField.leftView = facebookViewL
+        fbIcon.image = UIImage(named: "facebook")
+        let facebookViewLeft = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        facebookViewLeft.addSubview(fbIcon)
+        fbTextField.leftView = facebookViewLeft
         fbTextField.leftViewMode = .always
 
-        let facebookViewR = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        fbTextField.rightView = facebookViewR
+        let facebookViewRight = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
+        fbTextField.rightView = facebookViewRight
         fbTextField.rightViewMode = .always
 
         setupConstraints()
