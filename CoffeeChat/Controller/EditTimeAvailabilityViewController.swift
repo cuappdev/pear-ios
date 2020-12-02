@@ -153,35 +153,11 @@ class EditTimeAvailabilityViewController: UIViewController {
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
-
-    private func stringTimeToFloat(time: String) -> Float {
-        let timeList = time.components(separatedBy: ":")
-        guard var hours = Float(timeList[0]) else { return 0.0 }
-        if Time.isPm(time: time) && hours < 8.0 {
-            hours += 12
-        }
-        guard let minutes = Float(timeList[1]) else { return 0.0 }
-        return (hours + (minutes/60.0))
-    }
-
-    private func floatToStringTime(time: Float) -> String {
-        let hoursMins = Time.floatTimeToHoursMinutes(time: time)
-        var hoursInt = hoursMins.0
-        if hoursInt > 12 {
-            hoursInt -= 12
-        }
-        let hours = String(hoursInt)
-        var mins = String(hoursMins.1)
-        if mins.count == 1 {
-            mins = "00"
-        }
-        return "\(hours):\(mins)"
-    }
     
     @objc private func saveAvailability() {
         var schedule: [Schedule] = []
         for (day, times) in availabilities {
-            let floatTimes = times.map({stringTimeToFloat(time: $0)})
+            let floatTimes = times.map({Time.stringTimeToFloat(time: $0)})
             let daySchedule = Schedule(day: day.lowercased(), times: floatTimes)
             schedule.append(daySchedule)
         }
@@ -191,7 +167,7 @@ class EditTimeAvailabilityViewController: UIViewController {
                 guard value.success else { return }
                 DispatchQueue.main.async {
                     print("update time availabilities success")
-                    self.backPressed()
+                    self.navigationController?.popViewController(animated: true)
                 }
             case .error(let error):
                 print(error)
@@ -206,7 +182,7 @@ class EditTimeAvailabilityViewController: UIViewController {
                 guard value.success else { return }
                 var userAvailabilities: [String: [String]] = [:]
                 for data in value.data.availabilities {
-                    userAvailabilities[data.day.localizedCapitalized] = data.times.map({self.floatToStringTime(time: $0)})
+                    userAvailabilities[data.day.localizedCapitalized] = data.times.map({Time.floatToStringTime(time: $0)})
                 }
                 self.savedAvailabilities = userAvailabilities
                 DispatchQueue.main.async {
