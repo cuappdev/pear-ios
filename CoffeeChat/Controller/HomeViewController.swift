@@ -18,7 +18,7 @@ class HomeViewController: UIViewController {
     private var tabCollectionView: UICollectionView!
     /// View that holds `tabPageViewController` below the pill view
     private var tabContainerView: UIView!
-    /// View Controller who's contents are shown below
+    /// View Controller whose contents are shown below
     private var tabPageViewController: TabPageViewController?
     private let profileButtonSize = CGSize(width: 35, height: 35)
 

@@ -22,7 +22,23 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
-    private var interests: [Interest] = []
+    private var interests: [Interest] = [
+         Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageURL: nil),
+         Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageURL: nil),
+         Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageURL: nil),
+         Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageURL: nil),
+         Interest(name: "Fashion", categories: nil, imageURL: nil),
+         Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageURL: nil),
+         Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageURL: nil),
+         Interest(name: "Humanities", categories: ["history", "politics"], imageURL: nil),
+         Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageURL: nil),
+         Interest(name: "Photography", categories: ["digital", "analog"], imageURL: nil),
+         Interest(name: "Reading", categories: nil, imageURL: nil),
+         Interest(name: "Sustainability", categories: nil, imageURL: nil),
+         Interest(name: "Tech", categories: ["programming", "web/app development"], imageURL: nil),
+         Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageURL: nil),
+         Interest(name: "TV & Film", categories: nil, imageURL: nil)
+     ]
     private var selectedInterests: [Interest] = []
 
     init(delegate: OnboardingPageDelegate) {
@@ -143,27 +159,6 @@ class InterestsViewController: UIViewController {
             }
         }
     }
-    
-    private func getAllInterests() {
-        NetworkManager.shared.getAllInterests().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.interests = response.data.map {
-                            // TODO: Fix interest model in backend before using to populate screen
-                            return Interest(name: $0, categories: [], imageURL: nil)
-                        }
-                        self.fadeTableView.view.reloadData()
-                        
-                    }
-                case .error(let error):
-                    print(error)
-                }
-            }
-        }
-    }
 
     /// Updates the enabled state of next button based on the state of selectedInterests.
     private func updateNext() {
@@ -185,7 +180,6 @@ class InterestsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         getUserInterests()
-        getAllInterests()
         super.viewWillAppear(animated)
     }
 
