@@ -13,12 +13,11 @@ import UIKit
 class LoginViewController: UIViewController {
 
     // MARK: - Private View Vars
+    private let backgroundImage = UIImageView()
     private var errorBlurEffect: UIBlurEffect!
     private var errorMessageAlertView: MessageAlertView!
     private var errorMessageVisualEffectView: UIVisualEffectView!
     private let loginButton = GIDSignInButton()
-    private let logoImageView = UIImageView()
-    private let welcomeLabel = UILabel()
 
     // MARK: - Private Constants
     private let loginButtonSize = CGSize(width: 202, height: 50)
@@ -26,20 +25,15 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundLightGreen
+        
         navigationController?.navigationBar.isHidden = true
+        
+        backgroundImage.image = UIImage(named: "welcomeBackground")
+        backgroundImage.contentMode = .scaleAspectFill
+        view.insertSubview(backgroundImage, at: 0)
 
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().presentingViewController = self
-
-        welcomeLabel.text = "Welcome to Pear"
-        welcomeLabel.textColor = .black
-        welcomeLabel.font = ._24CircularStdMedium
-        view.addSubview(welcomeLabel)
-
-        logoImageView.layer.cornerRadius = logoSize.width/2
-        logoImageView.image = UIImage(named: "happyPear")
-        view.addSubview(logoImageView)
 
         loginButton.style = .wide
         view.addSubview(loginButton)
@@ -47,26 +41,16 @@ class LoginViewController: UIViewController {
         setupErrorMessageAlert()
         setupConstraints()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        backgroundImage.frame = view.bounds
+    }
 
     private func setupConstraints() {
-        let welcomeLabelHeight: CGFloat = 30
-        let welcomeLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 100)
-
-        welcomeLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(welcomeLabelHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(welcomeLabelPadding)
-        }
-
-        logoImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(welcomeLabel.snp.bottom).offset(97)
-            make.size.equalTo(logoSize)
-        }
-
         loginButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(52)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(96)
             make.size.equalTo(loginButtonSize)
         }
     }
@@ -121,8 +105,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         }
         
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-//        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-        let onboardingCompleted = false
+        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let loginVC = LoginViewController()
 
         if let idToken = user.authentication.idToken,

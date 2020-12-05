@@ -213,7 +213,7 @@ class EditingViewController: UIViewController {
                 }
 
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
-                let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageURL: nil)) }
+                let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [
                     Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
                     Section(type: .more, items: yoursAndMore.more.map(stringToInterest))

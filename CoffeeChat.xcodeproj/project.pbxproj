@@ -553,7 +553,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = cuappdev;
 				TargetAttributes = {
 					D48BB00623DE099200E88129 = {
@@ -811,7 +811,6 @@
 				4F811F42253A4F1300F5A15C /* FadeWrapperView.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				50298746253C043F00E52EDA /* ConnectSocialMediaViewController.swift in Sources */,
-				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
 				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
 				D47FF1852459424C00808A9A /* Response.swift in Sources */,

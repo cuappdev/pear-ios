@@ -23,22 +23,22 @@ class InterestsViewController: UIViewController {
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
     private var interests: [Interest] = [
-         Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageURL: nil),
-         Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageURL: nil),
-         Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageURL: nil),
-         Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageURL: nil),
-         Interest(name: "Fashion", categories: nil, imageURL: nil),
-         Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageURL: nil),
-         Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageURL: nil),
-         Interest(name: "Humanities", categories: ["history", "politics"], imageURL: nil),
-         Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageURL: nil),
-         Interest(name: "Photography", categories: ["digital", "analog"], imageURL: nil),
-         Interest(name: "Reading", categories: nil, imageURL: nil),
-         Interest(name: "Sustainability", categories: nil, imageURL: nil),
-         Interest(name: "Tech", categories: ["programming", "web/app development"], imageURL: nil),
-         Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageURL: nil),
-         Interest(name: "TV & Film", categories: nil, imageURL: nil)
-     ]
+         Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
+         Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
+         Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
+         Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
+         Interest(name: "Fashion", categories: nil, imageName: "fashion"),
+         Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
+         Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
+         Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
+         Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
+         Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
+         Interest(name: "Reading", categories: nil, imageName: "reading"),
+         Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
+         Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
+         Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
+         Interest(name: "TV & Film", categories: nil, imageName: "tvfilm")
+    ]
     private var selectedInterests: [Interest] = []
 
     init(delegate: OnboardingPageDelegate) {
@@ -148,7 +148,7 @@ class InterestsViewController: UIViewController {
                     if response.success {
                         self.selectedInterests = response.data.interests.map {
                             // TODO: Fix interest model in backend before using to populate screen
-                            return Interest(name: $0, categories: [], imageURL: nil)
+                            return Interest(name: $0, categories: [], imageName: "")
                         }
                         self.updateNext()
                         self.fadeTableView.view.reloadData()

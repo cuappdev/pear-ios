@@ -27,8 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
             // Onboard user if they haven't done so yet, otherwise bring to home.
-//            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let onboardingCompleted = false
+            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
             let rootVC = onboardingCompleted ? HomeViewController() : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
             guard let unwrappedToken = refreshToken else { return }
