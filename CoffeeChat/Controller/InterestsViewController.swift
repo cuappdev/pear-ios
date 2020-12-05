@@ -22,7 +22,7 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
-    private var interests: [Interest] = [
+    private let interests: [Interest] = [
          Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
          Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
          Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),

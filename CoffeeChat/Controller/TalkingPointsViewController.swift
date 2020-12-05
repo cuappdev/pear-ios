@@ -14,6 +14,23 @@ class TalkingPointsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedTalkingPoints: [SimpleOnboardingCell] = []
+    private let interests: [Interest] = [
+         Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
+         Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
+         Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
+         Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
+         Interest(name: "Fashion", categories: nil, imageName: "fashion"),
+         Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
+         Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
+         Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
+         Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
+         Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
+         Interest(name: "Reading", categories: nil, imageName: "reading"),
+         Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
+         Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
+         Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
+         Interest(name: "TV & Film", categories: nil, imageName: "tvfilm")
+    ]
     private var talkingPoints: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
 
@@ -140,27 +157,16 @@ class TalkingPointsViewController: UIViewController {
     }
     
     private func getAllInterests() {
-        NetworkManager.shared.getAllInterests().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let interests = response.data.map {
-                            // TODO: Fix interest model in backend before using to populate screen
-                            return SimpleOnboardingCell(name: $0, subtitle: nil)
-                        }
-                        self.talkingPoints.append(contentsOf: interests)
-                        self.talkingPoints.sort(by: { $0.name < $1.name })
-                        self.displayedTalkingPoints = self.talkingPoints
-                        self.fadeTableView.view.reloadData()
-                        
-                    }
-                case .error(let error):
-                    print(error)
-                }
-            }
-        }    }
+        let onboardingInterests = interests.map {
+            // TODO: Fix interest model in backend before using to populate screen
+            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
+        }
+        talkingPoints.append(contentsOf: onboardingInterests)
+        talkingPoints.sort(by: { $0.name < $1.name })
+        displayedTalkingPoints = self.talkingPoints
+        fadeTableView.view.reloadData()
+    }
+                
 
     private func setupConstraints() {
         let backSize = CGSize(width: 86, height: 20)
