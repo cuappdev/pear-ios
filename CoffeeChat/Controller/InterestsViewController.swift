@@ -145,14 +145,16 @@ class InterestsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    if response.success {
-                        self.selectedInterests = response.data.interests.map {
-                            // TODO: Fix interest model in backend before using to populate screen
-                            return Interest(name: $0, categories: [], imageName: "")
-                        }
-                        self.updateNext()
-                        self.fadeTableView.view.reloadData()
+                    guard response.success else {
+                        print("Get user interest failure")
+                        return
                     }
+                    self.selectedInterests = response.data.interests.map {
+                        // TODO: Fix interest model in backend before using to populate screen
+                        return Interest(name: $0, categories: [], imageName: "")
+                    }
+                    self.updateNext()
+                    self.fadeTableView.view.reloadData()
                 case .error(let error):
                     print(error)
                 }
