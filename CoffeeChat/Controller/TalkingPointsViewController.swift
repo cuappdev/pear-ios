@@ -109,7 +109,7 @@ class TalkingPointsViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        getAllGroups()
+        getAllTalkingPoints()
         getUserTalkingPoints()
         super.viewWillAppear(animated)
     }
@@ -136,7 +136,7 @@ class TalkingPointsViewController: UIViewController {
         }
     }
     
-    private func getAllGroups() {
+    private func getAllTalkingPoints() {
         NetworkManager.shared.getAllGroups().observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -147,7 +147,14 @@ class TalkingPointsViewController: UIViewController {
                         self.talkingPoints = groups.map {
                             return SimpleOnboardingCell(name: $0, subtitle: nil)
                         }
-                        self.getAllInterests()
+                        let onboardingInterests = self.interests.map {
+                            // TODO: Fix interest model in backend before using to populate screen
+                            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
+                        }
+                        self.talkingPoints.append(contentsOf: onboardingInterests)
+                        self.talkingPoints.sort(by: { $0.name < $1.name })
+                        self.displayedTalkingPoints = self.talkingPoints
+                        self.fadeTableView.view.reloadData()
                     }
                 case .error(let error):
                     print(error)
@@ -155,18 +162,6 @@ class TalkingPointsViewController: UIViewController {
             }
         }
     }
-    
-    private func getAllInterests() {
-        let onboardingInterests = interests.map {
-            // TODO: Fix interest model in backend before using to populate screen
-            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
-        }
-        talkingPoints.append(contentsOf: onboardingInterests)
-        talkingPoints.sort(by: { $0.name < $1.name })
-        displayedTalkingPoints = self.talkingPoints
-        fadeTableView.view.reloadData()
-    }
-                
 
     private func setupConstraints() {
         let backSize = CGSize(width: 86, height: 20)
@@ -233,7 +228,7 @@ class TalkingPointsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        let talkingPoints = selectedInterestsGroups.map { return $0.name }
+        let talkingPoints = selectedInterestsGroups.map { $0.name }
         NetworkManager.shared.updateUserTalkingPoints(talkingPoints: talkingPoints).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {

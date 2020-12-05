@@ -197,7 +197,7 @@ class GroupsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let groups = response.data
-                        self.groups = groups.map { return SimpleOnboardingCell(name: $0, subtitle: nil) }
+                        self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
                         self.displayedGroups = self.groups
                         self.fadeTableView.view.reloadData()
                     }
@@ -223,7 +223,7 @@ class GroupsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let userGroups = response.data.groups
-                        self.selectedGroups = userGroups.map { return SimpleOnboardingCell(name: $0, subtitle: nil)}
+                        self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
                         self.fadeTableView.view.reloadData()
                         self.updateNext()
                     }
