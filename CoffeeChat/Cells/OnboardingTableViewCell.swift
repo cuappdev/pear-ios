@@ -96,11 +96,7 @@ class OnboardingTableViewCell: UITableViewCell {
     func configure(with interest: Interest) {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.categories?.joined(separator: ", ") ?? nil
-        if let pictureString = interest.imageURL {
-            interestImageView.kf.setImage(with: URL(string: pictureString))
-        } else {
-            interestImageView.image = nil
-        }
+        interestImageView.image = UIImage(named: interest.imageName)
 
         if lastShownItem != .interest {
             lastShownItem = .interest

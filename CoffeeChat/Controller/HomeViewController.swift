@@ -18,9 +18,9 @@ class HomeViewController: UIViewController {
     private var tabCollectionView: UICollectionView!
     /// View that holds `tabPageViewController` below the pill view
     private var tabContainerView: UIView!
-    /// View Controller who's contents are shown below
+    /// View Controller whose contents are shown below
     private var tabPageViewController: TabPageViewController?
-    let profileButtonSize = CGSize(width: 35, height: 35)
+    private let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
@@ -69,10 +69,16 @@ class HomeViewController: UIViewController {
 
     private func getUserMatching() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).chained { (response: Response<User>) -> Future<Response<Matching?>> in
+        NetworkManager.shared.getUser(netId: netId).chained { [weak self] (response: Response<User>) -> Future<Response<Matching?>> in
+            guard let self = self else { return Promise<Response<Matching?>>(error: NetworkingError.failed("Self invalid")) }
             if response.success {
                 let user = response.data
                 self.user = user
+                DispatchQueue.main.async {
+                    if let profilePictureURL = URL(string: user.profilePictureURL) {
+                        self.profileButton.kf.setImage(with: profilePictureURL, for: .normal)
+                    }
+                }
                 return NetworkManager.shared.getMatching(user: user)
             } else {
                 return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
@@ -87,7 +93,8 @@ class HomeViewController: UIViewController {
                 matchResult = nil
             }
             DispatchQueue.main.async {
-                self.setupTabPageViewController(with: matchResult)
+                // TODO: Replace nil matching with actual matching after route is done
+                self.setupTabPageViewController(with: nil)
             }
         }
     }

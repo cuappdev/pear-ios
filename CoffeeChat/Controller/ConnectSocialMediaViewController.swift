@@ -39,7 +39,7 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(infoTextView)
 
         // TODO: fill with previously saved socials from backend
-        instaTextField.text = "@cndyhuang"
+        instaTextField.text = ""
         instaTextField.font = ._20CircularStdBook
         instaTextField.backgroundColor = .white
         instaTextField.layer.cornerRadius = 8
@@ -51,7 +51,7 @@ class ConnectSocialMediaViewController: UIViewController {
         view.addSubview(instaTextField)
 
         let instaIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
-        instaIcon.image = UIImage(named: "instagramIcon")
+        instaIcon.image = UIImage(named: "instagram")
         let instaViewL = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
         instaViewL.addSubview(instaIcon)
         instaTextField.leftView = instaViewL
@@ -62,7 +62,7 @@ class ConnectSocialMediaViewController: UIViewController {
         instaTextField.rightViewMode = .always
 
         // fill with previously saved socials from backend
-        fbTextField.text = "http://www.facebook.co..."
+        fbTextField.text = ""
         fbTextField.font = ._20CircularStdBook
         fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
@@ -116,6 +116,33 @@ class ConnectSocialMediaViewController: UIViewController {
 
     @objc private func saveSocialMedia() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getUserSocialMedia()
+        super.viewWillAppear(animated)
+    }
+    
+    private func getUserSocialMedia() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        if let facebook = response.data.facebook {
+                            self.fbTextField.text = facebook
+                        }
+                        if let instagram = response.data.instagram {
+                            self.instaTextField.text = instagram
+                        }
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
 
     private func setupConstraints() {

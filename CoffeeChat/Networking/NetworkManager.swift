@@ -59,10 +59,13 @@ class NetworkManager {
     func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserGoals(goals: goals)).decode()
     }
+    
+    func updateUserTalkingPoints(talkingPoints: [String]) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserTalkingPoints(talkingPoints: talkingPoints)).decode()
+    }
 
     func updateUserSocialMedia(facebook: String, instagram: String) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram)).decode()
-
     }
 
     func getUser(netId: String) -> Future<Response<User>> {

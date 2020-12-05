@@ -22,7 +22,7 @@ class OnboardingPageViewController: UIPageViewController {
     private var goalsViewController: GoalsViewController!
     private var groupsViewController: GroupsViewController!
     private var interestsViewController: InterestsViewController!
-    private var interestsGroupsViewController: InterestsGroupsViewController!
+    private var talkingPointsViewController: TalkingPointsViewController!
     private var onboardingPages = [UIViewController]()
     private var socialMediaViewController: SocialMediaViewController!
 
@@ -49,7 +49,7 @@ class OnboardingPageViewController: UIPageViewController {
 
         demographicsViewController = DemographicsViewController(delegate: self)
         interestsViewController = InterestsViewController(delegate: self)
-        interestsGroupsViewController = InterestsGroupsViewController(delegate: self)
+        talkingPointsViewController = TalkingPointsViewController(delegate: self)
         groupsViewController = GroupsViewController(delegate: self)
         goalsViewController = GoalsViewController(delegate: self)
         socialMediaViewController = SocialMediaViewController(delegate: self)
@@ -58,7 +58,7 @@ class OnboardingPageViewController: UIPageViewController {
             interestsViewController,
             groupsViewController,
             goalsViewController,
-            interestsGroupsViewController,
+            talkingPointsViewController,
             socialMediaViewController
         ]
 

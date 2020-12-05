@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "business1x.png",
       "idiom" : "universal",
-      "filename" : "business.png",
       "scale" : "1x"
     },
     {
+      "filename" : "business2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "business3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }
