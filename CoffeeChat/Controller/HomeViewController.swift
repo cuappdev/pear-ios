@@ -65,43 +65,43 @@ class HomeViewController: UIViewController {
         view.addSubview(tabCollectionView)
 
         setUpConstraints()
+        setUserAndTabPage()
     }
 
-    private func getUserMatching() {
+    private func setUserAndTabPage() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).chained { [weak self] (response: Response<User>) -> Future<Response<Matching?>> in
-            guard let self = self else { return Promise<Response<Matching?>>(error: NetworkingError.failed("Self invalid")) }
-            if response.success {
-                let user = response.data
-                self.user = user
-                DispatchQueue.main.async {
-                    if let profilePictureURL = URL(string: user.profilePictureURL) {
-                        self.profileButton.kf.setImage(with: profilePictureURL, for: .normal)
-                    }
+
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .value(let response):
+                guard response.success else {
+                    print("Unsuccesful response when getting user")
+                    return
                 }
-                //return NetworkManager.shared.getMatching(user: user)
-                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
-            } else {
-                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
-            }
-        }.observe { response in
-            let matchResult: Matching?
-            switch response {
-            case .value(let value):
-                matchResult = value.success ? value.data : nil
-            case .error:
-                print("Failed to get the matching for user")
-                matchResult = nil
-            }
-            DispatchQueue.main.async {
-                // TODO: Replace nil matching with actual matching after route is done
-                self.setupTabPageViewController(with: nil)
+
+                self.user = response.data
+
+                //let firstActiveMatch = response.data.matches.filter({ $0.status == "inactive" }).first
+                let firstActiveMatch = Match(
+                    matchID: "abc123",
+                    status: "created",
+                    meetingTime: 10,
+                    users: ["pno3", "llx2"],
+                    availabilities: TimeAvailability(availabilities: [SubTimeAvailability(day: "Friday", times: [10])])
+                )
+                DispatchQueue.main.async {
+                    self.setupTabPageViewController(with: firstActiveMatch)
+                }
+            case .error(let error):
+                print("Encountered error in HomeViewController when getting User: \(error)")
             }
         }
     }
 
-    private func setupTabPageViewController(with matching: Matching?) {
-        tabPageViewController = TabPageViewController(matching: matching)
+    private func setupTabPageViewController(with match: Match?) {
+        tabPageViewController = TabPageViewController(match: match)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -150,7 +150,6 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-        getUserMatching()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

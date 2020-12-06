@@ -139,21 +139,21 @@ class MeetupStatusView: UIView {
 
     // MARK: Different View States
 
-    private func setupForResponding(to user: SubUser) {
+    private func setupForResponding(to user: User) {
         statusImageView.image = UIImage(named: "newPear")
         statusLabel.text = "New Pear"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("\(user.firstName) wants to meet you! Pick a time that works for both of you.")
     }
 
-    private func setupForWaiting(for user: SubUser) {
+    private func setupForWaiting(for user: User) {
         statusImageView.image = UIImage(named: "reachedOut")
         statusLabel.text = "Reached out"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("Just waiting on \(user.firstName) to pick a time and place!")
     }
 
-    private func setupForChatScheduled(on date: Date, for user: SubUser) {
+    private func setupForChatScheduled(on date: Date, for user: User) {
         statusImageView.image = UIImage(named: "scheduled")
         statusLabel.text = "Chat scheduled"
 
@@ -195,7 +195,7 @@ class MeetupStatusView: UIView {
             .normalFont("Hope your chat went well! Now you have one more friend at Cornell 😊")
     }
 
-    private func setupForChatCancelled(with user: SubUser) {
+    private func setupForChatCancelled(with user: User) {
         statusImageView.image = UIImage(named: "cancelled")
         statusLabel.text = "Cancelled"
 

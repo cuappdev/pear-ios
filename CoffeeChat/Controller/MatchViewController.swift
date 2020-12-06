@@ -15,49 +15,38 @@ enum ChatStatus {
     case noResponses
 
     /// User already reached out and is waiting on `SubUser`
-    case waitingOn(SubUser)
+    case waitingOn(User)
     /// `SubUser` already reached out, and user is responding
-    case respondingTo(SubUser)
+    case respondingTo(User)
 
     /// The chat date has passed
     case finished
     /// The chat has been cancelled with `SubUser`
-    case cancelled(SubUser)
+    case cancelled(User)
 
     /// Chat between the User and `SubUser` has been scheduled and is coming up on `Date`
-    case chatScheduled(SubUser, Date)
+    case chatScheduled(User, Date)
 
-    // TODO change when matching responses change
-    // The current Matching doesn't hold enough information to distinguish between all states, so this function will
-    // change in the near future
-    static func forMatching(matching: Matching) -> ChatStatus {
-        // XXX redo this too ):
-        return .finished
-//        guard matching.users.count > 1 else {
-//            print("Attempted to extract a pear for a matching with only 1 person: returning .planning as the ChatStatus")
-//            return .planning
-//        }
-//        let matchPear = matching.users[1]
-//
-//        guard let matchDaySchedule = matching.schedule.first,
-//            let matchTime = matchDaySchedule.nextCorrespondingDate else {
-//            return Time.daysSinceMatching > 3 ? .noResponses : .planning
-//        }
-//
-//        if matching.active {
-//            return matchDaySchedule.hasPassed
-//            ? .finished
-//            : .chatScheduled(matchPear, matchTime)
-//        } else {
-//            return respondingTo(matchPear)
-//        }
+    static func forMatch(match: Match, pair: User) -> ChatStatus {
+        switch match.status {
+        case "created":
+            return Time.daysSinceMatching >= 3 ? .noResponses : .planning
+        case "proposed":
+            return .waitingOn(pair) // TODO another networking request to figure out which
+        case "cancelled":
+            return .cancelled(pair)
+        case "inactive":
+            return .finished
+        default:
+            print("Match has an invalid status; Using planning instead (match: \(match))")
+            return .planning
+        }
     }
 
 }
 
 class MatchViewController: UIViewController {
 
-    private let pair: SubUser
     private let chatStatus: ChatStatus
     private var hasReachedOut: Bool {
         switch chatStatus {
@@ -87,22 +76,28 @@ class MatchViewController: UIViewController {
         MatchSummary(title: "He is also part of...", detail: "EzraBox")
     ]
 
-    init(matching: Matching) {
+    init(match: Match) {
         // XXX redo this
-        self.pair = SubUser(
+        let dummyUser = User(
             firstName: "",
+            goals: [],
             googleID: "",
             graduationYear: "",
+            groups: [],
             hometown: "",
+            interests: [],
             lastName: "",
             major: "",
             netID: "",
             profilePictureURL: "",
             pronouns: "",
-            facebook: nil,
-            instagram: nil
-            )
-            self.chatStatus = ChatStatus.forMatching(matching: matching)
+            facebook: "",
+            instagram: "",
+            talkingPoints: [],
+            availabilities: [],
+            matches: []
+        )
+        self.chatStatus = ChatStatus.forMatch(match: match, pair: dummyUser)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -150,14 +145,17 @@ class MatchViewController: UIViewController {
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
+        //matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)" // TODO
+        matchNameLabel.text = "---"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
         let major = "???" // TODO update with info from User, not SubUser
-        matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)"
+        //matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)" // TODO
+        matchDemographicsLabel.text = "---"
+
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook
         matchDemographicsLabel.numberOfLines = 0

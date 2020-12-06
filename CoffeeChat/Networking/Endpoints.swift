@@ -173,7 +173,7 @@ extension Endpoint {
 
     /// [POST] Update the availabilities for the given match.
     static func updateMatchAvailabilities(match: Match) -> Endpoint {
-        let body = Matching(matchID: match.matchID, schedule: match.availibilities.schedule)
+        let body = Matching(matchID: match.matchID, schedule: match.availabilities.schedule)
         return Endpoint(path: "/match/availabilities/", headers: standardHeaders, body: body)
     }
 

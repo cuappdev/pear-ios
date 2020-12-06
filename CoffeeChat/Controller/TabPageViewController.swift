@@ -15,9 +15,9 @@ class TabPageViewController: UIPageViewController {
     private let matchViewController: UIViewController
     private var pages: [UIViewController] = [UIViewController]()
 
-    init(matching: Matching?) {
-        if let matching = matching {
-            matchViewController = MatchViewController(matching: matching)
+    init(match: Match?) {
+        if let match = match {
+            matchViewController = MatchViewController(match: match)
         } else {
             matchViewController = NoMatchViewController()
         }
