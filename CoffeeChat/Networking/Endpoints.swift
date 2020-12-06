@@ -78,19 +78,19 @@ extension Endpoint {
         let body = UpdateUserInterestsBody(interests: interests)
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update groups information about the user
     static func updateUserGroups(groups: [String]) -> Endpoint {
         let body = UpdateUserGroupsBody(groups: groups)
         return Endpoint(path: "/user/groups/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update goals information about the user
     static func updateUserGoals(goals: [String]) -> Endpoint {
         let body = UpdateUserGoalsBody(goals: goals)
         return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update goals information about the user
     static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
         let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
@@ -102,7 +102,7 @@ extension Endpoint {
         let body = UpdateUserGroupsBody(groups: organizations)
         return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update talking points information about the user
     static func updateUserTalkingPoints(talkingPoints: [String]) -> Endpoint {
         let body = UpdateUserTalkingPointsBody(talkingPoints: talkingPoints)
@@ -144,17 +144,17 @@ extension Endpoint {
     static func searchUsers(query: String) -> Endpoint {
         Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
     }
-    
+
     /// [GET] Get all student groups
     static func getAllGroups() -> Endpoint {
         Endpoint(path: "/group/all/", headers: standardHeaders)
     }
-    
+
     /// [GET] Get all interests
     static func getAllInterests() -> Endpoint {
         Endpoint(path: "/interest/all/", headers: standardHeaders)
     }
-    
+
     /// [GET] Get all majors
     static func getAllMajors() -> Endpoint {
         Endpoint(path: "/major/all/", headers: standardHeaders)
@@ -169,6 +169,24 @@ extension Endpoint {
     static func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Endpoint {
         let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)
         return Endpoint(path: "/user/availabilities/", headers: standardHeaders ,body: body)
+    }
+
+    /// [POST] Update the availabilities for the given match.
+    static func updateMatchAvailabilities(match: Match) -> Endpoint {
+        let body = Matching(matchID: match.matchID, schedule: match.availibilities.schedule)
+        return Endpoint(path: "/match/availabilities/", headers: standardHeaders, body: body)
+    }
+
+    /// [POST] Cancels match provided the matchID.
+    static func cancelMatch(matchID: String) -> Endpoint {
+        let e = Endpoint(path: "/match/cancel/", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders)
+        print("url: \(e.url)")
+        return e
+    }
+
+    /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
+    static func getMatchHistory(netID: String) -> Endpoint {
+        Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
     }
 
 }

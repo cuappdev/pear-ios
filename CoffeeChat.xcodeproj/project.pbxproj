@@ -53,7 +53,7 @@
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D41FE85A246463E10048900F /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE859246463E10048900F /* UserSession.swift */; };
 		D41FE85C246463FC0048900F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85B246463FC0048900F /* User.swift */; };
-		D41FE85E2464640F0048900F /* Matching.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85D2464640F0048900F /* Matching.swift */; };
+		D41FE85E2464640F0048900F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85D2464640F0048900F /* Match.swift */; };
 		D41FE860246464240048900F /* DaySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85F246464240048900F /* DaySchedule.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
 		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
@@ -161,7 +161,7 @@
 		D41FC30423F112B300F8673A /* GroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 		D41FE859246463E10048900F /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		D41FE85B246463FC0048900F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		D41FE85D2464640F0048900F /* Matching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matching.swift; sourceTree = "<group>"; };
+		D41FE85D2464640F0048900F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		D41FE85F246464240048900F /* DaySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySchedule.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
 		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -265,7 +265,7 @@
 				5030DCF42532B5F600374F7B /* SettingOption.swift */,
 				D41FE859246463E10048900F /* UserSession.swift */,
 				D41FE85B246463FC0048900F /* User.swift */,
-				D41FE85D2464640F0048900F /* Matching.swift */,
+				D41FE85D2464640F0048900F /* Match.swift */,
 				D41FE85F246464240048900F /* DaySchedule.swift */,
 				D41FE861246464310048900F /* SubUser.swift */,
 				D42961882526012400C677C3 /* SimpleOnboardingCell.swift */,
@@ -857,7 +857,7 @@
 				D41FE862246464310048900F /* SubUser.swift in Sources */,
 				D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */,
 				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
-				D41FE85E2464640F0048900F /* Matching.swift in Sources */,
+				D41FE85E2464640F0048900F /* Match.swift in Sources */,
 				5029873825389E4700E52EDA /* PausePearView.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */,

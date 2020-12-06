@@ -11,7 +11,10 @@ import Foundation
 struct TimeAvailability: Codable {
 
     let availabilities: [SubTimeAvailability]
-    
+
+    var schedule: [Schedule] {
+        availabilities.map { Schedule(day: $0.day, times: $0.times) }
+    }
 }
 
 struct SubTimeAvailability: Codable {

@@ -79,7 +79,8 @@ class HomeViewController: UIViewController {
                         self.profileButton.kf.setImage(with: profilePictureURL, for: .normal)
                     }
                 }
-                return NetworkManager.shared.getMatching(user: user)
+                //return NetworkManager.shared.getMatching(user: user)
+                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
             } else {
                 return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
             }

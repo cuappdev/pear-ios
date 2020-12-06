@@ -19,26 +19,26 @@ struct UserSessionBody: Codable {
 struct UpdateUserGroupsBody: Codable {
 
     let groups: [String]
-    
+
 }
 
 struct UpdateUserGoalsBody: Codable {
 
     let goals: [String]
-    
+
 }
 
 struct UpdateUserTalkingPointsBody: Codable {
-    
+
     let talkingPoints: [String]
-    
+
 }
 
 struct UpdateUserSocialMediaBody: Codable {
-    
+
     let facebook: String
     let instagram: String
-    
+
 }
 
 struct UpdateUserDemographicsBody: Codable {
@@ -74,5 +74,11 @@ struct Schedule: Codable {
 
     let day: String
     let times: [Float]
-    
+
+}
+
+struct Matching: Codable {
+
+    let matchID: String
+    let schedule: [Schedule]
 }

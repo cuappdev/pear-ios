@@ -31,24 +31,26 @@ enum ChatStatus {
     // The current Matching doesn't hold enough information to distinguish between all states, so this function will
     // change in the near future
     static func forMatching(matching: Matching) -> ChatStatus {
-        guard matching.users.count > 1 else {
-            print("Attempted to extract a pear for a matching with only 1 person: returning .planning as the ChatStatus")
-            return .planning
-        }
-        let matchPear = matching.users[1]
-
-        guard let matchDaySchedule = matching.schedule.first,
-            let matchTime = matchDaySchedule.nextCorrespondingDate else {
-            return Time.daysSinceMatching > 3 ? .noResponses : .planning
-        }
-
-        if matching.active {
-            return matchDaySchedule.hasPassed
-            ? .finished
-            : .chatScheduled(matchPear, matchTime)
-        } else {
-            return respondingTo(matchPear)
-        }
+        // XXX redo this too ):
+        return .finished
+//        guard matching.users.count > 1 else {
+//            print("Attempted to extract a pear for a matching with only 1 person: returning .planning as the ChatStatus")
+//            return .planning
+//        }
+//        let matchPear = matching.users[1]
+//
+//        guard let matchDaySchedule = matching.schedule.first,
+//            let matchTime = matchDaySchedule.nextCorrespondingDate else {
+//            return Time.daysSinceMatching > 3 ? .noResponses : .planning
+//        }
+//
+//        if matching.active {
+//            return matchDaySchedule.hasPassed
+//            ? .finished
+//            : .chatScheduled(matchPear, matchTime)
+//        } else {
+//            return respondingTo(matchPear)
+//        }
     }
 
 }
@@ -86,8 +88,21 @@ class MatchViewController: UIViewController {
     ]
 
     init(matching: Matching) {
-        self.pair = matching.users[1]
-        self.chatStatus = ChatStatus.forMatching(matching: matching)
+        // XXX redo this
+        self.pair = SubUser(
+            firstName: "",
+            googleID: "",
+            graduationYear: "",
+            hometown: "",
+            lastName: "",
+            major: "",
+            netID: "",
+            profilePictureURL: "",
+            pronouns: "",
+            facebook: nil,
+            instagram: nil
+            )
+            self.chatStatus = ChatStatus.forMatching(matching: matching)
         super.init(nibName: nil, bundle: nil)
     }
 

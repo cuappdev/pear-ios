@@ -24,7 +24,7 @@ class NoMatchViewController: UIViewController {
         title = "" // To get rid of the "back" text on navigation bar
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
-        
+
         surprisedPearImageView.image = UIImage(named: "surprisedPear")
         surprisedPearImageView.contentMode = .scaleAspectFit
         view.addSubview(surprisedPearImageView)
@@ -53,10 +53,10 @@ class NoMatchViewController: UIViewController {
         availabilityButton.layer.cornerRadius = 26
         availabilityButton.addTarget(self, action: #selector(availabilityButtonPressed), for: .touchUpInside)
         view.addSubview(availabilityButton)
-        
+
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
         let buttonSize = CGSize(width: 225, height: 54)
         let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
