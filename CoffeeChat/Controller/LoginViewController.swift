@@ -98,7 +98,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             return
         }
 
-        if let email = user.profile.email, !(email.contains("@cornell.edu")) {
+        if let email = user.profile.email, !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
             GIDSignIn.sharedInstance().signOut()
             self.showErrorMessageAlertView()
             return
