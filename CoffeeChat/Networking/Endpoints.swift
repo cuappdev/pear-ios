@@ -12,14 +12,19 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-        let baseURL = Keys.serverURL
+        // TODO change this back
+        //let baseURL = Keys.serverURL
+        let baseURL = "localhost";
 
-        #if LOCAL
-            Endpoint.config.scheme = "http"
-            Endpoint.config.port = 5000
-        #else
-            Endpoint.config.scheme = "http"
-        #endif
+        // #if LOCAL
+        //     Endpoint.config.scheme = "http"
+        //     Endpoint.config.port = 5000
+        // #else
+        //     Endpoint.config.scheme = "http"
+        // #endif
+        Endpoint.config.scheme = "http"
+        Endpoint.config.port = 5000
+
         Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
@@ -179,9 +184,7 @@ extension Endpoint {
 
     /// [POST] Cancels match provided the matchID.
     static func cancelMatch(matchID: String) -> Endpoint {
-        let e = Endpoint(path: "/match/cancel/", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders)
-        print("url: \(e.url)")
-        return e
+        return Endpoint(path: "/match/cancel/", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders)
     }
 
     /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
