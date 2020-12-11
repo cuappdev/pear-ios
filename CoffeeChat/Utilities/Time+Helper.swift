@@ -77,6 +77,36 @@ class Time {
         getWeekday(searchDirection: .forward, weekday: weekday, time: time)
     }
 
+    /**
+    Returns the next `Date` corresponding to the next date specified by `day` and the first float in `times`.
+    Returns nil if `day`doesn't represent a valid string or times is empty.
+    */
+    static func next(day: String, times: [Float]) -> Date? {
+        let firstTime = times.first ?? 0
+        if let weekday = Weekday(rawValue: day) {
+            return Time.next(weekday, at: firstTime)
+        } else {
+            return nil
+        }
+    }
+
+    /**
+    Returns true if the date corresponding to the day and the *first* time in times has passed this week.
+    "This week" is determined by getting the next occurence of the date and seeing if it is after the day of the
+    week new matches are assigned.
+
+    If this `DaySchedule` doesn't correspond to a day, is `false`
+    */
+    static func scheduleHasPassed(day: String, times: [Float]) -> Bool {
+        let nextSunday = Time.next(.sunday, at: 0)
+        if let matchDate = Time.next(day: day, times: times) {
+            return matchDate >= nextSunday
+        } else {
+            return false
+        }
+    }
+
+
 }
 
 // MARK: Helper Functinos

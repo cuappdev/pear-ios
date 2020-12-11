@@ -86,13 +86,14 @@ class HomeViewController: UIViewController {
                 //let firstActiveMatch = response.data.matches.filter({ $0.status == "inactive" }).first
                 let firstActiveMatch = Match(
                     matchID: "abc123",
-                    status: "created",
+                    status: "cancelled",
                     meetingTime: 10,
                     users: ["pno3", "llx2"],
                     availabilities: TimeAvailability(availabilities: [SubTimeAvailability(day: "Friday", times: [10])])
                 )
                 DispatchQueue.main.async {
                     self.setupTabPageViewController(with: firstActiveMatch)
+                    print("done setting this ")
                 }
             case .error(let error):
                 print("Encountered error in HomeViewController when getting User: \(error)")

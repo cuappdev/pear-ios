@@ -35,6 +35,19 @@ enum ChatStatus {
             return .waitingOn(pair) // TODO another networking request to figure out which
         case "cancelled":
             return .cancelled(pair)
+        case "active":
+            guard let availability = match.availabilities.availabilities.first else {
+                print("match's timeAvailability has no availabilities, but is active. Returning finished instead")
+                return .finished
+            }
+            guard let date = Time.next(day: availability.day, times: availability.times) else {
+                print("Couldn't convert match's timeAvailability to a Date, returning finished instead")
+                return .finished
+            }
+
+            return Time.scheduleHasPassed(day: availability.day, times: availability.times)
+                ? .finished
+                : .chatScheduled(pair, date)
         case "inactive":
             return .finished
         default:
@@ -47,7 +60,8 @@ enum ChatStatus {
 
 class MatchViewController: UIViewController {
 
-    private let chatStatus: ChatStatus
+    private let match: Match
+    private var chatStatus: ChatStatus?
     private var hasReachedOut: Bool {
         switch chatStatus {
         case .chatScheduled, .waitingOn, .finished, .cancelled:
@@ -77,27 +91,7 @@ class MatchViewController: UIViewController {
     ]
 
     init(match: Match) {
-        // XXX redo this
-        let dummyUser = User(
-            firstName: "",
-            goals: [],
-            googleID: "",
-            graduationYear: "",
-            groups: [],
-            hometown: "",
-            interests: [],
-            lastName: "",
-            major: "",
-            netID: "",
-            profilePictureURL: "",
-            pronouns: "",
-            facebook: "",
-            instagram: "",
-            talkingPoints: [],
-            availabilities: [],
-            matches: []
-        )
-        self.chatStatus = ChatStatus.forMatch(match: match, pair: dummyUser)
+        self.match = match
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -128,13 +122,6 @@ class MatchViewController: UIViewController {
         reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
         if !hasReachedOut {
             view.addSubview(reachOutButton)
-        }
-
-        switch chatStatus {
-        case .noResponses, .waitingOn, .respondingTo, .finished, .cancelled, .chatScheduled:
-            meetupStatusView = MeetupStatusView(for: chatStatus)
-        default:
-            break
         }
 
         if let meetupStatusView = meetupStatusView {

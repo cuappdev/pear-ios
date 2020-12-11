@@ -204,7 +204,7 @@ class MeetupStatusView: UIView {
 
         if user.instagram != nil || user.facebook != nil {
             fullText
-                .normalFont("\nYou can still reach Maggie on ")
+                .normalFont("\nYou can still reach \(user.firstName) on ")
                 .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
                 .normalFont(".")
         }
