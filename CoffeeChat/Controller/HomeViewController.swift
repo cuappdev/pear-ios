@@ -84,12 +84,16 @@ class HomeViewController: UIViewController {
                 self.user = response.data
 
                 //let firstActiveMatch = response.data.matches.filter({ $0.status == "inactive" }).first
+                UserDefaults.standard.setValue("im stuff", forKey: Constants.UserDefaults.matchIDLastReachedOut)
+                //UserDefaults.standard.insert(value: "abc123", key: Constants.UserDefaults.matchIDLastReachedOut)
                 let firstActiveMatch = Match(
                     matchID: "abc123",
-                    status: "cancelled",
+                    status: "proposed",
                     meetingTime: 10,
                     users: ["pno3", "pno3"],
-                    availabilities: TimeAvailability(availabilities: [SubTimeAvailability(day: "Friday", times: [10])])
+                    availabilities: TimeAvailability(availabilities:[
+                        SubTimeAvailability(day: "Friday", times: [10])
+                    ])
                 )
                 DispatchQueue.main.async {
                     self.setupTabPageViewController(with: firstActiveMatch)

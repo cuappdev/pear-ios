@@ -10,7 +10,7 @@ import UIKit
 enum SchedulingStatus {
     /// If the user has no pear, they can input their typical availabilities
     case pickingTypical
-    /// If the user reaches out first, they confirm their availabilities
+    /// If the user reaches out first, they confirm all of their availabilities
     case confirming
     /// If the pear reached out first, the user chooses 1 time from the availabilities
     case choosing
@@ -19,7 +19,6 @@ enum SchedulingStatus {
 class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
-    // TODO make some of these optional rather than force unwrapped
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
@@ -37,8 +36,11 @@ class SchedulingTimeViewController: UIViewController {
     private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
     private let timeCellVerticalSpacing: CGFloat = 8
     private var timeCollectionViewWidth: CGFloat {
-        get { CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105)) }
+        CGFloat(CGFloat(timeSections.count) * LayoutHelper.shared.getCustomHorizontalPadding(size: 105))
     }
+    private let nextButtonSize = CGSize(width: 175, height: 50)
+    private let interitemSpacing: CGFloat = 4
+    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
     // MARK: - Section
     private struct Section {
@@ -68,11 +70,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private var timeSections: [Section] = []
 
-    // MARK: - Data
-    private let nextButtonSize = CGSize(width: 175, height: 50)
-    private let interitemSpacing: CGFloat = 4
-    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-
+    // MARK: Time Related
     // All possible times available for parts of a day
     private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
     private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
@@ -125,12 +123,14 @@ class SchedulingTimeViewController: UIViewController {
     private let matchFirstName: String = "Ezra"
 
     // MARK: ViewController State
+    private let match: Match?
     private let schedulingStatus: SchedulingStatus
-    private var isChoosing: Bool { get { schedulingStatus == .choosing } }
-    private var isConfirming: Bool { get { schedulingStatus == .confirming } }
+    private var isChoosing: Bool { .choosing ~= schedulingStatus }
+    private var isConfirming: Bool { .confirming ~= schedulingStatus }
 
-    init(for status: SchedulingStatus) {
+    init(for status: SchedulingStatus, with match: Match? = nil) {
         self.schedulingStatus = status
+        self.match = match
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -175,7 +175,7 @@ class SchedulingTimeViewController: UIViewController {
             fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
         }
         selectedDay = firstDay
-        changeTimes(for: daysDict[firstDay] ?? "Sunday")
+        changeDisplayedTimes(for: daysDict[firstDay] ?? "Sunday")
     }
 
     private func setupForStatus() {
@@ -363,7 +363,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     // MARK: - Time Related
-    private func changeTimes(for day: String) {
+    private func changeDisplayedTimes(for day: String) {
         if isChoosing, let times = matchAvailabilities[day] {
             afternoonTimes = allAfternoonTimes.filter { times.contains($0) }
             eveningTimes = allEveningTimes.filter { times.contains($0) }
@@ -522,7 +522,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             selectedDay = daysAbbrev[indexPath.item]
             dayLabel.text  = isChoosing ? daysDict[selectedDay] ?? "" : "Every \(daysDict[selectedDay] ?? "")"
             if isChoosing, let day = daysDict[selectedDay] {
-                changeTimes(for: day)
+                changeDisplayedTimes(for: day)
             }
             timeCollectionView.reloadData()
         } else {
