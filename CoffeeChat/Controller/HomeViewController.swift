@@ -88,12 +88,15 @@ class HomeViewController: UIViewController {
                     matchID: "abc123",
                     status: "cancelled",
                     meetingTime: 10,
-                    users: ["pno3", "llx2"],
+                    users: ["pno3", "pno3"],
                     availabilities: TimeAvailability(availabilities: [SubTimeAvailability(day: "Friday", times: [10])])
                 )
                 DispatchQueue.main.async {
                     self.setupTabPageViewController(with: firstActiveMatch)
-                    print("done setting this ")
+
+                    if let pictureURL = URL(string: response.data.profilePictureURL) {
+                        self.profileButton.kf.setImage(with: pictureURL, for: .normal)
+                    }
                 }
             case .error(let error):
                 print("Encountered error in HomeViewController when getting User: \(error)")

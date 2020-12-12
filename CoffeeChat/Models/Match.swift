@@ -21,11 +21,14 @@ struct Match: Codable {
         Is `nil` if all netIDs match the user or was unable to retrieve the user's netID from UserDefaults
     */
     var pair: String? {
-        let userNetID = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId)
-        if let userNetID = userNetID {
-            return (users.filter { $0 != userNetID }).first
-        }
-        return nil
+        // TODO change this back!
+        // testing with myself, so just assume its me
+        // let userNetID = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId)
+        // if let userNetID = userNetID {
+        //     return (users.filter { $0 != userNetID }).first
+        // }
+        // return nil
+        return "pno3"
     }
 
 }

@@ -28,19 +28,25 @@ struct Constants {
     }
 
     struct UserDefaults {
+        // Login
         static let accessToken = "accessToken"
+        static let onboardingCompletion = "onboardingCompletion"
         static let refreshToken = "refreshToken"
         static let sessionExpiration = "sessionExpiration"
-        static let onboardingCompletion = "onboardingCompletion"
+
+        // User Info
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"
         static let userGraduationYear = "userGraduationYear"
         static let userHometown = "userHometown"
         static let userIdToken = "userIdToken"
-        static let userNetId = "userNetId"
         static let userMajor = "userMajor"
+        static let userNetId = "userNetId"
         static let userProfilePictureURL = "userProfilePictureURL"
         static let userPronouns = "userPronouns"
+
+        // Matching
+        static let matchIDLastReachedOut = "matchIDLastReachedOut"
     }
 
     struct Onboarding {

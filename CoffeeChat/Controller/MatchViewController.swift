@@ -8,6 +8,12 @@
 import GoogleSignIn
 import UIKit
 
+/// If the local stored matchID matches the current match from backend, then the user has already reached out
+private func userAlreadyReacheOut(to match: Match) -> Bool {
+    let matchIDLastReachedOut = UserDefaults.standard.string(forKey: Constants.UserDefaults.matchIDLastReachedOut)
+    return matchIDLastReachedOut == match.matchID
+}
+
 enum ChatStatus {
     /// No one has reached out yet
     case planning
@@ -32,7 +38,9 @@ enum ChatStatus {
         case "created":
             return Time.daysSinceMatching >= 3 ? .noResponses : .planning
         case "proposed":
-            return .waitingOn(pair) // TODO another networking request to figure out which
+            return userAlreadyReacheOut(to: match)
+                ? .waitingOn(pair)
+                : .respondingTo(pair)
         case "cancelled":
             return .cancelled(pair)
         case "active":
@@ -62,14 +70,6 @@ class MatchViewController: UIViewController {
 
     private let match: Match
     private var chatStatus: ChatStatus?
-    private var hasReachedOut: Bool {
-        switch chatStatus {
-        case .chatScheduled, .waitingOn, .finished, .cancelled:
-            return true
-        default:
-            return false
-        }
-    }
 
     private let matchDemographicsLabel = UILabel()
     private let matchNameLabel = UILabel()
@@ -106,49 +106,86 @@ class MatchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-        setupConstraints()
-    }
-
-    private func setupViews() {
         view.backgroundColor = .backgroundLightGreen
 
+        getPairThen { [weak self] pair in
+            guard let self = self else { return }
+
+            self.chatStatus = ChatStatus.forMatch(match: self.match, pair: pair)
+
+            self.setupViews(pair: pair)
+            self.setupConstraints()
+        }
+    }
+
+    private func getPairThen(_ closure: @escaping (User) -> Void) {
+        guard let pairNetId = match.pair else {
+            print("Was unable to get the pair's netid from the match!")
+            return
+        }
+
+        NetworkManager.shared.getUser(netId: pairNetId).observe { response in
+            switch response {
+            case .value(let result):
+                guard result.success else {
+                    print("Response not successful when getting the user's pair")
+                    return
+                }
+                DispatchQueue.main.async {
+                    closure(result.data)
+                }
+            case .error(let error):
+                print("Encountered error when getting the user's pair: \(error)")
+            }
+        }
+    }
+
+    private func setupViews(pair: User) {
         reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.setTitleColor(.white, for: .normal)
         reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
         reachOutButton.titleLabel?.font = ._20CircularStdBold
-        reachOutButton.setTitle("Pick a time", for: .normal) // TODO change text based on whether responding
         reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-        if !hasReachedOut {
+        switch chatStatus {
+        case .planning, .noResponses:
+            reachOutButton.setTitle("Reach out", for: .normal)
+        case .respondingTo:
+            reachOutButton.setTitle("Pick a time", for: .normal)
+        default:
+            reachOutButton.setTitle("Enter availability", for: .normal)
+        }
+        if !userAlreadyReacheOut(to: match) {
             view.addSubview(reachOutButton)
         }
 
-        if let meetupStatusView = meetupStatusView {
-            view.addSubview(meetupStatusView)
+        if let chatStatus = chatStatus {
+            meetupStatusView = MeetupStatusView(for: chatStatus)
+            view.addSubview(meetupStatusView!)
         }
 
         matchProfileBackgroundView.axis = .vertical
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        //matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)" // TODO
-        matchNameLabel.text = "---"
+        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
 
-        let major = "???" // TODO update with info from User, not SubUser
-        //matchDemographicsLabel.text = "\(major) \(pair.graduationYear)\nFrom \(pair.hometown)\n\(pair.pronouns)" // TODO
-        matchDemographicsLabel.text = "---"
-
+        matchDemographicsLabel.text = "\(pair.major)"
         matchDemographicsLabel.textColor = .textGreen
         matchDemographicsLabel.font = ._16CircularStdBook
         matchDemographicsLabel.numberOfLines = 0
         matchProfileBackgroundView.insertArrangedSubview(matchDemographicsLabel, at: 1)
+
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
+        matchProfileImageView.layer.masksToBounds = true
+        if let pictureURL = URL(string: pair.profilePictureURL) {
+            matchProfileImageView.kf.setImage(with: pictureURL)
+        }
         view.addSubview(matchProfileImageView)
 
         matchSummaryTableView.backgroundColor = .backgroundLightGreen
@@ -192,7 +229,7 @@ class MatchViewController: UIViewController {
 
         matchSummaryTableView.snp.makeConstraints { make in
             make.top.equalTo(matchProfileBackgroundView.snp.bottom).offset(padding)
-            if !hasReachedOut {
+            if !userAlreadyReacheOut(to: match) {
                 make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
             } else {
                 make.bottom.equalToSuperview().inset(padding)
@@ -200,14 +237,13 @@ class MatchViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(padding)
         }
 
-        if !hasReachedOut {
+        if !userAlreadyReacheOut(to: match) {
             reachOutButton.snp.makeConstraints { make in
                 make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
                 make.centerX.equalToSuperview()
                 make.size.equalTo(reachOutButtonSize)
             }
         }
-
     }
 
     @objc private func reachOutPressed() {
@@ -223,6 +259,7 @@ class MatchViewController: UIViewController {
         }
         navigationController?.pushViewController(schedulingVC, animated: true)
     }
+
 }
 
 extension MatchViewController: UITableViewDataSource {
