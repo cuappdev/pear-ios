@@ -31,4 +31,21 @@ struct Match: Codable {
         return "pno3"
     }
 
+    /// `true` if there are still valid availabilities for the user to choose from
+    var allAvailibilitiesPassed: Bool {
+        let matchDays = availabilities.availabilities.map { $0.day }
+        var allPossibleMeetingDays = [
+            Constants.Match.sunday,
+            Constants.Match.monday,
+            Constants.Match.tuesday,
+            Constants.Match.wednesday,
+            Constants.Match.thursday,
+            Constants.Match.friday,
+            Constants.Match.saturday
+        ]
+        allPossibleMeetingDays = allPossibleMeetingDays.filter { matchDays.contains($0) }
+
+        return allPossibleMeetingDays.isEmpty
+    }
+
 }

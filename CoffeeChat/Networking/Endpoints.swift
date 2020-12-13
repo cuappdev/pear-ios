@@ -14,7 +14,7 @@ extension Endpoint {
     static func setupEndpointConfig() {
         // TODO change this back
         //let baseURL = Keys.serverURL
-        let baseURL = "localhost";
+        let baseURL = "localhost"
 
         // #if LOCAL
         //     Endpoint.config.scheme = "http"

@@ -34,7 +34,7 @@ enum ChatStatus {
     case chatScheduled(User, Date)
 
     static func forMatch(match: Match, pair: User) -> ChatStatus {
-        switch match.status { 
+        switch match.status {
         case Constants.Match.created:
             return Time.daysSinceMatching >= 3 ? .noResponses : .planning
 
@@ -76,6 +76,7 @@ enum ChatStatus {
 class MatchViewController: UIViewController {
 
     private let match: Match
+    private var pair: User?
     private var chatStatus: ChatStatus?
 
     private let matchDemographicsLabel = UILabel()
@@ -118,6 +119,7 @@ class MatchViewController: UIViewController {
         getPairThen { [weak self] pair in
             guard let self = self else { return }
 
+            self.pair = pair
             self.chatStatus = ChatStatus.forMatch(match: self.match, pair: pair)
 
             self.setupViews(pair: pair)
@@ -254,12 +256,14 @@ class MatchViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
+        guard let pair = pair else { return }
         let schedulingVC: SchedulingTimeViewController
+
         switch chatStatus {
         case .planning, .noResponses:
-            schedulingVC = SchedulingTimeViewController(for: .confirming)
+            schedulingVC = SchedulingTimeViewController(for: .confirming, pair: pair, match: match)
         case .waitingOn, .respondingTo:
-            schedulingVC = SchedulingTimeViewController(for: .choosing)
+            schedulingVC = SchedulingTimeViewController(for: .choosing, pair: pair, match: match)
         default:
             print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
             schedulingVC = SchedulingTimeViewController(for: .pickingTypical)

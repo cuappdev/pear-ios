@@ -95,13 +95,13 @@ class SchedulingTimeViewController: UIViewController {
     ]
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let abbrevToDayDict = [
-        "Su": "Sunday",
-        "M": "Monday",
-        "Tu": "Tuesday",
-        "W": "Wednesday",
-        "Th": "Thursday",
-        "F": "Friday",
-        "Sa": "Saturday"
+        "Su": "sunday",
+        "M": "monday",
+        "Tu": "tuesday",
+        "W": "wednesday",
+        "Th": "thursday",
+        "F": "friday",
+        "Sa": "saturday"
     ]
     private var selectedDay: String = "Su"
 
@@ -117,11 +117,21 @@ class SchedulingTimeViewController: UIViewController {
     private var isChoosing: Bool { .choosing ~= schedulingStatus }
     private var isConfirming: Bool { .confirming ~= schedulingStatus }
 
-    init(for status: SchedulingStatus, with pair: User? = nil, match: Match? = nil) {
+    convenience init(for status: SchedulingStatus, pair: User, match: Match) {
+        self.init(status: status, pair: pair, match: match)
+    }
+
+    convenience init(for status: SchedulingStatus) {
+        self.init(status: status)
+    }
+
+    private init(status: SchedulingStatus, pair: User? = nil, match: Match? = nil) {
         self.schedulingStatus = status
         self.match = match
         self.pair = pair
         self.matchAvailabilities = match?.availabilities.availabilities ?? []
+        print(match)
+        print(match?.availabilities)
         print(match?.availabilities.availabilities) // TODO delete
         super.init(nibName: nil, bundle: nil)
     }
@@ -157,10 +167,10 @@ class SchedulingTimeViewController: UIViewController {
         morningTimes = allMorningTimes
 
         if isConfirming || isChoosing {
-            removePassedDays()
+            removePassedDaysFromSelection()
         }
         if isChoosing {
-            removeUnavailableDays()
+            removeUnavailableDaysFromSelection()
         }
 
         guard let firstDay = daysAbbrev.first else {
@@ -372,13 +382,13 @@ class SchedulingTimeViewController: UIViewController {
         setupTimeCollectionViewConstraints()
     }
 
-    private func removePassedDays() {
+    private func removePassedDaysFromSelection() {
         daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
         daysAbbrev.removeSubrange(0..<dayIndex)
     }
 
-    private func removeUnavailableDays() {
+    private func removeUnavailableDaysFromSelection() {
         daysAbbrev = daysAbbrev.filter {
             if let availability = getMatchAvailability(for: abbrevToDayDict[$0] ?? "") {
                 return !availability.times.isEmpty
@@ -439,11 +449,11 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func getMatchAvailability(for day: String) -> SubTimeAvailability? {
-        (matchAvailabilities.filter { $0.day == day.lowercased() }).first
+        (matchAvailabilities.filter { $0.day == day }).first
     }
 
     private func getSelectedAvailibility(for day: String) -> SubTimeAvailability? {
-        (selectedAvailabilities.filter { $0.day == day.lowercased() }).first
+        (selectedAvailabilities.filter { $0.day == day }).first
     }
 
     @objc private func nextButtonPressed() {

@@ -91,8 +91,8 @@ class HomeViewController: UIViewController {
                     status: "proposed",
                     meetingTime: 10,
                     users: ["pno3", "pno3"],
-                    availabilities: TimeAvailability(availabilities:[
-                        SubTimeAvailability(day: "Friday", times: [10])
+                    availabilities: TimeAvailability(availabilities: [
+                        SubTimeAvailability(day: "sunday", times: [10])
                     ])
                 )
                 DispatchQueue.main.async {
