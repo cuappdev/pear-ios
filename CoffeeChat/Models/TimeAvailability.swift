@@ -20,7 +20,7 @@ struct TimeAvailability: Codable {
 struct SubTimeAvailability: Codable {
 
     let day: String
-    let times: [Float]
+    var times: [Float]
 
 }
 

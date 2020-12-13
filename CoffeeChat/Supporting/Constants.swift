@@ -49,6 +49,24 @@ struct Constants {
         static let matchIDLastReachedOut = "matchIDLastReachedOut"
     }
 
+    struct Match {
+        // Match status
+        static let created = "created"
+        static let proposed = "proposed"
+        static let cancelled = "cancelled"
+        static let active = "active"
+        static let inactive = "inactive"
+
+        // Match day of week
+        static let sunday = "sunday"
+        static let monday = "monday"
+        static let tuesday = "tuesday"
+        static let wednesday = "wednesday"
+        static let thursday = "thursday"
+        static let friday = "friday"
+        static let saturday = "saturday"
+    }
+
     struct Onboarding {
         static let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         static let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)

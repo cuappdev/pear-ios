@@ -34,16 +34,19 @@ enum ChatStatus {
     case chatScheduled(User, Date)
 
     static func forMatch(match: Match, pair: User) -> ChatStatus {
-        switch match.status {
-        case "created":
+        switch match.status { 
+        case Constants.Match.created:
             return Time.daysSinceMatching >= 3 ? .noResponses : .planning
-        case "proposed":
+
+        case Constants.Match.proposed:
             return userAlreadyReacheOut(to: match)
                 ? .waitingOn(pair)
                 : .respondingTo(pair)
-        case "cancelled":
+
+        case Constants.Match.cancelled:
             return .cancelled(pair)
-        case "active":
+
+        case Constants.Match.active:
             guard let availability = match.availabilities.availabilities.first else {
                 print("match's timeAvailability has no availabilities, but is active. Returning finished instead")
                 return .finished
@@ -53,11 +56,15 @@ enum ChatStatus {
                 return .finished
             }
 
+
             return Time.scheduleHasPassed(day: availability.day, times: availability.times)
-                ? .finished
+            ? .finished
+
                 : .chatScheduled(pair, date)
-        case "inactive":
+
+        case Constants.Match.inactive:
             return .finished
+
         default:
             print("Match has an invalid status; Using planning instead (match: \(match))")
             return .planning
