@@ -33,7 +33,9 @@ struct Match: Codable {
 
     /// `true` if there are still valid availabilities for the user to choose from
     var allAvailibilitiesPassed: Bool {
-        let matchDays = availabilities.availabilities.map { $0.day }
+        let availabilities = self.availabilities.availabilities
+
+        let matchDays = availabilities.map { $0.day }
         var allPossibleMeetingDays = [
             Constants.Match.sunday,
             Constants.Match.monday,
@@ -43,9 +45,15 @@ struct Match: Codable {
             Constants.Match.friday,
             Constants.Match.saturday
         ]
+
+        // the days are sorted from sunday..saturday
         allPossibleMeetingDays = allPossibleMeetingDays.filter { matchDays.contains($0) }
 
-        return allPossibleMeetingDays.isEmpty
+        if let latestAvailability = (availabilities.filter { $0.day == allPossibleMeetingDays.last }).last {
+            return Time.scheduleHasPassed(day: latestAvailability.day, times: latestAvailability.times)
+        } else {
+            return false
+        }
     }
 
 }

@@ -34,14 +34,16 @@ enum ChatStatus {
     case chatScheduled(User, Date)
 
     static func forMatch(match: Match, pair: User) -> ChatStatus {
+        if match.allAvailibilitiesPassed {
+            return .finished
+        }
+
         switch match.status {
         case Constants.Match.created:
             return Time.daysSinceMatching >= 3 ? .noResponses : .planning
 
         case Constants.Match.proposed:
-            return userAlreadyReacheOut(to: match)
-                ? .waitingOn(pair)
-                : .respondingTo(pair)
+            return userAlreadyReacheOut(to: match) ? .waitingOn(pair) : .respondingTo(pair)
 
         case Constants.Match.cancelled:
             return .cancelled(pair)
@@ -55,11 +57,8 @@ enum ChatStatus {
                 print("Couldn't convert match's timeAvailability to a Date, returning finished instead")
                 return .finished
             }
-
-
             return Time.scheduleHasPassed(day: availability.day, times: availability.times)
-            ? .finished
-
+                ? .finished
                 : .chatScheduled(pair, date)
 
         case Constants.Match.inactive:
@@ -76,6 +75,7 @@ enum ChatStatus {
 class MatchViewController: UIViewController {
 
     private let match: Match
+    private let user: User
     private var pair: User?
     private var chatStatus: ChatStatus?
 
@@ -90,16 +90,20 @@ class MatchViewController: UIViewController {
     private let imageSize = CGSize(width: 120, height: 120)
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
-    private var matchSummaries: [MatchSummary] = [
-        // TODO: Remove after connecting to backend. These are temp values.
-        MatchSummary(title: "You both love...", detail: "design and tech"),
-        MatchSummary(title: "You're both part of...", detail: "AppDev"),
-        MatchSummary(title: "He also enjoys...", detail: "music, reading, and business"),
-        MatchSummary(title: "He is also part of...", detail: "EzraBox")
-    ]
+    private var shouldShowReachOutButton: Bool {
+        switch chatStatus {
+        case .finished, .cancelled:
+            return false
+        default:
+            return !userAlreadyReacheOut(to: self.match)
+        }
+    }
 
-    init(match: Match) {
+    private var matchSummaries: [MatchSummary] = []
+
+    init(match: Match, user: User) {
         self.match = match
+        self.user = user
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -122,6 +126,7 @@ class MatchViewController: UIViewController {
             self.pair = pair
             self.chatStatus = ChatStatus.forMatch(match: self.match, pair: pair)
 
+            self.setupMatchSummaries()
             self.setupViews(pair: pair)
             self.setupConstraints()
         }
@@ -150,27 +155,29 @@ class MatchViewController: UIViewController {
     }
 
     private func setupViews(pair: User) {
-        reachOutButton = UIButton()
-        reachOutButton.backgroundColor = .backgroundOrange
-        reachOutButton.setTitleColor(.white, for: .normal)
-        reachOutButton.layer.cornerRadius = reachOutButtonSize.height/2
-        reachOutButton.titleLabel?.font = ._20CircularStdBold
-        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-        switch chatStatus {
-        case .planning, .noResponses:
-            reachOutButton.setTitle("Reach out", for: .normal)
-        case .respondingTo:
-            reachOutButton.setTitle("Pick a time", for: .normal)
-        default:
-            reachOutButton.setTitle("Enter availability", for: .normal)
-        }
-        if !userAlreadyReacheOut(to: match) {
+        if shouldShowReachOutButton {
+            reachOutButton = UIButton()
+            reachOutButton.backgroundColor = .backgroundOrange
+            reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
+            reachOutButton.titleLabel?.font = ._20CircularStdBold
+            reachOutButton.setTitleColor(.white, for: .normal)
+            reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+
+            switch chatStatus {
+            case .planning, .noResponses:
+                reachOutButton.setTitle("Reach out", for: .normal)
+            case .respondingTo:
+                reachOutButton.setTitle("Pick a time", for: .normal)
+            default:
+                reachOutButton.setTitle("Enter availability", for: .normal)
+            }
             view.addSubview(reachOutButton)
         }
 
         if let chatStatus = chatStatus {
-            meetupStatusView = MeetupStatusView(for: chatStatus)
-            view.addSubview(meetupStatusView!)
+            let meetupView = MeetupStatusView(for: chatStatus)
+            meetupStatusView = meetupView
+            view.addSubview(meetupView)
         }
 
         matchProfileBackgroundView.axis = .vertical
@@ -238,7 +245,7 @@ class MatchViewController: UIViewController {
 
         matchSummaryTableView.snp.makeConstraints { make in
             make.top.equalTo(matchProfileBackgroundView.snp.bottom).offset(padding)
-            if !userAlreadyReacheOut(to: match) {
+            if shouldShowReachOutButton {
                 make.bottom.equalTo(reachOutButton.snp.top).offset(-padding)
             } else {
                 make.bottom.equalToSuperview().inset(padding)
@@ -246,12 +253,51 @@ class MatchViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(padding)
         }
 
-        if !userAlreadyReacheOut(to: match) {
+        if shouldShowReachOutButton {
             reachOutButton.snp.makeConstraints { make in
                 make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
                 make.centerX.equalToSuperview()
                 make.size.equalTo(reachOutButtonSize)
             }
+        }
+    }
+
+    private func setupMatchSummaries() {
+        guard let pair = pair else { return }
+        var matchSummary: MatchSummary
+
+        let commonInterests = user.interests.filter { pair.interests.contains($0) }
+        matchSummary = MatchSummary(title: "You both love...", detail: stringListToSentence(words: commonInterests))
+        matchSummaries.append(matchSummary)
+
+        let commonGroups = user.groups.filter { pair.groups.contains($0) }
+        matchSummary = MatchSummary(title: "You're both part of...", detail: stringListToSentence(words: commonGroups))
+        matchSummaries.append(matchSummary)
+
+        let exclusivePairInterests = pair.interests.filter { !commonInterests.contains($0) }
+        if exclusivePairInterests.count > 0 {
+            matchSummary = MatchSummary(title: "He also enjoys...", detail: stringListToSentence(words: exclusivePairInterests))
+            matchSummaries.append(matchSummary)
+        }
+
+        let exclusivePairGroups = pair.groups.filter { !commonGroups.contains($0) }
+        if exclusivePairGroups.count > 0 {
+            matchSummary = MatchSummary(title: "He is also part of...", detail: stringListToSentence(words: exclusivePairGroups))
+            matchSummaries.append(matchSummary)
+        }
+    }
+
+    /// Converts `words` to a sentence based on the number of words
+    private func stringListToSentence(words: [String]) -> String {
+        switch words.count {
+        case 1:
+            return words[0]
+        case 2:
+            return "\(words[0]) and \(words[1])"
+        case let x where x >= 3:
+            return "\(words[0]), \(words[1]) and \(words[2])"
+        default:
+            return ""
         }
     }
 

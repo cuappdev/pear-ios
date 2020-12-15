@@ -69,6 +69,31 @@ class HomeViewController: UIViewController {
     }
 
     private func setUserAndTabPage() {
+        getUserThen { user in
+            self.user = user
+
+            //let firstActiveMatch = user.matches.filter({ $0.status == "inactive" }).first
+            UserDefaults.standard.setValue("im stuff", forKey: Constants.UserDefaults.matchIDLastReachedOut)
+            //UserDefaults.standard.insert(value: "abc123", key: Constants.UserDefaults.matchIDLastReachedOut)
+
+            let firstActiveMatch = Match(
+                matchID: "abc123",
+                status: "proposed",
+                meetingTime: 10,
+                users: ["pno3", "pno3"],
+                availabilities: TimeAvailability(availabilities: [
+                                                 SubTimeAvailability(day: "tuesday", times: [10])
+                ])
+            )
+
+            self.setupTabPageViewController(with: firstActiveMatch, user: user)
+            if let pictureURL = URL(string: user.profilePictureURL) {
+                self.profileButton.kf.setImage(with: pictureURL, for: .normal)
+            }
+        }
+    }
+
+    private func getUserThen(_ completion: @escaping (User) -> Void) {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
@@ -81,26 +106,8 @@ class HomeViewController: UIViewController {
                     return
                 }
 
-                self.user = response.data
-
-                //let firstActiveMatch = response.data.matches.filter({ $0.status == "inactive" }).first
-                UserDefaults.standard.setValue("im stuff", forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                //UserDefaults.standard.insert(value: "abc123", key: Constants.UserDefaults.matchIDLastReachedOut)
-                let firstActiveMatch = Match(
-                    matchID: "abc123",
-                    status: "proposed",
-                    meetingTime: 10,
-                    users: ["pno3", "pno3"],
-                    availabilities: TimeAvailability(availabilities: [
-                        SubTimeAvailability(day: "sunday", times: [10])
-                    ])
-                )
                 DispatchQueue.main.async {
-                    self.setupTabPageViewController(with: firstActiveMatch)
-
-                    if let pictureURL = URL(string: response.data.profilePictureURL) {
-                        self.profileButton.kf.setImage(with: pictureURL, for: .normal)
-                    }
+                    completion(response.data)
                 }
             case .error(let error):
                 print("Encountered error in HomeViewController when getting User: \(error)")
@@ -108,8 +115,8 @@ class HomeViewController: UIViewController {
         }
     }
 
-    private func setupTabPageViewController(with match: Match?) {
-        tabPageViewController = TabPageViewController(match: match)
+    private func setupTabPageViewController(with match: Match?, user: User) {
+        tabPageViewController = TabPageViewController(match: match, user: user)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 

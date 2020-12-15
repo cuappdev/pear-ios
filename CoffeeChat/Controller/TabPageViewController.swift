@@ -15,9 +15,13 @@ class TabPageViewController: UIPageViewController {
     private let matchViewController: UIViewController
     private var pages: [UIViewController] = [UIViewController]()
 
-    init(match: Match?) {
+    private let user: User
+
+    init(match: Match?, user: User) {
+        self.user = user
+
         if let match = match {
-            matchViewController = MatchViewController(match: match)
+            matchViewController = MatchViewController(match: match, user: user)
         } else {
             matchViewController = NoMatchViewController()
         }

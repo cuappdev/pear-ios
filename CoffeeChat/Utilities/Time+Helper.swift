@@ -10,13 +10,13 @@ import Foundation
 
 enum Weekday: String, CaseIterable {
 
-    case sunday = "Sunday"
-    case monday = "Monday"
-    case tuesday = "Tuesday"
-    case wednesday = "Wednesday"
-    case thursday = "Thursday"
-    case friday = "Friday"
-    case saturday = "Saturday"
+    case sunday = "sunday"
+    case monday = "monday"
+    case tuesday = "tuesday"
+    case wednesday = "wednesday"
+    case thursday = "thursday"
+    case friday = "friday"
+    case saturday = "saturday"
 
     var calendarIndex: Int {
         Self.allCases.firstIndex(of: self)! + 1
@@ -78,11 +78,11 @@ class Time {
     }
 
     /**
-    Returns the next `Date` corresponding to the next date specified by `day` and the first float in `times`.
+    Returns the next `Date` corresponding to the next date specified by `day` and the largest float in `times`.
     Returns nil if `day`doesn't represent a valid string or times is empty.
     */
     static func next(day: String, times: [Float]) -> Date? {
-        let firstTime = times.first ?? 0
+        let firstTime = times.max() ?? 0
         if let weekday = Weekday(rawValue: day) {
             return Time.next(weekday, at: firstTime)
         } else {
@@ -91,7 +91,7 @@ class Time {
     }
 
     /**
-    Returns true if the date corresponding to the day and the *first* time in times has passed this week.
+    Returns true if the date corresponding to the day and the *largest/latest* time in times has passed this week.
     "This week" is determined by getting the next occurence of the date and seeing if it is after the day of the
     week new matches are assigned.
 
@@ -105,7 +105,6 @@ class Time {
             return false
         }
     }
-
 
 }
 
