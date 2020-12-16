@@ -124,12 +124,6 @@ extension Endpoint {
         Endpoint(path: "/user/clubs/")
     }
 
-    /// [POST] Get matchings of the user
-    static func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Endpoint {
-        let body = MatchingBody(netIDs: netIDs, schedule: schedule)
-        return Endpoint(path: "/user/matchings/", body: body)
-    }
-
     /// [GET] Get major of the user
     static func getUserMajor() -> Endpoint {
         Endpoint(path: "/user/majors/")
@@ -171,14 +165,24 @@ extension Endpoint {
     }
 
     /// [POST] Update user time availabilities
-    static func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Endpoint {
+    static func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Endpoint {
         let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)
-        return Endpoint(path: "/user/availabilities/", headers: standardHeaders ,body: body)
+        return Endpoint(path: "/user/availabilities/", headers: standardHeaders, body: body)
+    }
+
+    /// [GET] Gets current user's matches
+    static func getMatch(netId: String) -> Endpoint {
+        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+
+    }
+    /// [GET] Gets another user's matches, given their netID
+    static func getMatch() -> Endpoint {
+        Endpoint(path: "/match/", headers: standardHeaders)
     }
 
     /// [POST] Update the availabilities for the given match.
     static func updateMatchAvailabilities(match: Match) -> Endpoint {
-        let body = Matching(matchID: match.matchID, schedule: match.availabilities.schedule)
+        let body = UpdateMatchBody(matchID: match.matchID, schedule: match.availabilities)
         return Endpoint(path: "/match/availabilities/", headers: standardHeaders, body: body)
     }
 

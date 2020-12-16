@@ -76,10 +76,6 @@ class NetworkManager {
         networking(Endpoint.getUserClubs()).decode()
     }
 
-    func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Future<Response<Matching>> {
-        networking(Endpoint.getUserMatchings(netIDs: netIDs, schedule: schedule)).decode()
-    }
-
     func getUserMajor() -> Future<Response<String>> {
         networking(Endpoint.getUserMajor()).decode()
     }
@@ -108,12 +104,20 @@ class NetworkManager {
         networking(Endpoint.getAllMajors()).decode()
     }
 
-    func getTimeAvailabilities() -> Future<Response<TimeAvailability>> {
+    func getTimeAvailabilities() -> Future<Response<[DaySchedule]>> {
         networking(Endpoint.getTimeAvailabilities()).decode()
     }
 
-    func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Future<SuccessResponse> {
+    func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Future<SuccessResponse> {
         networking(Endpoint.updateTimeAvailabilities(savedAvailabilities: savedAvailabilities)).decode()
+    }
+
+    func getMatch() -> Future<Response<Match>> {
+        networking(Endpoint.getMatch()).decode()
+    }
+
+    func getMatch(netId: String) -> Future<Response<Match>> {
+        networking(Endpoint.getMatch(netId: netId)).decode()
     }
 
     func updateMatchAvailabilities(match: Match) -> Future<SuccessResponse> {

@@ -155,10 +155,10 @@ class EditTimeAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        var schedule: [Schedule] = []
+        var schedule: [DaySchedule] = []
         for (day, times) in availabilities {
             let floatTimes = times.map({Time.stringTimeToFloat(time: $0)})
-            let daySchedule = Schedule(day: day.lowercased(), times: floatTimes)
+            let daySchedule = DaySchedule(day: day.lowercased(), times: floatTimes)
             schedule.append(daySchedule)
         }
         NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
@@ -181,7 +181,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             case .value(let value):
                 guard value.success else { return }
                 var userAvailabilities: [String: [String]] = [:]
-                for data in value.data.availabilities {
+                for data in value.data {
                     userAvailabilities[data.day.localizedCapitalized] = data.times.map({Time.floatToStringTime(time: $0)})
                 }
                 self.savedAvailabilities = userAvailabilities

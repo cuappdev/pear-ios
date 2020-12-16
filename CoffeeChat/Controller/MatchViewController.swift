@@ -49,7 +49,7 @@ enum ChatStatus {
             return .cancelled(pair)
 
         case Constants.Match.active:
-            guard let availability = match.availabilities.availabilities.first else {
+            guard let availability = match.availabilities.first else {
                 print("match's timeAvailability has no availabilities, but is active. Returning finished instead")
                 return .finished
             }
@@ -175,9 +175,10 @@ class MatchViewController: UIViewController {
         }
 
         if let chatStatus = chatStatus {
-            let meetupView = MeetupStatusView(for: chatStatus)
-            meetupStatusView = meetupView
-            view.addSubview(meetupView)
+            meetupStatusView = MeetupStatusView(for: chatStatus)
+        }
+        if let meetupStatusView = meetupStatusView {
+            view.addSubview(meetupStatusView)
         }
 
         matchProfileBackgroundView.axis = .vertical

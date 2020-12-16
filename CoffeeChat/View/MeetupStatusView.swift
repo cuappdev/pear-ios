@@ -25,7 +25,7 @@ class MeetupStatusView: UIView {
     private let statusImageSize = CGSize(width: 10, height: 10)
     private let statusMessagePadding: CGFloat = 6.5
 
-    convenience init(for status: ChatStatus) {
+    convenience init?(for status: ChatStatus) {
         self.init()
 
         switch status {
@@ -46,8 +46,8 @@ class MeetupStatusView: UIView {
         case .finished:
             setupForChatFinished()
         default:
-            print("There is no meetupStatusView for \(status) so returning the one for .noResponses")
-            setupForNoResponses()
+            print("There is no meetupStatusView for \(status) so returning nil")
+            return nil
         }
     }
 

@@ -84,14 +84,14 @@ class SchedulingTimeViewController: UIViewController {
     private var eveningItems: [ItemType] = []
     private var morningItems: [ItemType] = []
 
-    private var selectedAvailabilities: [SubTimeAvailability] = [
-        SubTimeAvailability(day: Constants.Match.sunday, times: []),
-        SubTimeAvailability(day: Constants.Match.monday, times: []),
-        SubTimeAvailability(day: Constants.Match.tuesday, times: []),
-        SubTimeAvailability(day: Constants.Match.wednesday, times: []),
-        SubTimeAvailability(day: Constants.Match.thursday, times: []),
-        SubTimeAvailability(day: Constants.Match.friday, times: []),
-        SubTimeAvailability(day: Constants.Match.saturday, times: [])
+    private var selectedAvailabilities: [DaySchedule] = [
+        DaySchedule(day: Constants.Match.sunday, times: []),
+        DaySchedule(day: Constants.Match.monday, times: []),
+        DaySchedule(day: Constants.Match.tuesday, times: []),
+        DaySchedule(day: Constants.Match.wednesday, times: []),
+        DaySchedule(day: Constants.Match.thursday, times: []),
+        DaySchedule(day: Constants.Match.friday, times: []),
+        DaySchedule(day: Constants.Match.saturday, times: [])
     ]
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let abbrevToDayDict = [
@@ -107,8 +107,8 @@ class SchedulingTimeViewController: UIViewController {
 
     /// Time user picked from match's availabilities
     private var pickedTime: (day: String, time: String) = (day: "", time: "")
-    private var savedAvailabilities: [SubTimeAvailability] = []
-    private var matchAvailabilities: [SubTimeAvailability] = []
+    private var savedAvailabilities: [DaySchedule] = []
+    private var matchAvailabilities: [DaySchedule] = []
 
     // MARK: ViewController State
     private let pair: User?
@@ -129,10 +129,10 @@ class SchedulingTimeViewController: UIViewController {
         self.schedulingStatus = status
         self.match = match
         self.pair = pair
-        self.matchAvailabilities = match?.availabilities.availabilities ?? []
+        self.matchAvailabilities = match?.availabilities ?? []
         print(match)
         print(match?.availabilities)
-        print(match?.availabilities.availabilities) // TODO delete
+        print(match?.availabilities) // TODO delete
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -448,18 +448,40 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    private func getMatchAvailability(for day: String) -> SubTimeAvailability? {
+    private func getMatchAvailability(for day: String) -> DaySchedule? {
         (matchAvailabilities.filter { $0.day == day }).first
     }
 
-    private func getSelectedAvailibility(for day: String) -> SubTimeAvailability? {
+    private func getSelectedAvailibility(for day: String) -> DaySchedule? {
         (selectedAvailabilities.filter { $0.day == day }).first
     }
 
     @objc private func nextButtonPressed() {
+        guard let match = match else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        // Remove days with no times
+        var availabilities: [DaySchedule]
+        if isChoosing {
+            let floatTime = Time.stringTimeToFloat(time: pickedTime.time)
+            availabilities = [DaySchedule(day: pickedTime.day, times: [floatTime])]
+        } else {
+            availabilities = selectedAvailabilities.filter { !$0.times.isEmpty }
+        }
+
+        let editedMatch = Match(
+            matchID: match.matchID,
+            status: match.status,
+            meetingTime: match.meetingTime,
+            users: match.users,
+            availabilities: availabilities
+        )
+
         let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
-            availabilities: [String: [String]](), //selectedAvailabilities,
+            match: editedMatch,
             pickedTime: pickedTime
         )
         navigationController?.pushViewController(placesVC, animated: true)

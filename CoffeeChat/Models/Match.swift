@@ -12,28 +12,25 @@ struct Match: Codable {
 
     let matchID: String
     let status: String
-    let meetingTime: Float
+    let meetingTime: Float?
     let users: [String]
-    let availabilities: TimeAvailability
+    let availabilities: [DaySchedule]
 
     /**
         Returns the netid of the person the user is paired with.
         Is `nil` if all netIDs match the user or was unable to retrieve the user's netID from UserDefaults
     */
     var pair: String? {
-        // TODO change this back!
-        // testing with myself, so just assume its me
-        // let userNetID = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId)
-        // if let userNetID = userNetID {
-        //     return (users.filter { $0 != userNetID }).first
-        // }
-        // return nil
-        return "pno3"
+        let userNetID = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId)
+        if let userNetID = userNetID {
+            return (users.filter { $0 != userNetID }).first
+        }
+        return nil
     }
 
     /// `true` if there are still valid availabilities for the user to choose from
     var allAvailibilitiesPassed: Bool {
-        let availabilities = self.availabilities.availabilities
+        let availabilities = self.availabilities
 
         let matchDays = availabilities.map { $0.day }
         var allPossibleMeetingDays = [

@@ -13,7 +13,7 @@ struct User: Codable {
     let firstName: String
     let goals: [String]
     let googleID: String
-    let graduationYear: String
+    let graduationYear: String?
     let groups: [String]
     let hometown: String
     let interests: [String]

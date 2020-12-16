@@ -10,13 +10,13 @@ import Foundation
 
 enum Weekday: String, CaseIterable {
 
-    case sunday = "sunday"
-    case monday = "monday"
-    case tuesday = "tuesday"
-    case wednesday = "wednesday"
-    case thursday = "thursday"
-    case friday = "friday"
-    case saturday = "saturday"
+    case sunday
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
 
     var calendarIndex: Int {
         Self.allCases.firstIndex(of: self)! + 1
@@ -31,6 +31,7 @@ class Time {
     /// Day of the week matches are first assigned
     static let matchDay: Weekday = .sunday
 
+    /// Times available for meeting up
     static let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
     static let pmTimes = [
         "12:00", "12:30", "1:00", "1:30", "2:00", "2:30",
@@ -43,6 +44,10 @@ class Time {
         let lastSunday = getWeekday(searchDirection: .backward, weekday: .sunday, time: 0)
         let today = Date()
         return Time.calendar.dateComponents([.day], from: lastSunday, to: today).day ?? 0
+    }
+
+    static var thisYear: Int {
+        Calendar.current.component(.year, from: Date())
     }
 
     static func isAm(time: String) -> Bool {

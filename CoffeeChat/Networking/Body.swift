@@ -64,21 +64,21 @@ struct MatchingBody: Codable {
 
 }
 
-struct UpdateTimeAvailabilitiesBody: Codable {
-
-    let schedule: [Schedule]
-
-}
-
-struct Schedule: Codable {
-
-    let day: String
-    let times: [Float]
-
-}
-
-struct Matching: Codable {
+struct UpdateMatchBody: Codable {
 
     let matchID: String
-    let schedule: [Schedule]
+    let schedule: [DaySchedule]
+}
+
+struct UpdateTimeAvailabilitiesBody: Codable {
+
+    let schedule: [DaySchedule]
+
+}
+
+struct DaySchedule: Codable {
+
+    let day: String
+    var times: [Float]
+
 }

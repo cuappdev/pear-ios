@@ -72,19 +72,19 @@ class HomeViewController: UIViewController {
         getUserThen { user in
             self.user = user
 
-            //let firstActiveMatch = user.matches.filter({ $0.status == "inactive" }).first
-            UserDefaults.standard.setValue("im stuff", forKey: Constants.UserDefaults.matchIDLastReachedOut)
+            let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
+            // UserDefaults.standard.setValue("im stuff", forKey: Constants.UserDefaults.matchIDLastReachedOut)
             //UserDefaults.standard.insert(value: "abc123", key: Constants.UserDefaults.matchIDLastReachedOut)
 
-            let firstActiveMatch = Match(
-                matchID: "abc123",
-                status: "proposed",
-                meetingTime: 10,
-                users: ["pno3", "pno3"],
-                availabilities: TimeAvailability(availabilities: [
-                                                 SubTimeAvailability(day: "tuesday", times: [10])
-                ])
-            )
+            // let firstActiveMatch = Match(
+            //     matchID: "abc123",
+            //     status: "proposed",
+            //     meetingTime: 10,
+            //     users: ["pno3", "pno3"],
+            //     availabilities: TimeAvailability(availabilities: [
+            //                                      SubTimeAvailability(day: "wednesday", times: [18])
+            //     ])
+            // )
 
             self.setupTabPageViewController(with: firstActiveMatch, user: user)
             if let pictureURL = URL(string: user.profilePictureURL) {
@@ -97,8 +97,6 @@ class HomeViewController: UIViewController {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-
             switch result {
             case .value(let response):
                 guard response.success else {

@@ -35,7 +35,6 @@
 		4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */; };
 		4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */; };
 		50038699252E74E80036A3E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50038698252E74E80036A3E6 /* SettingsViewController.swift */; };
-		501CD57B25733781007989BE /* TimeAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CD57A25733781007989BE /* TimeAvailability.swift */; };
 		5029873825389E4700E52EDA /* PausePearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5029873725389E4700E52EDA /* PausePearView.swift */; };
 		5029873E253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */; };
 		50298746253C043F00E52EDA /* ConnectSocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */; };
@@ -54,7 +53,6 @@
 		D41FE85A246463E10048900F /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE859246463E10048900F /* UserSession.swift */; };
 		D41FE85C246463FC0048900F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85B246463FC0048900F /* User.swift */; };
 		D41FE85E2464640F0048900F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85D2464640F0048900F /* Match.swift */; };
-		D41FE860246464240048900F /* DaySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85F246464240048900F /* DaySchedule.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
 		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
 		D42961842525F1C800C677C3 /* TalkingPointsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */; };
@@ -144,7 +142,6 @@
 		4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
 		50038698252E74E80036A3E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		501CD57A25733781007989BE /* TimeAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeAvailability.swift; sourceTree = "<group>"; };
 		5029873725389E4700E52EDA /* PausePearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausePearView.swift; sourceTree = "<group>"; };
 		5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectSocialMediaViewController.swift; sourceTree = "<group>"; };
@@ -162,7 +159,6 @@
 		D41FE859246463E10048900F /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		D41FE85B246463FC0048900F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D41FE85D2464640F0048900F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		D41FE85F246464240048900F /* DaySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySchedule.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
 		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkingPointsViewController.swift; sourceTree = "<group>"; };
@@ -261,12 +257,10 @@
 				4FD8152E23F7817B0095EC17 /* Interest.swift */,
 				303F81A524395F63002937CD /* MenuOption.swift */,
 				50E1A7712558E95E008932F8 /* CommunityUser.swift */,
-				501CD57A25733781007989BE /* TimeAvailability.swift */,
 				5030DCF42532B5F600374F7B /* SettingOption.swift */,
 				D41FE859246463E10048900F /* UserSession.swift */,
 				D41FE85B246463FC0048900F /* User.swift */,
 				D41FE85D2464640F0048900F /* Match.swift */,
-				D41FE85F246464240048900F /* DaySchedule.swift */,
 				D41FE861246464310048900F /* SubUser.swift */,
 				D42961882526012400C677C3 /* SimpleOnboardingCell.swift */,
 				D4DDBF48257560B000D5C43A /* Demographics.swift */,
@@ -838,7 +832,6 @@
 				D44625042415B5B800714167 /* Endpoints.swift in Sources */,
 				4FCE3AEA25200DF0004E2E33 /* MeetupStatusView.swift in Sources */,
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
-				D41FE860246464240048900F /* DaySchedule.swift in Sources */,
 				303F81A424395EC2002937CD /* MenuOptionTableViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
 				4F12A7102419925C00AEA21C /* EditingViewController.swift in Sources */,
@@ -846,7 +839,6 @@
 				5030DCF52532B5F600374F7B /* SettingOption.swift in Sources */,
 				D480EC0623E2470000513063 /* MatchViewController.swift in Sources */,
 				5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */,
-				501CD57B25733781007989BE /* TimeAvailability.swift in Sources */,
 				D41FE85A246463E10048900F /* UserSession.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,

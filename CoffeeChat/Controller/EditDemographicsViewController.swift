@@ -37,7 +37,7 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Constants
     private let textFieldHeight: CGFloat = 49
     private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
-    
+
     init(user: User) {
         self.user = user
         demographics.name = "\(user.firstName) \(user.lastName)"
@@ -47,11 +47,11 @@ class EditDemographicsViewController: UIViewController {
         demographics.pronouns = user.pronouns
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -133,7 +133,7 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: user.graduationYear)
+        classDropdownView.setSelectValue(value: user.graduationYear ?? String(Time.thisYear))
         editScrollView.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
@@ -224,7 +224,7 @@ class EditDemographicsViewController: UIViewController {
             make.height.equalTo(textFieldHeight)
         }
     }
-    
+
     private func getMajors() {
         NetworkManager.shared.getAllMajors().observe { [weak self] result in
             guard let self = self else { return }
