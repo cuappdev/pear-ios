@@ -16,6 +16,109 @@ enum SchedulingStatus {
     case choosing
 }
 
+/// Handles the logic of converting selected time strings and days to `DaySchedule`, and getting relevent info
+fileprivate class SelectedSchedules {
+
+    /// User either picks multiple times in some cases, and just toggles a singular time
+    private enum SelectedItem {
+        case multiple([DaySchedule])
+        case single(DaySchedule?)
+    }
+    private var selectedItem: SelectedItem
+
+    /// Array of all selected schedules. Is an array of 0 or 1 elements if choosing
+    var schedules: [DaySchedule] {
+        switch selectedItem {
+        case .multiple(let schedules):
+            return schedules
+        case .single(let schedule):
+            if let schedule = schedule {
+                return [schedule]
+            } else {
+                return []
+            }
+        }
+    }
+
+    var numberSelected: Int {
+        switch selectedItem {
+        case .multiple(let schedules):
+            return schedules.count
+        case .single(let schedule):
+            return schedule == nil ? 0 : 1
+        }
+    }
+
+    init(availabilities: [DaySchedule]) {
+        selectedItem = .multiple(availabilities)
+    }
+
+    init() {
+        selectedItem = .single(nil)
+    }
+
+    func add(day: String, time: String) {
+        let time = Time.stringTimeToFloat(time: time)
+        let newSelection: SelectedItem
+
+        switch selectedItem {
+        case .multiple(var schedules):
+            if let daySchedule = schedules.first(where: { $0.day == day }) {
+                daySchedule.times.append(time)
+            } else {
+                schedules.append(DaySchedule(day: day, times: [time]))
+            }
+            newSelection = .multiple(schedules)
+        case .single:
+            newSelection = .single(DaySchedule(day: day, times: [time]))
+        }
+
+        selectedItem = newSelection
+    }
+
+    func remove(day: String, time: String) {
+        let time = Time.stringTimeToFloat(time: time)
+        let newSelection: SelectedItem
+
+        switch selectedItem {
+        case .multiple(var schedules):
+            if let daySchedule = schedules.first(where: { $0.day == day }) {
+                daySchedule.times.removeAll { $0 == time }
+                if daySchedule.times.isEmpty {
+                    schedules.removeAll { $0.day == daySchedule.day }
+                }
+            }
+            newSelection = .multiple(schedules)
+        case .single:
+            newSelection = .single(nil)
+        }
+
+        selectedItem = newSelection
+    }
+
+    func timesFor(day: String) -> [String] {
+        let result: [String]
+
+        switch selectedItem {
+        case .multiple(let schedules):
+            if let daySchedule = schedules.first(where: { $0.day == day }) {
+                result = daySchedule.times.map { Time.floatToStringTime(time: $0) }
+            } else {
+                result = []
+            }
+        case .single(let schedule):
+            if let schedule = schedule {
+                result = schedule.times.map { Time.floatToStringTime(time: $0) }
+            } else {
+                result = []
+            }
+        }
+
+        return result
+    }
+
+}
+
 class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
@@ -47,13 +150,11 @@ class SchedulingTimeViewController: UIViewController {
         let type: SectionType
         var items: [ItemType]
     }
-
     private enum SectionType: String {
         case afternoon = "Afternoon"
         case evening = "Evening"
         case morning = "Morning"
     }
-
     private enum ItemType {
         case header(String)
         case time(String)
@@ -67,7 +168,6 @@ class SchedulingTimeViewController: UIViewController {
             }
         }
     }
-
     private var timeSections: [Section] = []
 
     // MARK: Time Related
@@ -84,55 +184,51 @@ class SchedulingTimeViewController: UIViewController {
     private var eveningItems: [ItemType] = []
     private var morningItems: [ItemType] = []
 
-    private var selectedAvailabilities: [DaySchedule] = [
-        DaySchedule(day: Constants.Match.sunday, times: []),
-        DaySchedule(day: Constants.Match.monday, times: []),
-        DaySchedule(day: Constants.Match.tuesday, times: []),
-        DaySchedule(day: Constants.Match.wednesday, times: []),
-        DaySchedule(day: Constants.Match.thursday, times: []),
-        DaySchedule(day: Constants.Match.friday, times: []),
-        DaySchedule(day: Constants.Match.saturday, times: [])
-    ]
+    // Handling Abbreviations
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let abbrevToDayDict = [
-        "Su": "sunday",
-        "M": "monday",
-        "Tu": "tuesday",
-        "W": "wednesday",
-        "Th": "thursday",
-        "F": "friday",
-        "Sa": "saturday"
+        "Su": "Sunday",
+        "M": "Monday",
+        "Tu": "Tuesday",
+        "W": "Wednesday",
+        "Th": "Thursday",
+        "F": "Friday",
+        "Sa": "Saturday"
     ]
     private var selectedDay: String = "Su"
 
-    /// Time user picked from match's availabilities
-    private var pickedTime: (day: String, time: String) = (day: "", time: "")
-    private var savedAvailabilities: [DaySchedule] = []
-    private var matchAvailabilities: [DaySchedule] = []
+    // Availabilities Selected
+    private let selectedTimes: SelectedSchedules
 
     // MARK: ViewController State
+    private let user: User
     private let pair: User?
     private let match: Match?
     private let schedulingStatus: SchedulingStatus
+
     private var isChoosing: Bool { .choosing ~= schedulingStatus }
     private var isConfirming: Bool { .confirming ~= schedulingStatus }
 
-    convenience init(for status: SchedulingStatus, pair: User, match: Match) {
-        self.init(status: status, pair: pair, match: match)
+    convenience init(for status: SchedulingStatus, user: User, pair: User, match: Match) {
+        self.init(status: status, user: user, pair: pair, match: match)
     }
 
-    convenience init(for status: SchedulingStatus) {
-        self.init(status: status)
+    convenience init(for status: SchedulingStatus, user: User) {
+        self.init(status: status, user: user)
     }
 
-    private init(status: SchedulingStatus, pair: User? = nil, match: Match? = nil) {
+    private init(status: SchedulingStatus, user: User, pair: User? = nil, match: Match? = nil) {
         self.schedulingStatus = status
         self.match = match
+        self.user = user
         self.pair = pair
-        self.matchAvailabilities = match?.availabilities ?? []
-        print(match)
-        print(match?.availabilities)
-        print(match?.availabilities) // TODO delete
+
+        switch status {
+        case .choosing:
+            selectedTimes = SelectedSchedules()
+        case .confirming, .pickingTypical:
+            selectedTimes = SelectedSchedules(availabilities: user.availabilities)
+        }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -167,10 +263,10 @@ class SchedulingTimeViewController: UIViewController {
         morningTimes = allMorningTimes
 
         if isConfirming || isChoosing {
-            removePassedDaysFromSelection()
+            removePassedDaysFromDisplay()
         }
         if isChoosing {
-            removeUnavailableDaysFromSelection()
+            removeUnavailableDaysFromDisplay()
         }
 
         guard let firstDay = daysAbbrev.first else {
@@ -188,7 +284,6 @@ class SchedulingTimeViewController: UIViewController {
         case .confirming:
             titleLabel.text = "Confirm your availability"
             dayLabel.text = abbrevToDayDict[selectedDay]
-            selectedAvailabilities = savedAvailabilities
         case .choosing:
             titleLabel.text = "Pick a time to meet"
             dayLabel.text = abbrevToDayDict[selectedDay]
@@ -366,8 +461,8 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Time Related
     private func changeDisplayedTimes(for day: String) {
-        if isChoosing, let availability = getMatchAvailability(for: day) {
-            let timeStrings = availability.times.map { Time.floatToStringTime(time: $0) }
+        if isChoosing {
+            let timeStrings = selectedTimes.timesFor(day: day)
 
             afternoonTimes = allAfternoonTimes.filter { timeStrings.contains($0) }
             eveningTimes = allEveningTimes.filter { timeStrings.contains($0) }
@@ -382,15 +477,16 @@ class SchedulingTimeViewController: UIViewController {
         setupTimeCollectionViewConstraints()
     }
 
-    private func removePassedDaysFromSelection() {
+    private func removePassedDaysFromDisplay() {
         daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
         daysAbbrev.removeSubrange(0..<dayIndex)
     }
 
-    private func removeUnavailableDaysFromSelection() {
+    private func removeUnavailableDaysFromDisplay() {
         daysAbbrev = daysAbbrev.filter {
-            if let availability = getMatchAvailability(for: abbrevToDayDict[$0] ?? "") {
+            let day = abbrevToDayDict[$0] ?? ""
+            if let availability = pair?.availabilities.first(where: { $0.day == day }) {
                 return !availability.times.isEmpty
             } else {
                 return false
@@ -429,10 +525,9 @@ class SchedulingTimeViewController: UIViewController {
         })
     }
 
+    // MARK: - Button Related
     private func updateNextButton() {
-        let timeCount = selectedAvailabilities.map({ $0.times.count }).reduce(0, +)
-
-        nextButton.isEnabled = !selectedAvailabilities.isEmpty && timeCount > 0 || pickedTime.day != "" && pickedTime.time != ""
+        nextButton.isEnabled = selectedTimes.numberSelected > 0
         if nextButton.isEnabled {
             nextButton.backgroundColor = .backgroundOrange
             nextButton.layer.shadowColor = UIColor.black.cgColor
@@ -448,27 +543,10 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    private func getMatchAvailability(for day: String) -> DaySchedule? {
-        (matchAvailabilities.filter { $0.day == day }).first
-    }
-
-    private func getSelectedAvailibility(for day: String) -> DaySchedule? {
-        (selectedAvailabilities.filter { $0.day == day }).first
-    }
-
     @objc private func nextButtonPressed() {
         guard let match = match else {
             navigationController?.popViewController(animated: true)
             return
-        }
-
-        // Remove days with no times
-        var availabilities: [DaySchedule]
-        if isChoosing {
-            let floatTime = Time.stringTimeToFloat(time: pickedTime.time)
-            availabilities = [DaySchedule(day: pickedTime.day, times: [floatTime])]
-        } else {
-            availabilities = selectedAvailabilities.filter { !$0.times.isEmpty }
         }
 
         let editedMatch = Match(
@@ -476,13 +554,13 @@ class SchedulingTimeViewController: UIViewController {
             status: match.status,
             meetingTime: match.meetingTime,
             users: match.users,
-            availabilities: availabilities
+            availabilities: selectedTimes.schedules
         )
 
         let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
             match: editedMatch,
-            pickedTime: pickedTime
+            pickedTime: (day: "monday", time: "0") // TODO change this
         )
         navigationController?.pushViewController(placesVC, animated: true)
     }
@@ -497,6 +575,7 @@ class SchedulingTimeViewController: UIViewController {
 
 }
 
+// MARK: - UICollectionViewDataSource
 extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -510,61 +589,72 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(
+            return configuredDayCell(for: indexPath)
+        } else {
+            return configuredTimeCell(for: indexPath)
+        }
+    }
+
+    private func configuredDayCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = dayCollectionView.dequeueReusableCell(
                 withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId,
                 for: indexPath) as? SchedulingDayCollectionViewCell else {
-                return UICollectionViewCell()
-            }
-            let day = daysAbbrev[indexPath.item]
-            cell.configure(for: day)
-            // Update cell color based on whether there's availability for a day
-            if let day = abbrevToDayDict[day] {
-                let availability = getMatchAvailability(for: day)
-                let isAvailable = isChoosing
-                    ? pickedTime.day == day
-                    : (availability?.times.count ?? 0) == 0
-                cell.updateBackgroundColor(isAvailable: isAvailable)
-            }
-            // Select item if day is the selected day
-            if day == selectedDay {
-                dayCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-                cell.isSelected = true
-            }
-            return cell
-        } else {
-            let section = timeSections[indexPath.section]
-            let item = section.items[indexPath.item]
-            guard let cell = collectionView.dequeueReusableCell(
+            return UICollectionViewCell()
+        }
+
+        let day = daysAbbrev[indexPath.item]
+        cell.configure(for: day)
+
+        // Update cell color based on whether there's availability for a day
+        if let day = abbrevToDayDict[day] {
+            let availability = selectedTimes.schedules.first { $0.day == day }
+            let isAvailable = (availability?.times.count ?? 0) > 0 // TODO is this reversed?
+            cell.updateBackgroundColor(isAvailable: isAvailable)
+        }
+        // Select item if day is the selected day
+        if day == selectedDay {
+            dayCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+            cell.isSelected = true
+        }
+        return cell
+    }
+
+    private func configuredTimeCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = timeCollectionView.dequeueReusableCell(
                 withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId,
                 for: indexPath) as? SchedulingTimeCollectionViewCell else {
-                return UICollectionViewCell()
-            }
-            switch item {
-            case .header(let header):
-                cell.configure(for: header, isHeader: true)
-                cell.isUserInteractionEnabled = false
-            case .time(let timeString):
-                cell.configure(for: timeString, isHeader: false)
-                cell.isUserInteractionEnabled = true
-                // Select time(s) that was previously selected for a day
-                if let day = abbrevToDayDict[selectedDay] {
-                    if isChoosing,
-                        pickedTime.time == timeString && pickedTime.day == day {
-                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-                        cell.isSelected = true
-                    } else if let dayAvailability = getSelectedAvailibility(for: day),
-                        dayAvailability.times.contains(Time.stringTimeToFloat(time: timeString)) {
-                        timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-                        cell.isSelected = true
-                    }
-                }
-            }
-            return cell
+            return UICollectionViewCell()
         }
+
+        let section = timeSections[indexPath.section]
+        let item = section.items[indexPath.item]
+
+        switch item {
+        case .header(let header):
+            cell.configure(for: header, isHeader: true)
+            cell.isUserInteractionEnabled = false
+
+        case .time(let timeString):
+            cell.configure(for: timeString, isHeader: false)
+            cell.isUserInteractionEnabled = true
+
+            let time = Time.stringTimeToFloat(time: timeString)
+
+            // Select time(s) that were previously selected for a day
+            guard let day = abbrevToDayDict[selectedDay] else { return cell }
+
+            if selectedTimes.schedules.contains(where: { $0.day == day && $0.times.contains(time) }) {
+                timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                cell.isSelected = true
+            }
+        }
+
+        return cell
     }
 
 }
 
+// MARK: - UICollectionViewDelegate
 extension SchedulingTimeViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -594,11 +684,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
         guard let time = item.getTime(), let day = abbrevToDayDict[selectedDay] else { return }
 
-        if isChoosing {
-            pickedTime = (day: day, time: time)
-        } else if var availability = getMatchAvailability(for: day) {
-            availability.times.append(Time.stringTimeToFloat(time: day))
-        }
+        selectedTimes.add(day: day, time: time)
 
         dayCollectionView.reloadData()
         updateNextButton()
@@ -611,9 +697,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
             guard let time = item.getTime(), let day = abbrevToDayDict[selectedDay] else { return }
 
-            if var availability = getSelectedAvailibility(for: day) {
-                availability.times.removeAll { Time.stringTimeToFloat(time: time) == $0 }
-            }
+            selectedTimes.remove(day: day, time: time)
 
             dayCollectionView.reloadData()
             updateNextButton()
@@ -624,13 +708,13 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
 extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
-func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    if collectionView == dayCollectionView {
-        return CGSize(width: 36, height: 48)
-    } else {
-        return timeCellSize
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == dayCollectionView {
+            return CGSize(width: 36, height: 48)
+        } else {
+            return timeCellSize
+        }
     }
-}
 
 }
 

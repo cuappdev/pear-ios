@@ -267,11 +267,12 @@ class SchedulingPlacesViewController: UIViewController {
         print("Updating match availabilities with...")
         print(match)
 
-        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { response in
+        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
+            guard let self = self else { return }
             switch response {
             case .value(let value):
                 if value.success {
-                    UserDefaults.standard.insert(value: match.matchID, key: Constants.UserDefaults.matchIDLastReachedOut)
+                    UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
                     print("Successfully updated match availabilities")
                 } else {
                     print("Failed to update match availabilities")

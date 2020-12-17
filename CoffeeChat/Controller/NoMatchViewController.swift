@@ -12,12 +12,23 @@ import UIKit
 
 class NoMatchViewController: UIViewController {
 
+    private let user: User
+
     // MARK: - Private View Vars
     private let availabilityButton = UIButton()
     private let noMatchLabel = UILabel()
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImageView = UIImageView()
 
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -91,7 +102,7 @@ class NoMatchViewController: UIViewController {
     }
 
     @objc private func availabilityButtonPressed() {
-        let timeVC = SchedulingTimeViewController(for: .pickingTypical)
+        let timeVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 

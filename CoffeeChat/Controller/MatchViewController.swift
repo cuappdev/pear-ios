@@ -9,7 +9,7 @@ import GoogleSignIn
 import UIKit
 
 /// If the local stored matchID matches the current match from backend, then the user has already reached out
-private func userAlreadyReacheOut(to match: Match) -> Bool {
+private func userAlreadyReachedOut(to match: Match) -> Bool {
     let matchIDLastReachedOut = UserDefaults.standard.string(forKey: Constants.UserDefaults.matchIDLastReachedOut)
     return matchIDLastReachedOut == match.matchID
 }
@@ -43,7 +43,7 @@ enum ChatStatus {
             return Time.daysSinceMatching >= 3 ? .noResponses : .planning
 
         case Constants.Match.proposed:
-            return userAlreadyReacheOut(to: match) ? .waitingOn(pair) : .respondingTo(pair)
+            return userAlreadyReachedOut(to: match) ? .waitingOn(pair) : .respondingTo(pair)
 
         case Constants.Match.cancelled:
             return .cancelled(pair)
@@ -95,7 +95,7 @@ class MatchViewController: UIViewController {
         case .finished, .cancelled:
             return false
         default:
-            return !userAlreadyReacheOut(to: self.match)
+            return !userAlreadyReachedOut(to: self.match)
         }
     }
 
@@ -308,12 +308,12 @@ class MatchViewController: UIViewController {
 
         switch chatStatus {
         case .planning, .noResponses:
-            schedulingVC = SchedulingTimeViewController(for: .confirming, pair: pair, match: match)
+            schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
         case .waitingOn, .respondingTo:
-            schedulingVC = SchedulingTimeViewController(for: .choosing, pair: pair, match: match)
+            schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
         default:
             print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
-            schedulingVC = SchedulingTimeViewController(for: .pickingTypical)
+            schedulingVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
         }
         navigationController?.pushViewController(schedulingVC, animated: true)
     }
