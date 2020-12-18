@@ -44,7 +44,6 @@ class SchedulingPlacesViewController: UIViewController {
     // Data received from `SchedulingTimeViewController`
     // private var availabilities: [SubTimeAvailability] = []
     private var match: Match
-    private var pickedTime: (day: String, time: String) = (day: "", time: "")
 
     private let headerHeight: CGFloat = 50
     private let interitemSpacing: CGFloat = 12
@@ -88,9 +87,8 @@ class SchedulingPlacesViewController: UIViewController {
     ]
     private let savedLocations: [String] = []
 
-    init(status: SchedulingStatus, match: Match, pickedTime: (day: String, time: String)) {
+    init(status: SchedulingStatus, match: Match) {
         self.schedulingStatus = status
-        self.pickedTime = pickedTime
         self.match = match
         super.init(nibName: nil, bundle: nil)
     }
@@ -155,12 +153,19 @@ class SchedulingPlacesViewController: UIViewController {
         titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
-        let amPm = Time.isAm(time: pickedTime.time) ? "AM" : "PM"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = isChoosing
-            ? "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
-            : "Pick three"
         infoLabel.textColor = .greenGray
+        if let firstSelectedTime = match.availabilities.first {
+            let day = firstSelectedTime.day
+            let time = Time.floatToStringTime(time: firstSelectedTime.times.first ?? 0)
+            let amPm = Time.isAm(time: time) ? "AM" : "PM"
+
+            infoLabel.text = isChoosing
+              ? "Meeting at \(time) \(amPm) on \(day)"
+              : "Pick three"
+        } else {
+            infoLabel.text = "Pick three"
+        }
         view.addSubview(infoLabel)
 
         let locationsCollectionViewLayout = UICollectionViewFlowLayout()
