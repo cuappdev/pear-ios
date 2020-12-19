@@ -723,8 +723,9 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
     func removeAlertView(isDismiss: Bool) {
         if isDismiss {
-            navigationController?.popViewController(animated: true)
+            cancelMatchAndPopViewController()
         }
+
         UIView.animate(withDuration: 0.15, animations: {
             self.errorMessageVisualEffectView.alpha = 0
             self.errorMessageAlertView.alpha = 0
@@ -735,14 +736,39 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
         })
     }
 
+    private func cancelMatchAndPopViewController() {
+        guard let match = match else { return }
+
+        NetworkManager.shared.cancelMatch(matchID: match.matchID).observe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .value(let value):
+                if value.success {
+                    print("Succesfully cancelled matches")
+                } else {
+                    print("Was not sucessfull cancelling matches")
+                }
+            case .error(let error):
+                print("Couldn't cancel match: \(error)")
+            }
+
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+
+    }
+
 }
 
 // MARK: - String Extension
 extension String {
+
     var withCapitalizedFirstLetter: String {
         guard self.count >= 1 else { return "" }
         let first = self.prefix(1).uppercased()
         let last = self.dropFirst()
         return first + last
     }
+
 }

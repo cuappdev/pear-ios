@@ -81,12 +81,19 @@ class DaySchedule: Codable, CustomStringConvertible {
     let day: String
     var times: [Float]
 
-    var description: String {
+    var description: String { // TODO delete this...
         "(day: \(day) times: \(times))"
     }
+
     init(day: String, times: [Float]) {
         self.day = day
         self.times = times
     }
+
+}
+
+struct CancelMatchBody: Codable {
+
+    let matchID: String
 
 }

@@ -285,10 +285,11 @@ class SchedulingPlacesViewController: UIViewController {
             case .error(let error):
                 print("Error when updating match availabilities: \(error)")
             }
-
-
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+            }
         }
-        navigationController?.pushViewController(HomeViewController(), animated: true)
+
     }
 
     @objc private func backButtonPressed() {

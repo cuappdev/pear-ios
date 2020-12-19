@@ -9,10 +9,6 @@
 import Foundation
 import FutureNova
 
-enum NetworkingError: Error {
-    case failed(_ msg: String)
-}
-
 class NetworkManager {
 
     static let shared: NetworkManager = NetworkManager()

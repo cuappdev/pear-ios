@@ -188,7 +188,8 @@ extension Endpoint {
 
     /// [POST] Cancels match provided the matchID.
     static func cancelMatch(matchID: String) -> Endpoint {
-        return Endpoint(path: "/match/cancel/", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders)
+        let body = CancelMatchBody(matchID: matchID)
+        return Endpoint(path: "/match/cancel/", headers: standardHeaders, body: body)
     }
 
     /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
