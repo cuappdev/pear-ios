@@ -166,13 +166,13 @@ class SchedulingTimeViewController: UIViewController {
     // Handling Abbreviations
     private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
     private let abbrevToDayDict = [
-        "Su": "Sunday",
-        "M": "Monday",
-        "Tu": "Tuesday",
-        "W": "Wednesday",
-        "Th": "Thursday",
-        "F": "Friday",
-        "Sa": "Saturday"
+      "Su": Constants.Match.sunday,
+      "M": Constants.Match.monday,
+      "Tu": Constants.Match.tuesday,
+      "W": Constants.Match.wednesday,
+      "Th": Constants.Match.thursday,
+      "F": Constants.Match.friday,
+      "Sa": Constants.Match.saturday
     ]
     private var selectedDayAbbrev: String = "Su"
 
@@ -256,16 +256,17 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupForStatus() {
+        let dayString = abbrevToDayDict[selectedDayAbbrev]?.withCapitalizedFirstLetter ?? ""
         switch schedulingStatus {
         case .pickingTypical:
             titleLabel.text = "When are you free?"
-             dayLabel.text = "Every \(abbrevToDayDict[selectedDayAbbrev] ?? "")"
+            dayLabel.text = "Every \(dayString)"
         case .confirming:
             titleLabel.text = "Confirm your availability"
-            dayLabel.text = abbrevToDayDict[selectedDayAbbrev]
+            dayLabel.text = dayString
         case .choosing:
             titleLabel.text = "Pick a time to meet"
-            dayLabel.text = abbrevToDayDict[selectedDayAbbrev]
+            dayLabel.text = dayString
         }
 
         timeCollectionView.allowsMultipleSelection = !isChoosing
@@ -443,7 +444,7 @@ class SchedulingTimeViewController: UIViewController {
         if isChoosing {
             let timeStrings: [String]
 
-            if let scheduleForDay = match?.availabilities.first(where: { $0.day == day.lowercased() }) {
+            if let scheduleForDay = match?.availabilities.first(where: { $0.day == day }) {
                 timeStrings = scheduleForDay.times.map { Time.floatToStringTime(time: $0) }
             } else {
                 timeStrings = []
@@ -471,7 +472,7 @@ class SchedulingTimeViewController: UIViewController {
     private func removeUnavailableDaysFromDisplay() {
         daysAbbrev = daysAbbrev.filter {
             let day = abbrevToDayDict[$0] ?? ""
-            if let availability = match?.availabilities.first(where: { $0.day == day.lowercased() }) {
+            if let availability = match?.availabilities.first(where: { $0.day == day }) {
                 return !availability.times.isEmpty
             } else {
                 return false
@@ -662,18 +663,20 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
             selectNewDay(indexPath: indexPath)
         } else {
             selectNewTime(indexPath: indexPath)
+            dayCollectionView.reloadData()
         }
         print("selected: \(selectedTimes.schedules)")
     }
 
     private func selectNewDay(indexPath: IndexPath) {
         selectedDayAbbrev = daysAbbrev[indexPath.item]
+        let dayString = abbrevToDayDict[selectedDayAbbrev] ?? ""
         dayLabel.text  = isChoosing
-            ? abbrevToDayDict[selectedDayAbbrev] ?? ""
-            : "Every \(abbrevToDayDict[selectedDayAbbrev] ?? "")"
+            ? dayString.withCapitalizedFirstLetter
+            : "Every \(dayString.withCapitalizedFirstLetter)"
 
-        if isChoosing, let day = abbrevToDayDict[selectedDayAbbrev] {
-            changeDisplayedTimes(for: day)
+        if isChoosing {
+            changeDisplayedTimes(for: dayString)
         }
 
         timeCollectionView.reloadData()
@@ -696,7 +699,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
         guard let time = item.getTime(), let day = abbrevToDayDict[selectedDayAbbrev] else { return }
 
-        selectedTimes.remove(day: day.lowercased(), time: time)
+        selectedTimes.remove(day: day, time: time)
 
         dayCollectionView.reloadData()
         updateNextButton()
@@ -732,4 +735,14 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
         })
     }
 
+}
+
+// MARK: - String Extension
+extension String {
+    var withCapitalizedFirstLetter: String {
+        guard self.count >= 1 else { return "" }
+        let first = self.prefix(1).uppercased()
+        let last = self.dropFirst()
+        return first + last
+    }
 }
