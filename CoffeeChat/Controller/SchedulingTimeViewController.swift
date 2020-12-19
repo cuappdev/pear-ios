@@ -205,7 +205,9 @@ class SchedulingTimeViewController: UIViewController {
         switch status {
         case .choosing:
             selectedTimes = SelectedSchedules()
-        case .confirming, .pickingTypical:
+        case .confirming:
+            selectedTimes = SelectedSchedules(availabilities: user.availabilitiesLeftForMatch)
+        case .pickingTypical:
             selectedTimes = SelectedSchedules(availabilities: user.availabilities)
         }
         super.init(nibName: nil, bundle: nil)
@@ -629,7 +631,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
             guard let day = abbrevToDayDict[selectedDayAbbrev] else { return cell }
 
             if selectedTimes.schedules.contains(where: { $0.day == day && $0.times.contains(time) }) {
-                timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                // timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 cell.isSelected = true
             }
         }
@@ -759,6 +761,25 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
     }
 
+}
+
+// MARK: - User Extension
+extension User {
+    var availabilitiesLeftForMatch: [DaySchedule] {
+        var filteredDays = [
+          Constants.Match.sunday,
+          Constants.Match.monday,
+          Constants.Match.tuesday,
+          Constants.Match.wednesday,
+          Constants.Match.thursday,
+          Constants.Match.friday,
+          Constants.Match.saturday
+        ]
+        let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
+        filteredDays.removeSubrange(0..<dayIndex)
+
+        return self.availabilities.filter { filteredDays.contains($0.day) }
+    }
 }
 
 // MARK: - String Extension
