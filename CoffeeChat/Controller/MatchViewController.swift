@@ -268,12 +268,16 @@ class MatchViewController: UIViewController {
         var matchSummary: MatchSummary
 
         let commonInterests = user.interests.filter { pair.interests.contains($0) }
-        matchSummary = MatchSummary(title: "You both love...", detail: stringListToSentence(words: commonInterests))
-        matchSummaries.append(matchSummary)
+        if commonInterests.count > 0 {
+            matchSummary = MatchSummary(title: "You both love...", detail: stringListToSentence(words: commonInterests))
+            matchSummaries.append(matchSummary)
+        }
 
         let commonGroups = user.groups.filter { pair.groups.contains($0) }
-        matchSummary = MatchSummary(title: "You're both part of...", detail: stringListToSentence(words: commonGroups))
-        matchSummaries.append(matchSummary)
+        if commonGroups.count > 0 {
+            matchSummary = MatchSummary(title: "You're both part of...", detail: stringListToSentence(words: commonGroups))
+            matchSummaries.append(matchSummary)
+        }
 
         let exclusivePairInterests = pair.interests.filter { !commonInterests.contains($0) }
         if exclusivePairInterests.count > 0 {
