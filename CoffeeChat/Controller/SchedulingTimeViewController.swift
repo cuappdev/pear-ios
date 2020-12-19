@@ -807,6 +807,7 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
 // MARK: - User Extension
 fileprivate extension User {
+
     var availabilitiesLeftForMatch: [DaySchedule] {
         var daysLeftForMatch = [
           Constants.Match.sunday,
@@ -822,6 +823,7 @@ fileprivate extension User {
 
         return self.availabilities.filter { daysLeftForMatch.contains($0.day) }
     }
+
 }
 
 // MARK: - String Extension

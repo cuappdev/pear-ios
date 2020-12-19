@@ -78,7 +78,6 @@ class HomeViewController: UIViewController {
 
             let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
             self.setupTabPageViewController(with: firstActiveMatch, user: user)
-
         }
     }
 
