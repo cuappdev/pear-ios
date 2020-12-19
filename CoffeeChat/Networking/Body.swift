@@ -91,9 +91,3 @@ class DaySchedule: Codable, CustomStringConvertible {
     }
 
 }
-
-struct CancelMatchBody: Codable {
-
-    let matchID: String
-
-}

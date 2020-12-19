@@ -753,7 +753,7 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
             }
 
             DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
 
