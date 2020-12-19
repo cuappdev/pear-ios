@@ -75,16 +75,18 @@ class HomeViewController: UIViewController {
             // let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
             // UserDefaults.standard.setValue("aa", forKey: Constants.UserDefaults.matchIDLastReachedOut)
 
-            let firstActiveMatch = Match(
-                matchID: "abc123",
-                status: "created",
-                meetingTime: 10,
-                users: ["pno3", "cnorris"],
-                availabilities: [
-                  DaySchedule(day: "saturday", times: [16, 17, 18]),
-                  DaySchedule(day: "friday", times: [17, 19])
-                ]
-            )
+            // let firstActiveMatch = Match(
+            //     matchID: "abc123",
+            //     status: "created",
+            //     meetingTime: 10,
+            //     users: ["pno3", "cnorris"],
+            //     availabilities: [
+            //       DaySchedule(day: "saturday", times: [16, 17, 18]),
+            //       DaySchedule(day: "friday", times: [17, 19])
+            //     ]
+            // )
+
+            let firstActiveMatch: Match? = nil
 
             self.setupTabPageViewController(with: firstActiveMatch, user: user)
             if let pictureURL = URL(string: user.profilePictureURL) {
@@ -113,7 +115,7 @@ class HomeViewController: UIViewController {
         }
     }
 
-    private func setupTabPageViewController(with match: Match?, user: User) {
+    private func setupTabPageViewController(with match: Match? = nil, user: User) {
         tabPageViewController = TabPageViewController(match: match, user: user)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)

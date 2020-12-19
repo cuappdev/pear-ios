@@ -7,6 +7,9 @@
 //
 import UIKit
 
+// MARK: - SchedulingStatus
+
+/// The context in which the user is picking times
 enum SchedulingStatus {
     /// If the user has no pear, they can input their typical availabilities
     case pickingTypical
@@ -16,7 +19,12 @@ enum SchedulingStatus {
     case choosing
 }
 
-/// Handles the logic of converting selected time strings and days to `DaySchedule`, and getting relevent info
+// MARK: - SelectedSchedules
+
+/**
+ Handles the logic of selection for when the user has to pick one or multiple times
+ Also handles converting selected time strings and days to `DaySchedule`
+*/
 fileprivate class SelectedSchedules {
 
     /// User either picks multiple times in some cases, and just toggles a singular time
@@ -235,7 +243,6 @@ class SchedulingTimeViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-
 
     // MARK: - Setup
     private func setupDaysAndTimes() {
@@ -531,8 +538,50 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
+    @objc private func backButtonPressed() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func noTimesWorkPressed() {
+        showErrorMessageAlertView()
+    }
+
     @objc private func nextButtonPressed() {
+        switch schedulingStatus {
+        case .choosing, .confirming:
+            continueToSchedulingPlaces()
+        case .pickingTypical:
+            updateUserAvailabilitiesAndPop()
+        }
+    }
+
+    // MARK: - Navigation
+    private func updateUserAvailabilitiesAndPop() {
+        NetworkManager.shared.updateTimeAvailabilities(
+          savedAvailabilities: selectedTimes.schedules
+        ).observe { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .value(let response):
+                if response.success {
+                    print("Successfully updated user's time availabilities")
+                } else {
+                    print("Was not successful when updating user's time availabilities")
+                }
+            case .error(let error):
+                print("Error when updating time availabilities: \(error)")
+            }
+
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+
+    private func continueToSchedulingPlaces() {
         guard let match = match else {
+            print("Tried to continue to scheduling places view controller, but match is nil")
             navigationController?.popViewController(animated: true)
             return
         }
@@ -550,14 +599,6 @@ class SchedulingTimeViewController: UIViewController {
             match: editedMatch
         )
         navigationController?.pushViewController(placesVC, animated: true)
-    }
-
-    @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: true)
-    }
-
-    @objc private func noTimesWorkPressed() {
-        showErrorMessageAlertView()
     }
 
 }
@@ -631,7 +672,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
             guard let day = abbrevToDayDict[selectedDayAbbrev] else { return cell }
 
             if selectedTimes.schedules.contains(where: { $0.day == day && $0.times.contains(time) }) {
-                // timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 cell.isSelected = true
             }
         }
@@ -648,26 +689,25 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
         guard collectionView == timeCollectionView, let cell = collectionView.cellForItem(at: indexPath) else { return true }
         if cell.isSelected {
             collectionView.deselectItem(at: indexPath, animated: true)
-            deselectNewTime(indexPath: indexPath)
-            print("should select... \(false)")
-            print("selected: \(selectedTimes.schedules)")
             return false
         } else {
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-            print("should select... \(true)")
             return true
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selecting")
         if collectionView == dayCollectionView {
             selectNewDay(indexPath: indexPath)
         } else {
             selectNewTime(indexPath: indexPath)
             dayCollectionView.reloadData()
         }
-        print("selected: \(selectedTimes.schedules)")
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard collectionView == timeCollectionView else { return }
+        deselectNewTime(indexPath: indexPath)
     }
 
     private func selectNewDay(indexPath: IndexPath) {
@@ -709,6 +749,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
 
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -721,6 +762,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
 }
 
+// MARK: - MessageAlertViewDelegate
 extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
     func removeAlertView(isDismiss: Bool) {

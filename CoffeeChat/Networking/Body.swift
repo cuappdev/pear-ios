@@ -76,14 +76,10 @@ struct UpdateTimeAvailabilitiesBody: Codable {
 
 }
 
-class DaySchedule: Codable, CustomStringConvertible {
+class DaySchedule: Codable {
 
     let day: String
     var times: [Float]
-
-    var description: String { // TODO delete this...
-        "(day: \(day) times: \(times))"
-    }
 
     init(day: String, times: [Float]) {
         self.day = day
