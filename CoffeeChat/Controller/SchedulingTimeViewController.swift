@@ -806,9 +806,9 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 }
 
 // MARK: - User Extension
-extension User {
+fileprivate extension User {
     var availabilitiesLeftForMatch: [DaySchedule] {
-        var filteredDays = [
+        var daysLeftForMatch = [
           Constants.Match.sunday,
           Constants.Match.monday,
           Constants.Match.tuesday,
@@ -818,14 +818,14 @@ extension User {
           Constants.Match.saturday
         ]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
-        filteredDays.removeSubrange(0..<dayIndex)
+        daysLeftForMatch.removeSubrange(0..<dayIndex)
 
-        return self.availabilities.filter { filteredDays.contains($0.day) }
+        return self.availabilities.filter { daysLeftForMatch.contains($0.day) }
     }
 }
 
 // MARK: - String Extension
-extension String {
+fileprivate extension String {
 
     var withCapitalizedFirstLetter: String {
         guard self.count >= 1 else { return "" }

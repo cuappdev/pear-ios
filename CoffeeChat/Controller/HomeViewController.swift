@@ -72,26 +72,13 @@ class HomeViewController: UIViewController {
         getUserThen { user in
             self.user = user
 
-            // let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
-            // UserDefaults.standard.setValue("aa", forKey: Constants.UserDefaults.matchIDLastReachedOut)
-
-            // let firstActiveMatch = Match(
-            //     matchID: "abc123",
-            //     status: "created",
-            //     meetingTime: 10,
-            //     users: ["pno3", "cnorris"],
-            //     availabilities: [
-            //       DaySchedule(day: "saturday", times: [16, 17, 18]),
-            //       DaySchedule(day: "friday", times: [17, 19])
-            //     ]
-            // )
-
-            let firstActiveMatch: Match? = nil
-
-            self.setupTabPageViewController(with: firstActiveMatch, user: user)
             if let pictureURL = URL(string: user.profilePictureURL) {
                 self.profileButton.kf.setImage(with: pictureURL, for: .normal)
             }
+
+            let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
+            self.setupTabPageViewController(with: firstActiveMatch, user: user)
+
         }
     }
 
