@@ -12,20 +12,15 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-        // TODO change this back
-        //let baseURL = Keys.serverURL
-        let baseURL = "localhost"
+        let baseURL = Keys.serverURL
 
-        // #if LOCAL
-        //     Endpoint.config.scheme = "http"
-        //     Endpoint.config.port = 5000
-        // #else
-        //     Endpoint.config.scheme = "http"
-        // #endif
-        Endpoint.config.scheme = "http"
-        Endpoint.config.port = 5000
-
-        Endpoint.config.host = baseURL
+         #if LOCAL
+             Endpoint.config.scheme = "http"
+             Endpoint.config.port = 5000
+         #else
+             Endpoint.config.scheme = "http"
+         #endif
+   Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
 
