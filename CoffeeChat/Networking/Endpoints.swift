@@ -23,10 +23,6 @@ extension Endpoint {
             Endpoint.config.host = baseURL
         #endif
 
-        Endpoint.config.scheme = "http"
-        Endpoint.config.port = 5000
-        Endpoint.config.host = "localhost"
-
         Endpoint.config.commonPath = "/api/v1"
     }
 
