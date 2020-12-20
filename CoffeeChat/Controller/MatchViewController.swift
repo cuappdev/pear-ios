@@ -265,29 +265,33 @@ class MatchViewController: UIViewController {
 
     private func setupMatchSummaries() {
         guard let pair = pair else { return }
-        var matchSummary: MatchSummary
 
         let commonInterests = user.interests.filter { pair.interests.contains($0) }
-        if commonInterests.count > 0 {
-            matchSummary = MatchSummary(title: "You both love...", detail: stringListToSentence(words: commonInterests))
-            matchSummaries.append(matchSummary)
-        }
-
         let commonGroups = user.groups.filter { pair.groups.contains($0) }
-        if commonGroups.count > 0 {
-            matchSummary = MatchSummary(title: "You're both part of...", detail: stringListToSentence(words: commonGroups))
-            matchSummaries.append(matchSummary)
-        }
+        let uncommonInterests = pair.interests.filter { !commonInterests.contains($0) }
+        let uncommonGroups = pair.groups.filter { !commonGroups.contains($0) }
 
-        let exclusivePairInterests = pair.interests.filter { !commonInterests.contains($0) }
-        if exclusivePairInterests.count > 0 {
-            matchSummary = MatchSummary(title: "He also enjoys...", detail: stringListToSentence(words: exclusivePairInterests))
-            matchSummaries.append(matchSummary)
-        }
+        addMatchSummary(
+          title: "You both love...",
+          items: commonInterests
+        )
+        addMatchSummary(
+          title: "You're both part of...",
+          items: commonGroups
+        )
+        addMatchSummary(
+          title: "He also enjoys...",
+          items: uncommonInterests
+        )
+        addMatchSummary(
+          title: "He is also part of...",
+          items: uncommonGroups
+        )
+    }
 
-        let exclusivePairGroups = pair.groups.filter { !commonGroups.contains($0) }
-        if exclusivePairGroups.count > 0 {
-            matchSummary = MatchSummary(title: "He is also part of...", detail: stringListToSentence(words: exclusivePairGroups))
+    private func addMatchSummary(title: String, items: [String]) {
+        if items.count > 0 {
+            let matchSummary = MatchSummary(title: title, detail: stringListToSentence(words: items))
             matchSummaries.append(matchSummary)
         }
     }

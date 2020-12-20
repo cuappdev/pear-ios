@@ -42,7 +42,6 @@ class SchedulingPlacesViewController: UIViewController {
     private var pickedLocation: String?
 
     // Data received from `SchedulingTimeViewController`
-    // private var availabilities: [SubTimeAvailability] = []
     private var match: Match
 
     private let headerHeight: CGFloat = 50
