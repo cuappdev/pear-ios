@@ -76,7 +76,7 @@ struct UpdateTimeAvailabilitiesBody: Codable {
 
 }
 
-class DaySchedule: Codable {
+class DaySchedule: Codable, Equatable {
 
     let day: String
     var times: [Float]
@@ -84,6 +84,10 @@ class DaySchedule: Codable {
     init(day: String, times: [Float]) {
         self.day = day
         self.times = times
+    }
+
+    static func == (lhs: DaySchedule, rhs: DaySchedule) -> Bool {
+        return lhs.day == rhs.day && lhs.times == rhs.times
     }
 
 }

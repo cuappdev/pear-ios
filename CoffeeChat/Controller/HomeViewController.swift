@@ -65,20 +65,39 @@ class HomeViewController: UIViewController {
         view.addSubview(tabCollectionView)
 
         setUpConstraints()
-        setUserAndTabPage()
     }
 
-    private func setUserAndTabPage() {
-        getUserThen { user in
-            self.user = user
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
 
-            if let pictureURL = URL(string: user.profilePictureURL) {
-                self.profileButton.kf.setImage(with: pictureURL, for: .normal)
+        updateUserAndTabPage()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    private func updateUserAndTabPage() {
+        getUserThen { [weak self] newUser in
+            guard let self = self else { return }
+
+            if self.user == nil || self.user != newUser {
+                self.setUserAndTabPage(newUser: newUser)
             }
-
-            let firstActiveMatch = user.matches.filter({ $0.status != "inactive" }).first
-            self.setupTabPageViewController(with: firstActiveMatch, user: user)
         }
+    }
+
+    private func setUserAndTabPage(newUser: User) {
+        self.user = newUser
+
+        if let pictureURL = URL(string: newUser.profilePictureURL) {
+            self.profileButton.kf.setImage(with: pictureURL, for: .normal)
+        }
+
+        let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
+        self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
     }
 
     private func getUserThen(_ completion: @escaping (User) -> Void) {
@@ -146,16 +165,6 @@ class HomeViewController: UIViewController {
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
 
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
 }

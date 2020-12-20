@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Match: Codable {
+struct Match: Codable, Equatable {
 
     let matchID: String
     let status: String
@@ -51,6 +51,10 @@ struct Match: Codable {
         } else {
             return false
         }
+    }
+
+    static func == (lhs: Match, rhs: Match) -> Bool {
+        lhs.matchID == rhs.matchID && lhs.status == rhs.status
     }
 
 }
