@@ -25,7 +25,7 @@ class MeetupStatusView: UIView {
     private let statusImageSize = CGSize(width: 10, height: 10)
     private let statusMessagePadding: CGFloat = 6.5
 
-    convenience init(for status: ChatStatus) {
+    convenience init?(for status: ChatStatus) {
         self.init()
 
         switch status {
@@ -46,8 +46,8 @@ class MeetupStatusView: UIView {
         case .finished:
             setupForChatFinished()
         default:
-            print("There is no meetupStatusView for \(status) so returning the one for .noResponses")
-            setupForNoResponses()
+            print("There is no meetupStatusView for \(status) so returning nil")
+            return nil
         }
     }
 
@@ -139,21 +139,21 @@ class MeetupStatusView: UIView {
 
     // MARK: Different View States
 
-    private func setupForResponding(to user: SubUser) {
+    private func setupForResponding(to user: User) {
         statusImageView.image = UIImage(named: "newPear")
         statusLabel.text = "New Pear"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("\(user.firstName) wants to meet you! Pick a time that works for both of you.")
     }
 
-    private func setupForWaiting(for user: SubUser) {
+    private func setupForWaiting(for user: User) {
         statusImageView.image = UIImage(named: "reachedOut")
         statusLabel.text = "Reached out"
         messageTextView.attributedText = NSMutableAttributedString()
             .normalFont("Just waiting on \(user.firstName) to pick a time and place!")
     }
 
-    private func setupForChatScheduled(on date: Date, for user: SubUser) {
+    private func setupForChatScheduled(on date: Date, for user: User) {
         statusImageView.image = UIImage(named: "scheduled")
         statusLabel.text = "Chat scheduled"
 
@@ -195,7 +195,7 @@ class MeetupStatusView: UIView {
             .normalFont("Hope your chat went well! Now you have one more friend at Cornell 😊")
     }
 
-    private func setupForChatCancelled(with user: SubUser) {
+    private func setupForChatCancelled(with user: User) {
         statusImageView.image = UIImage(named: "cancelled")
         statusLabel.text = "Cancelled"
 
@@ -204,7 +204,7 @@ class MeetupStatusView: UIView {
 
         if user.instagram != nil || user.facebook != nil {
             fullText
-                .normalFont("\nYou can still reach Maggie on ")
+                .normalFont("\nYou can still reach \(user.firstName) on ")
                 .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
                 .normalFont(".")
         }

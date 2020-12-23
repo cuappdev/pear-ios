@@ -196,8 +196,8 @@ class EditingViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-            case .error:
-                print("Error when getting groups for user")
+            case .error(let error):
+                print("Error when getting groups for user: \(error)")
             }
         }
     }

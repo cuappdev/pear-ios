@@ -17,10 +17,12 @@ extension Endpoint {
         #if LOCAL
             Endpoint.config.scheme = "http"
             Endpoint.config.port = 5000
+            Endpoint.config.host = "localhost"
         #else
             Endpoint.config.scheme = "http"
+            Endpoint.config.host = baseURL
         #endif
-        Endpoint.config.host = baseURL
+
         Endpoint.config.commonPath = "/api/v1"
     }
 
@@ -78,19 +80,19 @@ extension Endpoint {
         let body = UpdateUserInterestsBody(interests: interests)
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update groups information about the user
     static func updateUserGroups(groups: [String]) -> Endpoint {
         let body = UpdateUserGroupsBody(groups: groups)
         return Endpoint(path: "/user/groups/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update goals information about the user
     static func updateUserGoals(goals: [String]) -> Endpoint {
         let body = UpdateUserGoalsBody(goals: goals)
         return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update goals information about the user
     static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
         let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
@@ -102,7 +104,7 @@ extension Endpoint {
         let body = UpdateUserGroupsBody(groups: organizations)
         return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
-    
+
     /// [POST] Update talking points information about the user
     static func updateUserTalkingPoints(talkingPoints: [String]) -> Endpoint {
         let body = UpdateUserTalkingPointsBody(talkingPoints: talkingPoints)
@@ -117,12 +119,6 @@ extension Endpoint {
     /// [GET] Get clubs of the user
     static func getUserClubs() -> Endpoint {
         Endpoint(path: "/user/clubs/")
-    }
-
-    /// [POST] Get matchings of the user
-    static func getUserMatchings(netIDs: [String], schedule: [DaySchedule]) -> Endpoint {
-        let body = MatchingBody(netIDs: netIDs, schedule: schedule)
-        return Endpoint(path: "/user/matchings/", body: body)
     }
 
     /// [GET] Get major of the user
@@ -144,17 +140,17 @@ extension Endpoint {
     static func searchUsers(query: String) -> Endpoint {
         Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
     }
-    
+
     /// [GET] Get all student groups
     static func getAllGroups() -> Endpoint {
         Endpoint(path: "/group/all/", headers: standardHeaders)
     }
-    
+
     /// [GET] Get all interests
     static func getAllInterests() -> Endpoint {
         Endpoint(path: "/interest/all/", headers: standardHeaders)
     }
-    
+
     /// [GET] Get all majors
     static func getAllMajors() -> Endpoint {
         Endpoint(path: "/major/all/", headers: standardHeaders)
@@ -166,9 +162,35 @@ extension Endpoint {
     }
 
     /// [POST] Update user time availabilities
-    static func updateTimeAvailabilities(savedAvailabilities: [Schedule]) -> Endpoint {
+    static func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Endpoint {
         let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)
-        return Endpoint(path: "/user/availabilities/", headers: standardHeaders ,body: body)
+        return Endpoint(path: "/user/availabilities/", headers: standardHeaders, body: body)
+    }
+
+    /// [GET] Gets current user's matches
+    static func getMatch(netId: String) -> Endpoint {
+        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+
+    }
+    /// [GET] Gets another user's matches, given their netID
+    static func getMatch() -> Endpoint {
+        Endpoint(path: "/match/", headers: standardHeaders)
+    }
+
+    /// [POST] Update the availabilities for the given match.
+    static func updateMatchAvailabilities(match: Match) -> Endpoint {
+        let body = UpdateMatchBody(matchID: match.matchID, schedule: match.availabilities)
+        return Endpoint(path: "/match/availabilities/", headers: standardHeaders, body: body)
+    }
+
+    /// [POST] Cancels match provided the matchID.
+    static func cancelMatch(matchID: String) -> Endpoint {
+        return Endpoint(path: "/match/cancel", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders, method: .post)
+    }
+
+    /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
+    static func getMatchHistory(netID: String) -> Endpoint {
+        Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
     }
 
 }

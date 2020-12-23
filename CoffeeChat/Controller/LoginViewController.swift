@@ -25,9 +25,9 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         navigationController?.navigationBar.isHidden = true
-        
+
         backgroundImage.image = UIImage(named: "welcomeBackground")
         backgroundImage.contentMode = .scaleAspectFill
         view.insertSubview(backgroundImage, at: 0)
@@ -41,7 +41,7 @@ class LoginViewController: UIViewController {
         setupErrorMessageAlert()
         setupConstraints()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         backgroundImage.frame = view.bounds
@@ -103,7 +103,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             self.showErrorMessageAlertView()
             return
         }
-        
+
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
         let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let loginVC = LoginViewController()

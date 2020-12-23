@@ -19,26 +19,26 @@ struct UserSessionBody: Codable {
 struct UpdateUserGroupsBody: Codable {
 
     let groups: [String]
-    
+
 }
 
 struct UpdateUserGoalsBody: Codable {
 
     let goals: [String]
-    
+
 }
 
 struct UpdateUserTalkingPointsBody: Codable {
-    
+
     let talkingPoints: [String]
-    
+
 }
 
 struct UpdateUserSocialMediaBody: Codable {
-    
+
     let facebook: String
     let instagram: String
-    
+
 }
 
 struct UpdateUserDemographicsBody: Codable {
@@ -64,15 +64,30 @@ struct MatchingBody: Codable {
 
 }
 
+struct UpdateMatchBody: Codable {
+
+    let matchID: String
+    let schedule: [DaySchedule]
+}
+
 struct UpdateTimeAvailabilitiesBody: Codable {
 
-    let schedule: [Schedule]
+    let schedule: [DaySchedule]
 
 }
 
-struct Schedule: Codable {
+class DaySchedule: Codable, Equatable {
 
     let day: String
-    let times: [Float]
-    
+    var times: [Float]
+
+    init(day: String, times: [Float]) {
+        self.day = day
+        self.times = times
+    }
+
+    static func == (lhs: DaySchedule, rhs: DaySchedule) -> Bool {
+        return lhs.day == rhs.day && lhs.times == rhs.times
+    }
+
 }

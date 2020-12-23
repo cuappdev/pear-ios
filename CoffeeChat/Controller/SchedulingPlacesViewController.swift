@@ -37,13 +37,12 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     private let schedulingStatus: SchedulingStatus
-    private let isChoosing: Bool
+    private var isChoosing: Bool { .choosing ~= schedulingStatus }
     // Location user picked from match's locations
     private var pickedLocation: String?
 
     // Data received from `SchedulingTimeViewController`
-    private var availabilities: [String: [String]] = [:]
-    private var pickedTime: (day: String, time: String) = (day: "", time: "")
+    private var match: Match
 
     private let headerHeight: CGFloat = 50
     private let interitemSpacing: CGFloat = 12
@@ -68,26 +67,28 @@ class SchedulingPlacesViewController: UIViewController {
         "Mango Mango",
         "U Tea"
     ]
-    private let matchLocations = [
-        "Goldie's Cafe",
-        "Green Dragon",
-        "Kung Fu Tea"
-    ]
-    private let savedLocations = [
+    // TODO replace once the match includes location information
+    private let matchLocations: [String] = [
         "Atrium Cafe",
         "Cafe Jennie",
-        "Mango Mango"
+        "Gimme Coffee",
+        "Goldie's Cafe",
+        "Green Dragon",
+        "Libe Cafe",
+        "Mac's Cafe",
+        "Martha's Cafe",
+        "Mattin's Cafe",
+        "Temple of Zeus",
+        "Kung Fu Tea",
+        "Starbucks",
+        "Mango Mango",
+        "U Tea"
     ]
+    private let savedLocations: [String] = []
 
-    init(status: SchedulingStatus, availabilities: [String: [String]], pickedTime: (day: String, time: String)) {
+    init(status: SchedulingStatus, match: Match) {
         self.schedulingStatus = status
-        isChoosing = status == .choosing
-        switch schedulingStatus {
-        case .choosing:
-            self.pickedTime = pickedTime
-        default:
-            self.availabilities = availabilities
-        }
+        self.match = match
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -151,12 +152,19 @@ class SchedulingPlacesViewController: UIViewController {
         titleLabel.textColor = .black
         view.addSubview(titleLabel)
 
-        let amPm = Time.isAm(time: pickedTime.time) ? "AM" : "PM"
         infoLabel.font = ._16CircularStdMedium
-        infoLabel.text = isChoosing
-            ? "Meeting at \(pickedTime.time) \(amPm) on \(pickedTime.day)"
-            : "Pick three"
         infoLabel.textColor = .greenGray
+        if let firstSelectedTime = match.availabilities.first {
+            let day = firstSelectedTime.day
+            let time = Time.floatToStringTime(time: firstSelectedTime.times.first ?? 0)
+            let amPm = Time.isAm(time: time) ? "AM" : "PM"
+
+            infoLabel.text = isChoosing
+              ? "Meeting at \(time) \(amPm) on \(day)"
+              : "Pick three"
+        } else {
+            infoLabel.text = "Pick three"
+        }
         view.addSubview(infoLabel)
 
         let locationsCollectionViewLayout = UICollectionViewFlowLayout()
@@ -170,7 +178,6 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionView.delegate = self
         locationsCollectionView.dataSource = self
         locationsCollectionView.backgroundColor = .clear
-        locationsCollectionView.layer.masksToBounds = false
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.campusReuseId)
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.ctownReuseId)
         locationsCollectionView.register(
@@ -261,7 +268,24 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        navigationController?.pushViewController(HomeViewController(), animated: true)
+        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .value(let value):
+                if value.success {
+                    UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
+                    print("Successfully updated match availabilities")
+                } else {
+                    print("Failed to update match availabilities")
+                }
+            case .error(let error):
+                print("Error when updating match availabilities: \(error)")
+            }
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+            }
+        }
+
     }
 
     @objc private func backButtonPressed() {
