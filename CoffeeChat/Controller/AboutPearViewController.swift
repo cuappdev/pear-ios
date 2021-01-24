@@ -49,7 +49,7 @@ class AboutPearViewController: UIViewController {
         aboutTableView.delegate = self
         aboutTableView.dataSource = self
         aboutTableView.backgroundColor = .clear
-        aboutTableView.isScrollEnabled = false
+        aboutTableView.bounces = false
         aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: AboutPearTableViewCell.aboutReuseId)
         view.addSubview(aboutTableView)
 
@@ -127,7 +127,7 @@ class AboutPearViewController: UIViewController {
 
         feedbackButton.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
-            make.top.equalTo(aboutTableView.snp.bottom).offset(10)
+            make.top.equalTo(aboutTableView.snp.bottom).offset(30)
             make.width.equalTo(180)
             make.height.equalTo(40)
         }

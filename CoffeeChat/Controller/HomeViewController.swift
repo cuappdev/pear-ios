@@ -143,7 +143,7 @@ class HomeViewController: UIViewController {
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
-        present(menu, animated: true)
+        present(menu, animated: true, completion: nil)
     }
 
     private func setUpConstraints() {

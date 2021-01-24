@@ -37,6 +37,11 @@ class CommunityViewController: UIViewController {
         searchBar.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.addSubview(searchBar)
 
+        // TODO - delete after taking screenshots for pull request
+        let dummy = CommunityUser(groups: ["group", "group", "group", "group", "group", "group", "group", "group", "group"], firstName: "Amy", googleID: "592", graduationYear: "2023", hometown: "Ithaca", interests: ["interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest", "interest"], lastName: "Huang", major: "Co", matches: [], netID: "ac", profilePictureURL: "", pronouns: "she/hers", facebook: "", instagram: "")
+        let dummy2 = CommunityUser(groups: ["group", "group", "group", "group", "group", "group", "group", "group", "group"], firstName: "Amy", googleID: "592", graduationYear: "2023", hometown: "Ithaca", interests: ["interest", "interest", "interest", "interest", "interest"], lastName: "Huang", major: "Co", matches: [], netID: "ac", profilePictureURL: "", pronouns: "she/hers", facebook: "", instagram: "")
+        users = [dummy, dummy, dummy2, dummy, dummy2]
+
         communityTableView.delegate = self
         communityTableView.dataSource = self
         communityTableView.isScrollEnabled = true
@@ -49,6 +54,13 @@ class CommunityViewController: UIViewController {
         view.addSubview(communityTableView)
 
         setupConstraints()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        DispatchQueue.main.async {
+            self.communityTableView.reloadData()
+        }
     }
 
     private func getUsers() {
