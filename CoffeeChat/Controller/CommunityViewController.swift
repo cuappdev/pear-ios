@@ -18,7 +18,6 @@ class CommunityViewController: UIViewController {
     private var users: [CommunityUser] = []
     override func viewDidLoad() {
         super.viewDidLoad()
- 
         view.backgroundColor = .backgroundLightGreen
 
         searchBar.delegate = self

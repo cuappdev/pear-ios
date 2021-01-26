@@ -41,7 +41,7 @@ class ProfileMenuViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
-        let firstName = user.firstName + user.firstName + user.firstName + user.firstName + user.firstName
+        let firstName = user.firstName
         let lastName = user.lastName
         let major = user.major
 
