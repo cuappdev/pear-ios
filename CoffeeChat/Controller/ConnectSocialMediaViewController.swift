@@ -118,9 +118,9 @@ class ConnectSocialMediaViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         getUserSocialMedia()
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
     }
     
     private func getUserSocialMedia() {

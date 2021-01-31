@@ -78,6 +78,7 @@ class TalkingPointsViewController: UIViewController {
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.dataSource = self
+        fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.delegate = self
         fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
@@ -104,14 +105,18 @@ class TalkingPointsViewController: UIViewController {
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         getAllTalkingPoints()
         getUserTalkingPoints()
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
     }
     
     private func getUserTalkingPoints() {
@@ -134,6 +139,10 @@ class TalkingPointsViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc func dismissKeyboard() {
+        searchBar.resignFirstResponder()
     }
     
     private func getAllTalkingPoints() {

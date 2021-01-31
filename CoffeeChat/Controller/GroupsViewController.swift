@@ -24,6 +24,7 @@ class GroupsViewController: UIViewController {
     private let nextButton = UIButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
+    private let subtitleLabel = UILabel()
     private let fadeTableView = FadeWrapperView(
         UITableView(),
         fadeColor: .backgroundLightGreen
@@ -56,10 +57,18 @@ class GroupsViewController: UIViewController {
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
-
+        
+        subtitleLabel.text = "You may select more than 1."
+        subtitleLabel.textColor = .greenGray
+        subtitleLabel.font = ._12CircularStdBook
+        subtitleLabel.textAlignment = .center
+        view.addSubview(subtitleLabel)
+        
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.isMultipleTouchEnabled = true
+        fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.separatorStyle = .none
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.delegate = self
@@ -88,7 +97,7 @@ class GroupsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
@@ -110,6 +119,11 @@ class GroupsViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.height.equalTo(30)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
+        }
+        
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(clubLabel.snp.bottom).offset(4)
+            make.centerX.width.equalTo(clubLabel)
         }
 
         searchBar.snp.makeConstraints { make in
@@ -184,7 +198,7 @@ class GroupsViewController: UIViewController {
         delegate?.nextPage(index: 3)
     }
     
-    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+    @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
     
@@ -209,9 +223,13 @@ class GroupsViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         getAllGroups()
         getUserGroups()
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
     }
 
     private func getUserGroups() {

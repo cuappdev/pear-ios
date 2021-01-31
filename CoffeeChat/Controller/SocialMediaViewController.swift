@@ -162,7 +162,7 @@ class SocialMediaViewController: UIViewController {
     private func updateNext() {
         guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
         let isSocialMediaEntered =
-            instagramHandle.trimmingCharacters(in: .whitespaces) != "" &&
+            instagramHandle.trimmingCharacters(in: .whitespaces) != "" ||
             facebookHandle.trimmingCharacters(in: .whitespaces) != ""
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
