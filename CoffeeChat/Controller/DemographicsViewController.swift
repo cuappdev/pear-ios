@@ -129,7 +129,7 @@ class DemographicsViewController: UIViewController {
             }
         }
     }
-    
+
     private func getMajors() {
         NetworkManager.shared.getAllMajors().observe { [weak self] result in
             guard let self = self else { return }
@@ -145,7 +145,7 @@ class DemographicsViewController: UIViewController {
             }
         }
     }
-    
+
     private func getUser() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
@@ -156,14 +156,13 @@ class DemographicsViewController: UIViewController {
                     if response.success {
                         let user = response.data
                         let major = user.major
-                        let graduationYear = user.graduationYear
                         let hometown = user.hometown
                         let pronouns = user.pronouns
                         if major != "" {
                             self.majorDropdownView.setTitle(title: user.major)
                         }
-                        if graduationYear != "" {
-                            self.classDropdownView.setTitle(title: user.graduationYear)
+                        if let graduationYear = user.graduationYear, graduationYear != "" {
+                            self.classDropdownView.setTitle(title: graduationYear)
                         }
                         if hometown != "" {
                             self.hometownDropdownView.setTitle(title: user.hometown)

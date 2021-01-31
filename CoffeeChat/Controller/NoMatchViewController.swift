@@ -12,19 +12,30 @@ import UIKit
 
 class NoMatchViewController: UIViewController {
 
+    private let user: User
+
     // MARK: - Private View Vars
     private let availabilityButton = UIButton()
     private let noMatchLabel = UILabel()
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImageView = UIImageView()
 
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "" // To get rid of the "back" text on navigation bar
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
-        
+
         surprisedPearImageView.image = UIImage(named: "surprisedPear")
         surprisedPearImageView.contentMode = .scaleAspectFit
         view.addSubview(surprisedPearImageView)
@@ -53,10 +64,10 @@ class NoMatchViewController: UIViewController {
         availabilityButton.layer.cornerRadius = 26
         availabilityButton.addTarget(self, action: #selector(availabilityButtonPressed), for: .touchUpInside)
         view.addSubview(availabilityButton)
-        
+
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
         let buttonSize = CGSize(width: 225, height: 54)
         let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
@@ -91,7 +102,7 @@ class NoMatchViewController: UIViewController {
     }
 
     @objc private func availabilityButtonPressed() {
-        let timeVC = SchedulingTimeViewController(for: .pickingTypical)
+        let timeVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
         navigationController?.pushViewController(timeVC, animated: true)
     }
 

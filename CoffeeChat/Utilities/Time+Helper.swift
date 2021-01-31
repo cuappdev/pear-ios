@@ -10,13 +10,13 @@ import Foundation
 
 enum Weekday: String, CaseIterable {
 
-    case sunday = "Sunday"
-    case monday = "Monday"
-    case tuesday = "Tuesday"
-    case wednesday = "Wednesday"
-    case thursday = "Thursday"
-    case friday = "Friday"
-    case saturday = "Saturday"
+    case sunday
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
 
     var calendarIndex: Int {
         Self.allCases.firstIndex(of: self)! + 1
@@ -31,6 +31,7 @@ class Time {
     /// Day of the week matches are first assigned
     static let matchDay: Weekday = .sunday
 
+    /// Times available for meeting up
     static let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
     static let pmTimes = [
         "12:00", "12:30", "1:00", "1:30", "2:00", "2:30",
@@ -43,6 +44,10 @@ class Time {
         let lastSunday = getWeekday(searchDirection: .backward, weekday: .sunday, time: 0)
         let today = Date()
         return Time.calendar.dateComponents([.day], from: lastSunday, to: today).day ?? 0
+    }
+
+    static var thisYear: Int {
+        Calendar.current.component(.year, from: Date())
     }
 
     static func isAm(time: String) -> Bool {
@@ -75,6 +80,35 @@ class Time {
     /// Returns the `Date` corresponding to next `weekday` at the time specified by `time`
     static func next(_ weekday: Weekday, at time: Float) -> Date {
         getWeekday(searchDirection: .forward, weekday: weekday, time: time)
+    }
+
+    /**
+    Returns the next `Date` corresponding to the next date specified by `day` and the largest float in `times`.
+    Returns nil if `day`doesn't represent a valid string or times is empty.
+    */
+    static func next(day: String, times: [Float]) -> Date? {
+        let firstTime = times.max() ?? 0
+        if let weekday = Weekday(rawValue: day) {
+            return Time.next(weekday, at: firstTime)
+        } else {
+            return nil
+        }
+    }
+
+    /**
+    Returns true if the date corresponding to the day and the *largest/latest* time in times has passed this week.
+    "This week" is determined by getting the next occurence of the date and seeing if it is after the day of the
+    week new matches are assigned.
+
+    If this `DaySchedule` doesn't correspond to a day, is `false`
+    */
+    static func scheduleHasPassed(day: String, times: [Float]) -> Bool {
+        let nextSunday = Time.next(.sunday, at: 0)
+        if let matchDate = Time.next(day: day, times: times) {
+            return matchDate >= nextSunday
+        } else {
+            return false
+        }
     }
 
 }

@@ -28,19 +28,43 @@ struct Constants {
     }
 
     struct UserDefaults {
+        // Login
         static let accessToken = "accessToken"
+        static let onboardingCompletion = "onboardingCompletion"
         static let refreshToken = "refreshToken"
         static let sessionExpiration = "sessionExpiration"
-        static let onboardingCompletion = "onboardingCompletion"
+
+        // User Info
         static let userFirstName = "userFirstName"
         static let userFullName = "userFullName"
         static let userGraduationYear = "userGraduationYear"
         static let userHometown = "userHometown"
         static let userIdToken = "userIdToken"
-        static let userNetId = "userNetId"
         static let userMajor = "userMajor"
+        static let userNetId = "userNetId"
         static let userProfilePictureURL = "userProfilePictureURL"
         static let userPronouns = "userPronouns"
+
+        // Matching
+        static let matchIDLastReachedOut = "matchIDLastReachedOut"
+    }
+
+    struct Match {
+        // Match status
+        static let created = "created"
+        static let proposed = "proposed"
+        static let cancelled = "cancelled"
+        static let active = "active"
+        static let inactive = "inactive"
+
+        // Match day of week
+        static let sunday = "sunday"
+        static let monday = "monday"
+        static let tuesday = "tuesday"
+        static let wednesday = "wednesday"
+        static let thursday = "thursday"
+        static let friday = "friday"
+        static let saturday = "saturday"
     }
 
     struct Onboarding {

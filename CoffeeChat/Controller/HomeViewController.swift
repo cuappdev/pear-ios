@@ -67,40 +67,61 @@ class HomeViewController: UIViewController {
         setUpConstraints()
     }
 
-    private func getUserMatching() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).chained { [weak self] (response: Response<User>) -> Future<Response<Matching?>> in
-            guard let self = self else { return Promise<Response<Matching?>>(error: NetworkingError.failed("Self invalid")) }
-            if response.success {
-                let user = response.data
-                self.user = user
-                DispatchQueue.main.async {
-                    if let profilePictureURL = URL(string: user.profilePictureURL) {
-                        self.profileButton.kf.setImage(with: profilePictureURL, for: .normal)
-                    }
-                }
-                return NetworkManager.shared.getMatching(user: user)
-            } else {
-                return Promise<Response<Matching?>>(error: NetworkingError.failed("Failed to get user"))
-            }
-        }.observe { response in
-            let matchResult: Matching?
-            switch response {
-            case .value(let value):
-                matchResult = value.success ? value.data : nil
-            case .error:
-                print("Failed to get the matching for user")
-                matchResult = nil
-            }
-            DispatchQueue.main.async {
-                // TODO: Replace nil matching with actual matching after route is done
-                self.setupTabPageViewController(with: nil)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+
+        updateUserAndTabPage()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    private func updateUserAndTabPage() {
+        getUserThen { [weak self] newUser in
+            guard let self = self else { return }
+
+            if self.user == nil || self.user != newUser {
+                self.setUserAndTabPage(newUser: newUser)
             }
         }
     }
 
-    private func setupTabPageViewController(with matching: Matching?) {
-        tabPageViewController = TabPageViewController(matching: matching)
+    private func setUserAndTabPage(newUser: User) {
+        self.user = newUser
+
+        if let pictureURL = URL(string: newUser.profilePictureURL) {
+            self.profileButton.kf.setImage(with: pictureURL, for: .normal)
+        }
+
+        let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
+        self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
+    }
+
+    private func getUserThen(_ completion: @escaping (User) -> Void) {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            switch result {
+            case .value(let response):
+                guard response.success else {
+                    print("Unsuccesful response when getting user")
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    completion(response.data)
+                }
+            case .error(let error):
+                print("Encountered error in HomeViewController when getting User: \(error)")
+            }
+        }
+    }
+
+    private func setupTabPageViewController(with match: Match? = nil, user: User) {
+        tabPageViewController = TabPageViewController(match: match, user: user)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -144,17 +165,6 @@ class HomeViewController: UIViewController {
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
 
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
-        getUserMatching()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
 }
