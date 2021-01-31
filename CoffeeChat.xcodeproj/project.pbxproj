@@ -69,6 +69,8 @@
 		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
 		D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
+		D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D474105525C6E7CE0062E2B4 /* UIImage.swift */; };
+		D474105B25C6EA350062E2B4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D474105A25C6EA350062E2B4 /* String.swift */; };
 		D47FF1852459424C00808A9A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF1842459424C00808A9A /* Response.swift */; };
 		D47FF18B24597CA800808A9A /* Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18A24597CA800808A9A /* Body.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
@@ -175,6 +177,8 @@
 		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
 		D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
+		D474105525C6E7CE0062E2B4 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		D474105A25C6EA350062E2B4 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Models/Response.swift; sourceTree = SOURCE_ROOT; };
 		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Networking/Body.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
@@ -281,6 +285,8 @@
 			children = (
 				4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */,
 				30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */,
+				D474105525C6E7CE0062E2B4 /* UIImage.swift */,
+				D474105A25C6EA350062E2B4 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -799,6 +805,7 @@
 			files = (
 				5030DCFA2532C1D300374F7B /* SettingOptionTableViewCell.swift in Sources */,
 				D4DDBF49257560B000D5C43A /* Demographics.swift in Sources */,
+				D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */,
 				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
 				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
@@ -826,6 +833,7 @@
 				D42961842525F1C800C677C3 /* TalkingPointsViewController.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */,
+				D474105B25C6EA350062E2B4 /* String.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,

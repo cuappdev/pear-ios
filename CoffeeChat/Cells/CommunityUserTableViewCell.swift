@@ -105,9 +105,7 @@ class CommunityUserTableViewCell: UITableViewCell {
                 interests = userInterests
                 interestsCollectionView.reloadData()
             }
-            if let profilePictureURL = user.profilePictureURL, let pictureURL = URL(string: profilePictureURL) {
-                profileImageView.kf.setImage(with: pictureURL)
-            }
+            profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String:  user.profilePictureURL ?? "", cacheKey: "\(user.googleID ?? "user")"))
         }
     }
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class EditDemographicsViewController: UIViewController {
 
@@ -85,9 +86,8 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = 62.5
-        if let profilePictureURL = URL(string: user.profilePictureURL) {
-            profileImageView.kf.setImage(with: profilePictureURL)
-        }
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: "userProfilePic"))
+        
         editScrollView.addSubview(profileImageView)
 
         uploadPhotoButton.setTitle("Upload New Picture", for: .normal)
@@ -247,16 +247,20 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save name to backend
+        print("save presdsed")
+        let base64ProfileImageString = profileImageView.image?.pngData()?.base64EncodedString()
         if let graduationYear = demographics.graduationYear,
            let major = demographics.major,
            let hometown = demographics.hometown,
-           let pronouns = demographics.pronouns {
+           let pronouns = demographics.pronouns,
+           let profileImageBase64 = base64ProfileImageString {
+            print("bse43")
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "\(user.profilePictureURL)").observe { [weak self] result in
+                profilePictureURL: profileImageBase64).observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
@@ -357,8 +361,9 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        profileImageView.image = image
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        let resizedImage = image.resize(toSize: CGSize(width: 50, height: 50))
+        profileImageView.image = resizedImage
         dismiss(animated: true, completion: nil)
     }
 

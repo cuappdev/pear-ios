@@ -180,7 +180,8 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
+        let instagramHandle = instagramTextField.text ?? ""
+        let facebookHandle = facebookTextField.text ?? ""
         NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {

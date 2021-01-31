@@ -7,6 +7,7 @@
 //
 import GoogleSignIn
 import UIKit
+import Kingfisher
 
 /// If the local stored matchID matches the current match from backend, then the user has already reached out
 private func userAlreadyReachedOut(to match: Match) -> Bool {
@@ -200,9 +201,8 @@ class MatchViewController: UIViewController {
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         matchProfileImageView.layer.masksToBounds = true
-        if let pictureURL = URL(string: pair.profilePictureURL) {
-            matchProfileImageView.kf.setImage(with: pictureURL)
-        }
+        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL ?? "", cacheKey: "pairProfilePic"))
+   
         view.addSubview(matchProfileImageView)
 
         matchSummaryTableView.backgroundColor = .backgroundLightGreen
