@@ -63,6 +63,7 @@ class ProfileMenuViewController: UIViewController {
         optionsTableView.backgroundColor = .backgroundLightGreen
         optionsTableView.separatorStyle = .none
         optionsTableView.showsVerticalScrollIndicator = false
+        optionsTableView.isScrollEnabled = false
         optionsTableView.allowsSelection = true
         optionsTableView.dataSource = self
         optionsTableView.delegate = self

@@ -17,10 +17,11 @@ extension Endpoint {
         #if LOCAL
             Endpoint.config.scheme = "http"
             Endpoint.config.port = 5000
+            Endpoint.config.host = "localhost"
         #else
             Endpoint.config.scheme = "http"
+            Endpoint.config.host = baseURL
         #endif
-        Endpoint.config.host = baseURL
         Endpoint.config.commonPath = "/api/v1"
     }
 
