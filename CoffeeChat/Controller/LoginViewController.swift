@@ -112,7 +112,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
            let userEmail = user.profile.email,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 50) {
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 25) {
             let profileURLData = try? Data(contentsOf: userProfilePictureURL)
             if let profileURLData = profileURLData,
                let profileImage = UIImage(data: profileURLData),

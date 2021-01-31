@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
     private var activeTabIndex = 0
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
+    private var showShowMenu = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +73,9 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-
+//        if showShowMenu {
+//            presentMenu(animated: false)
+//        }
         updateUserAndTabPage()
     }
 
@@ -93,7 +96,7 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: "key"))
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
 
         let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
         self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
@@ -134,15 +137,20 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
+        showShowMenu = true
+        presentMenu(animated: true)
+    }
+    
+    private func presentMenu(animated: Bool) {
         guard let user = user else { return }
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
-        menu.presentationStyle = presentationStyle
+        menu.presentationStyle = .viewSlideOutMenuPartialIn
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
-        present(menu, animated: true)
+        present(menu, animated: animated)
     }
 
     private func setUpConstraints() {

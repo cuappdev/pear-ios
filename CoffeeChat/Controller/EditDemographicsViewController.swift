@@ -86,7 +86,7 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = 62.5
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: "userProfilePic"))
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
         
         editScrollView.addSubview(profileImageView)
 
@@ -247,14 +247,13 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save name to backend
-        print("save presdsed")
         let base64ProfileImageString = profileImageView.image?.pngData()?.base64EncodedString()
         if let graduationYear = demographics.graduationYear,
            let major = demographics.major,
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns,
            let profileImageBase64 = base64ProfileImageString {
-            print("bse43")
+            print(profileImageBase64)
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
@@ -362,7 +361,7 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        let resizedImage = image.resize(toSize: CGSize(width: 50, height: 50))
+        let resizedImage = image.resize(toSize: CGSize(width: 25, height: 25))
         profileImageView.image = resizedImage
         dismiss(animated: true, completion: nil)
     }
