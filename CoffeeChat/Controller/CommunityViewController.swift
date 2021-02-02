@@ -18,7 +18,6 @@ class CommunityViewController: UIViewController {
     private var users: [CommunityUser] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .backgroundLightGreen
 
         searchBar.delegate = self
@@ -49,6 +48,11 @@ class CommunityViewController: UIViewController {
         view.addSubview(communityTableView)
 
         setupConstraints()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.communityTableView.reloadData()
     }
 
     private func getUsers() {

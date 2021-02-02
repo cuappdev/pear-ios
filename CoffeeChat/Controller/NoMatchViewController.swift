@@ -53,8 +53,8 @@ class NoMatchViewController: UIViewController {
         noMatchLabel.textAlignment = .center
         noMatchLabel.textColor = .greenGray
         noMatchLabel.lineBreakMode = .byWordWrapping
-        noMatchLabel.sizeToFit()
         noMatchLabel.font = ._16CircularStdMedium
+        noMatchLabel.sizeToFit()
         view.addSubview(noMatchLabel)
 
         availabilityButton.setTitle("Enter availability", for: .normal)
@@ -79,12 +79,14 @@ class NoMatchViewController: UIViewController {
         noMatchTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(titleLabelPadding)
+            make.height.equalTo(65)
         }
 
         noMatchLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(293)
             make.bottom.equalTo(availabilityButton.snp.top).offset(-subtitleLabelPadding)
+            make.height.equalTo(50)
         }
 
         surprisedPearImageView.snp.makeConstraints { make in
@@ -95,9 +97,9 @@ class NoMatchViewController: UIViewController {
         }
 
         availabilityButton.snp.makeConstraints { make in
-           make.size.equalTo(buttonSize)
-           make.centerX.equalToSuperview()
-           make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
+            make.size.equalTo(buttonSize)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
         }
     }
 
