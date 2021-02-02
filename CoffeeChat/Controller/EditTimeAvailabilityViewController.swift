@@ -161,6 +161,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             let daySchedule = DaySchedule(day: day.lowercased(), times: floatTimes)
             schedule.append(daySchedule)
         }
+        print("here")
         NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
             switch response {
             case .value(let value):

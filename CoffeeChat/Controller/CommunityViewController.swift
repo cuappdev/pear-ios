@@ -52,9 +52,7 @@ class CommunityViewController: UIViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        DispatchQueue.main.async {
-            self.communityTableView.reloadData()
-        }
+        self.communityTableView.reloadData()
     }
 
     private func getUsers() {
