@@ -157,6 +157,10 @@ class EditLocationAvailabilityViewController: UIViewController {
             make.bottom.equalTo(view.snp.bottom).inset(30)
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
 
 }
 

@@ -115,7 +115,6 @@ class ConnectSocialMediaViewController: UIViewController {
     }
 
     @objc private func saveSocialMedia() {
-        // LUCY TODO: Update fields to take in just usernames and not links
         let instagramHandle = instaTextField.text ?? ""
         let facebookHandle = fbTextField.text ?? ""
         NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
@@ -123,7 +122,6 @@ class ConnectSocialMediaViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update social media success response \(response)")
                     if response.success {
                         self.navigationController?.popViewController(animated: true)
                     }
