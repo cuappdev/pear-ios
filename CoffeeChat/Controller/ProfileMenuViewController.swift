@@ -92,6 +92,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileInfoLabel)
 
         profileNameLabel.text = "\(firstName) \(lastName)"
+        profileNameLabel.lineBreakMode = .byWordWrapping
         profileNameLabel.textColor = .black
         profileNameLabel.numberOfLines = 0
         profileNameLabel.font = ._24CircularStdMedium
@@ -126,26 +127,26 @@ class ProfileMenuViewController: UIViewController {
         }
 
         profileNameLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(leftPadding)
+            make.leading.trailing.equalToSuperview().inset(leftPadding)
             make.top.equalTo(profileImageView.snp.bottom).offset(15)
         }
     }
 
     @objc private func editPressed() {
         let editDemographicsVC = EditDemographicsViewController(user: user)
-        navigationController?.pushViewController(editDemographicsVC, animated: false)
+        navigationController?.pushViewController(editDemographicsVC, animated: true)
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: false), animated: false)
+        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: false), animated: true)
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: true), animated: false)
+        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: true), animated: true)
     }
 
     func pushSettingsViewController() {
-        navigationController?.pushViewController(SettingsViewController(), animated: false)
+        navigationController?.pushViewController(SettingsViewController(), animated: true)
     }
 
 }

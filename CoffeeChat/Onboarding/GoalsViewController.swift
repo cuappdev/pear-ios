@@ -51,7 +51,8 @@ class GoalsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .none
-        tableView.isScrollEnabled = false
+        tableView.bounces = false
+        tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = true
         tableView.register(SimpleOnboardingTableViewCell.self,
