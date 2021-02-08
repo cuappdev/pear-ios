@@ -107,12 +107,8 @@ class OnboardingTableViewCell: UITableViewCell {
     func configure(with group: Group) {
         titleLabel.text = group.name
         categoriesLabel.text = nil
-        if let pictureString = group.imageURL {
-            interestImageView.kf.setImage(with: URL(string: pictureString))
-        } else {
-            interestImageView.image = nil
-        }
-
+        interestImageView.image = UIImage(named: group.imageName)
+     
         if lastShownItem != .group {
             lastShownItem = .group
             setupConstraints()

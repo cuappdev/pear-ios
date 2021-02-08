@@ -74,5 +74,57 @@ struct Constants {
         static let backButtonSize = CGSize(width: 10, height: 18)
         static let mainButtonSize = CGSize(width: 225, height: 54)
     }
+    
+    struct Options {
+        static let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+        
+        static let organizations = [
+            Group(name: "Cornell AppDev", imageName: "appdev"),
+            Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
+            Group(name: "Underrepresented User Experience (URUX)", imageName: "urux")
+        ]
+        
+        static let organizationsMap: [String: Group] = [
+            "Cornell AppDev": Group(name: "Cornell AppDev", imageName: "appdev"),
+            "The Milstein Program in Technology in Humanity": Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
+            "Underrepresented User Experience (URUX)": Group(name: "Underrepresented User Experience (URUX)", imageName: "urux")
+        ]
+        
+        static let interests: [Interest] = [
+            Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
+            Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
+            Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
+            Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
+            Interest(name: "Fashion", categories: nil, imageName: "fashion"),
+            Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
+            Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
+            Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
+            Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
+            Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
+            Interest(name: "Reading", categories: nil, imageName: "reading"),
+            Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
+            Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
+            Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
+            Interest(name: "TV & Film", categories: nil, imageName: "tv&film")
+       ]
+        
+        static let interestsMap: [String: Interest] = [
+            "Art": Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
+            "Business": Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
+            "Dance": Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
+            "Design": Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
+            "Fashion": Interest(name: "Fashion", categories: nil, imageName: "fashion"),
+            "Fitness": Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
+            "Food": Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
+            "Humanities": Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
+            "Music": Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
+            "Photography": Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
+            "Reading": Interest(name: "Reading", categories: nil, imageName: "reading"),
+            "Sustainability": Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
+            "Tech": Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
+            "Travel": Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
+            "TV & Film": Interest(name: "TV & Film", categories: nil, imageName: "tv&film")
+        ]
+    }
 
 }

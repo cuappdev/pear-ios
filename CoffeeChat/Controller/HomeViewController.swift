@@ -42,6 +42,7 @@ class HomeViewController: UIViewController {
         profileImageView.layer.shadowRadius = 2
         profileImageView.isUserInteractionEnabled = true
         profileImageView.layer.masksToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         profileImageView.addGestureRecognizer(tapGestureRecognizer)
         view.addSubview(profileImageView)
@@ -73,9 +74,6 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-//        if showShowMenu {
-//            presentMenu(animated: false)
-//        }
         updateUserAndTabPage()
     }
 
@@ -96,6 +94,8 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
+        print(newUser.profilePictureURL)
+        print(Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
         profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
 
         let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
@@ -108,6 +108,7 @@ class HomeViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
             switch result {
             case .value(let response):
+//                print(response)
                 guard response.success else {
                     print("Unsuccesful response when getting user")
                     return

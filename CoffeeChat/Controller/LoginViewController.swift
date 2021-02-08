@@ -126,10 +126,10 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             UserDefaults.standard.set(base64Str, forKey: Constants.UserDefaults.userProfilePictureURL)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
                 guard let self = self else { return }
+                print(idToken)
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
-                        // TODO: Add user creation handling
                         let userSession = response.data
                         print(userSession)
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
@@ -137,7 +137,8 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         let vc = onboardingCompleted ? HomeViewController() : onboardingVC
                         self.navigationController?.pushViewController(vc, animated: false)
-                    case .error:
+                    case .error(let error):
+                        print(error)
                         self.navigationController?.pushViewController(loginVC, animated: false)
                     }
                 }

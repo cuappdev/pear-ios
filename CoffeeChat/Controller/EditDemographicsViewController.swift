@@ -46,6 +46,7 @@ class EditDemographicsViewController: UIViewController {
         demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -85,8 +86,8 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
+        profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 62.5
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
         
         editScrollView.addSubview(profileImageView)
 

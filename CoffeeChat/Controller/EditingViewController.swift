@@ -166,15 +166,24 @@ class EditingViewController: UIViewController {
 
     private func setupSections() {
         if isShowingGroups {
-            setupSectionsFomGroups()
+//            setupSectionsFomGroups()
+            let organizationStrings = Constants.Options.organizations.map { $0.name }
+            let yoursAndMore = removeDuplicates(yourStrings: user.groups, moreStrings: organizationStrings)
+            let stringToGroup = { ItemType.group(Constants.Options.organizationsMap[$0]!) }
+            sections = [
+               Section(type: .yours, items: yoursAndMore.your.map(stringToGroup)),
+               Section(type: .more, items: yoursAndMore.more.map(stringToGroup))
+            ]
         } else {
-            setupSectionsFromInterests()
+//            setupSectionsFromInterests()
+            let interestsStrings = Constants.Options.interests.map { $0.name }
+            let yoursAndMore = removeDuplicates(yourStrings: user.interests, moreStrings: interestsStrings)
+            let stringToInterest = { ItemType.interest(Constants.Options.interestsMap[$0]!) }
+            sections = [
+                Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
+                Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+            ]
         }
-
-        sections = [
-            Section(type: .yours, items: []),
-            Section(type: .more, items: [])
-        ]
         tableView.reloadData()
     }
 
@@ -190,8 +199,8 @@ class EditingViewController: UIViewController {
 
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
                 self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageURL: nil)) }),
-                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageURL: nil)) })
+                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageName: "")) }),
+                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageName: "")) })
                 ]
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -211,7 +220,7 @@ class EditingViewController: UIViewController {
                     print("Response not successful when getting interests for user")
                     return
                 }
-
+                
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
                 let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [

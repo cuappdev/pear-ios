@@ -227,7 +227,8 @@ class GroupsViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        getAllGroups()
+//        getAllGroups()
+        groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
         getUserGroups()
         super.viewDidAppear(animated)
     }

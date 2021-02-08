@@ -201,6 +201,8 @@ class MatchViewController: UIViewController {
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         matchProfileImageView.layer.masksToBounds = true
+        matchProfileImageView.contentMode = .scaleAspectFill
+        matchProfileImageView.clipsToBounds = true
         matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.googleID))
    
         view.addSubview(matchProfileImageView)

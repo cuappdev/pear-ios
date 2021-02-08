@@ -50,16 +50,14 @@ class CommunityViewController: UIViewController {
         setupConstraints()
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        self.communityTableView.reloadData()
-    }
-
     private func getUsers() {
+        print("this is getting users")
         NetworkManager.shared.getUsers().observe { response in
+            print(response)
             switch response {
             case .value(let value):
                 guard value.success else { return }
+                print(value)
                 DispatchQueue.main.async {
                     self.users = value.data
                     self.communityTableView.reloadData()
@@ -85,8 +83,9 @@ class CommunityViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        getUsers()
         super.viewDidAppear(animated)
+        print("getting users")
+        getUsers()
     }
 }
 
