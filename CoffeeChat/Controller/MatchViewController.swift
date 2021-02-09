@@ -6,8 +6,8 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import GoogleSignIn
-import UIKit
 import Kingfisher
+import UIKit
 
 /// If the local stored matchID matches the current match from backend, then the user has already reached out
 private func userAlreadyReachedOut(to match: Match) -> Bool {

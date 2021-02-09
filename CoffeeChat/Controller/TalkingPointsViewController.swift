@@ -98,9 +98,9 @@ class TalkingPointsViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         getAllTalkingPoints()
         getUserTalkingPoints()
-        super.viewDidAppear(animated)
     }
     
     private func getUserTalkingPoints() {

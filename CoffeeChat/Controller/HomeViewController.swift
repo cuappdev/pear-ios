@@ -24,9 +24,9 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
+    private var showShowMenu = false
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
-    private var showShowMenu = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +35,7 @@ class HomeViewController: UIViewController {
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profilePressed))
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
-        profileImageView.layer.cornerRadius = profileButtonSize.width/2
+        profileImageView.layer.cornerRadius = profileButtonSize.width / 2
         profileImageView.layer.shadowColor = UIColor.black.cgColor
         profileImageView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         profileImageView.layer.shadowOpacity = 0.15
@@ -84,7 +84,6 @@ class HomeViewController: UIViewController {
 
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
-            print(newUser)
             guard let self = self else { return }
             if self.user == nil || self.user != newUser {
                 self.setUserAndTabPage(newUser: newUser)
@@ -102,7 +101,7 @@ class HomeViewController: UIViewController {
     private func getUserThen(_ completion: @escaping (User) -> Void) {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        NetworkManager.shared.getUser(netId: netId).observe { result in
             switch result {
             case .value(let response):
                 guard response.success else {

@@ -172,7 +172,7 @@ class EditingViewController: UIViewController {
     private func setupSections() {
         if isShowingGroups {
 //            setupSectionsFomGroups()
-            let organizationStrings = Constants.Options.organizations.map { $0.name }
+            let organizationStrings = Constants.Options.organizations.map(\.name)
             let yoursAndMore = removeDuplicates(yourStrings: user.groups, moreStrings: organizationStrings)
             let stringToGroup = { ItemType.group(Constants.Options.organizationsMap[$0]!) }
             sections = [
@@ -181,7 +181,7 @@ class EditingViewController: UIViewController {
             ]
         } else {
 //            setupSectionsFromInterests()
-            let interestsStrings = Constants.Options.interests.map { $0.name }
+            let interestsStrings = Constants.Options.interests.map(\.name)
             let yoursAndMore = removeDuplicates(yourStrings: user.interests, moreStrings: interestsStrings)
             let stringToInterest = { ItemType.interest(Constants.Options.interestsMap[$0]!) }
             sections = [
@@ -291,10 +291,10 @@ class EditingViewController: UIViewController {
         }
 
         if isShowingGroups {
-            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
+            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .value(let response):
-                    print(response)
                     if response.success {
                         print("Groups updated successfully")
                         self.navigationController?.popViewController(animated: true)

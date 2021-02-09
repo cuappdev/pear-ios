@@ -10,7 +10,7 @@ import Kingfisher
 import UIKit
 
 class ProfileMenuViewController: UIViewController {
-    
+
     private let editButton = UIButton()
     private let optionsTableView = UITableView()
     private let profileImageView = UIImageView()
