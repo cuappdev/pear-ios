@@ -176,8 +176,8 @@ class EditingViewController: UIViewController {
             let yoursAndMore = removeDuplicates(yourStrings: user.groups, moreStrings: organizationStrings)
             let stringToGroup = { ItemType.group(Constants.Options.organizationsMap[$0]!) }
             sections = [
-               Section(type: .yours, items: yoursAndMore.your.map(stringToGroup)),
-               Section(type: .more, items: yoursAndMore.more.map(stringToGroup))
+               Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
+               Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
             ]
         } else {
 //            setupSectionsFromInterests()
@@ -185,8 +185,8 @@ class EditingViewController: UIViewController {
             let yoursAndMore = removeDuplicates(yourStrings: user.interests, moreStrings: interestsStrings)
             let stringToInterest = { ItemType.interest(Constants.Options.interestsMap[$0]!) }
             sections = [
-                Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
-                Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+                Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
+                Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
             ]
         }
         tableView.reloadData()
@@ -225,12 +225,12 @@ class EditingViewController: UIViewController {
                     print("Response not successful when getting interests for user")
                     return
                 }
-                
+
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
                 let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
-                    Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
+                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
                 ]
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -684,10 +684,12 @@ private class EditFooterView: UIButton {
 }
 
 extension EditingViewController: UIGestureRecognizerDelegate {
+    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer.isEqual(navigationController?.interactivePopGestureRecognizer) {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
             navigationController?.popViewController(animated: true)
         }
         return false
     }
+    
 }

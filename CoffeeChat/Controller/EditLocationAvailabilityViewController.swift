@@ -132,9 +132,6 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        print("fsdfdsfsd")
-        print(selectedCtownLocations)
-        print(selectedCampusLocations)
         let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
@@ -180,8 +177,6 @@ class EditLocationAvailabilityViewController: UIViewController {
     private func getUserAvailabilities() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { response in
-            print("get")
-            print(response)
             switch response {
             case .value(let value):
                 guard value.success else { return }

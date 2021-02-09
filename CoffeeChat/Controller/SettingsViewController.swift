@@ -206,10 +206,12 @@ extension SettingsViewController: PausePearDelegate {
 }
 
 extension SettingsViewController: UIGestureRecognizerDelegate {
+    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer.isEqual(navigationController?.interactivePopGestureRecognizer) {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
             navigationController?.popViewController(animated: true)
         }
         return false
     }
+    
 }

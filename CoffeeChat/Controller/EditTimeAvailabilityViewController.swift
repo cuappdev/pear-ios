@@ -182,8 +182,8 @@ class EditTimeAvailabilityViewController: UIViewController {
             case .value(let value):
                 guard value.success else { return }
                 var userAvailabilities: [String: [String]] = [:]
-                for data in value.data.availabilities {
-                    userAvailabilities[data.day.localizedCapitalized] = data.times.map({Time.floatToStringTime(time: $0)})
+                for availability in value.data.availabilities {
+                    userAvailabilities[availability.day.localizedCapitalized] = availability.times.map({Time.floatToStringTime(time: $0)})
                 }
                 self.savedAvailabilities = userAvailabilities
                 DispatchQueue.main.async {
