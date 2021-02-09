@@ -134,7 +134,6 @@ class InterestsViewController: UIViewController {
                         return
                     }
                     self.selectedInterests = response.data.interests.map {
-                        // TODO: Fix interest model in backend before using to populate screen
                         return Interest(name: $0, categories: [], imageName: "")
                     }
                     self.updateNext()

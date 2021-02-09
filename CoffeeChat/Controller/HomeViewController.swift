@@ -85,7 +85,6 @@ class HomeViewController: UIViewController {
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
             guard let self = self else { return }
-
             if self.user == nil || self.user != newUser {
                 self.setUserAndTabPage(newUser: newUser)
             }
@@ -94,10 +93,7 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
-        print(newUser.profilePictureURL)
-        print(Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
-
+        self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
         let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
         self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
     }
@@ -108,12 +104,10 @@ class HomeViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
             switch result {
             case .value(let response):
-//                print(response)
                 guard response.success else {
                     print("Unsuccesful response when getting user")
                     return
                 }
-
                 DispatchQueue.main.async {
                     completion(response.data)
                 }

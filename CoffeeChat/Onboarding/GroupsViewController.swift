@@ -206,7 +206,6 @@ class GroupsViewController: UIViewController {
         NetworkManager.shared.getAllGroups().observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                print(result)
                 switch result {
                 case .value(let response):
                     if response.success {

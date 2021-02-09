@@ -23,6 +23,7 @@ class SettingsViewController: UIViewController {
     private var pauseBlurEffect: UIBlurEffect!
     private var pauseVisualEffectView: UIVisualEffectView!
     private var pausePearView: PausePearView!
+    private let user: User
 
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
@@ -51,6 +52,20 @@ class SettingsViewController: UIViewController {
         setupPausePear()
 
         setupConstraints()
+    }
+    
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
     private func setupNavigationBar() {
@@ -89,7 +104,7 @@ class SettingsViewController: UIViewController {
     }
     
     private func pushEditTimeAvailabilitiesViewController() {
-        navigationController?.pushViewController(EditTimeAvailabilityViewController(), animated: true)
+        navigationController?.pushViewController(SchedulingTimeViewController(for: .pickingTypical, user: user), animated: true)
     }
 
     private func pushEditLocationAvailabilitiesViewController() {
@@ -188,4 +203,13 @@ extension SettingsViewController: PausePearDelegate {
         }
     }
 
+}
+
+extension SettingsViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.isEqual(navigationController?.interactivePopGestureRecognizer) {
+            navigationController?.popViewController(animated: true)
+        }
+        return false
+    }
 }

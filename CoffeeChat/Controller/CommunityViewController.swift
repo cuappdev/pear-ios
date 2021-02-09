@@ -51,7 +51,6 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        print("this is getting users")
         NetworkManager.shared.getUsers().observe { response in
             print(response)
             switch response {
@@ -84,7 +83,6 @@ class CommunityViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("getting users")
         getUsers()
     }
 }

@@ -15,7 +15,6 @@ extension Endpoint {
         let baseURL = Keys.serverURL
 
         #if LOCAL
-        print("LOCAL")
             Endpoint.config.scheme = "http"
             Endpoint.config.port = 5000
             Endpoint.config.host = "localhost"

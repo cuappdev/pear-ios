@@ -166,7 +166,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             case .value(let value):
                 guard value.success else { return }
                 DispatchQueue.main.async {
-                    print("update time availabilities success")
+                    print("Update time availabilities success")
                     self.navigationController?.popViewController(animated: true)
                 }
             case .error(let error):

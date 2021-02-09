@@ -254,7 +254,6 @@ class EditDemographicsViewController: UIViewController {
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns,
            let profileImageBase64 = base64ProfileImageString {
-            print(profileImageBase64)
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
@@ -262,12 +261,15 @@ class EditDemographicsViewController: UIViewController {
                 pronouns: pronouns,
                 profilePictureURL: profileImageBase64).observe { [weak self] result in
                     guard let self = self else { return }
+                    print("a result came back")
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
                             print("Update demographics success response \(response)")
+                            ImageCache.default.removeImage(forKey: self.user.googleID)
                             self.navigationController?.popViewController(animated: true)
                         case .error(let error):
+                            print("there is error")
                             print(error)
                         }
                     }
@@ -362,7 +364,7 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        let resizedImage = image.resize(toSize: CGSize(width: 25, height: 25))
+        let resizedImage = image.resize(toSize: CGSize(width: 40, height: 40))
         profileImageView.image = resizedImage
         dismiss(animated: true, completion: nil)
     }

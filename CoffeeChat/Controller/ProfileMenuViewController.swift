@@ -147,7 +147,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushSettingsViewController() {
-        navigationController?.pushViewController(SettingsViewController(), animated: true)
+        navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
 }

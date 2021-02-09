@@ -158,6 +158,11 @@ class EditingViewController: UIViewController {
         setupSections()
         setupNavigationBar()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -286,9 +291,12 @@ class EditingViewController: UIViewController {
         }
 
         if isShowingGroups {
+            print("Saving groups")
+            print(groups.map(\.name))
             NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
                 switch result {
                 case .value(let response):
+                    print(response)
                     if response.success {
                         print("Groups updated successfully")
                     } else {
@@ -674,4 +682,13 @@ private class EditFooterView: UIButton {
         label.text = isShowingGroups ? "view your other groups" : "view your other interests"
     }
 
+}
+
+extension EditingViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.isEqual(navigationController?.interactivePopGestureRecognizer) {
+            navigationController?.popViewController(animated: true)
+        }
+        return false
+    }
 }
