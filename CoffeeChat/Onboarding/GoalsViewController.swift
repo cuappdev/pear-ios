@@ -90,8 +90,8 @@ class GoalsViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        getUserGoals()
         super.viewDidAppear(animated)
+        getUserGoals()
     }
 
     private func setupConstraints() {

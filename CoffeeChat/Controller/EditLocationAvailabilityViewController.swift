@@ -135,8 +135,8 @@ class EditLocationAvailabilityViewController: UIViewController {
         print("fsdfdsfsd")
         print(selectedCtownLocations)
         print(selectedCampusLocations)
-        let ctownLocations: [Location] = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
-        let campusLocations: [Location] = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
+        let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
+        let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
         print(locations)
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
@@ -186,7 +186,7 @@ class EditLocationAvailabilityViewController: UIViewController {
             case .value(let value):
                 guard value.success else { return }
                 DispatchQueue.main.async {
-                    self.savedLocations = value.data.preferredLocations.map { return $0.name }
+                    self.savedLocations = value.data.preferredLocations.map(\.name)
                     for location in value.data.preferredLocations {
                         if location.area == "Campus" {
                             self.selectedCampusLocations.append(location.name)

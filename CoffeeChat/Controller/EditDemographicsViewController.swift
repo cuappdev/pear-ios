@@ -15,6 +15,7 @@ class EditDemographicsViewController: UIViewController {
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
     private let hometownSearchFields = Constants.Options.hometownSearchFields
+    private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: User
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
@@ -138,7 +139,7 @@ class EditDemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: [])
+                                                         tableData: majorSearchFields)
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
         majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
@@ -361,8 +362,7 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        let resizedImage = image.resize(toSize: CGSize(width: 40, height: 40))
-        profileImageView.image = resizedImage
+        profileImageView.image = image.resize(toSize: CGSize(width: 40, height: 40))
         dismiss(animated: true, completion: nil)
     }
 
