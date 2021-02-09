@@ -84,6 +84,7 @@ class HomeViewController: UIViewController {
 
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
+            print(newUser)
             guard let self = self else { return }
             if self.user == nil || self.user != newUser {
                 self.setUserAndTabPage(newUser: newUser)

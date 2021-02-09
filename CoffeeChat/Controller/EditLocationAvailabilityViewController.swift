@@ -56,11 +56,7 @@ class EditLocationAvailabilityViewController: UIViewController {
         "U Tea"
     ]
 
-    private let savedLocations = [
-        "Atrium Cafe",
-        "Cafe Jennie",
-        "Mango Mango"
-    ]
+    private var savedLocations: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,7 +132,6 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        // TODO: save new availability
         let ctownLocations: [Location] = selectedCampusLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations: [Location] = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
@@ -152,7 +147,6 @@ class EditLocationAvailabilityViewController: UIViewController {
                 print(error)
             }
         }
-        
     }
 
     private func setupConstraints() {
@@ -180,7 +174,19 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
     
     private func getUserAvailabilities() {
-        
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    self.savedLocations = value.data.preferredLocations.map { return $0.name }
+                    self.locationsCollectionView.reloadData()
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
     }
 
 }
