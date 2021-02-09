@@ -69,6 +69,7 @@ class ProfileMenuViewController: UIViewController {
         optionsTableView.backgroundColor = .backgroundLightGreen
         optionsTableView.separatorStyle = .none
         optionsTableView.showsVerticalScrollIndicator = false
+        optionsTableView.isScrollEnabled = false
         optionsTableView.allowsSelection = true
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
@@ -79,9 +80,9 @@ class ProfileMenuViewController: UIViewController {
         profileImageView.layer.cornerRadius = profileImageSize.width/2
         profileImageView.clipsToBounds = true
         profileImageView.layer.masksToBounds = true
-        if let profilePictureURL = URL(string: user.profilePictureURL) {
-            profileImageView.kf.setImage(with: profilePictureURL)
-        }
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
+   
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
@@ -146,7 +147,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushSettingsViewController() {
-        navigationController?.pushViewController(SettingsViewController(), animated: true)
+        navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
 }

@@ -19,10 +19,9 @@ extension Endpoint {
             Endpoint.config.port = 5000
             Endpoint.config.host = "localhost"
         #else
-            Endpoint.config.scheme = "http"
+            Endpoint.config.scheme = "https"
             Endpoint.config.host = baseURL
         #endif
-
         Endpoint.config.commonPath = "/api/v1"
     }
 
@@ -191,6 +190,11 @@ extension Endpoint {
     /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
     static func getMatchHistory(netID: String) -> Endpoint {
         Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
+    }
+    
+    static func updatePreferredLocations(locations: [Location]) -> Endpoint {
+        let body = UpdatePreferredLocationsBody(preferences: locations)
+        return Endpoint(path: "/user/preferredLocations/", headers: standardHeaders, body: body)
     }
 
 }

@@ -64,7 +64,7 @@ class SchedulingPlacesViewController: UIViewController {
     private var ctownLocations = [
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
     // TODO replace once the match includes location information
@@ -81,7 +81,7 @@ class SchedulingPlacesViewController: UIViewController {
         "Temple of Zeus",
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
     private let savedLocations: [String] = []
@@ -275,14 +275,14 @@ class SchedulingPlacesViewController: UIViewController {
                 if value.success {
                     UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
                     print("Successfully updated match availabilities")
+                    DispatchQueue.main.async {
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    }
                 } else {
                     print("Failed to update match availabilities")
                 }
             case .error(let error):
                 print("Error when updating match availabilities: \(error)")
-            }
-            DispatchQueue.main.async {
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
 

@@ -128,4 +128,7 @@ class NetworkManager {
         networking(Endpoint.getMatchHistory(netID: netID)).decode()
     }
 
+    func updatePreferredLocations(locations: [Location]) -> Future<SuccessResponse> {
+        networking(Endpoint.updatePreferredLocations(locations: locations)).decode()
+    }
 }

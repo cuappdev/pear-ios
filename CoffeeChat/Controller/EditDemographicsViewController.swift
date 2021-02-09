@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import Kingfisher
 import UIKit
 
 class EditDemographicsViewController: UIViewController {
@@ -13,9 +14,9 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
-    private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
-    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private let hometownSearchFields = Constants.Options.hometownSearchFields
+    private var majorSearchFields: [String] = []
+    private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: User
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
 
@@ -45,6 +46,7 @@ class EditDemographicsViewController: UIViewController {
         demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -84,10 +86,9 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
+        profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 62.5
-        if let profilePictureURL = URL(string: user.profilePictureURL) {
-            profileImageView.kf.setImage(with: profilePictureURL)
-        }
+        
         editScrollView.addSubview(profileImageView)
 
         uploadPhotoButton.setTitle("Upload New Picture", for: .normal)
@@ -247,21 +248,24 @@ class EditDemographicsViewController: UIViewController {
 
     @objc private func savePressed() {
         // TODO: Save name to backend
+        let base64ProfileImageString = profileImageView.image?.pngData()?.base64EncodedString()
         if let graduationYear = demographics.graduationYear,
            let major = demographics.major,
            let hometown = demographics.hometown,
-           let pronouns = demographics.pronouns {
+           let pronouns = demographics.pronouns,
+           let profileImageBase64 = base64ProfileImageString {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "\(user.profilePictureURL)").observe { [weak self] result in
+                profilePictureURL: profileImageBase64).observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
                             print("Update demographics success response \(response)")
+                            ImageCache.default.removeImage(forKey: self.user.googleID)
                             self.navigationController?.popViewController(animated: true)
                         case .error(let error):
                             print(error)
@@ -357,8 +361,8 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        profileImageView.image = image
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        profileImageView.image = image.resize(toSize: CGSize(width: 40, height: 40))
         dismiss(animated: true, completion: nil)
     }
 

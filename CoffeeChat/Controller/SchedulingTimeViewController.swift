@@ -334,7 +334,8 @@ class SchedulingTimeViewController: UIViewController {
         timeScrollView.view.contentInset = UIEdgeInsets(top: timeScrollView.fadeInsets.top, left: 0, bottom: timeScrollView.fadeInsets.bottom, right: 0)
         view.addSubview(timeScrollView)
 
-        nextButton.setTitle("Next", for: .normal)
+        let nextButtonText = schedulingStatus == .pickingTypical ? "Save" : "Next"
+        nextButton.setTitle(nextButtonText, for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -561,20 +562,18 @@ class SchedulingTimeViewController: UIViewController {
           savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
             guard let self = self else { return }
-
             switch result {
             case .value(let response):
                 if response.success {
                     print("Successfully updated user's time availabilities")
+                    DispatchQueue.main.async {
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 } else {
                     print("Was not successful when updating user's time availabilities")
                 }
             case .error(let error):
                 print("Error when updating time availabilities: \(error)")
-            }
-
-            DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
             }
         }
     }

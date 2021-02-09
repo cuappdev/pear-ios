@@ -52,15 +52,11 @@ class EditLocationAvailabilityViewController: UIViewController {
     private var ctownLocations = [
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
 
-    private let savedLocations = [
-        "Atrium Cafe",
-        "Cafe Jennie",
-        "Mango Mango"
-    ]
+    private var savedLocations: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,7 +132,22 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        // TODO: save new availability
+        let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
+        let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
+        let locations = ctownLocations + campusLocations
+        print(locations)
+        NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    print("Update location availabilities success")
+                    self.navigationController?.popViewController(animated: true)
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
     }
 
     private func setupConstraints() {
@@ -155,6 +166,34 @@ class EditLocationAvailabilityViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(32)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).inset(30)
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getUserAvailabilities()
+    }
+    
+    private func getUserAvailabilities() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    self.savedLocations = value.data.preferredLocations.map(\.name)
+                    for location in value.data.preferredLocations {
+                        if location.area == "Campus" {
+                            self.selectedCampusLocations.append(location.name)
+                        } else {
+                            self.selectedCtownLocations.append(location.name)
+                        }
+                    }
+                    self.locationsCollectionView.reloadData()
+                }
+            case .error(let error):
+                print(error)
+            }
         }
     }
 

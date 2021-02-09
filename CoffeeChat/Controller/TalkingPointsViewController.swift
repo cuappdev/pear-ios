@@ -14,23 +14,7 @@ class TalkingPointsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedTalkingPoints: [SimpleOnboardingCell] = []
-    private let interests: [Interest] = [
-         Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
-         Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
-         Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
-         Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
-         Interest(name: "Fashion", categories: nil, imageName: "fashion"),
-         Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
-         Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
-         Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
-         Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
-         Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
-         Interest(name: "Reading", categories: nil, imageName: "reading"),
-         Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
-         Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
-         Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
-         Interest(name: "TV & Film", categories: nil, imageName: "tvfilm")
-    ]
+    private let interests = Constants.Options.interests
     private var talkingPoints: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
 
@@ -78,6 +62,7 @@ class TalkingPointsViewController: UIViewController {
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.dataSource = self
+        fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.delegate = self
         fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
@@ -104,14 +89,18 @@ class TalkingPointsViewController: UIViewController {
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         getAllTalkingPoints()
         getUserTalkingPoints()
-        super.viewWillAppear(animated)
     }
     
     private func getUserTalkingPoints() {
@@ -134,6 +123,10 @@ class TalkingPointsViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc func dismissKeyboard() {
+        searchBar.resignFirstResponder()
     }
     
     private func getAllTalkingPoints() {

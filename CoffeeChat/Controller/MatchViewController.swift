@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import GoogleSignIn
+import Kingfisher
 import UIKit
 
 /// If the local stored matchID matches the current match from backend, then the user has already reached out
@@ -200,9 +201,10 @@ class MatchViewController: UIViewController {
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
         matchProfileImageView.layer.masksToBounds = true
-        if let pictureURL = URL(string: pair.profilePictureURL) {
-            matchProfileImageView.kf.setImage(with: pictureURL)
-        }
+        matchProfileImageView.contentMode = .scaleAspectFill
+        matchProfileImageView.clipsToBounds = true
+        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.googleID))
+   
         view.addSubview(matchProfileImageView)
 
         matchSummaryTableView.backgroundColor = .backgroundLightGreen

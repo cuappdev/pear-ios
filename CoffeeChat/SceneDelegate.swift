@@ -16,8 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
+        
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
+        
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoginViewController())
         window.rootViewController = navigationController
@@ -30,6 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
             let rootVC = onboardingCompleted ? HomeViewController() : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            
             guard let unwrappedToken = refreshToken else { return }
             NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {

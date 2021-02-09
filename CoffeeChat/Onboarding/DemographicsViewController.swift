@@ -16,8 +16,9 @@ class DemographicsViewController: UIViewController {
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend (use states for now)
-    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
-    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private let hometownSearchFields = Constants.Options.hometownSearchFields
+    private var majorSearchFields: [String] = []
+    private let pronounSearchFields = Constants.Options.pronounSearchFields
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -72,7 +73,7 @@ class DemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: [])
+                                                         tableData: majorSearchFields)
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
@@ -107,7 +108,7 @@ class DemographicsViewController: UIViewController {
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
-           let profilePictureURL = UserDefaults.standard.url(forKey: Constants.UserDefaults.userProfilePictureURL) {
+           let profilePictureURL = UserDefaults.standard.string(forKey: Constants.UserDefaults.userProfilePictureURL) {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
