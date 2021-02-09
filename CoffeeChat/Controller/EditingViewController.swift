@@ -291,8 +291,6 @@ class EditingViewController: UIViewController {
         }
 
         if isShowingGroups {
-            print("Saving groups")
-            print(groups.map(\.name))
             NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
                 switch result {
                 case .value(let response):

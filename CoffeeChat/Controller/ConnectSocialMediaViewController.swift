@@ -148,7 +148,6 @@ class ConnectSocialMediaViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        print(response.data)
                         if let facebook = response.data.facebook {
                             self.fbTextField.text = facebook
                         }

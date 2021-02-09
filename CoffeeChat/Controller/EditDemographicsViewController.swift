@@ -14,9 +14,8 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let hometownSearchFields = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "International", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
-    private let majorSearchFields = ["Computer Science", "Economics", "Psychology", "English", "Government"]
-    private let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
+    private let hometownSearchFields = Constants.Options.hometownSearchFields
+    private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: User
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
 
@@ -139,7 +138,7 @@ class EditDemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: majorSearchFields)
+                                                         tableData: [])
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
         majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
@@ -261,7 +260,6 @@ class EditDemographicsViewController: UIViewController {
                 pronouns: pronouns,
                 profilePictureURL: profileImageBase64).observe { [weak self] result in
                     guard let self = self else { return }
-                    print("a result came back")
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):

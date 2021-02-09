@@ -52,11 +52,9 @@ class CommunityViewController: UIViewController {
 
     private func getUsers() {
         NetworkManager.shared.getUsers().observe { response in
-            print(response)
             switch response {
             case .value(let value):
                 guard value.success else { return }
-                print(value)
                 DispatchQueue.main.async {
                     self.users = value.data
                     self.communityTableView.reloadData()

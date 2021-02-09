@@ -106,7 +106,9 @@ struct Constants {
             Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
             Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
             Interest(name: "TV & Film", categories: nil, imageName: "tv&film")
-       ]
+        ]
+        
+        static let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
         
         static let interestsMap: [String: Interest] = [
             "Art": Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),

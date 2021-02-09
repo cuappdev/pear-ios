@@ -15,11 +15,3 @@ struct Interest {
     let imageName: String
 
 }
-
-struct Interest2 {
-
-    let name: String
-    let categories: [String]?
-    let imageURL: String?
-
-}
