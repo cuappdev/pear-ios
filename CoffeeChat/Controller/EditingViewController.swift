@@ -297,6 +297,7 @@ class EditingViewController: UIViewController {
                     print(response)
                     if response.success {
                         print("Groups updated successfully")
+                        self.navigationController?.popViewController(animated: true)
                     } else {
                         print("Groups couldn't be updated")
                     }
@@ -310,6 +311,7 @@ class EditingViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         print("Interests updated successfully")
+                        self.navigationController?.popViewController(animated: true)
                     } else {
                         print("Interests couldn't be updated")
                     }
@@ -318,7 +320,6 @@ class EditingViewController: UIViewController {
                 }
             }
         }
-        navigationController?.popViewController(animated: true)
     }
 
     /// Remove duplicated entries in `yourStrings` and `moreStrings`. If a duplicate exists in both `yourStrings`
