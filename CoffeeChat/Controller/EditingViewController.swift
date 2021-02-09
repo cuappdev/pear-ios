@@ -158,6 +158,11 @@ class EditingViewController: UIViewController {
         setupSections()
         setupNavigationBar()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -166,15 +171,24 @@ class EditingViewController: UIViewController {
 
     private func setupSections() {
         if isShowingGroups {
-            setupSectionsFomGroups()
+//            setupSectionsFomGroups()
+            let organizationStrings = Constants.Options.organizations.map(\.name)
+            let yoursAndMore = removeDuplicates(yourStrings: user.groups, moreStrings: organizationStrings)
+            let stringToGroup = { ItemType.group(Constants.Options.organizationsMap[$0]!) }
+            sections = [
+               Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
+               Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
+            ]
         } else {
-            setupSectionsFromInterests()
+//            setupSectionsFromInterests()
+            let interestsStrings = Constants.Options.interests.map(\.name)
+            let yoursAndMore = removeDuplicates(yourStrings: user.interests, moreStrings: interestsStrings)
+            let stringToInterest = { ItemType.interest(Constants.Options.interestsMap[$0]!) }
+            sections = [
+                Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
+                Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
+            ]
         }
-
-        sections = [
-            Section(type: .yours, items: []),
-            Section(type: .more, items: [])
-        ]
         tableView.reloadData()
     }
 
@@ -190,8 +204,8 @@ class EditingViewController: UIViewController {
 
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
                 self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageURL: nil)) }),
-                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageURL: nil)) })
+                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageName: "")) }),
+                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageName: "")) })
                 ]
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -215,8 +229,8 @@ class EditingViewController: UIViewController {
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
                 let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.map(stringToInterest)),
-                    Section(type: .more, items: yoursAndMore.more.map(stringToInterest))
+                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
+                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
                 ]
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -277,11 +291,13 @@ class EditingViewController: UIViewController {
         }
 
         if isShowingGroups {
-            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { result in
+            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .value(let response):
                     if response.success {
                         print("Groups updated successfully")
+                        self.navigationController?.popViewController(animated: true)
                     } else {
                         print("Groups couldn't be updated")
                     }
@@ -295,6 +311,7 @@ class EditingViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         print("Interests updated successfully")
+                        self.navigationController?.popViewController(animated: true)
                     } else {
                         print("Interests couldn't be updated")
                     }
@@ -303,7 +320,6 @@ class EditingViewController: UIViewController {
                 }
             }
         }
-        navigationController?.popViewController(animated: true)
     }
 
     /// Remove duplicated entries in `yourStrings` and `moreStrings`. If a duplicate exists in both `yourStrings`
@@ -665,4 +681,15 @@ private class EditFooterView: UIButton {
         label.text = isShowingGroups ? "view your other groups" : "view your other interests"
     }
 
+}
+
+extension EditingViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            navigationController?.popViewController(animated: true)
+        }
+        return false
+    }
+    
 }

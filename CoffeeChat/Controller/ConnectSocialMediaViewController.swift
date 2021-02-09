@@ -38,8 +38,8 @@ class ConnectSocialMediaViewController: UIViewController {
         infoTextView.isScrollEnabled = false
         view.addSubview(infoTextView)
 
-        // TODO: fill with previously saved socials from backend
         instaTextField.text = ""
+        instaTextField.placeholder = "@Instagram handle"
         instaTextField.font = ._20CircularStdBook
         instaTextField.backgroundColor = .white
         instaTextField.layer.cornerRadius = 8
@@ -61,8 +61,8 @@ class ConnectSocialMediaViewController: UIViewController {
         instaTextField.rightView = instaViewR
         instaTextField.rightViewMode = .always
 
-        // fill with previously saved socials from backend
         fbTextField.text = ""
+        fbTextField.placeholder = "Facebook profile link"
         fbTextField.font = ._20CircularStdBook
         fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
@@ -115,12 +115,26 @@ class ConnectSocialMediaViewController: UIViewController {
     }
 
     @objc private func saveSocialMedia() {
-        navigationController?.popViewController(animated: true)
+        let instagramHandle = instaTextField.text ?? ""
+        let facebookHandle = fbTextField.text ?? ""
+        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                case .error(let error):
+                    print(error)
+                }
+            }
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         getUserSocialMedia()
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
     }
     
     private func getUserSocialMedia() {

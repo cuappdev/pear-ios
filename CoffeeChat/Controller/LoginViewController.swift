@@ -98,7 +98,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
             return
         }
 
-        if let email = user.profile.email, !(email.contains("@cornell.edu")) {
+        if let email = user.profile.email, !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
             GIDSignIn.sharedInstance().signOut()
             self.showErrorMessageAlertView()
             return
@@ -107,31 +107,36 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
         let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let loginVC = LoginViewController()
-
+        var base64Str = ""
         if let idToken = user.authentication.idToken,
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
            let userEmail = user.profile.email,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 300) {
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 25) {
+            let profileURLData = try? Data(contentsOf: userProfilePictureURL)
+            if let profileURLData = profileURLData,
+               let profileImage = UIImage(data: profileURLData),
+               let profileImagePngData = profileImage.pngData() {
+                base64Str = profileImagePngData.base64EncodedString()
+            }
             let userNetId = userEmail[..<userEmail.firstIndex(of: "@")!]
             UserDefaults.standard.set(userNetId, forKey: Constants.UserDefaults.userNetId)
             UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            UserDefaults.standard.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
+            UserDefaults.standard.set(base64Str, forKey: Constants.UserDefaults.userProfilePictureURL)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
-                        // TODO: Add user creation handling
                         let userSession = response.data
-                        print(userSession)
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         let vc = onboardingCompleted ? HomeViewController() : onboardingVC
                         self.navigationController?.pushViewController(vc, animated: false)
-                    case .error:
+                    case .error(let error):
+                        print(error)
                         self.navigationController?.pushViewController(loginVC, animated: false)
                     }
                 }

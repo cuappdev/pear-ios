@@ -162,8 +162,8 @@ class SocialMediaViewController: UIViewController {
     private func updateNext() {
         guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
         let isSocialMediaEntered =
-            instagramHandle.trimmingCharacters(in: .whitespaces) != "" &&
-            facebookHandle.trimmingCharacters(in: .whitespaces) != ""
+            instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
+            facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = !nextButton.isEnabled
@@ -180,7 +180,8 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
+        let instagramHandle = instagramTextField.text ?? ""
+        let facebookHandle = facebookTextField.text ?? ""
         NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {

@@ -13,7 +13,7 @@ import UIKit
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let profileButton = UIButton(type: .custom)
+    private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
     /// View that holds `tabPageViewController` below the pill view
@@ -24,6 +24,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
+    private var showShowMenu = false
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
@@ -32,16 +33,19 @@ class HomeViewController: UIViewController {
 
         view.backgroundColor = .backgroundLightGreen
 
-        profileButton.backgroundColor = .inactiveGreen
-        profileButton.layer.cornerRadius = profileButtonSize.width/2
-        profileButton.layer.shadowColor = UIColor.black.cgColor
-        profileButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        profileButton.layer.shadowOpacity = 0.15
-        profileButton.layer.shadowRadius = 2
-        profileButton.layer.masksToBounds = true
-        profileButton.clipsToBounds = true
-        profileButton.addTarget(self, action: #selector(profilePressed), for: .touchUpInside)
-        view.addSubview(profileButton)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profilePressed))
+        profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
+        profileImageView.layer.cornerRadius = profileButtonSize.width / 2
+        profileImageView.layer.shadowColor = UIColor.black.cgColor
+        profileImageView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        profileImageView.layer.shadowOpacity = 0.15
+        profileImageView.layer.shadowRadius = 2
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.layer.masksToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.clipsToBounds = true
+        profileImageView.addGestureRecognizer(tapGestureRecognizer)
+        view.addSubview(profileImageView)
 
         tabContainerView = UIView()
         view.addSubview(tabContainerView)
@@ -70,7 +74,6 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-
         updateUserAndTabPage()
     }
 
@@ -82,7 +85,6 @@ class HomeViewController: UIViewController {
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
             guard let self = self else { return }
-
             if self.user == nil || self.user != newUser {
                 self.setUserAndTabPage(newUser: newUser)
             }
@@ -91,11 +93,7 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
-
-        if let pictureURL = URL(string: newUser.profilePictureURL) {
-            self.profileButton.kf.setImage(with: pictureURL, for: .normal)
-        }
-
+        self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
         let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
         self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
     }
@@ -103,14 +101,13 @@ class HomeViewController: UIViewController {
     private func getUserThen(_ completion: @escaping (User) -> Void) {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        NetworkManager.shared.getUser(netId: netId).observe { result in
             switch result {
             case .value(let response):
                 guard response.success else {
                     print("Unsuccesful response when getting user")
                     return
                 }
-
                 DispatchQueue.main.async {
                     completion(response.data)
                 }
@@ -135,20 +132,25 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
+        showShowMenu = true
+        presentMenu(animated: true)
+    }
+    
+    private func presentMenu(animated: Bool) {
         guard let user = user else { return }
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
-        menu.presentationStyle = presentationStyle
+        menu.presentationStyle = .viewSlideOutMenuPartialIn
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
-        present(menu, animated: true)
+        present(menu, animated: animated)
     }
 
     private func setUpConstraints() {
 
-        profileButton.snp.makeConstraints { make in
+        profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
             make.leading.equalToSuperview().inset(20)
             make.size.equalTo(profileButtonSize)

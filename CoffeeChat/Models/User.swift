@@ -26,6 +26,7 @@ struct User: Codable, Equatable {
     let instagram: String?
     let talkingPoints: [String]
     let availabilities: [DaySchedule]
+    let preferredLocations: [Location]
     let matches: [Match]
 
     static func == (lhs: User, rhs: User) -> Bool {

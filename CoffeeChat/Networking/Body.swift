@@ -76,6 +76,12 @@ struct UpdateTimeAvailabilitiesBody: Codable {
 
 }
 
+struct UpdatePreferredLocationsBody: Codable {
+    
+    let preferences: [Location]
+    
+}
+
 class DaySchedule: Codable, Equatable {
 
     let day: String
@@ -90,4 +96,11 @@ class DaySchedule: Codable, Equatable {
         return lhs.day == rhs.day && lhs.times == rhs.times
     }
 
+}
+
+struct Location: Codable {
+    
+    let area: String
+    let name: String
+    
 }

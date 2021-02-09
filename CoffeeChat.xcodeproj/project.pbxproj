@@ -69,6 +69,8 @@
 		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
 		D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
+		D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D474105525C6E7CE0062E2B4 /* UIImage.swift */; };
+		D474105B25C6EA350062E2B4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D474105A25C6EA350062E2B4 /* String.swift */; };
 		D47FF1852459424C00808A9A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF1842459424C00808A9A /* Response.swift */; };
 		D47FF18B24597CA800808A9A /* Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47FF18A24597CA800808A9A /* Body.swift */; };
 		D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */; };
@@ -175,6 +177,8 @@
 		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
 		D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
+		D474105525C6E7CE0062E2B4 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		D474105A25C6EA350062E2B4 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		D47FF1842459424C00808A9A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Response.swift; path = CoffeeChat/Models/Response.swift; sourceTree = SOURCE_ROOT; };
 		D47FF18A24597CA800808A9A /* Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Body.swift; path = CoffeeChat/Networking/Body.swift; sourceTree = SOURCE_ROOT; };
 		D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDropdownTableViewCell.swift; sourceTree = "<group>"; };
@@ -281,6 +285,8 @@
 			children = (
 				4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */,
 				30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */,
+				D474105525C6E7CE0062E2B4 /* UIImage.swift */,
+				D474105A25C6EA350062E2B4 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -316,6 +322,19 @@
 			path = Layouts;
 			sourceTree = "<group>";
 		};
+		D474108F25C729780062E2B4 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
+				7E06B84F2543F15900D6B505 /* InterestsViewController.swift */,
+				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
+				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
+				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
+				D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		D480EBFD23E2425C00513063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,15 +358,12 @@
 		D480EC0023E2434200513063 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
-				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
-				5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */,
 				50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */,
+				5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
 				4F12A70F2419925C00AEA21C /* EditingViewController.swift */,
 				D480EC0523E2470000513063 /* MatchViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
-				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
 				D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */,
 				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
@@ -355,13 +371,10 @@
 				5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */,
 				50038698252E74E80036A3E6 /* SettingsViewController.swift */,
 				50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */,
-				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
-				7E06B84F2543F15900D6B505 /* InterestsViewController.swift */,
 				D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */,
 				D429619F2526246600C677C3 /* HomeViewController.swift */,
 				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
 				D498CFE125265FB200F2E2ED /* CommunityViewController.swift */,
-				D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -429,6 +442,7 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
+				D474108F25C729780062E2B4 /* Onboarding */,
 				D4349977253C14190024A992 /* Layouts */,
 				D4D3EFF023FE544D00229587 /* Utilities */,
 				30304E1923F60CC9006DC6C3 /* Models */,
@@ -799,6 +813,7 @@
 			files = (
 				5030DCFA2532C1D300374F7B /* SettingOptionTableViewCell.swift in Sources */,
 				D4DDBF49257560B000D5C43A /* Demographics.swift in Sources */,
+				D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */,
 				D44625022415B3D700714167 /* NetworkManager.swift in Sources */,
 				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
@@ -826,6 +841,7 @@
 				D42961842525F1C800C677C3 /* TalkingPointsViewController.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */,
+				D474105B25C6EA350062E2B4 /* String.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
@@ -924,6 +940,7 @@
 		D48BB02F23DE099900E88129 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -985,6 +1002,7 @@
 		D48BB03023DE099900E88129 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1043,6 +1061,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1063,6 +1082,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;

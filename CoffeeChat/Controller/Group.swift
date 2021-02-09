@@ -11,6 +11,6 @@ import Foundation
 struct Group {
 
     let name: String
-    let imageURL: String?
+    let imageName: String
 
 }
