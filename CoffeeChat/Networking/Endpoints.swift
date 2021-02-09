@@ -191,5 +191,10 @@ extension Endpoint {
     static func getMatchHistory(netID: String) -> Endpoint {
         Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
     }
+    
+    static func updatePreferredLocations(locations: [Location]) -> Endpoint {
+        let body = UpdatePreferredLocationsBody(preferences: locations)
+        return Endpoint(path: "/user/preferredLocations/", headers: standardHeaders, body: body)
+    }
 
 }

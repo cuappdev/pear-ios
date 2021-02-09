@@ -137,6 +137,22 @@ class EditLocationAvailabilityViewController: UIViewController {
 
     @objc private func saveAvailability() {
         // TODO: save new availability
+        let ctownLocations: [Location] = selectedCampusLocations.map { Location(area: "Collegetown", name: $0) }
+        let campusLocations: [Location] = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
+        let locations = ctownLocations + campusLocations
+        NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
+            switch response {
+            case .value(let value):
+                guard value.success else { return }
+                DispatchQueue.main.async {
+                    print("Update time availabilities success")
+                    self.navigationController?.popViewController(animated: true)
+                }
+            case .error(let error):
+                print(error)
+            }
+        }
+        
     }
 
     private func setupConstraints() {
@@ -160,6 +176,11 @@ class EditLocationAvailabilityViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        getUserAvailabilities()
+    }
+    
+    private func getUserAvailabilities() {
+        
     }
 
 }

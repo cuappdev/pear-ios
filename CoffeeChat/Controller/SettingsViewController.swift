@@ -104,7 +104,7 @@ class SettingsViewController: UIViewController {
     }
     
     private func pushEditTimeAvailabilitiesViewController() {
-        navigationController?.pushViewController(SchedulingTimeViewController(for: .pickingTypical, user: user), animated: true)
+        navigationController?.pushViewController(EditTimeAvailabilityViewController(), animated: true)
     }
 
     private func pushEditLocationAvailabilitiesViewController() {

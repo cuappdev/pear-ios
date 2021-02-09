@@ -40,6 +40,7 @@ class ConnectSocialMediaViewController: UIViewController {
 
         // TODO: fill with previously saved socials from backend
         instaTextField.text = ""
+        instaTextField.placeholder = "@Instagram handle"
         instaTextField.font = ._20CircularStdBook
         instaTextField.backgroundColor = .white
         instaTextField.layer.cornerRadius = 8
@@ -63,6 +64,7 @@ class ConnectSocialMediaViewController: UIViewController {
 
         // fill with previously saved socials from backend
         fbTextField.text = ""
+        fbTextField.placeholder = "Facebook profile link"
         fbTextField.font = ._20CircularStdBook
         fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
@@ -140,11 +142,13 @@ class ConnectSocialMediaViewController: UIViewController {
     private func getUserSocialMedia() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            print(result)
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
                     if response.success {
+                        print(response.data)
                         if let facebook = response.data.facebook {
                             self.fbTextField.text = facebook
                         }

@@ -228,6 +228,8 @@ class GroupsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
 //        getAllGroups()
         groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
+        displayedGroups = groups
+        fadeTableView.view.reloadData()
         getUserGroups()
         super.viewDidAppear(animated)
     }

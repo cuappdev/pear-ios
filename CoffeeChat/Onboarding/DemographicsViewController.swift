@@ -107,7 +107,7 @@ class DemographicsViewController: UIViewController {
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
-           let profilePictureURL = UserDefaults.standard.url(forKey: Constants.UserDefaults.userProfilePictureURL) {
+           let profilePictureURL = UserDefaults.standard.string(forKey: Constants.UserDefaults.userProfilePictureURL) {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
