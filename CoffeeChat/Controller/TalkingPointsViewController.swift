@@ -14,7 +14,7 @@ class TalkingPointsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedTalkingPoints: [SimpleOnboardingCell] = []
-    private let interests: [Interest] = Constants.Options.interests
+    private let interests = Constants.Options.interests
     private var talkingPoints: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
 

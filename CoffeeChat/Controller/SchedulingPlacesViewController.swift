@@ -64,7 +64,7 @@ class SchedulingPlacesViewController: UIViewController {
     private var ctownLocations = [
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
     // TODO replace once the match includes location information
@@ -81,7 +81,7 @@ class SchedulingPlacesViewController: UIViewController {
         "Temple of Zeus",
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
     private let savedLocations: [String] = []

@@ -17,6 +17,7 @@ class DemographicsViewController: UIViewController {
     private var fieldValues: [String: String] = [:] // Keep track of selected values
     // TODO: Update with networking values from backend (use states for now)
     private let hometownSearchFields = Constants.Options.hometownSearchFields
+    private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
 
     // MARK: - Private View Vars
@@ -72,7 +73,7 @@ class DemographicsViewController: UIViewController {
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: [])
+                                                         tableData: majorSearchFields)
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 

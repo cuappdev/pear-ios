@@ -52,7 +52,7 @@ class EditLocationAvailabilityViewController: UIViewController {
     private var ctownLocations = [
         "Kung Fu Tea",
         "Starbucks",
-        "Mango Mango",
+        "CTB",
         "U Tea"
     ]
 
@@ -132,9 +132,13 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        let ctownLocations: [Location] = selectedCampusLocations.map { Location(area: "Collegetown", name: $0) }
+        print("fsdfdsfsd")
+        print(selectedCtownLocations)
+        print(selectedCampusLocations)
+        let ctownLocations: [Location] = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations: [Location] = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
+        print(locations)
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
@@ -176,11 +180,20 @@ class EditLocationAvailabilityViewController: UIViewController {
     private func getUserAvailabilities() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { response in
+            print("get")
+            print(response)
             switch response {
             case .value(let value):
                 guard value.success else { return }
                 DispatchQueue.main.async {
                     self.savedLocations = value.data.preferredLocations.map { return $0.name }
+                    for location in value.data.preferredLocations {
+                        if location.area == "Campus" {
+                            self.selectedCampusLocations.append(location.name)
+                        } else {
+                            self.selectedCtownLocations.append(location.name)
+                        }
+                    }
                     self.locationsCollectionView.reloadData()
                 }
             case .error(let error):

@@ -6,8 +6,8 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class EditDemographicsViewController: UIViewController {
 
@@ -267,7 +267,6 @@ class EditDemographicsViewController: UIViewController {
                             ImageCache.default.removeImage(forKey: self.user.googleID)
                             self.navigationController?.popViewController(animated: true)
                         case .error(let error):
-                            print("there is error")
                             print(error)
                         }
                     }

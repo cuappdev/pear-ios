@@ -38,7 +38,6 @@ class ConnectSocialMediaViewController: UIViewController {
         infoTextView.isScrollEnabled = false
         view.addSubview(infoTextView)
 
-        // TODO: fill with previously saved socials from backend
         instaTextField.text = ""
         instaTextField.placeholder = "@Instagram handle"
         instaTextField.font = ._20CircularStdBook
@@ -62,7 +61,6 @@ class ConnectSocialMediaViewController: UIViewController {
         instaTextField.rightView = instaViewR
         instaTextField.rightViewMode = .always
 
-        // fill with previously saved socials from backend
         fbTextField.text = ""
         fbTextField.placeholder = "Facebook profile link"
         fbTextField.font = ._20CircularStdBook
@@ -142,7 +140,6 @@ class ConnectSocialMediaViewController: UIViewController {
     private func getUserSocialMedia() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
-            print(result)
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
