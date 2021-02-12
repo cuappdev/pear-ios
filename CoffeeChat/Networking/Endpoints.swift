@@ -21,9 +21,6 @@ extension Endpoint {
         #else
             Endpoint.config.scheme = "https"
             Endpoint.config.host = baseURL
-//            Endpoint.config.scheme = "http"
-//            Endpoint.config.port = 5000
-//            Endpoint.config.host = "localhost"
         #endif
         Endpoint.config.commonPath = "/api/v1"
     }
