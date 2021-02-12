@@ -50,15 +50,15 @@ class SchedulingPlacesViewController: UIViewController {
 
     // TODO: Replace with networking when available
     private var campusLocations = [
-        "Atrium Cafe",
-        "Cafe Jennie",
+        "Atrium Café",
+        "Café Jennie",
         "Gimme Coffee",
-        "Goldie's Cafe",
+        "Goldie's Café",
         "Green Dragon",
-        "Libe Cafe",
-        "Mac's Cafe",
-        "Martha's Cafe",
-        "Mattin's Cafe",
+        "Libe Café",
+        "Mac's Café",
+        "Martha's Café",
+        "Mattin's Café",
         "Temple of Zeus"
     ]
     private var ctownLocations = [
@@ -69,15 +69,15 @@ class SchedulingPlacesViewController: UIViewController {
     ]
     // TODO replace once the match includes location information
     private let matchLocations: [String] = [
-        "Atrium Cafe",
-        "Cafe Jennie",
+        "Atrium Café",
+        "Café Jennie",
         "Gimme Coffee",
-        "Goldie's Cafe",
+        "Goldie's Café",
         "Green Dragon",
-        "Libe Cafe",
-        "Mac's Cafe",
-        "Martha's Cafe",
-        "Mattin's Cafe",
+        "Libe Café",
+        "Mac's Café",
+        "Martha's Café",
+        "Mattin's Café",
         "Temple of Zeus",
         "Kung Fu Tea",
         "Starbucks",

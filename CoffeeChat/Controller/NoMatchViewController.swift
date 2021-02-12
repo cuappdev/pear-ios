@@ -40,7 +40,7 @@ class NoMatchViewController: UIViewController {
         surprisedPearImageView.contentMode = .scaleAspectFit
         view.addSubview(surprisedPearImageView)
 
-        noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
+        noMatchTitleLabel.text = "Meet your new Pear\nnext Monday"
         noMatchTitleLabel.numberOfLines = 0
         noMatchTitleLabel.sizeToFit()
         noMatchTitleLabel.textAlignment = .center
