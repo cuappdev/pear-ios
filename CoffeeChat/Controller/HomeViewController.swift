@@ -9,6 +9,7 @@ import FutureNova
 import Kingfisher
 import SideMenu
 import UIKit
+import UserNotifications
 
 class HomeViewController: UIViewController {
 
@@ -68,6 +69,7 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
+        setUpLocalNotifications()
         setUpConstraints()
     }
 
@@ -89,6 +91,32 @@ class HomeViewController: UIViewController {
                 self.setUserAndTabPage(newUser: newUser)
             }
         }
+    }
+
+    private func setUpLocalNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            print(granted)
+        }
+        let content = UNMutableNotificationContent()
+        content.title = "Pear"
+        content.body = "Your Pear is available!"
+        let date = setNotificationDate(month: 2, date: 12, hour: 17, minute: 16)
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        let notification = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: notification)
+        center.add(request) { (error) in
+            print(error as Any)
+        }
+    }
+
+    private func setNotificationDate(month: Int, date: Int, hour: Int, minute: Int) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let dateString = "2021/\(month)/\(date) \(hour):\(minute)"
+        guard let date = formatter.date(from: dateString) else { return Date() }
+        return date
     }
 
     private func setUserAndTabPage(newUser: User) {
