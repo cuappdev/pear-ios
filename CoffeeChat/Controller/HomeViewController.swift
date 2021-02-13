@@ -96,25 +96,24 @@ class HomeViewController: UIViewController {
     private func setUpLocalNotifications() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            print(granted)
+            print("granted: \(granted)")
         }
         let content = UNMutableNotificationContent()
-        content.title = "Pear"
-        content.body = "Your Pear is available!"
-        let date = setNotificationDate(month: 2, date: 12, hour: 17, minute: 16)
+        content.title = "Meet your new pear!"
+        content.body = "Set up this week's chat today 😊"
+        let date = setNotificationDate()
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let notification = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let uuid = UUID().uuidString
         let request = UNNotificationRequest(identifier: uuid, content: content, trigger: notification)
-        center.add(request) { (error) in
-            print(error as Any)
-        }
+        center.add(request)
     }
 
-    private func setNotificationDate(month: Int, date: Int, hour: Int, minute: Int) -> Date {
+    private func setNotificationDate() -> Date {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let dateString = "2021/\(month)/\(date) \(hour):\(minute)"
+        // set the notification date and time
+        let dateString = "2021/02/15 08:00"
         guard let date = formatter.date(from: dateString) else { return Date() }
         return date
     }
