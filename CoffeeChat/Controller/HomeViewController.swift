@@ -69,7 +69,7 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        setUpLocalNotifications()
+        setupLocalNotifications()
         setUpConstraints()
     }
 
@@ -93,7 +93,7 @@ class HomeViewController: UIViewController {
         }
     }
 
-    private func setUpLocalNotifications() {
+    private func setupLocalNotifications() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             print("granted: \(granted)")
@@ -101,21 +101,15 @@ class HomeViewController: UIViewController {
         let content = UNMutableNotificationContent()
         content.title = "Meet your new pear!"
         content.body = "Set up this week's chat today 😊"
-        let date = setNotificationDate()
-        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
-        let notification = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        var dateComponents = DateComponents()
+        dateComponents.weekday = 2
+        dateComponents.hour = 8
+        dateComponents.minute = 0
+        dateComponents.second = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let uuid = UUID().uuidString
-        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: notification)
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
         center.add(request)
-    }
-
-    private func setNotificationDate() -> Date {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm"
-        // set the notification date and time
-        let dateString = "2021/02/15 08:00"
-        guard let date = formatter.date(from: dateString) else { return Date() }
-        return date
     }
 
     private func setUserAndTabPage(newUser: User) {
