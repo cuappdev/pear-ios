@@ -98,9 +98,9 @@ class DemographicsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        setUpConstraints()
         getUser()
         getMajors()
+        setUpConstraints()
     }
 
     @objc private func nextButtonPressed() {

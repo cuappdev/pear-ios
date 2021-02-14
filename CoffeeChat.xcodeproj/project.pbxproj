@@ -82,6 +82,7 @@
 		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
+		D48E31B125D95541009AB253 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48E31B025D95541009AB253 /* LoadingViewController.swift */; };
 		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
 		D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */; };
@@ -196,6 +197,7 @@
 		D48BB02823DE099900E88129 /* CoffeeChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatUITests.swift; sourceTree = "<group>"; };
 		D48BB02E23DE099900E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D48E31B025D95541009AB253 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUserTableViewCell.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				D429619F2526246600C677C3 /* HomeViewController.swift */,
 				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
 				D498CFE125265FB200F2E2ED /* CommunityViewController.swift */,
+				D48E31B025D95541009AB253 /* LoadingViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -830,6 +833,7 @@
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
 				5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */,
 				305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */,
+				D48E31B125D95541009AB253 /* LoadingViewController.swift in Sources */,
 				30E3A3C5245678EA0049D09B /* Time+Helper.swift in Sources */,
 				D42961A22526253B00C677C3 /* TabPageViewController.swift in Sources */,
 				4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */,
@@ -1061,7 +1065,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.2;
+				CURRENT_PROJECT_VERSION = 1.1.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1082,7 +1086,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.2;
+				CURRENT_PROJECT_VERSION = 1.1.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;

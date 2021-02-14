@@ -51,18 +51,18 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        NetworkManager.shared.getUsers().observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else { return }
-                DispatchQueue.main.async {
-                    self.users = value.data
-                    self.communityTableView.reloadData()
-                }
-            case .error(let error):
-                print(error)
-            }
-        }
+//        NetworkManager.shared.getUsers().observe { response in
+//            switch response {
+//            case .value(let value):
+//                guard value.success else { return }
+//                DispatchQueue.main.async {
+//                    self.users = value.data
+//                    self.communityTableView.reloadData()
+//                }
+//            case .error(let error):
+//                print(error)
+//            }
+//        }
     }
     
     private func setupConstraints() {
@@ -106,18 +106,18 @@ extension CommunityViewController: UITableViewDataSource {
 extension CommunityViewController: UISearchBarDelegate {
 
     private func searchUsers(query: String) {
-        NetworkManager.shared.searchUsers(query: query).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else { return }
-                DispatchQueue.main.async {
-                    self.users = value.data
-                    self.communityTableView.reloadData()
-                }
-            case .error(let error):
-                print(error)
-            }
-        }
+//        NetworkManager.shared.searchUsers(query: query).observe { response in
+//            switch response {
+//            case .value(let value):
+//                guard value.success else { return }
+//                DispatchQueue.main.async {
+//                    self.users = value.data
+//                    self.communityTableView.reloadData()
+//                }
+//            case .error(let error):
+//                print(error)
+//            }
+//        }
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

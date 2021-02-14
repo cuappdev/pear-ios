@@ -86,12 +86,8 @@ class GoalsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        setupConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         getUserGoals()
+        setupConstraints()
     }
 
     private func setupConstraints() {

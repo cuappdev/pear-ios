@@ -15,7 +15,7 @@ class GroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups: [SimpleOnboardingCell] = []
+    private var groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
     private var selectedGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -102,7 +102,8 @@ class GroupsViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
 
         displayedGroups = groups
-
+        
+        getUserGroups()
         setupConstraints()
     }
 
@@ -219,19 +220,6 @@ class GroupsViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        getAllGroups()
-        groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
-        displayedGroups = groups
-        fadeTableView.view.reloadData()
-        getUserGroups()
     }
 
     private func getUserGroups() {

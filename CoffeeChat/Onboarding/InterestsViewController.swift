@@ -65,6 +65,7 @@ class InterestsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        getUserInterests()
         setupConstraints()
     }
 
@@ -161,11 +162,6 @@ class InterestsViewController: UIViewController {
             nextButton.layer.shadowOpacity = 0
             nextButton.layer.shadowRadius = 0
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        getUserInterests()
-        super.viewDidAppear(animated)
     }
 
 }

@@ -17,42 +17,50 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
         
+        // Set up keyboard management library, helps to shift up view when keyboard becomes active
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200 // TODO: Double check with design
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
         
         let window = UIWindow(windowScene: scene)
-        let navigationController = UINavigationController(rootViewController: LoginViewController())
+        let navigationController = UINavigationController(rootViewController: LoadingViewController())
         window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            // Onboard user if they haven't done so yet, otherwise bring to home.
-            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
-            let rootVC = onboardingCompleted ? HomeViewController() : OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
             
-            guard let unwrappedToken = refreshToken else { return }
+//            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let onboardingCompleted = false
+            let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
+            let rootVC = onboardingCompleted ?
+                HomeViewController() :
+                OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+
+            guard let unwrappedToken = refreshToken else {
+                navigationController.pushViewController(LoginViewController(), animated: false)
+                window.rootViewController = navigationController
+                return
+            }
+            
             NetworkManager.shared.refreshUserSession(token: unwrappedToken).observe { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):
-                        // TODO: Add user creation handling
                         let userSession = response.data
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                        UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         navigationController.pushViewController(rootVC, animated: false)
                         window.rootViewController = navigationController
-                        self.window = window
-                        window.makeKeyAndVisible()
-                    case .error(let error):
-                    // TODO: Handle error
-                        print(error)
+                    case .error:
+                        navigationController.pushViewController(LoginViewController(), animated: false)
+                        window.rootViewController = navigationController
                     }
                 }
             }
+        } else {
+            navigationController.pushViewController(LoginViewController(), animated: false)
+            window.rootViewController = navigationController
         }
     }
 

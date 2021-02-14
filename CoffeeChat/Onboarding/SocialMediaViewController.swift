@@ -88,8 +88,8 @@ class SocialMediaViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        setupConstraints()
         getUserSocialMedia()
+        setupConstraints()
     }
 
     private func setSocialMediaTextField(socialMediaTextField: UITextField) {
