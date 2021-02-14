@@ -52,18 +52,18 @@ class CommunityViewController: UIViewController {
 
     private func getUsers() {
         NetworkManager.shared.getUsers().observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get users.")
-                    return
-                }
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                    guard value.success else {
+                        print("Network error: could not get users.")
+                        return
+                    }
                     self.users = value.data
                     self.communityTableView.reloadData()
+                case .error:
+                    print("Network error: could not get users.")
                 }
-            case .error:
-                print("Network error: could not get users.")
             }
         }
     }
@@ -111,18 +111,18 @@ extension CommunityViewController: UISearchBarDelegate {
 
     private func searchUsers(query: String) {
         NetworkManager.shared.searchUsers(query: query).observe { response in
-            switch response {
-            case .value(let value):
-                DispatchQueue.main.async {
-                    guard value.success else {
-                        print("Network error: could not search users")
-                        return
-                    }
-                    self.users = value.data
-                    self.communityTableView.reloadData()
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                        guard value.success else {
+                            print("Network error: could not search users")
+                            return
+                        }
+                        self.users = value.data
+                        self.communityTableView.reloadData()
+                case .error:
+                    print("Network error: could not search users")
                 }
-            case .error:
-                print("Network error: could not search users")
             }
         }
     }

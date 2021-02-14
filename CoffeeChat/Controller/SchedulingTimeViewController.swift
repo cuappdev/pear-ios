@@ -562,17 +562,17 @@ class SchedulingTimeViewController: UIViewController {
           savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .value(let response):
-                if response.success {
-                    DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
                         self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                } else {
+                case .error:
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error:
-                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -783,22 +783,20 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
         NetworkManager.shared.cancelMatch(matchID: match.matchID).observe { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .value(let value):
-                if value.success {
-                    print("Succesfully cancelled matches")
-                } else {
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let value):
+                    if value.success {
+                        print("Succesfully cancelled matches")
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        print("Network error: could not cancel match.")
+                    }
+                case .error:
                     print("Network error: could not cancel match.")
                 }
-            case .error:
-                print("Network error: could not cancel match.")
-            }
-
-            DispatchQueue.main.async {
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
-
     }
 
 }

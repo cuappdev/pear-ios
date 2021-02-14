@@ -156,7 +156,7 @@ class ConnectSocialMediaViewController: UIViewController {
                     } else {
                         print("Network error: could not get user.")
                     }
-                case .error(let error):
+                case .error:
                     print("Network error: could not get user.")
                 }
             }

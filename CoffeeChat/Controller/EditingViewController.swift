@@ -292,32 +292,32 @@ class EditingViewController: UIViewController {
         if isShowingGroups {
             NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { [weak self] result in
                 guard let self = self else { return }
-                switch result {
-                case .value(let response):
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         } else {
             NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
-                switch result {
-                case .value(let response):
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
