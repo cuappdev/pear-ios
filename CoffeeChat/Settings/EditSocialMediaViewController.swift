@@ -1,5 +1,5 @@
 //
-//  ConnectSocialMediaViewController.swift
+//  EditSocialMediaViewController.swift
 //  CoffeeChat
 //
 //  Created by Amy Chin Siu Huang on 10/18/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConnectSocialMediaViewController: UIViewController {
+class EditSocialMediaViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()

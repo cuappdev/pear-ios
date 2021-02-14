@@ -111,8 +111,8 @@ class SettingsViewController: UIViewController {
         navigationController?.pushViewController(EditLocationAvailabilityViewController(), animated: true)
     }
 
-    private func pushConnectSocialMediaViewController() {
-        navigationController?.pushViewController(ConnectSocialMediaViewController(), animated: true)
+    private func pushEditSocialMediaViewController() {
+        navigationController?.pushViewController(EditSocialMediaViewController(), animated: true)
     }
 
 }
@@ -143,7 +143,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Edit Location Availabilities" {
             pushEditLocationAvailabilitiesViewController()
         } else if option.text == "Connect Social Media" {
-            pushConnectSocialMediaViewController()
+            pushEditSocialMediaViewController()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userNetId)
