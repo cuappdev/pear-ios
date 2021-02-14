@@ -294,10 +294,12 @@ class EditingViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .value(let response):
-                    if response.success {
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        if response.success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
                     }
                 case .error:
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
@@ -307,10 +309,12 @@ class EditingViewController: UIViewController {
             NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
                 switch result {
                 case .value(let response):
-                    if response.success {
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        if response.success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
                     }
                 case .error:
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)

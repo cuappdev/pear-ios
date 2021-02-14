@@ -135,15 +135,14 @@ class EditLocationAvailabilityViewController: UIViewController {
         let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
-        print(locations)
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else {
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    return
-                }
                 DispatchQueue.main.async {
+                    guard value.success else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        return
+                    }
                     self.navigationController?.popViewController(animated: true)
                 }
             case .error:

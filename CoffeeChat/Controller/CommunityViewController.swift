@@ -113,12 +113,13 @@ extension CommunityViewController: UISearchBarDelegate {
         NetworkManager.shared.searchUsers(query: query).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
                 DispatchQueue.main.async {
+                    guard value.success else {
+                        print("Network error: could not search users")
+                        return
+                    }
                     self.users = value.data
                     self.communityTableView.reloadData()
-                } else {
-                    print("Network error: could not search users")
                 }
             case .error:
                 print("Network error: could not search users")

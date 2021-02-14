@@ -149,18 +149,18 @@ class GoalsViewController: UIViewController {
     @objc func nextButtonPressed() {
         NetworkManager.shared.updateUserGoals(goals: selectedGoals).observe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    if response.success {
-                        self.delegate?.nextPage(index: 4)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        if response.success {
+                            self.delegate?.nextPage(index: 4)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
                     }
                 case .error:
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            }
         }
     }
 
