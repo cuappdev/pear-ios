@@ -17,7 +17,6 @@ class ProfileMenuViewController: UIViewController {
     private let profileInfoLabel = UILabel()
     private let profileNameLabel = UILabel()
 
-    private let menuOptionCellReuseId = "MenuOptionCellReuseIdentifier"
     private let editButtonSize = CGSize(width: 70, height: 30)
     private let menuOptions: [MenuOption] = [
         MenuOption(image: "interests", text: "Your interests"),
@@ -73,7 +72,7 @@ class ProfileMenuViewController: UIViewController {
         optionsTableView.allowsSelection = true
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
-        optionsTableView.register(MenuOptionTableViewCell.self, forCellReuseIdentifier: menuOptionCellReuseId)
+        optionsTableView.register(MenuOptionTableViewCell.self, forCellReuseIdentifier: MenuOptionTableViewCell.reuseIdentifier)
         view.addSubview(optionsTableView)
 
         profileImageView.backgroundColor = .inactiveGreen
@@ -159,7 +158,7 @@ extension ProfileMenuViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: menuOptionCellReuseId,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MenuOptionTableViewCell.reuseIdentifier,
                                                        for: indexPath) as?
             MenuOptionTableViewCell else { return UITableViewCell() }
         let option = menuOptions[indexPath.row]

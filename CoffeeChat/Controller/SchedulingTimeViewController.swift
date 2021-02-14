@@ -299,7 +299,7 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -323,7 +323,7 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
         timeCollectionView.clipsToBounds = false
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
         timeCollectionView.isScrollEnabled = false
 
         timeScrollView = FadeWrapperView(UIScrollView(), fadeColor: .backgroundLightGreen)
@@ -624,7 +624,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     private func configuredDayCell(for indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = dayCollectionView.dequeueReusableCell(
-                withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId,
+                withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier,
                 for: indexPath) as? SchedulingDayCollectionViewCell else {
             return UICollectionViewCell()
         }
@@ -648,7 +648,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     private func configuredTimeCell(for indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = timeCollectionView.dequeueReusableCell(
-                withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId,
+                withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier,
                 for: indexPath) as? SchedulingTimeCollectionViewCell else {
             return UICollectionViewCell()
         }

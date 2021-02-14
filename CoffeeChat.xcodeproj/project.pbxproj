@@ -330,6 +330,7 @@
 		D474108F25C729780062E2B4 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				D48E31FE25D9B799009AB253 /* Cells */,
 				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
 				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
 				7E06B84F2543F15900D6B505 /* InterestsViewController.swift */,
@@ -353,7 +354,6 @@
 				305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */,
 				305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */,
 				4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */,
-				D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */,
 				D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */,
 				D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */,
 				D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */,
@@ -484,6 +484,14 @@
 				D48BB02E23DE099900E88129 /* Info.plist */,
 			);
 			path = CoffeeChatUITests;
+			sourceTree = "<group>";
+		};
+		D48E31FE25D9B799009AB253 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		D4D3EFF023FE544D00229587 /* Utilities */ = {

@@ -50,7 +50,7 @@ class AboutPearViewController: UIViewController {
         aboutTableView.dataSource = self
         aboutTableView.backgroundColor = .clear
         aboutTableView.bounces = false
-        aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: AboutPearTableViewCell.aboutReuseId)
+        aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: AboutPearTableViewCell.reuseIdentifier)
         view.addSubview(aboutTableView)
 
         feedbackButton.setTitle("Send Feedback", for: .normal)
@@ -102,15 +102,24 @@ class AboutPearViewController: UIViewController {
     }
 
     @objc private func sendFeedback() {
-        // TODO
+        let feedbackURL = "https://forms.gle/t9umWjckEs4NNWNS8/"
+        if let url = URL(string: feedbackURL), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 
     @objc private func visitWebsite() {
-        // TODO
+        let websiteURL = "https://www.cornellappdev.com/"
+        if let url = URL(string: websiteURL), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 
     @objc private func presentMoreApps() {
-        // TODO
+        let moreAppsURL = "https://www.cornellappdev.com/apps/"
+        if let url = URL(string: moreAppsURL), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 
     private func setupConstraints() {
@@ -152,7 +161,7 @@ extension AboutPearViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = aboutTableView.dequeueReusableCell(withIdentifier: AboutPearTableViewCell.aboutReuseId, for: indexPath) as? AboutPearTableViewCell else { return UITableViewCell() }
+        guard let cell = aboutTableView.dequeueReusableCell(withIdentifier: AboutPearTableViewCell.reuseIdentifier, for: indexPath) as? AboutPearTableViewCell else { return UITableViewCell() }
         let paragraph = aboutParagraphs[indexPath.row]
         cell.configure(for: paragraph)
         return cell

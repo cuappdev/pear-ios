@@ -45,7 +45,7 @@ class SettingsViewController: UIViewController {
         settingsTableView.allowsSelection = true
         settingsTableView.delegate = self
         settingsTableView.dataSource = self
-        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier)
+        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.reuseIdentifier)
         view.addSubview(settingsTableView)
 
         setupNavigationBar()
@@ -125,7 +125,7 @@ extension SettingsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =
-                settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier,
+                settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.reuseIdentifier,
                         for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
         let setting = settingOptions[indexPath.row]
         cell.configure(for: setting)

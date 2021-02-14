@@ -40,7 +40,6 @@ class OnboardingSearchDropdownView: UIView {
     // MARK: - Private Data Vars
     private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
-    private let reuseIdentifier = "OnboardingDropdownCell"
     private var resultsTableData: [String] = []
     private var tableData: [String]
 
@@ -89,7 +88,7 @@ class OnboardingSearchDropdownView: UIView {
         tableView.backgroundColor = .darkGray
         tableView.layer.cornerRadius = fieldsCornerRadius
         tableView.bounces = false
-        tableView.register(OnboardingDropdownTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(OnboardingDropdownTableViewCell.self, forCellReuseIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier)
         addSubview(tableView)
     }
 
@@ -135,7 +134,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier, for: indexPath)
             as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
         cell.configure(with: resultsTableData[indexPath.row])
         return cell

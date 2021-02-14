@@ -17,7 +17,7 @@ class SchedulingDayCollectionViewCell: UICollectionViewCell {
     private let backgroundViewSize = CGSize(width: 36, height: 36)
     private let indicatorViewSize = CGSize(width: 8, height: 8)
 
-    static let dayCellReuseId = "dayCellReuseIdentifier"
+    static let reuseIdentifier = "dayCellReuseIdentifier"
 
     override var isSelected: Bool {
         didSet {

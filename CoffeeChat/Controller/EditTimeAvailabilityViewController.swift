@@ -100,7 +100,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -120,7 +120,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
         view.addSubview(timeCollectionView)
 
         setupTimeSections()
@@ -265,7 +265,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = daysAbbrev[indexPath.item]
             cell.configure(for: day)
             if let day = daysDict[day] {
@@ -281,7 +281,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
 
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.row]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
         switch item {
         case .header(let header):
             cell.configure(for: header, isHeader: true)

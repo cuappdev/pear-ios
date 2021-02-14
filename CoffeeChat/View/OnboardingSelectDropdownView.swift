@@ -17,7 +17,6 @@ class OnboardingSelectDropdownView: UIView {
     // MARK: - Private Data Vars
     private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
-    private let reuseIdentifier = "OnboardingDropdownCell"
     private var tableData: [String]
     private var textTemplate: String = ""
     private var shouldShowFields: Bool = true
@@ -47,7 +46,8 @@ class OnboardingSelectDropdownView: UIView {
         dropdownButton.titleLabel?.font = ._20CircularStdBook
         dropdownButton.layer.cornerRadius = fieldsCornerRadius
         dropdownButton.contentHorizontalAlignment = .left
-        dropdownButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0) // Shift placeholder into place.
+        // Shift placeholder into place.
+        dropdownButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
         dropdownButton.layer.shadowColor = UIColor.black.cgColor
         dropdownButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         dropdownButton.layer.shadowOpacity = 0.15
@@ -64,7 +64,7 @@ class OnboardingSelectDropdownView: UIView {
         tableView.isUserInteractionEnabled = true
         tableView.backgroundColor = .darkGray
         tableView.layer.cornerRadius = fieldsCornerRadius
-        tableView.register(OnboardingDropdownTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(OnboardingDropdownTableViewCell.self, forCellReuseIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier)
         addSubview(tableView)
     }
 
@@ -115,24 +115,14 @@ class OnboardingSelectDropdownView: UIView {
     }
 }
 
-extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSource {
+extension OnboardingSelectDropdownView: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         44
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableData.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-            as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
-        cell.configure(with: tableData[indexPath.row])
-        return cell
-    }
-
-    /// Updates dropdown text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Updates dropdown text when a cell is selected in the table view and hides the table view.
         let selectedText = tableData[indexPath.row]
         dropdownButton.setTitle("\(textTemplate) \(selectedText)", for: .normal)
         dropdownButton.setTitleColor(.black, for: .normal)
@@ -140,4 +130,20 @@ extension OnboardingSelectDropdownView: UITableViewDelegate, UITableViewDataSour
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)
         delegate?.sendDropdownViewToBack(dropdownView: self)
     }
+    
+}
+
+extension OnboardingSelectDropdownView: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        tableData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier, for: indexPath)
+            as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
+        cell.configure(with: tableData[indexPath.row])
+        return cell
+    }
+    
 }

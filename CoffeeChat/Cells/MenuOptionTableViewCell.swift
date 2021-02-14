@@ -14,6 +14,8 @@ class MenuOptionTableViewCell: UITableViewCell {
     private let optionImageView = UIImageView()
     private let optionLabel = UILabel()
     private let selectedView = UIView()
+    
+    static let reuseIdentifier = "MenuOptionCellReuseIdentifier"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
