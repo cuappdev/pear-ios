@@ -249,7 +249,7 @@ class EditingViewController: UIViewController {
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -652,7 +652,7 @@ private class EditFooterView: UIButton {
 
     private func setupConstraints() {
         arrowView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 9, height: 18))
+            make.size.equalTo(CGSize(width: 20, height: 20))
         }
 
         stackView.snp.makeConstraints { make in

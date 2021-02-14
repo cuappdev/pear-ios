@@ -376,8 +376,7 @@ class SchedulingTimeViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
             make.leading.equalToSuperview().inset(backButtonPadding)
-            make.width.equalTo(14)
-            make.height.equalTo(24)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
 
         titleLabel.snp.makeConstraints { make in

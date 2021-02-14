@@ -76,7 +76,7 @@ class SettingsViewController: UIViewController {
         ]
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)

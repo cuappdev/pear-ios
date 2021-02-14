@@ -169,8 +169,7 @@ class EditDemographicsViewController: UIViewController {
         let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
 
         backButton.snp.makeConstraints { make in
-            make.width.equalTo(12)
-            make.height.equalTo(22)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
 
         editScrollView.snp.makeConstraints { make in

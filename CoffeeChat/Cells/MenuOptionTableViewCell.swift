@@ -42,8 +42,7 @@ class MenuOptionTableViewCell: UITableViewCell {
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().inset(30)
-            make.height.equalTo(12)
-            make.width.equalTo(6)
+            make.size.equalTo(CGSize(width: 20, height: 20))
         }
 
         optionImageView.snp.makeConstraints { make in
