@@ -139,13 +139,15 @@ class EditLocationAvailabilityViewController: UIViewController {
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    return
+                }
                 DispatchQueue.main.async {
-                    print("Update location availabilities success")
                     self.navigationController?.popViewController(animated: true)
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -179,7 +181,10 @@ class EditLocationAvailabilityViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    print("Network error: could not get user availabilities.")
+                    return
+                }
                 DispatchQueue.main.async {
                     self.savedLocations = value.data.preferredLocations.map(\.name)
                     for location in value.data.preferredLocations {
@@ -191,8 +196,8 @@ class EditLocationAvailabilityViewController: UIViewController {
                     }
                     self.locationsCollectionView.reloadData()
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                print("Network error: could not get user availabilities.")
             }
         }
     }

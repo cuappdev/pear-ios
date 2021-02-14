@@ -565,15 +565,14 @@ class SchedulingTimeViewController: UIViewController {
             switch result {
             case .value(let response):
                 if response.success {
-                    print("Successfully updated user's time availabilities")
                     DispatchQueue.main.async {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
-                    print("Was not successful when updating user's time availabilities")
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error(let error):
-                print("Error when updating time availabilities: \(error)")
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -789,10 +788,10 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
                 if value.success {
                     print("Succesfully cancelled matches")
                 } else {
-                    print("Was not sucessfull cancelling matches")
+                    print("Network error: could not cancel match.")
                 }
-            case .error(let error):
-                print("Couldn't cancel match: \(error)")
+            case .error:
+                print("Network error: could not cancel match.")
             }
 
             DispatchQueue.main.async {

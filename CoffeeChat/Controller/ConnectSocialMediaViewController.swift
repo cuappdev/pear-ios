@@ -124,9 +124,11 @@ class ConnectSocialMediaViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -151,9 +153,11 @@ class ConnectSocialMediaViewController: UIViewController {
                         if let instagram = response.data.instagram {
                             self.instaTextField.text = instagram
                         }
+                    } else {
+                        print("Network error: could not get user.")
                     }
                 case .error(let error):
-                    print(error)
+                    print("Network error: could not get user.")
                 }
             }
         }

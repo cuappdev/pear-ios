@@ -114,6 +114,8 @@ class TalkingPointsViewController: UIViewController {
                         self.selectedInterestsGroups = userTalkingPoints
                         self.fadeTableView.view.reloadData()
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user talking points.")
                     }
                 case .error:
                     print("Network error: could not get user talking points.")
@@ -158,6 +160,8 @@ class TalkingPointsViewController: UIViewController {
                         self.talkingPoints.sort(by: { $0.name < $1.name })
                         self.displayedTalkingPoints = self.talkingPoints
                         self.fadeTableView.view.reloadData()
+                    } else {
+                        print("Network error: could not get all talking points.")
                     }
                 case .error:
                     print("Network error: could not get all talking points.")

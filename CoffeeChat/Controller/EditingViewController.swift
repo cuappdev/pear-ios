@@ -222,10 +222,9 @@ class EditingViewController: UIViewController {
             switch response {
             case .value(let result):
                 guard result.success else {
-                    print("Response not successful when getting interests for user")
+                    print("Network error: could not get interests.")
                     return
                 }
-
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
                 let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [
@@ -236,7 +235,7 @@ class EditingViewController: UIViewController {
                     self.tableView.reloadData()
                 }
             case .error:
-                print("Error when getting groups for user")
+                print("Network error: could not get interests.")
             }
         }
     }
@@ -296,13 +295,12 @@ class EditingViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        print("Groups updated successfully")
                         self.navigationController?.popViewController(animated: true)
                     } else {
-                        print("Groups couldn't be updated")
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
                 case .error:
-                    print("Networking error when trying to update groups")
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         } else {
@@ -310,13 +308,12 @@ class EditingViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        print("Interests updated successfully")
                         self.navigationController?.popViewController(animated: true)
                     } else {
-                        print("Interests couldn't be updated")
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
                 case .error:
-                    print("Networking error when trying to update interests")
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }

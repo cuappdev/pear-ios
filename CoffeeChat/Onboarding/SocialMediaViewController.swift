@@ -215,9 +215,11 @@ class SocialMediaViewController: UIViewController {
                             self.instagramTextField.text = instagram
                         }
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user social media.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user social media.")
                 }
             }
         }

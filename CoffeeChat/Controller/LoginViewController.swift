@@ -135,8 +135,8 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                         UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
                         let vc = onboardingCompleted ? HomeViewController() : onboardingVC
                         self.navigationController?.pushViewController(vc, animated: false)
-                    case .error(let error):
-                        print(error)
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         self.navigationController?.pushViewController(loginVC, animated: false)
                     }
                 }

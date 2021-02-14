@@ -180,6 +180,8 @@ class GoalsViewController: UIViewController {
                         self.selectedGoals = userGoals
                         self.tableView.reloadData()
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user goals.")
                     }
                 case .error:
                     print("Network error: could not get user goals.")

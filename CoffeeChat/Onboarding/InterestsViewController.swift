@@ -132,7 +132,7 @@ class InterestsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     guard response.success else {
-                        print("Get user interest failure")
+                        print("Network error: could not get user interests.")
                         return
                     }
                     self.selectedInterests = response.data.interests.map {
@@ -140,8 +140,8 @@ class InterestsViewController: UIViewController {
                     }
                     self.updateNext()
                     self.fadeTableView.view.reloadData()
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user interests.")
                 }
             }
         }

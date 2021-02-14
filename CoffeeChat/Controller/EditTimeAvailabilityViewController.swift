@@ -164,13 +164,15 @@ class EditTimeAvailabilityViewController: UIViewController {
         NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    return
+                }
                 DispatchQueue.main.async {
-                    print("Update time availabilities success")
                     self.navigationController?.popViewController(animated: true)
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -180,7 +182,10 @@ class EditTimeAvailabilityViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    print("Network error: could not get time availabilities.")
+                    return
+                }
                 var userAvailabilities: [String: [String]] = [:]
                 for availability in value.data.availabilities {
                     userAvailabilities[availability.day.localizedCapitalized] = availability.times.map({Time.floatToStringTime(time: $0)})
@@ -191,8 +196,8 @@ class EditTimeAvailabilityViewController: UIViewController {
                     self.dayCollectionView.reloadData()
                     self.timeCollectionView.reloadData()
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                print("Network error: could not get time availabilities.")
             }
         }
     }

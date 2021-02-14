@@ -215,9 +215,11 @@ class GroupsViewController: UIViewController {
                         self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
                         self.displayedGroups = self.groups
                         self.fadeTableView.view.reloadData()
+                    } else {
+                        print("Network error: could not get all groups.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get all groups.")
                 }
             }
         }
@@ -235,9 +237,11 @@ class GroupsViewController: UIViewController {
                         self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
                         self.fadeTableView.view.reloadData()
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user groups.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user groups.")
                 }
             }
         }

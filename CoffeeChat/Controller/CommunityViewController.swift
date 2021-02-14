@@ -54,13 +54,16 @@ class CommunityViewController: UIViewController {
         NetworkManager.shared.getUsers().observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    print("Network error: could not get users.")
+                    return
+                }
                 DispatchQueue.main.async {
                     self.users = value.data
                     self.communityTableView.reloadData()
                 }
             case .error:
-                print("Network error: could not get users")
+                print("Network error: could not get users.")
             }
         }
     }
@@ -114,6 +117,8 @@ extension CommunityViewController: UISearchBarDelegate {
                 DispatchQueue.main.async {
                     self.users = value.data
                     self.communityTableView.reloadData()
+                } else {
+                    print("Network error: could not search users")
                 }
             case .error:
                 print("Network error: could not search users")

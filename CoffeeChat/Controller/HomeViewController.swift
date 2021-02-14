@@ -105,14 +105,14 @@ class HomeViewController: UIViewController {
             switch result {
             case .value(let response):
                 guard response.success else {
-                    print("Unsuccesful response when getting user")
+                    print("Network error: could not get user.")
                     return
                 }
                 DispatchQueue.main.async {
                     completion(response.data)
                 }
-            case .error(let error):
-                print("Encountered error in HomeViewController when getting User: \(error)")
+            case .error:
+                print("Network error: could not get user.")
             }
         }
     }
