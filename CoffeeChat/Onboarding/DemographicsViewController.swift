@@ -51,8 +51,9 @@ class DemographicsViewController: UIViewController {
 
     override func viewDidLoad() {
         navigationController?.navigationBar.isHidden = true
-
-        titleLabel.text = "Hi \(UserDefaults.standard.string(forKey: "userFirstName") ?? "user")!\nLet's get to know you better."
+        
+        let userFirstName = UserDefaults.standard.string(forKey: "userFirstName") ?? "user"
+        titleLabel.text = "Hi \(userFirstName)!\nLet's get to know you better."
         titleLabel.textColor = .black
         titleLabel.font = ._24CircularStdMedium
         titleLabel.textAlignment = .center
@@ -99,7 +100,7 @@ class DemographicsViewController: UIViewController {
         view.addSubview(nextButton)
 
         getUser()
-        getMajors()
+        getAllMajors()
         setUpConstraints()
     }
 
@@ -114,24 +115,25 @@ class DemographicsViewController: UIViewController {
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: "\(profilePictureURL)").observe { [weak self] result in
+                profilePictureURL: profilePictureURL).observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
-                            print("Update demographics success response \(response)")
                             if response.success {
                                 self.delegate?.nextPage(index: 1)
+                            } else {
+                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                             }
-                        case .error(let error):
-                            print(error)
+                        case .error:
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }
                     }
             }
         }
     }
 
-    private func getMajors() {
+    private func getAllMajors() {
         NetworkManager.shared.getAllMajors().observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -140,8 +142,8 @@ class DemographicsViewController: UIViewController {
                     if response.success {
                         self.majorDropdownView.setTableData(tableData: response.data)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get all major fields.")
                 }
             }
         }
@@ -156,24 +158,21 @@ class DemographicsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let user = response.data
-                        let major = user.major
-                        let hometown = user.hometown
-                        let pronouns = user.pronouns
-                        if major != "" {
+                        if user.major != "" {
                             self.majorDropdownView.setTitle(title: user.major)
                         }
                         if let graduationYear = user.graduationYear, graduationYear != "" {
                             self.classDropdownView.setTitle(title: graduationYear)
                         }
-                        if hometown != "" {
+                        if user.hometown != "" {
                             self.hometownDropdownView.setTitle(title: user.hometown)
                         }
-                        if pronouns != "" {
+                        if user.pronouns != "" {
                             self.pronounsDropdownView.setTitle(title: user.pronouns)
                         }
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user.")
                 }
             }
         }
@@ -262,8 +261,7 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight + height)
     }
 
-    /// Brings field view to the front of the screen and handles keyboard interactions
-    /// when switching from select dropdowns to search.
+    /// Brings field view to the front of the screen and handles keyboard interactions when switching from select dropdowns to search.
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
         if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView,
              activeDropdownView != dropdownView {

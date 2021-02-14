@@ -14,6 +14,7 @@ class TalkingPointsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedTalkingPoints: [SimpleOnboardingCell] = []
+    private let groups = Constants.Options.organizations
     private let interests = Constants.Options.interests
     private var talkingPoints: [SimpleOnboardingCell] = []
     private var selectedInterestsGroups: [SimpleOnboardingCell] = []
@@ -94,13 +95,9 @@ class TalkingPointsViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
-        setupConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        getAllTalkingPoints()
+        getTalkingPoints()
         getUserTalkingPoints()
+        setupConstraints()
     }
     
     private func getUserTalkingPoints() {
@@ -118,8 +115,8 @@ class TalkingPointsViewController: UIViewController {
                         self.fadeTableView.view.reloadData()
                         self.updateNext()
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user talking points.")
                 }
             }
         }
@@ -127,6 +124,19 @@ class TalkingPointsViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
+    }
+    
+    private func getTalkingPoints() {
+        talkingPoints = groups.map {
+            return SimpleOnboardingCell(name: $0.name, subtitle: nil)
+        }
+        let onboardingInterests = self.interests.map {
+            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
+        }
+        talkingPoints.append(contentsOf: onboardingInterests)
+        talkingPoints.sort(by: { $0.name < $1.name })
+        displayedTalkingPoints = talkingPoints
+        fadeTableView.view.reloadData()
     }
     
     private func getAllTalkingPoints() {
@@ -149,8 +159,8 @@ class TalkingPointsViewController: UIViewController {
                         self.displayedTalkingPoints = self.talkingPoints
                         self.fadeTableView.view.reloadData()
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get all talking points.")
                 }
             }
         }
@@ -227,12 +237,13 @@ class TalkingPointsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update talking points success response \(response)")
                     if response.success {
                         self.delegate?.nextPage(index: 5)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }

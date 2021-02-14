@@ -187,13 +187,14 @@ class SocialMediaViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update social media success response \(response)")
                     if response.success {
                         UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
                         self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }

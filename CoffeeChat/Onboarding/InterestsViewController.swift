@@ -81,12 +81,13 @@ class InterestsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update interests success response \(response)")
                     if response.success {
                         self.delegate?.nextPage(index: 2)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }

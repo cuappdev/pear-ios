@@ -152,12 +152,13 @@ class GoalsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update goals success response \(response)")
                     if response.success {
                         self.delegate?.nextPage(index: 4)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -180,8 +181,8 @@ class GoalsViewController: UIViewController {
                         self.tableView.reloadData()
                         self.updateNext()
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user goals.")
                 }
             }
         }
