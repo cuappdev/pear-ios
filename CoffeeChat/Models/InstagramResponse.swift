@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct InstagramTestUser: Codable {
+struct InstagramAuthentication: Codable {
     var access_token: String
     var user_id: Int
 }

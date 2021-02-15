@@ -78,7 +78,7 @@ class InstagramAPI {
         
     }
     
-    func getTestUserIDAndToken(request: URLRequest, completion: @escaping (InstagramTestUser) -> Void) {
+    func getTestUserIDAndToken(request: URLRequest, completion: @escaping (InstagramAuthentication) -> Void) {
         
         guard let authToken = getTokenFromCallbackURL(request: request) else { return }
         let headers = ["content-type": "multipart/form-data; boundary=\(boundary)"]
@@ -104,7 +104,7 @@ class InstagramAPI {
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request, completionHandler: {(data, response, error) in
             guard let data = data else { return }
-            do { let jsonData = try JSONDecoder().decode(InstagramTestUser.self, from: data)
+            do { let jsonData = try JSONDecoder().decode(InstagramAuthentication.self, from: data)
                 completion(jsonData)
             }
             catch {
@@ -115,7 +115,7 @@ class InstagramAPI {
     }
 
     
-    func getInstagramUser(testUserData: InstagramTestUser, completion: @escaping (InstagramUser) -> Void) {
+    func getInstagramUser(testUserData: InstagramAuthentication, completion: @escaping (InstagramUser) -> Void) {
         
         let baseURL = "https://graph.instagram.com/"
         let fields = ["id", "username", "media_count"].joined(separator: ",")

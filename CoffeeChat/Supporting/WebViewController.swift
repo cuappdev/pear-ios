@@ -12,9 +12,17 @@ import WebKit
 
 class WebViewController: UIViewController {
     
-    var testUserData: InstagramTestUser?
-    var mainVC: SocialMediaViewController?
+    var mainViewController: SocialMediaViewController
     private let webView = WKWebView()
+    
+    init(mainViewController: SocialMediaViewController) {
+        self.mainViewController = mainViewController
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,17 +34,22 @@ class WebViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
-        InstagramAPI.shared.authorizeApplication { (url) in
+        authorizeApplication()
+    }
+    
+    private func authorizeApplication() {
+        InstagramAPI.shared.authorizeApplication { url in
             DispatchQueue.main.async {
-                self.webView.load(URLRequest(url: url!))
+                guard let url = url else { return }
+                self.webView.load(URLRequest(url: url))
             }
         }
     }
     
-    func dismissViewController() {
+    func dismissViewController(userData: InstagramAuthentication) {
         DispatchQueue.main.async {
             self.dismiss(animated: true) {
-                self.mainVC?.testUserData = self.testUserData!
+                self.mainViewController.testUserData = userData
             }
         }
     }
@@ -45,11 +58,9 @@ class WebViewController: UIViewController {
 extension WebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        let request = navigationAction.request
-        InstagramAPI.shared.getTestUserIDAndToken(request: request) { [weak self] (instagramTestUser) in
+        InstagramAPI.shared.getTestUserIDAndToken(request: navigationAction.request) { [weak self] instagramTestUser in
             guard let self = self else { return }
-            self.testUserData = instagramTestUser
-            self.dismissViewController()
+            self.dismissViewController(userData: instagramTestUser)
         }
         decisionHandler(.allow)
     }

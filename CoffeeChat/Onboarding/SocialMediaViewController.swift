@@ -21,13 +21,15 @@ class SocialMediaViewController: UIViewController {
     private let instagramLabel = UILabel()
     private let instagramSwitch = UISwitch()
     private let nextButton = UIButton()
-    private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
     
     private let button = UIButton()
     
-    var testUserData = InstagramTestUser(access_token: "", user_id: 0)
+    var instagramUsername: String? = nil
+    var facebookUsername: String? = nil
+    
+    var testUserData = InstagramAuthentication(access_token: "", user_id: 0)
     var instagramUser: InstagramUser?
     var signedIn = false
 
@@ -83,18 +85,10 @@ class SocialMediaViewController: UIViewController {
         nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
+        nextButton.backgroundColor = .backgroundOrange
         nextButton.layer.cornerRadius = 26
-        nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
-
-        skipButton.titleLabel?.font = ._16CircularStdMedium
-        skipButton.setTitle("Skip", for: .normal)
-        skipButton.setTitleColor(.greenGray, for: .normal)
-        skipButton.backgroundColor = .none
-        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
-        view.addSubview(skipButton)
 
         getUserSocialMedia()
         setupConstraints()
@@ -155,12 +149,6 @@ class SocialMediaViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
-
-        skipButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 86, height: 20))
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
-        }
     }
     
     @objc func facebookSwitchValueDidChange() {
@@ -175,30 +163,11 @@ class SocialMediaViewController: UIViewController {
         }
     }
 
-    // MARK: - Next and Previous Buttons
-    private func updateNext() {
-//        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
-//        let isSocialMediaEntered =
-//            instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
-//            facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty
-//        nextButton.isEnabled = isSocialMediaEntered
-//        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-//        skipButton.isEnabled = !nextButton.isEnabled
-//        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
-//        skipButton.setTitleColor(skipButtonColor, for: .normal)
-    }
-
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        updateNext()
-    }
-
     @objc func backButtonPressed() {
         delegate?.backPage(index: 4)
     }
 
     @objc func nextButtonPressed() {
-//        let instagramHandle = instagramTextField.text ?? ""
-//        let facebookHandle = facebookTextField.text ?? ""
 //        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
 //            guard let self = self else { return }
 //            DispatchQueue.main.async {
@@ -225,13 +194,12 @@ class SocialMediaViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
-//                        if let facebook = response.data.facebook {
-//                            self.facebookTextField.text = facebook
-//                        }
-//                        if let instagram = response.data.instagram {
-//                            self.instagramTextField.text = instagram
-//                        }
-                        self.updateNext()
+                        if let facebookUsername = response.data.facebook, facebookUsername != "" {
+                            self.facebookSwitch.isOn = true
+                        }
+                        if let instagramUsername = response.data.instagram, instagramUsername != "" {
+                            self.instagramSwitch.isOn = true
+                        }
                     } else {
                         print("Network error: could not get user social media.")
                     }
@@ -241,12 +209,6 @@ class SocialMediaViewController: UIViewController {
             }
         }
     }
-
-    @objc func skipButtonPressed() {
-        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-        let homeVC = HomeViewController()
-        navigationController?.pushViewController(homeVC, animated: true)
-    }
     
     func presentAlert() {
         let alert = UIAlertController(title: "Signed In:", message: "with account: @\(self.instagramUser!.username)", preferredStyle: UIAlertController.Style.alert)
@@ -255,9 +217,8 @@ class SocialMediaViewController: UIViewController {
     }
     
     func presentWebViewController() {
-        let webVC = WebViewController()
-        webVC.mainVC = self
-        self.present(webVC, animated: true)
+        let webViewController = WebViewController(mainViewController: self)
+        self.present(webViewController, animated: true)
     }
     
     func authenticateOrSignIn() {
