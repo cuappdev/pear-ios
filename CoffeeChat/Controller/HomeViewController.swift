@@ -9,6 +9,7 @@ import FutureNova
 import Kingfisher
 import SideMenu
 import UIKit
+import UserNotifications
 
 class HomeViewController: UIViewController {
 
@@ -68,6 +69,7 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
+        setupLocalNotifications()
         setUpConstraints()
     }
 
@@ -89,6 +91,25 @@ class HomeViewController: UIViewController {
                 self.setUserAndTabPage(newUser: newUser)
             }
         }
+    }
+
+    private func setupLocalNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            print("granted: \(granted)")
+        }
+        let content = UNMutableNotificationContent()
+        content.title = "Meet your new pear!"
+        content.body = "Set up this week's chat today 😊"
+        var dateComponents = DateComponents()
+        dateComponents.weekday = 2
+        dateComponents.hour = 8
+        dateComponents.minute = 0
+        dateComponents.second = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
+        center.add(request)
     }
 
     private func setUserAndTabPage(newUser: User) {
