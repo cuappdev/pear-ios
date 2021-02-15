@@ -8,6 +8,8 @@ use_frameworks!
 # Pods for CoffeeChat
     # User Data
     pod 'GoogleSignIn'
+    pod 'FBSDKLoginKit'
+    pod 'FBSDKCoreKit'
 
     # Networking
     pod 'SwiftyJSON'

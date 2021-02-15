@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import FBSDKLoginKit
 import UIKit
 
 class SocialMediaViewController: UIViewController {
@@ -152,7 +153,27 @@ class SocialMediaViewController: UIViewController {
     }
     
     @objc func facebookSwitchValueDidChange() {
-        
+        if facebookSwitch.isOn {
+            let loginManager = LoginManager()
+            loginManager.logIn(permissions: ["public_profile", "email"], from: self) { [weak self] (result, error) in
+                guard let self = self else { return }
+
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    return
+                }
+
+                guard let result = result, !result.isCancelled else {
+                    return
+                }
+                Profile.loadCurrentProfile { (profile, error) in
+                    print("fsdfasldfkjsd", profile?.firstName)
+                    print("fsdfasldfkjsd", profile?.userID)
+                    print("fsdfasldfkjsd", profile?.imageURL)
+                }
+            }
+        } else {
+        }
     }
     
     @objc func instagramSwitchValueDidChange() {
