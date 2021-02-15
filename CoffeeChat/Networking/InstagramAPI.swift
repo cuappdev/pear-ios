@@ -31,6 +31,7 @@ class InstagramAPI {
     private init() {}
     
     private func getFormBody(_ parameters: [[String : String]], _ boundary: String) -> Data {
+        
         var body = ""
         for param in parameters {
             let paramName = param["name"]!
@@ -50,31 +51,36 @@ class InstagramAPI {
                 body += "\r\n\r\n\(paramValue)"
             }
         }
+        
         return body.data(using: .utf8)!
+        
     }
     
     private func getTokenFromCallbackURL(request: URLRequest) -> String? {
+        
         let requestURLString = (request.url?.absoluteString)! as String
-        print("here is request urk string", requestURLString)
         if requestURLString.starts(with: "\(redirectURI)?code=") {
-            print("Response uri:",requestURLString)
             if let range = requestURLString.range(of: "\(redirectURI)?code=") {
                 return String(requestURLString[range.upperBound...].dropLast(2))
             }
         }
         return nil
+        
     }
     
     func authorizeApp(completion: @escaping (_ url: URL?) -> Void ) {
         
-        let urlString = "\(InstagramAPIBaseURL.displayApi.rawValue)\(InstagramAPIMethod.authorize.rawValue)?app_id=\(instagramAppID)&redirect_uri=\(redirectURIURLEncoded)&scope=user_profile,user_media&response_type=code"
+        let baseURL = "https://api.instagram.com/"
+        let oauthMethod = "oauth/authorize"
+        let scope = ["user_profile", "user_media"].joined(separator: ",")
         
-        let request = URLRequest(url: URL(string: urlString)!)
+        let urlString = "\(baseURL)\(oauthMethod)?app_id=\(instagramAppID)&redirect_uri=\(redirectURIURLEncoded)&scope=\(scope)&response_type=code"
         
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error in
+        guard let url = URL(string: urlString) else { return }
+        let requestURL = URLRequest(url: url)
+        
+        let task = URLSession.shared.dataTask(with: requestURL, completionHandler: { data, response, error in
             if let response = response {
-                print(response)
                 completion(response.url)
             }
         })
@@ -103,17 +109,11 @@ class InstagramAPI {
         
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request, completionHandler: {(data, response, error) in
-            if (error != nil) {
-                print(error!)
-            } else {
-                do { let jsonData = try JSONDecoder().decode(InstagramTestUser.self, from: data!)
-                    print(jsonData)
-                    completion(jsonData)
-                }
-                catch let error as NSError {
-                    print(error)
-                }
-                
+            do { let jsonData = try JSONDecoder().decode(InstagramTestUser.self, from: data!)
+                completion(jsonData)
+            }
+            catch {
+                print(error)
             }
         })
         dataTask.resume()
@@ -122,20 +122,17 @@ class InstagramAPI {
     
     func getInstagramUser(testUserData: InstagramTestUser, completion: @escaping (InstagramUser) -> Void) {
         
-        let urlString = "\(InstagramAPIBaseURL.graphApi.rawValue)\(testUserData.user_id)?fields=id,username,media_count&access_token=\(testUserData.access_token)"
-        let request = URLRequest(url: URL(string: urlString)!)
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request, completionHandler: {(data, response, error) in
-            if (error != nil) {
-                print(error!)
-            } else {
-                let httpResponse = response as? HTTPURLResponse
-                print(httpResponse!)
-            }
+        let baseURL = "https://graph.instagram.com/"
+        let fields = ["id", "username", "media_count"].joined(separator: ",")
+        
+        let urlString = "\(baseURL)\(testUserData.user_id)?fields=\(fields)&access_token=\(testUserData.access_token)"
+        guard let url = URL(string: urlString) else { return }
+        
+        let request = URLRequest(url: url)
+        let dataTask = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             do { let jsonData = try JSONDecoder().decode(InstagramUser.self, from: data!)
                 completion(jsonData)
-            }
-            catch let error as NSError {
+            } catch {
                 print(error)
             }
         })

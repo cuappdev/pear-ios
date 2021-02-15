@@ -408,7 +408,6 @@
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
 				30304E0823E78228006DC6C3 /* Constants.swift */,
 				D41FE86724661E260048900F /* Keys.plist */,
-				D48E321825D9E525009AB253 /* InstagramAPI.swift */,
 				D48E322225D9E732009AB253 /* WebViewController.swift */,
 			);
 			path = Supporting;
@@ -419,6 +418,7 @@
 			children = (
 				D44625012415B3D700714167 /* NetworkManager.swift */,
 				D44625032415B5B800714167 /* Endpoints.swift */,
+				D48E321825D9E525009AB253 /* InstagramAPI.swift */,
 				D47FF18A24597CA800808A9A /* Body.swift */,
 			);
 			path = Networking;
