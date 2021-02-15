@@ -26,7 +26,7 @@ class WebViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
-        InstagramAPI.shared.authorizeApp { (url) in
+        InstagramAPI.shared.authorizeApplication { (url) in
             DispatchQueue.main.async {
                 self.webView.load(URLRequest(url: url!))
             }
@@ -43,6 +43,7 @@ class WebViewController: UIViewController {
 }
 
 extension WebViewController: WKNavigationDelegate {
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let request = navigationAction.request
         InstagramAPI.shared.getTestUserIDAndToken(request: request) { [weak self] (instagramTestUser) in
@@ -52,4 +53,5 @@ extension WebViewController: WKNavigationDelegate {
         }
         decisionHandler(.allow)
     }
+    
 }

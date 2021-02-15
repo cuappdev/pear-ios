@@ -18,16 +18,6 @@ class InstagramAPI {
     private let appSecret = Keys.instagramAppSecret
     private let boundary = "boundary=\(NSUUID().uuidString)"
     
-    private enum InstagramAPIBaseURL: String {
-        case displayApi = "https://api.instagram.com/"
-        case graphApi = "https://graph.instagram.com/"
-    }
-    
-    private enum InstagramAPIMethod: String {
-        case authorize = "oauth/authorize"
-        case access_token = "oauth/access_token"
-    }
-    
     private init() {}
     
     private func getFormBody(_ parameters: [[String : String]], _ boundary: String) -> Data {
@@ -68,7 +58,7 @@ class InstagramAPI {
         
     }
     
-    func authorizeApp(completion: @escaping (_ url: URL?) -> Void ) {
+    func authorizeApplication(completion: @escaping (_ url: URL?) -> Void ) {
         
         let baseURL = "https://api.instagram.com/"
         let oauthMethod = "oauth/authorize"
@@ -100,7 +90,11 @@ class InstagramAPI {
             ["name": "code", "value": authToken]
         ]
         
-        var request = URLRequest(url: URL(string: "\(InstagramAPIBaseURL.displayApi.rawValue)\(InstagramAPIMethod.access_token.rawValue)")!)
+        let baseURL = "https://api.instagram.com/"
+        let oauthMethod = "oauth/access_token"
+        
+        guard let url = URL(string: "\(baseURL)\(oauthMethod)") else { return }
+        var request = URLRequest(url: url)
         
         let postData = getFormBody(parameters, boundary)
         request.httpMethod = "POST"
@@ -109,7 +103,8 @@ class InstagramAPI {
         
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request, completionHandler: {(data, response, error) in
-            do { let jsonData = try JSONDecoder().decode(InstagramTestUser.self, from: data!)
+            guard let data = data else { return }
+            do { let jsonData = try JSONDecoder().decode(InstagramTestUser.self, from: data)
                 completion(jsonData)
             }
             catch {
@@ -130,7 +125,8 @@ class InstagramAPI {
         
         let request = URLRequest(url: url)
         let dataTask = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
-            do { let jsonData = try JSONDecoder().decode(InstagramUser.self, from: data!)
+            guard let data = data else { return }
+            do { let jsonData = try JSONDecoder().decode(InstagramUser.self, from: data)
                 completion(jsonData)
             } catch {
                 print(error)
