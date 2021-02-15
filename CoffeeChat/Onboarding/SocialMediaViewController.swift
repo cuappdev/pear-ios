@@ -22,6 +22,14 @@ class SocialMediaViewController: UIViewController {
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
+    
+    private let button = UIButton()
+    
+    
+    var instagramApi = InstagramAPI.shared
+    var testUserData = InstagramTestUser(access_token: "", user_id: 0)
+    var instagramUser: InstagramUser?
+    var signedIn = false
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -34,6 +42,17 @@ class SocialMediaViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        button.setTitle("Add instagram", for: .normal)
+        button.layer.backgroundColor = UIColor.greenGray.cgColor
+        button.addTarget(self, action: #selector(authenticateOrSignIn), for: .touchUpInside)
+        view.addSubview(button)
+        
+        button.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 300, height: 40))
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(400)
+        }
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -229,6 +248,33 @@ class SocialMediaViewController: UIViewController {
         UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
         let homeVC = HomeViewController()
         navigationController?.pushViewController(homeVC, animated: true)
+    }
+    
+    func presentAlert() {
+        let alert = UIAlertController(title: "Signed In:", message: "with account: @\(self.instagramUser!.username)", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true)
+    }
+    
+    func presentWebViewController() {
+        let webVC = WebViewController()
+        webVC.mainVC = self
+        self.present(webVC, animated: true)
+    }
+    
+    @objc func authenticateOrSignIn() {
+        if self.testUserData.user_id == 0 {
+            print("trying to sign in")
+            presentWebViewController()
+        } else {
+            InstagramAPI.shared.getInstagramUser(testUserData: self.testUserData) { [weak self] (user) in
+                self?.instagramUser = user
+                self?.signedIn = true
+                DispatchQueue.main.async {
+                    self?.presentAlert()
+                }
+            }
+        }
     }
 
 }
