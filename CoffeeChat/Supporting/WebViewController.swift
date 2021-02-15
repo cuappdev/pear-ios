@@ -61,9 +61,7 @@ extension WebViewController: WKNavigationDelegate {
         InstagramAPI.shared.getInstagramAuthentication(request: navigationAction.request) { [weak self] instagramAuthentication in
             guard let self = self else { return }
             InstagramAPI.shared.getInstagramUser(testUserData: instagramAuthentication) { user in
-                DispatchQueue.main.async {
-                    self.dismissViewController(username: user.username)
-                }
+                self.dismissViewController(username: user.username)
             }
         }
         decisionHandler(.allow)

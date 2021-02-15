@@ -20,24 +20,25 @@ class InstagramAPI {
     
     private init() {}
     
+    /// getFormBody returns the form data generated from key value pairs
     private func getFormBody(_ parameters: [[String : String]], _ boundary: String) -> Data {
         
         var body = ""
-        for param in parameters {
-            let paramName = param["name"]!
+        for parameter in parameters {
+            let parameterName = parameter["name"]!
             body += "--\(boundary)\r\n"
-            body += "Content-Disposition:form-data; name=\"\(paramName)\""
-            if let filename = param["fileName"] {
-                let contentType = param["content-type"]!
+            body += "Content-Disposition:form-data; name=\"\(parameterName)\""
+            if let filename = parameter["fileName"] {
+                let contentType = parameter["content-type"]!
                 var fileContent: String = ""
-                do { fileContent = try String(contentsOfFile: filename, encoding: .utf8)}
+                do { fileContent = try String(contentsOfFile: filename, encoding: .utf8) }
                 catch {
                     print(error)
                 }
                 body += "; filename=\"\(filename)\"\r\n"
                 body += "Content-Type: \(contentType)\r\n\r\n"
                 body += fileContent
-            } else if let paramValue = param["value"] {
+            } else if let paramValue = parameter["value"] {
                 body += "\r\n\r\n\(paramValue)"
             }
         }
@@ -46,6 +47,7 @@ class InstagramAPI {
         
     }
     
+    /// getTokenFromCallbackURL retrieves the authorization token from callback URL
     private func getTokenFromCallbackURL(request: URLRequest) -> String? {
         
         let requestURLString = (request.url?.absoluteString)! as String
