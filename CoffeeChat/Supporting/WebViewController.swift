@@ -46,10 +46,10 @@ class WebViewController: UIViewController {
         }
     }
     
-    func dismissViewController(userData: InstagramAuthentication) {
+    func dismissViewController(username: String) {
         DispatchQueue.main.async {
             self.dismiss(animated: true) {
-                self.mainViewController.testUserData = userData
+                self.mainViewController.instagramUsername = username
             }
         }
     }
@@ -58,9 +58,13 @@ class WebViewController: UIViewController {
 extension WebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        InstagramAPI.shared.getTestUserIDAndToken(request: navigationAction.request) { [weak self] instagramTestUser in
+        InstagramAPI.shared.getInstagramAuthentication(request: navigationAction.request) { [weak self] instagramAuthentication in
             guard let self = self else { return }
-            self.dismissViewController(userData: instagramTestUser)
+            InstagramAPI.shared.getInstagramUser(testUserData: instagramAuthentication) { user in
+                DispatchQueue.main.async {
+                    self.dismissViewController(username: user.username)
+                }
+            }
         }
         decisionHandler(.allow)
     }

@@ -157,9 +157,9 @@ class SocialMediaViewController: UIViewController {
     
     @objc func instagramSwitchValueDidChange() {
         if instagramSwitch.isOn {
-            authenticateOrSignIn()
+            presentWebViewController()
         } else {
-            
+            instagramUsername = nil
         }
     }
 
@@ -168,22 +168,25 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-//        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .value(let response):
-//                    if response.success {
-//                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-//                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
-//                    } else {
-//                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-//                    }
-//                case .error:
-//                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-//                }
-//            }
-//        }
+        let facebookHandle = facebookUsername ?? ""
+        let instagramHandle = instagramUsername ?? ""
+        print("social media handles: ", facebookHandle, instagramHandle)
+        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    }
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     private func getUserSocialMedia() {
@@ -195,9 +198,11 @@ class SocialMediaViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         if let facebookUsername = response.data.facebook, facebookUsername != "" {
+                            self.facebookUsername = facebookUsername
                             self.facebookSwitch.isOn = true
                         }
                         if let instagramUsername = response.data.instagram, instagramUsername != "" {
+                            self.instagramUsername = instagramUsername
                             self.instagramSwitch.isOn = true
                         }
                     } else {
@@ -209,30 +214,10 @@ class SocialMediaViewController: UIViewController {
             }
         }
     }
-    
-    func presentAlert() {
-        let alert = UIAlertController(title: "Signed In:", message: "with account: @\(self.instagramUser!.username)", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true)
-    }
-    
+
     func presentWebViewController() {
         let webViewController = WebViewController(mainViewController: self)
         self.present(webViewController, animated: true)
-    }
-    
-    func authenticateOrSignIn() {
-        if self.testUserData.user_id == 0 {
-            presentWebViewController()
-        } else {
-            InstagramAPI.shared.getInstagramUser(testUserData: self.testUserData) { [weak self] (user) in
-                self?.instagramUser = user
-                self?.signedIn = true
-                DispatchQueue.main.async {
-                    self?.presentAlert()
-                }
-            }
-        }
     }
 
 }
