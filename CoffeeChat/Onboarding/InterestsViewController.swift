@@ -65,6 +65,7 @@ class InterestsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        getUserInterests()
         setupConstraints()
     }
 
@@ -80,12 +81,13 @@ class InterestsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update interests success response \(response)")
                     if response.success {
                         self.delegate?.nextPage(index: 2)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -130,7 +132,7 @@ class InterestsViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     guard response.success else {
-                        print("Get user interest failure")
+                        print("Network error: could not get user interests.")
                         return
                     }
                     self.selectedInterests = response.data.interests.map {
@@ -138,8 +140,8 @@ class InterestsViewController: UIViewController {
                     }
                     self.updateNext()
                     self.fadeTableView.view.reloadData()
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user interests.")
                 }
             }
         }
@@ -161,11 +163,6 @@ class InterestsViewController: UIViewController {
             nextButton.layer.shadowOpacity = 0
             nextButton.layer.shadowRadius = 0
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        getUserInterests()
-        super.viewDidAppear(animated)
     }
 
 }

@@ -71,7 +71,7 @@ struct Constants {
         static let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         static let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         static let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
-        static let backButtonSize = CGSize(width: 10, height: 18)
+        static let backButtonSize = CGSize(width: 25, height: 25)
         static let mainButtonSize = CGSize(width: 225, height: 54)
     }
     
@@ -81,13 +81,15 @@ struct Constants {
         static let organizations = [
             Group(name: "Cornell AppDev", imageName: "appdev"),
             Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
-            Group(name: "Under Represented User Experience (URUX)", imageName: "urux")
+            Group(name: "Under Represented User Experience (URUX)", imageName: "urux"),
+            Group(name: "Women in Computing at Cornell (WICC)", imageName: "wicc")
         ]
         
         static let organizationsMap: [String: Group] = [
             "Cornell AppDev": Group(name: "Cornell AppDev", imageName: "appdev"),
             "The Milstein Program in Technology in Humanity": Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
-            "Under Represented User Experience (URUX)": Group(name: "Underrepresented User Experience (URUX)", imageName: "urux")
+            "Under Represented User Experience (URUX)": Group(name: "Underrepresented User Experience (URUX)", imageName: "urux"),
+            "Women in Computing at Cornell (WICC)": Group(name: "Women in Computing at Cornell (WICC)", imageName: "wicc")
         ]
         
         static let interests: [Interest] = [

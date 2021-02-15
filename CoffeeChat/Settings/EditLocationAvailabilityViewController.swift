@@ -112,7 +112,7 @@ class EditLocationAvailabilityViewController: UIViewController {
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -135,17 +135,18 @@ class EditLocationAvailabilityViewController: UIViewController {
         let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let locations = ctownLocations + campusLocations
-        print(locations)
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
                 DispatchQueue.main.async {
-                    print("Update location availabilities success")
+                    guard value.success else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        return
+                    }
                     self.navigationController?.popViewController(animated: true)
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -179,7 +180,10 @@ class EditLocationAvailabilityViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    print("Network error: could not get user availabilities.")
+                    return
+                }
                 DispatchQueue.main.async {
                     self.savedLocations = value.data.preferredLocations.map(\.name)
                     for location in value.data.preferredLocations {
@@ -191,8 +195,8 @@ class EditLocationAvailabilityViewController: UIViewController {
                     }
                     self.locationsCollectionView.reloadData()
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                print("Network error: could not get user availabilities.")
             }
         }
     }

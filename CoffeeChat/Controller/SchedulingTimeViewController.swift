@@ -299,7 +299,7 @@ class SchedulingTimeViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -323,7 +323,7 @@ class SchedulingTimeViewController: UIViewController {
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
         timeCollectionView.clipsToBounds = false
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
         timeCollectionView.isScrollEnabled = false
 
         timeScrollView = FadeWrapperView(UIScrollView(), fadeColor: .backgroundLightGreen)
@@ -376,8 +376,7 @@ class SchedulingTimeViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
             make.leading.equalToSuperview().inset(backButtonPadding)
-            make.width.equalTo(14)
-            make.height.equalTo(24)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
 
         titleLabel.snp.makeConstraints { make in
@@ -562,18 +561,17 @@ class SchedulingTimeViewController: UIViewController {
           savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .value(let response):
-                if response.success {
-                    print("Successfully updated user's time availabilities")
-                    DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
                         self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                } else {
-                    print("Was not successful when updating user's time availabilities")
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error(let error):
-                print("Error when updating time availabilities: \(error)")
             }
         }
     }
@@ -624,7 +622,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     private func configuredDayCell(for indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = dayCollectionView.dequeueReusableCell(
-                withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId,
+                withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier,
                 for: indexPath) as? SchedulingDayCollectionViewCell else {
             return UICollectionViewCell()
         }
@@ -648,7 +646,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
     private func configuredTimeCell(for indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = timeCollectionView.dequeueReusableCell(
-                withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId,
+                withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier,
                 for: indexPath) as? SchedulingTimeCollectionViewCell else {
             return UICollectionViewCell()
         }
@@ -784,22 +782,20 @@ extension SchedulingTimeViewController: MessageAlertViewDelegate {
 
         NetworkManager.shared.cancelMatch(matchID: match.matchID).observe { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .value(let value):
-                if value.success {
-                    print("Succesfully cancelled matches")
-                } else {
-                    print("Was not sucessfull cancelling matches")
-                }
-            case .error(let error):
-                print("Couldn't cancel match: \(error)")
-            }
-
             DispatchQueue.main.async {
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                switch result {
+                case .value(let value):
+                    if value.success {
+                        print("Succesfully cancelled matches")
+                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        print("Network error: could not cancel match.")
+                    }
+                case .error:
+                    print("Network error: could not cancel match.")
+                }
             }
         }
-
     }
 
 }

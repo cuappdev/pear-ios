@@ -12,6 +12,8 @@ class OnboardingDropdownTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let label = UILabel()
+    
+    static let reuseIdentifier = "OnboardingDropdownTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

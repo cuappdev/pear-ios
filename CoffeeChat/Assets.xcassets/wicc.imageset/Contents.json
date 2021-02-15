@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "leftArrow1x.png",
+      "filename" : "wicc1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "leftArrow2x.png",
+      "filename" : "wicc2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "leftArrow3x.png",
+      "filename" : "wicc3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

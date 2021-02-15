@@ -15,7 +15,7 @@ class GroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups: [SimpleOnboardingCell] = []
+    private var groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
     private var selectedGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -102,7 +102,8 @@ class GroupsViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
 
         displayedGroups = groups
-
+        
+        getUserGroups()
         setupConstraints()
     }
 
@@ -183,12 +184,13 @@ class GroupsViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update organizations success response \(response)")
                     if response.success {
                         self.delegate?.nextPage(index: 3)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -213,25 +215,14 @@ class GroupsViewController: UIViewController {
                         self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
                         self.displayedGroups = self.groups
                         self.fadeTableView.view.reloadData()
+                    } else {
+                        print("Network error: could not get all groups.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get all groups.")
                 }
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        getAllGroups()
-        groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
-        displayedGroups = groups
-        fadeTableView.view.reloadData()
-        getUserGroups()
     }
 
     private func getUserGroups() {
@@ -246,9 +237,11 @@ class GroupsViewController: UIViewController {
                         self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
                         self.fadeTableView.view.reloadData()
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user groups.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user groups.")
                 }
             }
         }

@@ -169,8 +169,7 @@ class EditDemographicsViewController: UIViewController {
         let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
 
         backButton.snp.makeConstraints { make in
-            make.width.equalTo(12)
-            make.height.equalTo(22)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
 
         editScrollView.snp.makeConstraints { make in
@@ -234,9 +233,11 @@ class EditDemographicsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         self.majorDropdownView.setTableData(tableData: response.data)
+                    } else {
+                        print("Network error: could not get majors.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get majors.")
                 }
             }
         }
@@ -264,11 +265,14 @@ class EditDemographicsViewController: UIViewController {
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
-                            print("Update demographics success response \(response)")
-                            ImageCache.default.removeImage(forKey: self.user.googleID)
-                            self.navigationController?.popViewController(animated: true)
-                        case .error(let error):
-                            print(error)
+                            if response.success {
+                                ImageCache.default.removeImage(forKey: self.user.googleID)
+                                self.navigationController?.popViewController(animated: true)
+                            } else {
+                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            }
+                        case .error:
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }
                     }
                 }

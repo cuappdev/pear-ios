@@ -37,7 +37,7 @@
 		50038699252E74E80036A3E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50038698252E74E80036A3E6 /* SettingsViewController.swift */; };
 		5029873825389E4700E52EDA /* PausePearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5029873725389E4700E52EDA /* PausePearView.swift */; };
 		5029873E253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */; };
-		50298746253C043F00E52EDA /* ConnectSocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */; };
+		50298746253C043F00E52EDA /* EditSocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50298745253C043F00E52EDA /* EditSocialMediaViewController.swift */; };
 		5030DCF52532B5F600374F7B /* SettingOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCF42532B5F600374F7B /* SettingOption.swift */; };
 		5030DCFA2532C1D300374F7B /* SettingOptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCF92532C1D300374F7B /* SettingOptionTableViewCell.swift */; };
 		5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */; };
@@ -82,6 +82,8 @@
 		D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D48BB01523DE099800E88129 /* LaunchScreen.storyboard */; };
 		D48BB02223DE099900E88129 /* CoffeeChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02123DE099900E88129 /* CoffeeChatTests.swift */; };
 		D48BB02D23DE099900E88129 /* CoffeeChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */; };
+		D48E31B125D95541009AB253 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48E31B025D95541009AB253 /* LoadingViewController.swift */; };
+		D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48E31D025D9682B009AB253 /* UIAlertController.swift */; };
 		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
 		D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */; };
@@ -146,7 +148,7 @@
 		50038698252E74E80036A3E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5029873725389E4700E52EDA /* PausePearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausePearView.swift; sourceTree = "<group>"; };
 		5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeAvailabilityViewController.swift; sourceTree = "<group>"; };
-		50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectSocialMediaViewController.swift; sourceTree = "<group>"; };
+		50298745253C043F00E52EDA /* EditSocialMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSocialMediaViewController.swift; sourceTree = "<group>"; };
 		5030DCF42532B5F600374F7B /* SettingOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingOption.swift; sourceTree = "<group>"; };
 		5030DCF92532C1D300374F7B /* SettingOptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingOptionTableViewCell.swift; sourceTree = "<group>"; };
 		5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearViewController.swift; sourceTree = "<group>"; };
@@ -196,6 +198,8 @@
 		D48BB02823DE099900E88129 /* CoffeeChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffeeChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D48BB02C23DE099900E88129 /* CoffeeChatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeChatUITests.swift; sourceTree = "<group>"; };
 		D48BB02E23DE099900E88129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D48E31B025D95541009AB253 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		D48E31D025D9682B009AB253 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
 		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUserTableViewCell.swift; sourceTree = "<group>"; };
@@ -287,6 +291,7 @@
 				30304E1323F4BCD4006DC6C3 /* UIFont+Shared.swift */,
 				D474105525C6E7CE0062E2B4 /* UIImage.swift */,
 				D474105A25C6EA350062E2B4 /* String.swift */,
+				D48E31D025D9682B009AB253 /* UIAlertController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -325,11 +330,13 @@
 		D474108F25C729780062E2B4 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				D48E31FE25D9B799009AB253 /* Cells */,
 				D4C8F58223EFC97F007722F6 /* OnboardingPageViewController.swift */,
+				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
 				7E06B84F2543F15900D6B505 /* InterestsViewController.swift */,
 				D41FC30423F112B300F8673A /* GroupsViewController.swift */,
 				D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */,
-				D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */,
+				D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */,
 				D4FFD107252BE0780036C4B2 /* SocialMediaViewController.swift */,
 			);
 			path = Onboarding;
@@ -347,7 +354,6 @@
 				305064522403960F00C5E491 /* SchedulingDayCollectionViewCell.swift */,
 				305064542403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift */,
 				4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */,
-				D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */,
 				D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */,
 				D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */,
 				D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */,
@@ -358,23 +364,16 @@
 		D480EC0023E2434200513063 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */,
-				5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
-				4F12A70F2419925C00AEA21C /* EditingViewController.swift */,
 				D480EC0523E2470000513063 /* MatchViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
 				D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */,
-				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
 				303F81A124394F95002937CD /* ProfileMenuViewController.swift */,
-				5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */,
-				50038698252E74E80036A3E6 /* SettingsViewController.swift */,
-				50298745253C043F00E52EDA /* ConnectSocialMediaViewController.swift */,
-				D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */,
 				D429619F2526246600C677C3 /* HomeViewController.swift */,
 				D42961A12526253B00C677C3 /* TabPageViewController.swift */,
 				D498CFE125265FB200F2E2ED /* CommunityViewController.swift */,
+				D48E31B025D95541009AB253 /* LoadingViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -442,6 +441,7 @@
 		D48BB00923DE099200E88129 /* CoffeeChat */ = {
 			isa = PBXGroup;
 			children = (
+				D48E320E25D9CFF7009AB253 /* Settings */,
 				D474108F25C729780062E2B4 /* Onboarding */,
 				D4349977253C14190024A992 /* Layouts */,
 				D4D3EFF023FE544D00229587 /* Utilities */,
@@ -478,6 +478,28 @@
 				D48BB02E23DE099900E88129 /* Info.plist */,
 			);
 			path = CoffeeChatUITests;
+			sourceTree = "<group>";
+		};
+		D48E31FE25D9B799009AB253 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		D48E320E25D9CFF7009AB253 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */,
+				50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */,
+				5029873D253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift */,
+				4F12A70F2419925C00AEA21C /* EditingViewController.swift */,
+				50038698252E74E80036A3E6 /* SettingsViewController.swift */,
+				5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */,
+				50298745253C043F00E52EDA /* EditSocialMediaViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		D4D3EFF023FE544D00229587 /* Utilities */ = {
@@ -819,10 +841,11 @@
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				4F811F42253A4F1300F5A15C /* FadeWrapperView.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
-				50298746253C043F00E52EDA /* ConnectSocialMediaViewController.swift in Sources */,
+				50298746253C043F00E52EDA /* EditSocialMediaViewController.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
 				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
 				D47FF1852459424C00808A9A /* Response.swift in Sources */,
+				D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
@@ -830,6 +853,7 @@
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
 				5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */,
 				305064552403961D00C5E491 /* SchedulingTimeCollectionViewCell.swift in Sources */,
+				D48E31B125D95541009AB253 /* LoadingViewController.swift in Sources */,
 				30E3A3C5245678EA0049D09B /* Time+Helper.swift in Sources */,
 				D42961A22526253B00C677C3 /* TabPageViewController.swift in Sources */,
 				4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */,
@@ -1061,7 +1085,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.2;
+				CURRENT_PROJECT_VERSION = 1.1.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1082,7 +1106,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.2;
+				CURRENT_PROJECT_VERSION = 1.1.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = CoffeeChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;

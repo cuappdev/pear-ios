@@ -100,7 +100,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         dayCollectionView.backgroundColor = .clear
         dayCollectionView.dataSource = self
         dayCollectionView.delegate = self
-        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId)
+        dayCollectionView.register(SchedulingDayCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier)
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
@@ -120,7 +120,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         timeCollectionView.backgroundColor = .clear
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
-        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId)
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
         view.addSubview(timeCollectionView)
 
         setupTimeSections()
@@ -135,7 +135,7 @@ class EditTimeAvailabilityViewController: UIViewController {
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -164,13 +164,15 @@ class EditTimeAvailabilityViewController: UIViewController {
         NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    return
+                }
                 DispatchQueue.main.async {
-                    print("Update time availabilities success")
                     self.navigationController?.popViewController(animated: true)
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
     }
@@ -180,7 +182,10 @@ class EditTimeAvailabilityViewController: UIViewController {
         NetworkManager.shared.getUser(netId: netId).observe { response in
             switch response {
             case .value(let value):
-                guard value.success else { return }
+                guard value.success else {
+                    print("Network error: could not get time availabilities.")
+                    return
+                }
                 var userAvailabilities: [String: [String]] = [:]
                 for availability in value.data.availabilities {
                     userAvailabilities[availability.day.localizedCapitalized] = availability.times.map({Time.floatToStringTime(time: $0)})
@@ -191,8 +196,8 @@ class EditTimeAvailabilityViewController: UIViewController {
                     self.dayCollectionView.reloadData()
                     self.timeCollectionView.reloadData()
                 }
-            case .error(let error):
-                print(error)
+            case .error:
+                print("Network error: could not get time availabilities.")
             }
         }
     }
@@ -265,7 +270,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.dayCellReuseId, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
             let day = daysAbbrev[indexPath.item]
             cell.configure(for: day)
             if let day = daysDict[day] {
@@ -281,7 +286,7 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
 
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.row]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.timeCellReuseId, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
         switch item {
         case .header(let header):
             cell.configure(for: header, isHeader: true)

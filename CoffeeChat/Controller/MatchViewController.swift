@@ -135,7 +135,7 @@ class MatchViewController: UIViewController {
 
     private func getPairThen(_ closure: @escaping (User) -> Void) {
         guard let pairNetId = match.pair else {
-            print("Was unable to get the pair's netid from the match!")
+            print("Unable to get the pair's netid from the match.")
             return
         }
 
@@ -143,14 +143,14 @@ class MatchViewController: UIViewController {
             switch response {
             case .value(let result):
                 guard result.success else {
-                    print("Response not successful when getting the user's pair")
+                    print("Network error: could not get user's pair.")
                     return
                 }
                 DispatchQueue.main.async {
                     closure(result.data)
                 }
-            case .error(let error):
-                print("Encountered error when getting the user's pair: \(error)")
+            case .error:
+                print("Network error: could not get user's pair.")
             }
         }
     }

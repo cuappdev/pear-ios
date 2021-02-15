@@ -242,8 +242,7 @@ class SchedulingPlacesViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel.snp.centerY)
             make.leading.equalToSuperview().inset(backButtonPadding)
-            make.width.equalTo(14)
-            make.height.equalTo(24)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
     }
 
@@ -274,15 +273,14 @@ class SchedulingPlacesViewController: UIViewController {
             case .value(let value):
                 if value.success {
                     UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                    print("Successfully updated match availabilities")
                     DispatchQueue.main.async {
                         self.navigationController?.pushViewController(HomeViewController(), animated: true)
                     }
                 } else {
-                    print("Failed to update match availabilities")
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error(let error):
-                print("Error when updating match availabilities: \(error)")
+            case .error:
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
 

@@ -23,10 +23,9 @@ class OnboardingTableViewCell: UITableViewCell {
     /// The type of item the cell was last showing. Used to determine if the cell needs to relayout its views for
     /// the new item type.
     private var lastShownItem: LastShownItem = .none
-
     // Whether the cell should change its appearence when selected
     var shouldSelectionChangeAppearence = true
-
+    
     static let reuseIdentifier = "OnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

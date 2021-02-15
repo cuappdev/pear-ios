@@ -11,7 +11,7 @@ import UIKit
 class AboutPearTableViewCell: UITableViewCell {
 
     private let paragraphLabel = UILabel()
-    static let aboutReuseId = "aboutReuseId"
+    static let reuseIdentifier = "aboutReuseId"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

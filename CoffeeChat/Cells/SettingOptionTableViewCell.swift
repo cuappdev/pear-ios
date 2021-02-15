@@ -12,9 +12,9 @@ class SettingOptionTableViewCell: UITableViewCell {
 
     private let optionImageView = UIImageView()
     private let optionLabel = UILabel()
-    static let settingsReuseIdentifier = "settingsReuseIdentifier"
     private let switchView = UISwitch()
 
+    static let reuseIdentifier = "SettingsReuseIdentifier"
     weak var delegate: PausePearDelegate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

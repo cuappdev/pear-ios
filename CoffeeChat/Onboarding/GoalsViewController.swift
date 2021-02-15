@@ -86,12 +86,8 @@ class GoalsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        setupConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         getUserGoals()
+        setupConstraints()
     }
 
     private func setupConstraints() {
@@ -153,17 +149,18 @@ class GoalsViewController: UIViewController {
     @objc func nextButtonPressed() {
         NetworkManager.shared.updateUserGoals(goals: selectedGoals).observe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update goals success response \(response)")
-                    if response.success {
-                        self.delegate?.nextPage(index: 4)
+                    DispatchQueue.main.async {
+                        if response.success {
+                            self.delegate?.nextPage(index: 4)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            }
         }
     }
 
@@ -183,9 +180,11 @@ class GoalsViewController: UIViewController {
                         self.selectedGoals = userGoals
                         self.tableView.reloadData()
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user goals.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user goals.")
                 }
             }
         }

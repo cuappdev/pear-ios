@@ -14,17 +14,12 @@ protocol OnboardingPageDelegate: class {
     func backPage(index: Int)
 }
 
+/// OnboardingPageViewController controls all the pages inside our onboarding flow and helps coordinate forward and backward actions in onboarding
 class OnboardingPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
     private let backgroundImage = UIImageView()
-    private var demographicsViewController: DemographicsViewController!
-    private var goalsViewController: GoalsViewController!
-    private var groupsViewController: GroupsViewController!
-    private var interestsViewController: InterestsViewController!
-    private var talkingPointsViewController: TalkingPointsViewController!
     private var onboardingPages = [UIViewController]()
-    private var socialMediaViewController: SocialMediaViewController!
 
     // MARK: - Private Data Vars
     private var backgroundXPosition: CGFloat = UIScreen.main.bounds.width
@@ -47,12 +42,12 @@ class OnboardingPageViewController: UIPageViewController {
         view.insertSubview(backgroundImage, at: 0)
         backgroundImage.frame = CGRect(x: backgroundXPosition, y: 0, width: screenWidth, height: screenHeight)
 
-        demographicsViewController = DemographicsViewController(delegate: self)
-        interestsViewController = InterestsViewController(delegate: self)
-        talkingPointsViewController = TalkingPointsViewController(delegate: self)
-        groupsViewController = GroupsViewController(delegate: self)
-        goalsViewController = GoalsViewController(delegate: self)
-        socialMediaViewController = SocialMediaViewController(delegate: self)
+        let demographicsViewController = DemographicsViewController(delegate: self)
+        let interestsViewController = InterestsViewController(delegate: self)
+        let talkingPointsViewController = TalkingPointsViewController(delegate: self)
+        let groupsViewController = GroupsViewController(delegate: self)
+        let goalsViewController = GoalsViewController(delegate: self)
+        let socialMediaViewController = SocialMediaViewController(delegate: self)
         onboardingPages = [
             demographicsViewController,
             interestsViewController,

@@ -52,15 +52,18 @@ class CommunityViewController: UIViewController {
 
     private func getUsers() {
         NetworkManager.shared.getUsers().observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else { return }
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                    guard value.success else {
+                        print("Network error: could not get users.")
+                        return
+                    }
                     self.users = value.data
                     self.communityTableView.reloadData()
+                case .error:
+                    print("Network error: could not get users.")
                 }
-            case .error(let error):
-                print(error)
             }
         }
     }
@@ -81,7 +84,8 @@ class CommunityViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        getUsers()
+        // TODO: Comment out for now while backend fixes server issues
+//        getUsers()
     }
 }
 
@@ -107,24 +111,28 @@ extension CommunityViewController: UISearchBarDelegate {
 
     private func searchUsers(query: String) {
         NetworkManager.shared.searchUsers(query: query).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else { return }
-                DispatchQueue.main.async {
-                    self.users = value.data
-                    self.communityTableView.reloadData()
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                        guard value.success else {
+                            print("Network error: could not search users")
+                            return
+                        }
+                        self.users = value.data
+                        self.communityTableView.reloadData()
+                case .error:
+                    print("Network error: could not search users")
                 }
-            case .error(let error):
-                print(error)
             }
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // TODO: Comment out for now while backend fixes server issues
         if searchText.isEmpty {
-            getUsers()
+//            getUsers()
         } else {
-            searchUsers(query: searchText)
+//            searchUsers(query: searchText)
         }
     }
 

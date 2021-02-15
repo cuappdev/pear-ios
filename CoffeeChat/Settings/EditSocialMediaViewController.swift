@@ -1,5 +1,5 @@
 //
-//  ConnectSocialMediaViewController.swift
+//  EditSocialMediaViewController.swift
 //  CoffeeChat
 //
 //  Created by Amy Chin Siu Huang on 10/18/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConnectSocialMediaViewController: UIViewController {
+class EditSocialMediaViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -95,7 +95,7 @@ class ConnectSocialMediaViewController: UIViewController {
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -124,9 +124,11 @@ class ConnectSocialMediaViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -151,9 +153,11 @@ class ConnectSocialMediaViewController: UIViewController {
                         if let instagram = response.data.instagram {
                             self.instaTextField.text = instagram
                         }
+                    } else {
+                        print("Network error: could not get user.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user.")
                 }
             }
         }

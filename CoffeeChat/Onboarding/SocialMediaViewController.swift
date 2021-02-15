@@ -88,8 +88,8 @@ class SocialMediaViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        setupConstraints()
         getUserSocialMedia()
+        setupConstraints()
     }
 
     private func setSocialMediaTextField(socialMediaTextField: UITextField) {
@@ -187,13 +187,14 @@ class SocialMediaViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
-                    print("Update social media success response \(response)")
                     if response.success {
                         UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
                         self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
@@ -214,9 +215,11 @@ class SocialMediaViewController: UIViewController {
                             self.instagramTextField.text = instagram
                         }
                         self.updateNext()
+                    } else {
+                        print("Network error: could not get user social media.")
                     }
-                case .error(let error):
-                    print(error)
+                case .error:
+                    print("Network error: could not get user social media.")
                 }
             }
         }

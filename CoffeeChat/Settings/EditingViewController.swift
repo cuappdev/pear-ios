@@ -222,10 +222,9 @@ class EditingViewController: UIViewController {
             switch response {
             case .value(let result):
                 guard result.success else {
-                    print("Response not successful when getting interests for user")
+                    print("Network error: could not get interests.")
                     return
                 }
-
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
                 let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
                 self.sections = [
@@ -236,7 +235,7 @@ class EditingViewController: UIViewController {
                     self.tableView.reloadData()
                 }
             case .error:
-                print("Error when getting groups for user")
+                print("Network error: could not get interests.")
             }
         }
     }
@@ -250,7 +249,7 @@ class EditingViewController: UIViewController {
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -293,30 +292,32 @@ class EditingViewController: UIViewController {
         if isShowingGroups {
             NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { [weak self] result in
                 guard let self = self else { return }
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        print("Groups updated successfully")
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        print("Groups couldn't be updated")
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        if response.success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error:
-                    print("Networking error when trying to update groups")
                 }
             }
         } else {
             NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        print("Interests updated successfully")
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        print("Interests couldn't be updated")
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        if response.success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        }
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                case .error:
-                    print("Networking error when trying to update interests")
                 }
             }
         }
@@ -651,7 +652,7 @@ private class EditFooterView: UIButton {
 
     private func setupConstraints() {
         arrowView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 9, height: 18))
+            make.size.equalTo(CGSize(width: 20, height: 20))
         }
 
         stackView.snp.makeConstraints { make in

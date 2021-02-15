@@ -45,7 +45,7 @@ class SettingsViewController: UIViewController {
         settingsTableView.allowsSelection = true
         settingsTableView.delegate = self
         settingsTableView.dataSource = self
-        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier)
+        settingsTableView.register(SettingOptionTableViewCell.self, forCellReuseIdentifier: SettingOptionTableViewCell.reuseIdentifier)
         view.addSubview(settingsTableView)
 
         setupNavigationBar()
@@ -76,7 +76,7 @@ class SettingsViewController: UIViewController {
         ]
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 10, height: 20))
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -111,8 +111,8 @@ class SettingsViewController: UIViewController {
         navigationController?.pushViewController(EditLocationAvailabilityViewController(), animated: true)
     }
 
-    private func pushConnectSocialMediaViewController() {
-        navigationController?.pushViewController(ConnectSocialMediaViewController(), animated: true)
+    private func pushEditSocialMediaViewController() {
+        navigationController?.pushViewController(EditSocialMediaViewController(), animated: true)
     }
 
 }
@@ -125,7 +125,7 @@ extension SettingsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =
-                settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.settingsReuseIdentifier,
+                settingsTableView.dequeueReusableCell(withIdentifier: SettingOptionTableViewCell.reuseIdentifier,
                         for: indexPath) as? SettingOptionTableViewCell else { return UITableViewCell() }
         let setting = settingOptions[indexPath.row]
         cell.configure(for: setting)
@@ -143,7 +143,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Edit Location Availabilities" {
             pushEditLocationAvailabilitiesViewController()
         } else if option.text == "Connect Social Media" {
-            pushConnectSocialMediaViewController()
+            pushEditSocialMediaViewController()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userNetId)
