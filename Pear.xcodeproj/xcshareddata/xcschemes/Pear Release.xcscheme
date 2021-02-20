@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D48BB00623DE099200E88129"
-               BuildableName = "Coffee Chat.app"
-               BlueprintName = "CoffeeChat"
-               ReferencedContainer = "container:CoffeeChat.xcodeproj">
+               BuildableName = "Pear.app"
+               BlueprintName = "Pear"
+               ReferencedContainer = "container:Pear.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D48BB00623DE099200E88129"
-            BuildableName = "Coffee Chat.app"
-            BlueprintName = "CoffeeChat"
-            ReferencedContainer = "container:CoffeeChat.xcodeproj">
+            BuildableName = "Pear.app"
+            BlueprintName = "Pear"
+            ReferencedContainer = "container:Pear.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D48BB00623DE099200E88129"
-            BuildableName = "Coffee Chat.app"
-            BlueprintName = "CoffeeChat"
-            ReferencedContainer = "container:CoffeeChat.xcodeproj">
+            BuildableName = "Pear.app"
+            BlueprintName = "Pear"
+            ReferencedContainer = "container:Pear.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
