@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:CoffeeChat.xcodeproj">
+      location = "self:/Users/lucyxu/Desktop/pear/pear-ios/Pear.xcodeproj">
    </FileRef>
 </Workspace>

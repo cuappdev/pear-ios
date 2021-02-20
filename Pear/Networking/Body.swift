@@ -5,11 +5,9 @@
 //  Created by Lucy Xu on 4/29/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
-
 import Foundation
 
 // MARK: - Request Bodies
-
 struct UserSessionBody: Codable {
 
     let idToken: String

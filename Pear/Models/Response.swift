@@ -1,9 +1,9 @@
 //
 //  Response.swift
-//  CoffeeChat
+//  Pear
 //
-//  Created by Lucy Xu on 4/29/20.
-//  Copyright © 2020 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 2/20/21.
+//  Copyright © 2021 cuappdev. All rights reserved.
 //
 
 import Foundation
