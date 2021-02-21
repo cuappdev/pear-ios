@@ -115,7 +115,12 @@ class HomeViewController: UIViewController {
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
         self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
-        let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
+        let firstActiveMatch = newUser.matches.filter({
+                                                        print($0)
+                                                        return $0.status != "inactive"
+            
+        }).first
+        print("firstActiveMatch", firstActiveMatch)
         self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
     }
 

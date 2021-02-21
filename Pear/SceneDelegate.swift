@@ -31,6 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             signIn.restorePreviousSignIn()
             
             let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+//            let onboardingCompleted = false
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
             let rootVC = onboardingCompleted ?
                 HomeViewController() :

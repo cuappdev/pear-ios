@@ -60,7 +60,8 @@ class LoginViewController: UIViewController {
             delegate: self,
             mainMessage: Constants.Alerts.LoginFailure.message,
             actionMessage: "Try Again",
-            dismissMessage: "" // Empty string because there is no dismiss option for alert.
+            dismissMessage: "", // Empty string because there is no dismiss option for alert.
+            alertImageName: "sadPear"
         )
         errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
@@ -112,7 +113,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
            let userEmail = user.profile.email,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 25) {
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 40) {
             let profileURLData = try? Data(contentsOf: userProfilePictureURL)
             if let profileURLData = profileURLData,
                let profileImage = UIImage(data: profileURLData),

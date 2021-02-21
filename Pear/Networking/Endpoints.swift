@@ -20,12 +20,16 @@ extension Endpoint {
         #else
             Endpoint.config.scheme = "https"
             Endpoint.config.host = baseURL
+//            Endpoint.config.scheme = "http"
+//            Endpoint.config.port = 5000
+//            Endpoint.config.host = "localhost"
         #endif
         Endpoint.config.commonPath = "/api/v1"
     }
 
     static var standardHeaders: [String: String] {
         if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
+            print(token)
             return ["Authorization": "Bearer \(token)"]
         } else {
             return [:]

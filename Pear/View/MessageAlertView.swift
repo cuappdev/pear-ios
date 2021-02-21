@@ -26,14 +26,16 @@ class MessageAlertView: UIView {
     private var dismissMessage: String = ""
     private var hasDismissOption: Bool = false
     private var mainMessage: String = ""
+    private var alertImageName: String = ""
 
-    init(delegate: MessageAlertViewDelegate, mainMessage: String, actionMessage: String, dismissMessage: String) {
+    init(delegate: MessageAlertViewDelegate, mainMessage: String, actionMessage: String, dismissMessage: String, alertImageName: String) {
         super.init(frame: .zero)
         self.delegate = delegate
         self.mainMessage = mainMessage
         self.actionMessage = actionMessage
         self.dismissMessage = dismissMessage
         self.hasDismissOption = dismissMessage != ""
+        self.alertImageName = alertImageName
         setupViews()
         setupConstraints()
     }
@@ -47,7 +49,7 @@ class MessageAlertView: UIView {
 
         layer.cornerRadius = 36
 
-        alertImageView.image = UIImage(named: "sadPear")
+        alertImageView.image = UIImage(named: alertImageName)
         addSubview(alertImageView)
 
         messageLabel.text = mainMessage

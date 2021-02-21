@@ -19,7 +19,7 @@ class SocialMediaViewController: UIViewController {
     private var facebookTextField = UITextField()
     private var instagramTextField = UITextField()
     private let nextButton = UIButton()
-    private let skipButton = UIButton()
+//    private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
 
@@ -75,18 +75,18 @@ class SocialMediaViewController: UIViewController {
         nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
+        nextButton.backgroundColor = .backgroundOrange
         nextButton.layer.cornerRadius = 26
-        nextButton.isEnabled = false
+        nextButton.isEnabled = true
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        skipButton.titleLabel?.font = ._16CircularStdMedium
-        skipButton.setTitle("Skip", for: .normal)
-        skipButton.setTitleColor(.greenGray, for: .normal)
-        skipButton.backgroundColor = .none
-        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
-        view.addSubview(skipButton)
+//        skipButton.titleLabel?.font = ._16CircularStdMedium
+//        skipButton.setTitle("Skip", for: .normal)
+//        skipButton.setTitleColor(.greenGray, for: .normal)
+//        skipButton.backgroundColor = .none
+//        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+//        view.addSubview(skipButton)
 
         getUserSocialMedia()
         setupConstraints()
@@ -151,28 +151,28 @@ class SocialMediaViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
 
-        skipButton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 86, height: 20))
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
-        }
+//        skipButton.snp.makeConstraints { make in
+//            make.size.equalTo(CGSize(width: 86, height: 20))
+//            make.centerX.equalToSuperview()
+//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
+//        }
     }
 
     // MARK: - Next and Previous Buttons
     private func updateNext() {
         guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
         let isSocialMediaEntered =
-            instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
-            facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty
+            !instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
+            !facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty
         nextButton.isEnabled = isSocialMediaEntered
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        skipButton.isEnabled = !nextButton.isEnabled
-        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
-        skipButton.setTitleColor(skipButtonColor, for: .normal)
+//        skipButton.isEnabled = !nextButton.isEnabled
+//        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
+//        skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {
-        updateNext()
+        // updateNext()
     }
 
     @objc func backButtonPressed() {
@@ -214,7 +214,7 @@ class SocialMediaViewController: UIViewController {
                         if let instagram = response.data.instagram {
                             self.instagramTextField.text = instagram
                         }
-                        self.updateNext()
+//                        self.updateNext()
                     } else {
                         print("Network error: could not get user social media.")
                     }

@@ -495,7 +495,8 @@ class SchedulingTimeViewController: UIViewController {
             delegate: self,
             mainMessage: Constants.Alerts.NoTimesWork.message,
             actionMessage: Constants.Alerts.NoTimesWork.action,
-            dismissMessage: Constants.Alerts.NoTimesWork.dismiss
+            dismissMessage: Constants.Alerts.NoTimesWork.dismiss,
+            alertImageName: "sadPear"
         )
         errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
