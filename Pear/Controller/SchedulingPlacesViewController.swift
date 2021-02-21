@@ -302,11 +302,37 @@ class SchedulingPlacesViewController: UIViewController {
     // MARK: - Error Message
     private func setupSendEmailMessageAlert() {
         messageAlertView = MessageAlertView(
-            delegate: self,
             mainMessage: "Send your Pear a personal note.",
             actionMessage: "Send an email",
             dismissMessage: "Skip",
-            alertImageName: "happyPear"
+            alertImageName: "happyPear",
+            removeFunction: { isDismiss in
+                if isDismiss {
+                    let matchEmail = "\(self.match.pair ?? "")@cornell.edu"
+                    let emailSubject = "Hello%20from%20your%20pear!"
+                    let emailBody = "Hi!"
+                    let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
+                    if let googleUrl = URL(string: googleUrlString) {
+                        // show alert to choose app
+                        if UIApplication.shared.canOpenURL(googleUrl) {
+                            if #available(iOS 10.0, *) {
+                                UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
+                            } else {
+                                UIApplication.shared.openURL(googleUrl)
+                            }
+                        }
+                    }
+                }
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.messageVisualEffectView.alpha = 0
+                    self.messageAlertView.alpha = 0
+                    self.messageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }, completion: { _ in
+                    self.messageAlertView.removeFromSuperview()
+                    self.messageVisualEffectView.removeFromSuperview()
+                })
+            }
         )
         blurEffect = UIBlurEffect(style: .light)
         messageVisualEffectView = UIVisualEffectView(effect: blurEffect)
@@ -450,39 +476,6 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
-    }
-
-}
-
-// MARK: - MessageAlertViewDelegate
-extension SchedulingPlacesViewController: MessageAlertViewDelegate {
-
-    func removeAlertView(isDismiss: Bool) {
-        if !isDismiss {
-            let matchEmail = "\(match.pair ?? "")@cornell.edu"
-            let emailSubject = "Hello%20from%20your%20pear!"
-            let emailBody = "Hi!"
-            let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
-            if let googleUrl = URL(string: googleUrlString) {
-                // show alert to choose app
-                if UIApplication.shared.canOpenURL(googleUrl) {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
-                    } else {
-                        UIApplication.shared.openURL(googleUrl)
-                    }
-                }
-            }
-        }
-        navigationController?.pushViewController(HomeViewController(), animated: true)
-        UIView.animate(withDuration: 0.15, animations: {
-            self.messageVisualEffectView.alpha = 0
-            self.messageAlertView.alpha = 0
-            self.messageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            self.messageAlertView.removeFromSuperview()
-            self.messageVisualEffectView.removeFromSuperview()
-        })
     }
 
 }

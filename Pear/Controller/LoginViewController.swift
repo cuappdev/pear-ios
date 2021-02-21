@@ -57,11 +57,19 @@ class LoginViewController: UIViewController {
 
     private func setupErrorMessageAlert() {
         errorMessageAlertView = MessageAlertView(
-            delegate: self,
             mainMessage: Constants.Alerts.LoginFailure.message,
             actionMessage: "Try Again",
             dismissMessage: "", // Empty string because there is no dismiss option for alert.
-            alertImageName: "sadPear"
+            alertImageName: "sadPear",
+            removeFunction: { isDismiss in
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.errorMessageVisualEffectView.alpha = 0
+                    self.errorMessageAlertView.alpha = 0
+                    self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }) { _ in
+                    self.errorMessageAlertView.removeFromSuperview()
+                }
+            }
         )
         errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
@@ -87,7 +95,7 @@ class LoginViewController: UIViewController {
 
 }
 
-extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
+extension LoginViewController: GIDSignInDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -142,17 +150,6 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                     }
                 }
             }
-        }
-    }
-
-    // Animate error alert view pop up dismissal in 0.15 seconds
-    func removeAlertView(isDismiss: Bool) {
-        UIView.animate(withDuration: 0.15, animations: {
-            self.errorMessageVisualEffectView.alpha = 0
-            self.errorMessageAlertView.alpha = 0
-            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            self.errorMessageAlertView.removeFromSuperview()
         }
     }
 

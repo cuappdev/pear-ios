@@ -492,11 +492,24 @@ class SchedulingTimeViewController: UIViewController {
     // MARK: - Error Message
     private func setupErrorMessageAlert() {
         errorMessageAlertView = MessageAlertView(
-            delegate: self,
             mainMessage: Constants.Alerts.NoTimesWork.message,
             actionMessage: Constants.Alerts.NoTimesWork.action,
             dismissMessage: Constants.Alerts.NoTimesWork.dismiss,
-            alertImageName: "sadPear"
+            alertImageName: "sadPear",
+            removeFunction: { isDismiss in
+                if isDismiss {
+                    self.cancelMatchAndPopViewController()
+                }
+
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.errorMessageVisualEffectView.alpha = 0
+                    self.errorMessageAlertView.alpha = 0
+                    self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }, completion: { _ in
+                    self.errorMessageAlertView.removeFromSuperview()
+                    self.errorMessageVisualEffectView.removeFromSuperview()
+                })
+            }
         )
         errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
@@ -593,7 +606,7 @@ class SchedulingTimeViewController: UIViewController {
         )
 
         
-        /* REMOVING FOR FIRST LAUNCH SINCE LOCATION SAVING NOT IMPLEMENTED ON BACKEND.
+        ///* REMOVING FOR FIRST LAUNCH SINCE LOCATION SAVING NOT IMPLEMENTED ON BACKEND.
                   
          let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
@@ -601,7 +614,7 @@ class SchedulingTimeViewController: UIViewController {
         )
         navigationController?.pushViewController(placesVC, animated: true)
          
-         */
+         //*/
     }
 
 }
@@ -766,7 +779,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - MessageAlertViewDelegate
-extension SchedulingTimeViewController: MessageAlertViewDelegate {
+extension SchedulingTimeViewController {
 
     func removeAlertView(isDismiss: Bool) {
         if isDismiss {
