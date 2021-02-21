@@ -21,11 +21,6 @@ class SchedulingPlacesViewController: UIViewController {
     // Reuse Identifiers
     private let campusHeaderIdentifier = "campusHeaderIdentifier"
     private let ctownHeaderIdentifier = "ctownHeaderIdentifier"
-
-    // MARK: - Send Email Message Popup
-    private var blurEffect: UIBlurEffect!
-    private var messageAlertView: MessageAlertView!
-    private var messageVisualEffectView: UIVisualEffectView!
     
     // MARK: - Collection View Sections
     private enum Section {
@@ -109,7 +104,6 @@ class SchedulingPlacesViewController: UIViewController {
         setupLocationSections()
         setupForStatus()
         setupConstraints()
-        setupSendEmailMessageAlert()
         updateNext()
     }
 
@@ -273,7 +267,6 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        print(match)
         NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -281,9 +274,7 @@ class SchedulingPlacesViewController: UIViewController {
                 case .value(let value):
                     if value.success {
                         UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                        print("CHOOSING LOCATIONS")
-                        self.showSendEmailMessageAlertView()
-    //                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                            self.navigationController?.pushViewController(HomeViewController(), animated: true)
                     } else {
                         self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
@@ -298,65 +289,6 @@ class SchedulingPlacesViewController: UIViewController {
     @objc private func backButtonPressed() {
         navigationController?.popViewController(animated: true)
     }
-    
-    // MARK: - Error Message
-    private func setupSendEmailMessageAlert() {
-        messageAlertView = MessageAlertView(
-            mainMessage: "Send your Pear a personal note.",
-            actionMessage: "Send an email",
-            dismissMessage: "Skip",
-            alertImageName: "happyPear",
-            removeFunction: { isDismiss in
-                if isDismiss {
-                    let matchEmail = "\(self.match.pair ?? "")@cornell.edu"
-                    let emailSubject = "Hello%20from%20your%20pear!"
-                    let emailBody = "Hi!"
-                    let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
-                    if let googleUrl = URL(string: googleUrlString) {
-                        // show alert to choose app
-                        if UIApplication.shared.canOpenURL(googleUrl) {
-                            if #available(iOS 10.0, *) {
-                                UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
-                            } else {
-                                UIApplication.shared.openURL(googleUrl)
-                            }
-                        }
-                    }
-                }
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
-                UIView.animate(withDuration: 0.15, animations: {
-                    self.messageVisualEffectView.alpha = 0
-                    self.messageAlertView.alpha = 0
-                    self.messageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-                }, completion: { _ in
-                    self.messageAlertView.removeFromSuperview()
-                    self.messageVisualEffectView.removeFromSuperview()
-                })
-            }
-        )
-        blurEffect = UIBlurEffect(style: .light)
-        messageVisualEffectView = UIVisualEffectView(effect: blurEffect)
-    }
-    
-    private func showSendEmailMessageAlertView() {
-        messageVisualEffectView.frame = view.bounds
-        view.addSubview(messageVisualEffectView)
-        view.addSubview(messageAlertView)
-
-        messageAlertView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(281)
-            make.width.equalTo(292)
-        }
-
-        UIView.animate(withDuration: 0.25, animations: {
-            self.messageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
-            self.messageVisualEffectView.alpha = 1
-            self.messageAlertView.alpha = 1
-            self.messageAlertView.transform = .identity
-        })
-    }
-
 
 }
 

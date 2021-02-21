@@ -112,15 +112,19 @@ class SchedulingTimeViewController: UIViewController {
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
-    private var errorBlurEffect: UIBlurEffect!
-    private var errorMessageAlertView: MessageAlertView!
-    private var errorMessageVisualEffectView: UIVisualEffectView!
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
     private var timeCollectionView: UICollectionView!
     private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
+    
+    private var errorMessageAlertView: MessageAlertView!
+    private var errorMessageVisualEffectView: UIVisualEffectView!
+    
+    private var emailMessageAlertView: MessageAlertView!
+    private var emailMessageVisualEffectView: UIVisualEffectView!
+    
 
     // MARK: - Sizing
     private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
@@ -234,6 +238,7 @@ class SchedulingTimeViewController: UIViewController {
         setupForStatus()
 
         setupErrorMessageAlert()
+        setupEmailMessageAlert()
         setupTimeSections()
         setupConstraints()
         updateNextButton()
@@ -500,7 +505,6 @@ class SchedulingTimeViewController: UIViewController {
                 if isDismiss {
                     self.cancelMatchAndPopViewController()
                 }
-
                 UIView.animate(withDuration: 0.15, animations: {
                     self.errorMessageVisualEffectView.alpha = 0
                     self.errorMessageAlertView.alpha = 0
@@ -511,8 +515,49 @@ class SchedulingTimeViewController: UIViewController {
                 })
             }
         )
-        errorBlurEffect = UIBlurEffect(style: .light)
-        errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
+        let blurEffect = UIBlurEffect(style: .light)
+        errorMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
+    }
+    
+    // MARK: - Error Message
+    private func setupEmailMessageAlert() {
+        emailMessageAlertView = MessageAlertView(
+            mainMessage: "Send your Pear a personal note.",
+            actionMessage: "Send an email",
+            dismissMessage: "Skip",
+            alertImageName: "happyPear",
+            removeFunction: { [weak self] isDismiss in
+                guard let self = self else { return }
+                guard let match = self.match else { return }
+                if isDismiss {
+                    let matchEmail = "\(match.pair ?? "")@cornell.edu"
+                    let emailSubject = "Hello%20from%20your%20pear!"
+                    let emailBody = "Hi!"
+                    let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
+                    if let googleUrl = URL(string: googleUrlString) {
+                        // show alert to choose app
+                        if UIApplication.shared.canOpenURL(googleUrl) {
+                            if #available(iOS 10.0, *) {
+                                UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
+                            } else {
+                                UIApplication.shared.openURL(googleUrl)
+                            }
+                        }
+                    }
+                }
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.emailMessageVisualEffectView.alpha = 0
+                    self.emailMessageAlertView.alpha = 0
+                    self.emailMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }, completion: { _ in
+                    self.emailMessageAlertView.removeFromSuperview()
+                    self.emailMessageVisualEffectView.removeFromSuperview()
+                })
+            }
+        )
+        let blurEffect = UIBlurEffect(style: .light)
+        emailMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
     }
 
     private func showErrorMessageAlertView() {
@@ -531,6 +576,25 @@ class SchedulingTimeViewController: UIViewController {
             self.errorMessageVisualEffectView.alpha = 1
             self.errorMessageAlertView.alpha = 1
             self.errorMessageAlertView.transform = .identity
+        })
+    }
+    
+    private func showEmailMessageAlertView() {
+        emailMessageVisualEffectView.frame = view.bounds
+        view.addSubview(emailMessageVisualEffectView)
+        view.addSubview(emailMessageAlertView)
+
+        emailMessageAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(281)
+            make.width.equalTo(292)
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.emailMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.emailMessageVisualEffectView.alpha = 1
+            self.emailMessageAlertView.alpha = 1
+            self.emailMessageAlertView.transform = .identity
         })
     }
 
@@ -563,7 +627,8 @@ class SchedulingTimeViewController: UIViewController {
     @objc private func nextButtonPressed() {
         switch schedulingStatus {
         case .choosing, .confirming:
-            continueToSchedulingPlaces()
+            showEmailMessageAlertView()
+//            continueToSchedulingPlaces()
         case .pickingTypical:
             updateUserAvailabilitiesAndPop()
         }
@@ -780,21 +845,6 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - MessageAlertViewDelegate
 extension SchedulingTimeViewController {
-
-    func removeAlertView(isDismiss: Bool) {
-        if isDismiss {
-            cancelMatchAndPopViewController()
-        }
-
-        UIView.animate(withDuration: 0.15, animations: {
-            self.errorMessageVisualEffectView.alpha = 0
-            self.errorMessageAlertView.alpha = 0
-            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            self.errorMessageAlertView.removeFromSuperview()
-            self.errorMessageVisualEffectView.removeFromSuperview()
-        })
-    }
 
     private func cancelMatchAndPopViewController() {
         guard let match = match else { return }
