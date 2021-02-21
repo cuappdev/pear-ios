@@ -273,21 +273,23 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
+        print(match)
         NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
             guard let self = self else { return }
-            switch response {
-            case .value(let value):
-                if value.success {
-                    UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                    DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                    if value.success {
+                        UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
+                        print("CHOOSING LOCATIONS")
                         self.showSendEmailMessageAlertView()
-//                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+    //                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
-                } else {
+                case .error:
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error:
-                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
 
@@ -456,10 +458,10 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
 extension SchedulingPlacesViewController: MessageAlertViewDelegate {
 
     func removeAlertView(isDismiss: Bool) {
-        let matchEmail = "\(match.pair ?? "")@cornell.edu"
-        let emailSubject = "Hello%20from%20your%20pear!"
-        let emailBody = "Hi!"
         if !isDismiss {
+            let matchEmail = "\(match.pair ?? "")@cornell.edu"
+            let emailSubject = "Hello%20from%20your%20pear!"
+            let emailBody = "Hi!"
             let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
             if let googleUrl = URL(string: googleUrlString) {
                 // show alert to choose app

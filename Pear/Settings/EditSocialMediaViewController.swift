@@ -57,9 +57,6 @@ class EditSocialMediaViewController: UIViewController {
         instaViewL.addSubview(instaIcon)
         instaTextField.leftView = instaViewL
         instaTextField.leftViewMode = .always
-        let instaViewR = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        instaTextField.rightView = instaViewR
-        instaTextField.rightViewMode = .always
 
         fbTextField.text = ""
         fbTextField.placeholder = "Facebook profile link"
@@ -80,14 +77,6 @@ class EditSocialMediaViewController: UIViewController {
         facebookViewLeft.addSubview(fbIcon)
         fbTextField.leftView = facebookViewLeft
         fbTextField.leftViewMode = .always
-
-        let facebookViewRight = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        fbTextField.rightView = facebookViewRight
-        fbTextField.rightViewMode = .always
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
@@ -117,11 +106,6 @@ class EditSocialMediaViewController: UIViewController {
 
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func dismissKeyboard() {
-        fbTextField.resignFirstResponder()
-        instaTextField.resignFirstResponder()
     }
 
     @objc private func saveSocialMedia() {

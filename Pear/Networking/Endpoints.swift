@@ -18,11 +18,11 @@ extension Endpoint {
             Endpoint.config.port = 5000
             Endpoint.config.host = "localhost"
         #else
-            Endpoint.config.scheme = "https"
-            Endpoint.config.host = baseURL
-//            Endpoint.config.scheme = "http"
-//            Endpoint.config.port = 5000
-//            Endpoint.config.host = "localhost"
+//            Endpoint.config.scheme = "https"
+//            Endpoint.config.host = baseURL
+            Endpoint.config.scheme = "http"
+            Endpoint.config.port = 5000
+            Endpoint.config.host = "localhost"
         #endif
         Endpoint.config.commonPath = "/api/v1"
     }
@@ -174,6 +174,7 @@ extension Endpoint {
         Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
 
     }
+    
     /// [GET] Gets another user's matches, given their netID
     static func getMatch() -> Endpoint {
         Endpoint(path: "/match/", headers: standardHeaders)

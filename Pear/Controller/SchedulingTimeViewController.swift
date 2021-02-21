@@ -592,11 +592,16 @@ class SchedulingTimeViewController: UIViewController {
             availabilities: selectedTimes.schedules
         )
 
-        let placesVC = SchedulingPlacesViewController(
+        
+        /* REMOVING FOR FIRST LAUNCH SINCE LOCATION SAVING NOT IMPLEMENTED ON BACKEND.
+                  
+         let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
             match: editedMatch
         )
         navigationController?.pushViewController(placesVC, animated: true)
+         
+         */
     }
 
 }

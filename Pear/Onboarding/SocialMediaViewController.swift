@@ -52,7 +52,6 @@ class SocialMediaViewController: UIViewController {
 
         setSocialMediaTextField(socialMediaTextField: instagramTextField)
         instagramTextField.placeholder = "@Instagram handle"
-        instagramTextField.clearButtonMode = .whileEditing
         let instagramImageView = UIImageView(image: UIImage(named: "instagram"))
         instagramImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         instagramTextField.addSubview(instagramImageView)
@@ -60,7 +59,6 @@ class SocialMediaViewController: UIViewController {
 
         setSocialMediaTextField(socialMediaTextField: facebookTextField)
         facebookTextField.placeholder = "Facebook profile link"
-        facebookTextField.clearButtonMode = .whileEditing
         let facebookImageView = UIImageView(image: UIImage(named: "facebook"))
         facebookImageView.frame = CGRect(x: 15, y: 15, width: 19, height: 19)
         facebookTextField.addSubview(facebookImageView)
@@ -90,10 +88,7 @@ class SocialMediaViewController: UIViewController {
         skipButton.isEnabled = false
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
+
 
         getUserSocialMedia()
         setupConstraints()
@@ -103,7 +98,7 @@ class SocialMediaViewController: UIViewController {
         socialMediaTextField.backgroundColor = .backgroundWhite
         socialMediaTextField.textColor = .black
         socialMediaTextField.font = ._20CircularStdBook
-        socialMediaTextField.clearButtonMode = .never
+        socialMediaTextField.clearButtonMode = .whileEditing
         socialMediaTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         socialMediaTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
         socialMediaTextField.leftViewMode = .always
@@ -162,11 +157,6 @@ class SocialMediaViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.skipBottomPadding)
         }
-    }
-    
-    @objc func dismissKeyboard() {
-//        facebookTextField.resignFirstResponder()
-        instagramTextField.resignFirstResponder()
     }
 
     // MARK: - Next and Previous Buttons

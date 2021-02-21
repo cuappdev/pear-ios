@@ -189,7 +189,7 @@ class MatchViewController: UIViewController {
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
+        matchNameLabel.text = "\(pair.firstName) \(pair.lastName)"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
