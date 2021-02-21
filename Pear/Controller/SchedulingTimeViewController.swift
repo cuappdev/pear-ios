@@ -236,9 +236,7 @@ class SchedulingTimeViewController: UIViewController {
         setupViews()
         setupDaysAndTimes()
         setupForStatus()
-
-        setupErrorMessageAlert()
-        setupEmailMessageAlert()
+        
         setupTimeSections()
         setupConstraints()
         updateNextButton()
@@ -494,8 +492,7 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    // MARK: - Error Message
-    private func setupErrorMessageAlert() {
+    private func showErrorMessageAlertView() {
         errorMessageAlertView = MessageAlertView(
             mainMessage: Constants.Alerts.NoTimesWork.message,
             actionMessage: Constants.Alerts.NoTimesWork.action,
@@ -517,10 +514,27 @@ class SchedulingTimeViewController: UIViewController {
         )
         let blurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        errorMessageVisualEffectView.frame = view.bounds
+        view.addSubview(errorMessageVisualEffectView)
+        view.addSubview(errorMessageAlertView)
+
+        errorMessageAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(281)
+            make.width.equalTo(292)
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.errorMessageVisualEffectView.alpha = 1
+            self.errorMessageAlertView.alpha = 1
+            self.errorMessageAlertView.transform = .identity
+        })
     }
     
-    // MARK: - Error Message
-    private func setupEmailMessageAlert() {
+    private func showEmailMessageAlertView() {
+        
         emailMessageAlertView = MessageAlertView(
             mainMessage: "Send your Pear a personal note.",
             actionMessage: "Send an email",
@@ -529,7 +543,7 @@ class SchedulingTimeViewController: UIViewController {
             removeFunction: { [weak self] isDismiss in
                 guard let self = self else { return }
                 guard let match = self.match else { return }
-                if isDismiss {
+                if !isDismiss {
                     let matchEmail = "\(match.pair ?? "")@cornell.edu"
                     let emailSubject = "Hello%20from%20your%20pear!"
                     let emailBody = "Hi!"
@@ -556,32 +570,12 @@ class SchedulingTimeViewController: UIViewController {
                 })
             }
         )
+        
         let blurEffect = UIBlurEffect(style: .light)
         emailMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
-    }
-
-    private func showErrorMessageAlertView() {
-        errorMessageVisualEffectView.frame = view.bounds
-        view.addSubview(errorMessageVisualEffectView)
-        view.addSubview(errorMessageAlertView)
-
-        errorMessageAlertView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(281)
-            make.width.equalTo(292)
-        }
-
-        UIView.animate(withDuration: 0.25, animations: {
-            self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
-            self.errorMessageVisualEffectView.alpha = 1
-            self.errorMessageAlertView.alpha = 1
-            self.errorMessageAlertView.transform = .identity
-        })
-    }
-    
-    private func showEmailMessageAlertView() {
-        emailMessageVisualEffectView.frame = view.bounds
         view.addSubview(emailMessageVisualEffectView)
+        
+        emailMessageVisualEffectView.frame = view.bounds
         view.addSubview(emailMessageAlertView)
 
         emailMessageAlertView.snp.makeConstraints { make in
