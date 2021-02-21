@@ -212,7 +212,7 @@ class SchedulingTimeViewController: UIViewController {
 
         switch status {
         case .choosing:
-            selectedTimes = SelectedSchedules()
+            selectedTimes = SelectedSchedules(availabilities: user.availabilities)
         case .confirming:
             selectedTimes = SelectedSchedules(availabilities: user.availabilitiesLeftForMatch)
         case .pickingTypical:

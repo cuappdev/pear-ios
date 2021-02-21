@@ -68,7 +68,7 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
-        searchBar.searchTextField.clearButtonMode = .never
+        searchBar.searchTextField.clearButtonMode = .whileEditing
         searchBar.layer.cornerRadius = fieldsCornerRadius
         searchBar.layer.shadowColor = UIColor.black.cgColor
         searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
@@ -122,6 +122,7 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.text = title
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
     }
+
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {

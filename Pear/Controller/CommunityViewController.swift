@@ -27,7 +27,7 @@ class CommunityViewController: UIViewController {
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._16CircularStdBook
-        searchBar.searchTextField.clearButtonMode = .never
+        searchBar.searchTextField.clearButtonMode = .whileEditing
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         searchBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
@@ -46,6 +46,10 @@ class CommunityViewController: UIViewController {
         communityTableView.sizeToFit()
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
@@ -80,6 +84,10 @@ class CommunityViewController: UIViewController {
             make.top.equalTo(searchBar.snp.bottom).offset(20)
             make.bottom.equalToSuperview()
         }
+    }
+    
+    @objc func dismissKeyboard() {
+        searchBar.resignFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {

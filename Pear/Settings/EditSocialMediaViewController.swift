@@ -48,6 +48,7 @@ class EditSocialMediaViewController: UIViewController {
         instaTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         instaTextField.layer.shadowOpacity = 1
         instaTextField.layer.shadowRadius = 4
+        instaTextField.clearButtonMode = .whileEditing
         view.addSubview(instaTextField)
 
         let instaIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
@@ -56,7 +57,6 @@ class EditSocialMediaViewController: UIViewController {
         instaViewL.addSubview(instaIcon)
         instaTextField.leftView = instaViewL
         instaTextField.leftViewMode = .always
-
         let instaViewR = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         instaTextField.rightView = instaViewR
         instaTextField.rightViewMode = .always
@@ -66,6 +66,7 @@ class EditSocialMediaViewController: UIViewController {
         fbTextField.font = ._20CircularStdBook
         fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
+        fbTextField.clearButtonMode = .whileEditing
         fbTextField.layer.cornerRadius = 8
         fbTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
         fbTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -83,6 +84,10 @@ class EditSocialMediaViewController: UIViewController {
         let facebookViewRight = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         fbTextField.rightView = facebookViewRight
         fbTextField.rightViewMode = .always
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
@@ -112,6 +117,11 @@ class EditSocialMediaViewController: UIViewController {
 
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        fbTextField.resignFirstResponder()
+        instaTextField.resignFirstResponder()
     }
 
     @objc private func saveSocialMedia() {
