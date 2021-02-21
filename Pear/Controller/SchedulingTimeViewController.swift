@@ -558,8 +558,10 @@ class SchedulingTimeViewController: UIViewController {
                             }
                         }
                     }
+                    self.updateMatchAvailabilities()
+                } else {
+                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 }
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 UIView.animate(withDuration: 0.15, animations: {
                     self.emailMessageVisualEffectView.alpha = 0
                     self.emailMessageAlertView.alpha = 0
@@ -590,6 +592,26 @@ class SchedulingTimeViewController: UIViewController {
             self.emailMessageAlertView.alpha = 1
             self.emailMessageAlertView.transform = .identity
         })
+    }
+    
+    private func updateMatchAvailabilities() {
+        guard let match = match else { return }
+        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                    if value.success {
+                        UserDefaults.standard.set(match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
+                            self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    }
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     // MARK: - Button Related

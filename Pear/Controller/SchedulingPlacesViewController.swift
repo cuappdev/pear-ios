@@ -267,6 +267,7 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
+        
         NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
             guard let self = self else { return }
             DispatchQueue.main.async {
