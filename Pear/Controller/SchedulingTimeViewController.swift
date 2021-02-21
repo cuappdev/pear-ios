@@ -644,7 +644,6 @@ class SchedulingTimeViewController: UIViewController {
         switch schedulingStatus {
         case .choosing, .confirming:
             showEmailMessageAlertView()
-//            continueToSchedulingPlaces()
         case .pickingTypical:
             updateUserAvailabilitiesAndPop()
         }
@@ -652,6 +651,7 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Navigation
     private func updateUserAvailabilitiesAndPop() {
+        
         NetworkManager.shared.updateTimeAvailabilities(
           savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
@@ -672,6 +672,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func continueToSchedulingPlaces() {
+        
         guard let match = match else {
             print("Tried to continue to scheduling places view controller, but match is nil")
             navigationController?.popViewController(animated: true)
@@ -686,16 +687,12 @@ class SchedulingTimeViewController: UIViewController {
             availabilities: selectedTimes.schedules
         )
 
-        
-        ///* REMOVING FOR FIRST LAUNCH SINCE LOCATION SAVING NOT IMPLEMENTED ON BACKEND.
-                  
          let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
             match: editedMatch
         )
         navigationController?.pushViewController(placesVC, animated: true)
-         
-         //*/
+
     }
 
 }

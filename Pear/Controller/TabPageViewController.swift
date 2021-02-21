@@ -21,10 +21,8 @@ class TabPageViewController: UIPageViewController {
         self.user = user
 
         if let match = match {
-            print("there is a match")
             matchViewController = MatchViewController(match: match, user: user)
         } else {
-            print("there is no match")
             matchViewController = NoMatchViewController(user: user)
         }
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)

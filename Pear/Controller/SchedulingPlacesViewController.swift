@@ -21,7 +21,7 @@ class SchedulingPlacesViewController: UIViewController {
     // Reuse Identifiers
     private let campusHeaderIdentifier = "campusHeaderIdentifier"
     private let ctownHeaderIdentifier = "ctownHeaderIdentifier"
-    
+
     // MARK: - Collection View Sections
     private enum Section {
         case campus([String])

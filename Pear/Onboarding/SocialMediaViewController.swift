@@ -89,7 +89,6 @@ class SocialMediaViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-
         getUserSocialMedia()
         setupConstraints()
     }
@@ -179,7 +178,7 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {
-         updateNext()
+        updateNext()
     }
 
     @objc func backButtonPressed() {
