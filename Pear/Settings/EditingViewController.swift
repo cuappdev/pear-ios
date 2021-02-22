@@ -154,6 +154,10 @@ class EditingViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupSections()
         setupNavigationBar()
@@ -167,6 +171,10 @@ class EditingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     private func setupSections() {
@@ -563,6 +571,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
 
         self.searchBar = searchBar
     }
+
 
     private func setupStack() {
         stackView.alignment = .center
