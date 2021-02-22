@@ -92,8 +92,7 @@ class CommunityViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // TODO: Comment out for now while backend fixes server issues
-//        getUsers()
+        getUsers()
     }
 }
 
@@ -136,11 +135,10 @@ extension CommunityViewController: UISearchBarDelegate {
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO: Comment out for now while backend fixes server issues
         if searchText.isEmpty {
-//            getUsers()
+            getUsers()
         } else {
-//            searchUsers(query: searchText)
+            searchUsers(query: searchText)
         }
     }
 
