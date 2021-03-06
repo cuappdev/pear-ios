@@ -215,24 +215,6 @@ class SchedulingTimeViewController: UIViewController {
         self.pair = pair
         super.init(nibName: nil, bundle: nil)
         getSelectedTimes()
-//        NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { [weak self] response in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch response {
-//                case .value(let value):
-//                    switch status {
-//                    case .choosing:
-//                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
-//                    case .confirming:
-//                        self.selectedTimes = SelectedSchedules(availabilities: self.getAvailabilitiesLeftForMatch(availabilities: value.data))
-//                    case .pickingTypical:
-//                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
-//                    }
-//                case .error:
-//                    print("")
-//                }
-//            }
-//        }
     }
 
     required init?(coder: NSCoder) {
@@ -303,6 +285,8 @@ class SchedulingTimeViewController: UIViewController {
             default:
                 self.selectedTimes = SelectedSchedules(availabilities: userAvailabilities)
             }
+            self.dayCollectionView.reloadData()
+            self.timeCollectionView.reloadData()
         }
     }
 
@@ -614,10 +598,9 @@ class SchedulingTimeViewController: UIViewController {
                             }
                         }
                     }
-                    self.updateMatchAvailabilities()
-                } else {
-                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 }
+                self.updateMatchAvailabilities()
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 UIView.animate(withDuration: 0.15, animations: {
                     self.emailMessageVisualEffectView.alpha = 0
                     self.emailMessageAlertView.alpha = 0
@@ -779,7 +762,6 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
     }
 
     private func configuredDayCell(for indexPath: IndexPath) -> UICollectionViewCell {
-        guard let selectedTimes = selectedTimes else { return UICollectionViewCell() }
 
         guard let cell = dayCollectionView.dequeueReusableCell(
                 withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier,
@@ -789,6 +771,8 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
         let dayAbbrev = daysAbbrev[indexPath.item]
         cell.configure(for: dayAbbrev)
+
+        guard let selectedTimes = selectedTimes else { return cell }
 
         // Update cell color based on whether there's availability for a day
         if let day = abbrevToDayDict[dayAbbrev] {
