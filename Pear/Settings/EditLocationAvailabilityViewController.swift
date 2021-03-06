@@ -140,13 +140,13 @@ class EditLocationAvailabilityViewController: UIViewController {
             case .value(let value):
                 DispatchQueue.main.async {
                     guard value.success else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         return
                     }
                     self.navigationController?.popViewController(animated: true)
                 }
             case .error:
-                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
             }
         }
     }

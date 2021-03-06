@@ -29,8 +29,7 @@ class MessageAlertView: UIView {
          actionMessage: String,
          dismissMessage: String,
          alertImageName: String,
-         removeFunction: @escaping (Bool) -> ()
-    ) {
+         removeFunction: @escaping (Bool) -> ()) {
         self.mainMessage = mainMessage
         self.actionMessage = actionMessage
         self.dismissMessage = dismissMessage

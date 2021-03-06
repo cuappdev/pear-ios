@@ -274,10 +274,10 @@ class EditDemographicsViewController: UIViewController {
                                 ImageCache.default.removeImage(forKey: self.user.googleID)
                                 self.navigationController?.popViewController(animated: true)
                             } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                             }
                         case .error:
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     }
                 }

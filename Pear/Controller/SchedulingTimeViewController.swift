@@ -498,8 +498,8 @@ class SchedulingTimeViewController: UIViewController {
             actionMessage: Constants.Alerts.NoTimesWork.action,
             dismissMessage: Constants.Alerts.NoTimesWork.dismiss,
             alertImageName: "sadPear",
-            removeFunction: { isDismiss in
-                if isDismiss {
+            removeFunction: { dismiss in
+                if dismiss {
                     self.cancelMatchAndPopViewController()
                 }
                 UIView.animate(withDuration: 0.15, animations: {
@@ -540,10 +540,10 @@ class SchedulingTimeViewController: UIViewController {
             actionMessage: "Send an email",
             dismissMessage: "Skip",
             alertImageName: "happyPear",
-            removeFunction: { [weak self] isDismiss in
+            removeFunction: { [weak self] dismiss in
                 guard let self = self else { return }
                 guard let match = self.match else { return }
-                if !isDismiss {
+                if !dismiss {
                     let matchEmail = "\(match.pair ?? "")@cornell.edu"
                     let emailSubject = "Hello%20from%20your%20pear!"
                     let emailBody = "Hi!"
@@ -605,10 +605,10 @@ class SchedulingTimeViewController: UIViewController {
                         UserDefaults.standard.set(match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
                             self.navigationController?.pushViewController(HomeViewController(), animated: true)
                     } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                 }
             }
         }

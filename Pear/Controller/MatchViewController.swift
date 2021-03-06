@@ -81,8 +81,8 @@ class MatchViewController: UIViewController {
     private var chatStatus: ChatStatus?
 
     private let matchClassLabel = UILabel()
-    private let matchNameLabel = UILabel()
     private let matchHometownLabel = UILabel()
+    private let matchNameLabel = UILabel()
     private let matchNetIdLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
@@ -290,12 +290,13 @@ class MatchViewController: UIViewController {
     private func setupMatchSummaries() {
         guard let pair = pair else { return }
 
-        var pronoun: String
-        if pair.pronouns == "She/Her/Hers" {
+        let pronoun: String
+        switch pair.pronouns {
+        case "She/Her/Hers":
             pronoun = "She"
-        } else if pair.pronouns == "He/Him/His" {
+        case "He/Him/His":
             pronoun = "He"
-        } else {
+        default:
             pronoun = "They"
         }
         let commonInterests = user.interests.filter { pair.interests.contains($0) }
@@ -312,11 +313,11 @@ class MatchViewController: UIViewController {
           items: commonGroups
         )
         addMatchSummary(
-          title: "\(pronoun) also enjoys...",
+          title: "\(pronoun) also enjoy\(pronoun == "They" ? "" : "s")...",
           items: uncommonInterests
         )
         addMatchSummary(
-          title: "\(pronoun) is also part of...",
+          title: "\(pronoun) \(pronoun == "They" ? "are" : "is") also part of...",
           items: uncommonGroups
         )
     }

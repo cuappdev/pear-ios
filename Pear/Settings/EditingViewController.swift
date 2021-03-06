@@ -306,10 +306,10 @@ class EditingViewController: UIViewController {
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 }
             }
@@ -321,10 +321,10 @@ class EditingViewController: UIViewController {
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 }
             }

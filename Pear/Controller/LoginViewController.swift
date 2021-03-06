@@ -52,7 +52,6 @@ class LoginViewController: UIViewController {
     }
 
     private func showErrorMessageAlertView() {
-        
         errorMessageAlertView = MessageAlertView(
             mainMessage: Constants.Alerts.LoginFailure.message,
             actionMessage: "Try Again",
@@ -72,7 +71,7 @@ class LoginViewController: UIViewController {
         let errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
         view.addSubview(errorMessageVisualEffectView)
-        
+
         errorMessageVisualEffectView.frame = view.bounds
         view.addSubview(errorMessageAlertView)
         
