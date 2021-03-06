@@ -65,7 +65,7 @@ extension Endpoint {
     
     /// [GET] Get information about the user.
     static func getUser(netId: String) -> Endpoint {
-        return Endpoint(path: "/user/", headers: standardHeaders)
+        return Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
     /// [GET] Get clubs of the user.
