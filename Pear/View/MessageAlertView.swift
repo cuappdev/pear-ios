@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol MessageAlertViewDelegate: class {
-    func removeAlertView(isDismiss: Bool)
-}
-
 class MessageAlertView: UIView {
 
     // MARK: - Private View Vars
@@ -22,18 +18,26 @@ class MessageAlertView: UIView {
 
     // MARK: - Private Data Vars
     private var actionMessage: String = ""
-    private weak var delegate: MessageAlertViewDelegate?
     private var dismissMessage: String = ""
     private var hasDismissOption: Bool = false
     private var mainMessage: String = ""
+    private var alertImageName: String = ""
+    
+    private var removeFunction: (Bool) -> ()
 
-    init(delegate: MessageAlertViewDelegate, mainMessage: String, actionMessage: String, dismissMessage: String) {
-        super.init(frame: .zero)
-        self.delegate = delegate
+    init(mainMessage: String,
+         actionMessage: String,
+         dismissMessage: String,
+         alertImageName: String,
+         removeFunction: @escaping (Bool) -> ()) {
         self.mainMessage = mainMessage
         self.actionMessage = actionMessage
         self.dismissMessage = dismissMessage
         self.hasDismissOption = dismissMessage != ""
+        self.alertImageName = alertImageName
+        self.removeFunction = removeFunction
+        super.init(frame: .zero)
+        
         setupViews()
         setupConstraints()
     }
@@ -47,7 +51,7 @@ class MessageAlertView: UIView {
 
         layer.cornerRadius = 36
 
-        alertImageView.image = UIImage(named: "sadPear")
+        alertImageView.image = UIImage(named: alertImageName)
         addSubview(alertImageView)
 
         messageLabel.text = mainMessage
@@ -107,11 +111,11 @@ class MessageAlertView: UIView {
     }
 
     @objc func handleAction() {
-        delegate?.removeAlertView(isDismiss: false)
+        removeFunction(false)
     }
 
     @objc func handleDismissal() {
-        delegate?.removeAlertView(isDismiss: true)
+        removeFunction(true)
     }
 
 }

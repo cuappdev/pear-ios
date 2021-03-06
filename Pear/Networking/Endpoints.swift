@@ -26,6 +26,7 @@ extension Endpoint {
 
     static var standardHeaders: [String: String] {
         if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
+            print(token)
             return ["Authorization": "Bearer \(token)"]
         } else {
             return [:]
@@ -111,7 +112,7 @@ extension Endpoint {
 
     /// [GET] Get information about the user
     static func getUser(netId: String) -> Endpoint {
-        Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+        return Endpoint(path: "/user/", headers: standardHeaders)
     }
 
     /// [GET] Get clubs of the user
@@ -170,6 +171,7 @@ extension Endpoint {
         Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
 
     }
+    
     /// [GET] Gets another user's matches, given their netID
     static func getMatch() -> Endpoint {
         Endpoint(path: "/match/", headers: standardHeaders)

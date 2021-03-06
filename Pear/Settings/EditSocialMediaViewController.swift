@@ -48,6 +48,7 @@ class EditSocialMediaViewController: UIViewController {
         instaTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         instaTextField.layer.shadowOpacity = 1
         instaTextField.layer.shadowRadius = 4
+        instaTextField.clearButtonMode = .whileEditing
         view.addSubview(instaTextField)
 
         let instaIcon = UIImageView(frame: CGRect(x: 10, y: 0, width: 20, height: 20))
@@ -57,15 +58,12 @@ class EditSocialMediaViewController: UIViewController {
         instaTextField.leftView = instaViewL
         instaTextField.leftViewMode = .always
 
-        let instaViewR = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        instaTextField.rightView = instaViewR
-        instaTextField.rightViewMode = .always
-
         fbTextField.text = ""
         fbTextField.placeholder = "Facebook profile link"
         fbTextField.font = ._20CircularStdBook
         fbTextField.textColor = .black
         fbTextField.backgroundColor = .white
+        fbTextField.clearButtonMode = .whileEditing
         fbTextField.layer.cornerRadius = 8
         fbTextField.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
         fbTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -79,10 +77,6 @@ class EditSocialMediaViewController: UIViewController {
         facebookViewLeft.addSubview(fbIcon)
         fbTextField.leftView = facebookViewLeft
         fbTextField.leftViewMode = .always
-
-        let facebookViewRight = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
-        fbTextField.rightView = facebookViewRight
-        fbTextField.rightViewMode = .always
 
         setupConstraints()
     }
@@ -125,10 +119,10 @@ class EditSocialMediaViewController: UIViewController {
                     if response.success {
                         self.navigationController?.popViewController(animated: true)
                     } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                 }
             }
         }

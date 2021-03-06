@@ -27,7 +27,7 @@ class CommunityViewController: UIViewController {
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._16CircularStdBook
-        searchBar.searchTextField.clearButtonMode = .never
+        searchBar.searchTextField.clearButtonMode = .whileEditing
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         searchBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
@@ -46,6 +46,10 @@ class CommunityViewController: UIViewController {
         communityTableView.sizeToFit()
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupConstraints()
     }
@@ -82,10 +86,13 @@ class CommunityViewController: UIViewController {
         }
     }
     
+    @objc func dismissKeyboard() {
+        searchBar.resignFirstResponder()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // TODO: Comment out for now while backend fixes server issues
-//        getUsers()
+        getUsers()
     }
 }
 
@@ -128,11 +135,10 @@ extension CommunityViewController: UISearchBarDelegate {
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO: Comment out for now while backend fixes server issues
         if searchText.isEmpty {
-//            getUsers()
+            getUsers()
         } else {
-//            searchUsers(query: searchText)
+            searchUsers(query: searchText)
         }
     }
 

@@ -83,8 +83,9 @@ class SocialMediaViewController: UIViewController {
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
         skipButton.setTitle("Skip", for: .normal)
-        skipButton.setTitleColor(.greenGray, for: .normal)
+        skipButton.setTitleColor(.inactiveGreen, for: .normal)
         skipButton.backgroundColor = .none
+        skipButton.isEnabled = false
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
@@ -96,7 +97,7 @@ class SocialMediaViewController: UIViewController {
         socialMediaTextField.backgroundColor = .backgroundWhite
         socialMediaTextField.textColor = .black
         socialMediaTextField.font = ._20CircularStdBook
-        socialMediaTextField.clearButtonMode = .never
+        socialMediaTextField.clearButtonMode = .whileEditing
         socialMediaTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         socialMediaTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
         socialMediaTextField.leftViewMode = .always
@@ -140,8 +141,7 @@ class SocialMediaViewController: UIViewController {
         }
 
         facebookTextField.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(40)
-            make.height.equalTo(49)
+            make.leading.trailing.height.equalTo(instagramTextField)
             make.top.equalTo(instagramTextField.snp.bottom).offset(16)
         }
 
@@ -160,15 +160,21 @@ class SocialMediaViewController: UIViewController {
 
     // MARK: - Next and Previous Buttons
     private func updateNext() {
-        guard let instagramHandle = instagramTextField.text, let facebookHandle = facebookTextField.text else { return }
-        let isSocialMediaEntered =
-            instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
-            facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty
-        nextButton.isEnabled = isSocialMediaEntered
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        skipButton.isEnabled = !nextButton.isEnabled
-        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
-        skipButton.setTitleColor(skipButtonColor, for: .normal)
+        if let instagramHandle = instagramTextField.text,
+           let facebookHandle = facebookTextField.text,
+           (!instagramHandle.trimmingCharacters(in: .whitespaces).isEmpty ||
+            !facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty)
+           {
+            nextButton.isEnabled = true
+            nextButton.backgroundColor = .backgroundOrange
+            skipButton.isEnabled = false
+            skipButton.setTitleColor(.inactiveGreen, for: .normal)
+        } else {
+            skipButton.isEnabled = true
+            skipButton.setTitleColor(.greenGray, for: .normal)
+            nextButton.isEnabled = false
+            nextButton.backgroundColor = .inactiveGreen
+        }
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {

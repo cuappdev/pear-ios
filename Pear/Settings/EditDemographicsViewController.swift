@@ -161,6 +161,11 @@ class EditDemographicsViewController: UIViewController {
         setupConstraints()
         getMajors()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
 
     private func setupConstraints() {
         let textFieldHeight: CGFloat = 49
@@ -269,10 +274,10 @@ class EditDemographicsViewController: UIViewController {
                                 ImageCache.default.removeImage(forKey: self.user.googleID)
                                 self.navigationController?.popViewController(animated: true)
                             } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                             }
                         case .error:
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     }
                 }
@@ -374,3 +379,15 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
         activeDropdownView = textField
     }
 }
+
+
+extension EditDemographicsViewController: UIGestureRecognizerDelegate {
+
+      func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+             navigationController?.popViewController(animated: true)
+         }
+         return false
+     }
+
+  }

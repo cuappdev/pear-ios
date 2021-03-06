@@ -14,14 +14,11 @@ class LoginViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backgroundImage = UIImageView()
-    private var errorBlurEffect: UIBlurEffect!
+    private let loginButton = GIDSignInButton()
+    
+    // MARK: - Error Alert Vars
     private var errorMessageAlertView: MessageAlertView!
     private var errorMessageVisualEffectView: UIVisualEffectView!
-    private let loginButton = GIDSignInButton()
-
-    // MARK: - Private Constants
-    private let loginButtonSize = CGSize(width: 202, height: 50)
-    private let logoSize = CGSize(width: 146, height: 146)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +34,7 @@ class LoginViewController: UIViewController {
 
         loginButton.style = .wide
         view.addSubview(loginButton)
-
-        setupErrorMessageAlert()
+        
         setupConstraints()
     }
 
@@ -51,24 +47,34 @@ class LoginViewController: UIViewController {
         loginButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(96)
-            make.size.equalTo(loginButtonSize)
+            make.size.equalTo(CGSize(width: 202, height: 50))
         }
     }
 
-    private func setupErrorMessageAlert() {
+    private func showErrorMessageAlertView() {
         errorMessageAlertView = MessageAlertView(
-            delegate: self,
             mainMessage: Constants.Alerts.LoginFailure.message,
             actionMessage: "Try Again",
-            dismissMessage: "" // Empty string because there is no dismiss option for alert.
+            dismissMessage: "", // Empty string because there is no dismiss option for alert.
+            alertImageName: "sadPear",
+            removeFunction: { _ in
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.errorMessageVisualEffectView.alpha = 0
+                    self.errorMessageAlertView.alpha = 0
+                    self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }) { _ in
+                    self.errorMessageAlertView.removeFromSuperview()
+                }
+            }
         )
-        errorBlurEffect = UIBlurEffect(style: .light)
+        
+        let errorBlurEffect = UIBlurEffect(style: .light)
         errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
-    }
+        view.addSubview(errorMessageVisualEffectView)
 
-    private func showErrorMessageAlertView() {
+        errorMessageVisualEffectView.frame = view.bounds
         view.addSubview(errorMessageAlertView)
-
+        
         errorMessageAlertView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.height.equalTo(250)
@@ -78,15 +84,15 @@ class LoginViewController: UIViewController {
         // Animate the pop up of error alert view in 0.25 seconds
         UIView.animate(withDuration: 0.25, animations: {
             self.errorMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
-            self.errorMessageVisualEffectView.alpha = 1
             self.errorMessageAlertView.alpha = 1
             self.errorMessageAlertView.transform = .identity
+            self.errorMessageVisualEffectView.alpha = 1
         })
     }
 
 }
 
-extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
+extension LoginViewController: GIDSignInDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -112,7 +118,7 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
            let userFirstName = user.profile.givenName,
            let userFullName = user.profile.name,
            let userEmail = user.profile.email,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 25) {
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 40) {
             let profileURLData = try? Data(contentsOf: userProfilePictureURL)
             if let profileURLData = profileURLData,
                let profileImage = UIImage(data: profileURLData),
@@ -141,17 +147,6 @@ extension LoginViewController: GIDSignInDelegate, MessageAlertViewDelegate {
                     }
                 }
             }
-        }
-    }
-
-    // Animate error alert view pop up dismissal in 0.15 seconds
-    func removeAlertView(isDismiss: Bool) {
-        UIView.animate(withDuration: 0.15, animations: {
-            self.errorMessageVisualEffectView.alpha = 0
-            self.errorMessageAlertView.alpha = 0
-            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            self.errorMessageAlertView.removeFromSuperview()
         }
     }
 

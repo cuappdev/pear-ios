@@ -80,10 +80,13 @@ class MatchViewController: UIViewController {
     private var pair: User?
     private var chatStatus: ChatStatus?
 
-    private let matchDemographicsLabel = UILabel()
+    private let matchClassLabel = UILabel()
+    private let matchHometownLabel = UILabel()
     private let matchNameLabel = UILabel()
+    private let matchNetIdLabel = UILabel()
     private let matchProfileBackgroundView = UIStackView()
     private let matchProfileImageView = UIImageView()
+    private let matchPronounsLabel = UILabel()
     private let matchSummaryTableView = UITableView()
     private var meetupStatusView: MeetupStatusView?
     private var reachOutButton = UIButton()
@@ -186,17 +189,36 @@ class MatchViewController: UIViewController {
         matchProfileBackgroundView.spacing = 4
         view.addSubview(matchProfileBackgroundView)
 
-        matchNameLabel.text = "\(pair.firstName)\n\(pair.lastName)"
+        matchNameLabel.text = "\(pair.firstName) \(pair.lastName)"
         matchNameLabel.textColor = .black
         matchNameLabel.numberOfLines = 0
         matchNameLabel.font = ._24CircularStdMedium
         matchProfileBackgroundView.insertArrangedSubview(matchNameLabel, at: 0)
-
-        matchDemographicsLabel.text = "\(pair.major)"
-        matchDemographicsLabel.textColor = .textGreen
-        matchDemographicsLabel.font = ._16CircularStdBook
-        matchDemographicsLabel.numberOfLines = 0
-        matchProfileBackgroundView.insertArrangedSubview(matchDemographicsLabel, at: 1)
+        
+        matchNetIdLabel.text = "NetID: \(pair.netID)"
+        matchNetIdLabel.textColor = .textGreen
+        matchNetIdLabel.font = ._16CircularStdBook
+        matchNetIdLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchNetIdLabel, at: 1)
+        
+        let graduationYear = String(pair.graduationYear?.suffix(2) ?? "")
+        matchClassLabel.text = "\(pair.major) '\(graduationYear)"
+        matchClassLabel.textColor = .textGreen
+        matchClassLabel.font = ._16CircularStdBook
+        matchClassLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchClassLabel, at: 2)
+        
+        matchHometownLabel.text = "from \(pair.hometown)"
+        matchHometownLabel.textColor = .textGreen
+        matchHometownLabel.font = ._16CircularStdBook
+        matchHometownLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchHometownLabel, at: 3)
+        
+        matchPronounsLabel.text = pair.pronouns
+        matchPronounsLabel.textColor = .textGreen
+        matchPronounsLabel.font = ._16CircularStdBook
+        matchPronounsLabel.numberOfLines = 0
+        matchProfileBackgroundView.insertArrangedSubview(matchPronounsLabel, at: 4)
 
         matchProfileImageView.backgroundColor = .inactiveGreen
         matchProfileImageView.layer.cornerRadius = imageSize.width/2
@@ -268,6 +290,15 @@ class MatchViewController: UIViewController {
     private func setupMatchSummaries() {
         guard let pair = pair else { return }
 
+        let pronoun: String
+        switch pair.pronouns {
+        case "She/Her/Hers":
+            pronoun = "She"
+        case "He/Him/His":
+            pronoun = "He"
+        default:
+            pronoun = "They"
+        }
         let commonInterests = user.interests.filter { pair.interests.contains($0) }
         let commonGroups = user.groups.filter { pair.groups.contains($0) }
         let uncommonInterests = pair.interests.filter { !commonInterests.contains($0) }
@@ -282,11 +313,11 @@ class MatchViewController: UIViewController {
           items: commonGroups
         )
         addMatchSummary(
-          title: "He also enjoys...",
+          title: "\(pronoun) also enjoy\(pronoun == "They" ? "" : "s")...",
           items: uncommonInterests
         )
         addMatchSummary(
-          title: "He is also part of...",
+          title: "\(pronoun) \(pronoun == "They" ? "are" : "is") also part of...",
           items: uncommonGroups
         )
     }

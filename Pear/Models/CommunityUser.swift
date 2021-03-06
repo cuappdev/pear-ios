@@ -18,11 +18,8 @@ struct CommunityUser: Codable {
     let interests: [String]?
     let lastName: String?
     let major: String?
-    let matches: [Match]?
     let netID: String?
     let profilePictureURL: String?
     let pronouns: String?
-    let facebook: String?
-    let instagram: String?
 
 }

@@ -112,15 +112,19 @@ class SchedulingTimeViewController: UIViewController {
     private var backButton = UIButton()
     private var dayCollectionView: UICollectionView!
     private let dayLabel = UILabel()
-    private var errorBlurEffect: UIBlurEffect!
-    private var errorMessageAlertView: MessageAlertView!
-    private var errorMessageVisualEffectView: UIVisualEffectView!
     private let infoLabel = UILabel()
     private let nextButton = UIButton()
     private let noTimesWorkButton = UIButton()
     private var timeCollectionView: UICollectionView!
     private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
+    
+    private var errorMessageAlertView: MessageAlertView!
+    private var errorMessageVisualEffectView: UIVisualEffectView!
+    
+    private var emailMessageAlertView: MessageAlertView!
+    private var emailMessageVisualEffectView: UIVisualEffectView!
+    
 
     // MARK: - Sizing
     private let timeCellSize = CGSize(width: LayoutHelper.shared.getCustomHorizontalPadding(size: 88), height: 36)
@@ -212,7 +216,7 @@ class SchedulingTimeViewController: UIViewController {
 
         switch status {
         case .choosing:
-            selectedTimes = SelectedSchedules()
+            selectedTimes = SelectedSchedules(availabilities: user.availabilities)
         case .confirming:
             selectedTimes = SelectedSchedules(availabilities: user.availabilitiesLeftForMatch)
         case .pickingTypical:
@@ -232,8 +236,7 @@ class SchedulingTimeViewController: UIViewController {
         setupViews()
         setupDaysAndTimes()
         setupForStatus()
-
-        setupErrorMessageAlert()
+        
         setupTimeSections()
         setupConstraints()
         updateNextButton()
@@ -489,19 +492,29 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    // MARK: - Error Message
-    private func setupErrorMessageAlert() {
+    private func showErrorMessageAlertView() {
         errorMessageAlertView = MessageAlertView(
-            delegate: self,
             mainMessage: Constants.Alerts.NoTimesWork.message,
             actionMessage: Constants.Alerts.NoTimesWork.action,
-            dismissMessage: Constants.Alerts.NoTimesWork.dismiss
+            dismissMessage: Constants.Alerts.NoTimesWork.dismiss,
+            alertImageName: "sadPear",
+            removeFunction: { dismiss in
+                if dismiss {
+                    self.cancelMatchAndPopViewController()
+                }
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.errorMessageVisualEffectView.alpha = 0
+                    self.errorMessageAlertView.alpha = 0
+                    self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }, completion: { _ in
+                    self.errorMessageAlertView.removeFromSuperview()
+                    self.errorMessageVisualEffectView.removeFromSuperview()
+                })
+            }
         )
-        errorBlurEffect = UIBlurEffect(style: .light)
-        errorMessageVisualEffectView = UIVisualEffectView(effect: errorBlurEffect)
-    }
-
-    private func showErrorMessageAlertView() {
+        let blurEffect = UIBlurEffect(style: .light)
+        errorMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        
         errorMessageVisualEffectView.frame = view.bounds
         view.addSubview(errorMessageVisualEffectView)
         view.addSubview(errorMessageAlertView)
@@ -518,6 +531,87 @@ class SchedulingTimeViewController: UIViewController {
             self.errorMessageAlertView.alpha = 1
             self.errorMessageAlertView.transform = .identity
         })
+    }
+    
+    private func showEmailMessageAlertView() {
+        
+        emailMessageAlertView = MessageAlertView(
+            mainMessage: "Send your Pear a personal note.",
+            actionMessage: "Send an email",
+            dismissMessage: "Skip",
+            alertImageName: "happyPear",
+            removeFunction: { [weak self] dismiss in
+                guard let self = self else { return }
+                guard let match = self.match else { return }
+                if !dismiss {
+                    let matchEmail = "\(match.pair ?? "")@cornell.edu"
+                    let emailSubject = "Hello%20from%20your%20pear!"
+                    let emailBody = "Hi!"
+                    let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
+                    if let googleUrl = URL(string: googleUrlString) {
+                        // show alert to choose app
+                        if UIApplication.shared.canOpenURL(googleUrl) {
+                            if #available(iOS 10.0, *) {
+                                UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
+                            } else {
+                                UIApplication.shared.openURL(googleUrl)
+                            }
+                        }
+                    }
+                    self.updateMatchAvailabilities()
+                } else {
+                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                }
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.emailMessageVisualEffectView.alpha = 0
+                    self.emailMessageAlertView.alpha = 0
+                    self.emailMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                }, completion: { _ in
+                    self.emailMessageAlertView.removeFromSuperview()
+                    self.emailMessageVisualEffectView.removeFromSuperview()
+                })
+            }
+        )
+        
+        let blurEffect = UIBlurEffect(style: .light)
+        emailMessageVisualEffectView = UIVisualEffectView(effect: blurEffect)
+        view.addSubview(emailMessageVisualEffectView)
+        
+        emailMessageVisualEffectView.frame = view.bounds
+        view.addSubview(emailMessageAlertView)
+
+        emailMessageAlertView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(281)
+            make.width.equalTo(292)
+        }
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.emailMessageAlertView.transform = .init(scaleX: 1.5, y: 1.5)
+            self.emailMessageVisualEffectView.alpha = 1
+            self.emailMessageAlertView.alpha = 1
+            self.emailMessageAlertView.transform = .identity
+        })
+    }
+    
+    private func updateMatchAvailabilities() {
+        guard let match = match else { return }
+        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let value):
+                    if value.success {
+                        UserDefaults.standard.set(match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
+                            self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                    }
+                case .error:
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                }
+            }
+        }
     }
 
     // MARK: - Button Related
@@ -549,7 +643,7 @@ class SchedulingTimeViewController: UIViewController {
     @objc private func nextButtonPressed() {
         switch schedulingStatus {
         case .choosing, .confirming:
-            continueToSchedulingPlaces()
+            showEmailMessageAlertView()
         case .pickingTypical:
             updateUserAvailabilitiesAndPop()
         }
@@ -557,6 +651,7 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Navigation
     private func updateUserAvailabilitiesAndPop() {
+        
         NetworkManager.shared.updateTimeAvailabilities(
           savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
@@ -577,6 +672,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func continueToSchedulingPlaces() {
+        
         guard let match = match else {
             print("Tried to continue to scheduling places view controller, but match is nil")
             navigationController?.popViewController(animated: true)
@@ -591,11 +687,12 @@ class SchedulingTimeViewController: UIViewController {
             availabilities: selectedTimes.schedules
         )
 
-        let placesVC = SchedulingPlacesViewController(
+         let placesVC = SchedulingPlacesViewController(
             status: schedulingStatus,
             match: editedMatch
         )
         navigationController?.pushViewController(placesVC, animated: true)
+
     }
 
 }
@@ -760,22 +857,7 @@ extension SchedulingTimeViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - MessageAlertViewDelegate
-extension SchedulingTimeViewController: MessageAlertViewDelegate {
-
-    func removeAlertView(isDismiss: Bool) {
-        if isDismiss {
-            cancelMatchAndPopViewController()
-        }
-
-        UIView.animate(withDuration: 0.15, animations: {
-            self.errorMessageVisualEffectView.alpha = 0
-            self.errorMessageAlertView.alpha = 0
-            self.errorMessageAlertView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            self.errorMessageAlertView.removeFromSuperview()
-            self.errorMessageVisualEffectView.removeFromSuperview()
-        })
-    }
+extension SchedulingTimeViewController {
 
     private func cancelMatchAndPopViewController() {
         guard let match = match else { return }

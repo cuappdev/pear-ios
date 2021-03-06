@@ -30,6 +30,7 @@ class OnboardingPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         for subview in view.subviews {
             if let scrollView = subview as? UIScrollView {
@@ -59,6 +60,7 @@ class OnboardingPageViewController: UIPageViewController {
 
         setViewControllers([onboardingPages[0]], direction: .forward, animated: true, completion: nil)
     }
+    
 }
 
 extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDelegate {
@@ -77,4 +79,12 @@ extension OnboardingPageViewController: OnboardingPageDelegate, UIScrollViewDele
         scrollContentOffset = scrollView.contentOffset.x
         backgroundImage.frame.origin = CGPoint(x: backgroundXPosition, y: 0)
     }
+}
+
+extension OnboardingPageViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+    
 }

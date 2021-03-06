@@ -154,6 +154,10 @@ class EditingViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
 
         setupSections()
         setupNavigationBar()
@@ -167,6 +171,10 @@ class EditingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     private func setupSections() {
@@ -298,10 +306,10 @@ class EditingViewController: UIViewController {
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 }
             }
@@ -313,10 +321,10 @@ class EditingViewController: UIViewController {
                         if response.success {
                             self.navigationController?.popViewController(animated: true)
                         } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                     }
                 }
             }
@@ -553,7 +561,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
-        searchBar.searchTextField.clearButtonMode = .never
+        searchBar.searchTextField.clearButtonMode = .whileEditing
 
         searchBar.layer.cornerRadius = 8
         searchBar.layer.shadowColor = UIColor.black.cgColor
@@ -563,6 +571,7 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
 
         self.searchBar = searchBar
     }
+
 
     private func setupStack() {
         stackView.alignment = .center
