@@ -701,29 +701,33 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-//    private func continueToSchedulingPlaces() {
-//
-//        guard let match = match else {
-//            print("Tried to continue to scheduling places view controller, but match is nil")
-//            navigationController?.popViewController(animated: true)
-//            return
-//        }
-//
-//        let editedMatch = Match(
-//            matchID: match.matchID,
-//            status: match.status,
-//            meetingTime: match.meetingTime,
-//            users: match.users,
-//            availabilities: selectedTimes.schedules
-//        )
-//
-//         let placesVC = SchedulingPlacesViewController(
-//            status: schedulingStatus,
-//            match: editedMatch
-//        )
-//        navigationController?.pushViewController(placesVC, animated: true)
-//
-//    }
+    /* Places scheduling not currently supported on backend.
+
+    private func continueToSchedulingPlaces() {
+
+        guard let match = match else {
+            print("Tried to continue to scheduling places view controller, but match is nil")
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        let editedMatch = Match(
+            matchID: match.matchID,
+            status: match.status,
+            meetingTime: match.meetingTime,
+            users: match.users,
+            availabilities: selectedTimes.schedules
+        )
+
+         let placesVC = SchedulingPlacesViewController(
+            status: schedulingStatus,
+            match: editedMatch
+        )
+        navigationController?.pushViewController(placesVC, animated: true)
+
+    }
+
+     */
 
 }
 

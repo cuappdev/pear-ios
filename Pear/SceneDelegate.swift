@@ -43,7 +43,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
             
             NetworkManager.shared.refreshUserToken(token: unwrappedToken).observe { result in
-                print("Refresh user token")
                 DispatchQueue.main.async {
                     switch result {
                     case .value(let response):

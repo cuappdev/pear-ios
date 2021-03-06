@@ -90,7 +90,7 @@ extension Endpoint {
     
     /// [GET] Get social media of the user.
     static func getUserSocialMedia(netId: String) -> Endpoint {
-        Endpoint(path: "/user/sociaMedia/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+        Endpoint(path: "/user/socialMedia/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
     
     /// [GET] Get goals of the user.

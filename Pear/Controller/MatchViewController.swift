@@ -70,7 +70,6 @@ enum ChatStatus {
             return .planning
         }
     }
-
 }
 
 class MatchViewController: UIViewController {

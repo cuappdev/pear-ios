@@ -25,6 +25,7 @@ class TabPageViewController: UIPageViewController {
         } else {
             matchViewController = NoMatchViewController(user: user)
         }
+
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
 

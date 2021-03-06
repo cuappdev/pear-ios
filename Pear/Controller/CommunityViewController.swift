@@ -55,7 +55,6 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        print("getting users")
         NetworkManager.shared.getUsers().observe { response in
             DispatchQueue.main.async {
                 switch response {

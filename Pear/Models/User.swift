@@ -23,8 +23,6 @@ struct User: Codable, Equatable {
 
     static func == (lhs: User, rhs: User) -> Bool {
         lhs.firstName == rhs.firstName &&
-//        lhs.goals == rhs.goals &&
-//        lhs.netID == rhs.netID &&
         lhs.graduationYear == rhs.graduationYear &&
         lhs.groups == rhs.groups &&
         lhs.hometown == rhs.hometown &&
@@ -34,11 +32,6 @@ struct User: Codable, Equatable {
         lhs.netID == rhs.netID &&
         lhs.profilePictureURL == rhs.profilePictureURL &&
         lhs.pronouns == rhs.pronouns
-//        lhs.facebook == rhs.facebook &&
-//        lhs.instagram == rhs.instagram &&
-//        lhs.talkingPoints == rhs.talkingPoints &&
-//        lhs.availabilities == rhs.availabilities &&
-//        lhs.matches == rhs.matches
     }
 
 }
