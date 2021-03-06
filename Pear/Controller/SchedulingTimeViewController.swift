@@ -192,10 +192,10 @@ class SchedulingTimeViewController: UIViewController {
     private var selectedTimes: SelectedSchedules?
 
     // MARK: ViewController State
-    private var user: User?
-    private var pair: User?
-    private var match: Match?
-    private var schedulingStatus: SchedulingStatus?
+    private let user: User
+    private let pair: User?
+    private let match: Match?
+    private var schedulingStatus: SchedulingStatus
 
     private var isChoosing: Bool { .choosing ~= schedulingStatus }
     private var isConfirming: Bool { .confirming ~= schedulingStatus }
@@ -209,30 +209,30 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private init(status: SchedulingStatus, user: User, pair: User? = nil, match: Match? = nil) {
-        super.init(nibName: nil, bundle: nil)
         self.schedulingStatus = status
         self.match = match
         self.user = user
         self.pair = pair
-        
-        NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { [weak self] response in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let value):
-                    switch status {
-                    case .choosing:
-                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
-                    case .confirming:
-                        self.selectedTimes = SelectedSchedules(availabilities: self.getAvailabilitiesLeftForMatch(availabilities: value.data))
-                    case .pickingTypical:
-                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
-                    }
-                case .error:
-                    print("")
-                }
-            }
-        }
+        super.init(nibName: nil, bundle: nil)
+        getSelectedTimes()
+//        NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { [weak self] response in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                switch response {
+//                case .value(let value):
+//                    switch status {
+//                    case .choosing:
+//                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
+//                    case .confirming:
+//                        self.selectedTimes = SelectedSchedules(availabilities: self.getAvailabilitiesLeftForMatch(availabilities: value.data))
+//                    case .pickingTypical:
+//                        self.selectedTimes = SelectedSchedules(availabilities: value.data)
+//                    }
+//                case .error:
+//                    print("")
+//                }
+//            }
+//        }
     }
 
     required init?(coder: NSCoder) {
@@ -293,6 +293,36 @@ class SchedulingTimeViewController: UIViewController {
         changeDisplayedTimes(for: abbrevToDayDict[firstDay] ?? "Sunday")
     }
 
+    private func getSelectedTimes() {
+        getUserAvailabilitiesThen { [weak self] userAvailabilities in
+            guard let self = self else { return }
+            switch self.schedulingStatus {
+            case .confirming:
+                let availabilitiesLeftForMatch = self.getAvailabilitiesLeftForMatch(availabilities: userAvailabilities)
+                self.selectedTimes = SelectedSchedules(availabilities: availabilitiesLeftForMatch)
+            default:
+                self.selectedTimes = SelectedSchedules(availabilities: userAvailabilities)
+            }
+        }
+    }
+
+    private func getUserAvailabilitiesThen(_ closure: @escaping ([DaySchedule]) -> Void) {
+        NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { response in
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let result):
+                    guard result.success else {
+                        print("Network error: could not get user's availabilities.")
+                        return
+                    }
+                    closure(result.data)
+                case .error:
+                    print("Network error: could not get user's availabilities.")
+                }
+            }
+        }
+    }
+
     private func setupForStatus() {
         let dayString = abbrevToDayDict[selectedDayAbbrev]?.withCapitalizedFirstLetter ?? ""
         switch schedulingStatus {
@@ -305,8 +335,6 @@ class SchedulingTimeViewController: UIViewController {
         case .choosing:
             titleLabel.text = "Pick a time to meet"
             dayLabel.text = dayString
-        case .none:
-            print("fd")
         }
        
         timeCollectionView.allowsMultipleSelection = !isChoosing
@@ -644,7 +672,8 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Button Related
     private func updateNextButton() {
-        nextButton.isEnabled = selectedTimes!.numberSelected > 0
+        guard let selectedTimes = selectedTimes else { return }
+        nextButton.isEnabled = selectedTimes.numberSelected > 0
         if nextButton.isEnabled {
             nextButton.backgroundColor = .backgroundOrange
             nextButton.layer.shadowColor = UIColor.black.cgColor
@@ -674,16 +703,14 @@ class SchedulingTimeViewController: UIViewController {
             showEmailMessageAlertView()
         case .pickingTypical:
             updateUserAvailabilitiesAndPop()
-        case .none:
-            print("fdfs")
         }
     }
 
     // MARK: - Navigation
     private func updateUserAvailabilitiesAndPop() {
-        
+        guard let selectedTimes = selectedTimes else { return }
         NetworkManager.shared.updateTimeAvailabilities(
-            savedAvailabilities: selectedTimes!.schedules
+            savedAvailabilities: selectedTimes.schedules
         ).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -752,6 +779,8 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
     }
 
     private func configuredDayCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let selectedTimes = selectedTimes else { return UICollectionViewCell() }
+
         guard let cell = dayCollectionView.dequeueReusableCell(
                 withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier,
                 for: indexPath) as? SchedulingDayCollectionViewCell else {
@@ -763,7 +792,7 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
 
         // Update cell color based on whether there's availability for a day
         if let day = abbrevToDayDict[dayAbbrev] {
-            let availability = selectedTimes!.schedules.first { $0.day == day }
+            let availability = selectedTimes.schedules.first { $0.day == day }
             let isAvailable = (availability?.times.count ?? 0) > 0
             cell.updateBackgroundColor(isAvailable: isAvailable)
         }
@@ -797,9 +826,10 @@ extension SchedulingTimeViewController: UICollectionViewDataSource {
             let time = Time.stringTimeToFloat(time: timeString)
 
             // Select time(s) that were previously selected for a day
-            guard let day = abbrevToDayDict[selectedDayAbbrev] else { return cell }
+            guard let day = abbrevToDayDict[selectedDayAbbrev],
+                  let selectedTimes = selectedTimes else { return cell }
 
-            if selectedTimes!.schedules.contains(where: { $0.day == day && $0.times.contains(time) }) {
+            if selectedTimes.schedules.contains(where: { $0.day == day && $0.times.contains(time) }) {
                 timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 cell.isSelected = true
             }
@@ -856,9 +886,11 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.item]
 
-        guard let time = item.getTime(), let day = abbrevToDayDict[selectedDayAbbrev] else { return }
+        guard let time = item.getTime(),
+              let day = abbrevToDayDict[selectedDayAbbrev],
+              let selectedTimes = selectedTimes else { return }
 
-        selectedTimes!.add(day: day, time: time)
+        selectedTimes.add(day: day, time: time)
 
         updateNextButton()
     }
@@ -867,9 +899,11 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.item]
 
-        guard let time = item.getTime(), let day = abbrevToDayDict[selectedDayAbbrev] else { return }
+        guard let time = item.getTime(),
+              let day = abbrevToDayDict[selectedDayAbbrev],
+              let selectedTimes = selectedTimes else { return }
 
-        selectedTimes!.remove(day: day, time: time)
+        selectedTimes.remove(day: day, time: time)
 
         dayCollectionView.reloadData()
         updateNextButton()
