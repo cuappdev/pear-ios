@@ -105,10 +105,10 @@ class CommunityUserTableViewCell: UITableViewCell {
                 interests = userInterests
                 interestsCollectionView.reloadData()
             }
-            if let profilePictureURL = user.profilePictureURL,
-               let userGoogleId = user.googleID {
-                profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String:  profilePictureURL, cacheKey: userGoogleId))
-            }
+//            if let profilePictureURL = user.profilePictureURL,
+//               let userGoogleId = user.netID {
+//                profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String:  profilePictureURL, cacheKey: userGoogleId))
+//            }
         }
     }
 

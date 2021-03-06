@@ -172,12 +172,12 @@ class EditLocationAvailabilityViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        getUserAvailabilities()
+        getUserPreferredLocations()
     }
     
-    private func getUserAvailabilities() {
+    private func getUserPreferredLocations() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { response in
+        NetworkManager.shared.getUserPreferredLocations(netId: netId).observe { response in
             switch response {
             case .value(let value):
                 guard value.success else {
@@ -185,8 +185,8 @@ class EditLocationAvailabilityViewController: UIViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                    self.savedLocations = value.data.preferredLocations.map(\.name)
-                    for location in value.data.preferredLocations {
+                    self.savedLocations = value.data.map(\.name)
+                    for location in value.data {
                         if location.area == "Campus" {
                             self.selectedCampusLocations.append(location.name)
                         } else {

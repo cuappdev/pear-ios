@@ -114,9 +114,26 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User) {
         self.user = newUser
-        self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
-        let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
-        self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
+        self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.netID))
+        
+        NetworkManager.shared.getUserMatches(netId: newUser.netID).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let firstActiveMatch = response.data.filter({ $0.status != "inactive" }).first
+                        self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
+                    } else {
+                        
+                    }
+                case .error:
+                    print("")
+                }
+                
+            }
+        }
+
     }
 
     private func getUserThen(_ completion: @escaping (User) -> Void) {

@@ -82,7 +82,7 @@ struct UpdatePreferredLocationsBody: Codable {
 
 class DaySchedule: Codable, Equatable {
 
-    let day: String
+    var day: String
     var times: [Float]
 
     init(day: String, times: [Float]) {

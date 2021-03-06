@@ -208,7 +208,7 @@ class SocialMediaViewController: UIViewController {
     
     private func getUserSocialMedia() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        NetworkManager.shared.getUserSocialMedia(netId: netId).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {

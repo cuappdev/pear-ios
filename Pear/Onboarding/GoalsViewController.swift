@@ -170,13 +170,13 @@ class GoalsViewController: UIViewController {
 
     private func getUserGoals() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        NetworkManager.shared.getUserGoals(netId: netId).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        let userGoals = response.data.goals
+                        let userGoals = response.data
                         self.selectedGoals = userGoals
                         self.tableView.reloadData()
                         self.updateNext()

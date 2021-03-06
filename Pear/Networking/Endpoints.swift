@@ -40,23 +40,94 @@ extension Endpoint {
             return [:]
         }
     }
+    
+    // MARK: - General
 
-    /// [GET] Check if server application is running
+    /// [GET] Checks if server application is running.
     static func pingServer() -> Endpoint {
         Endpoint(path: "/general/hello/")
     }
-
-    static func refreshUserToken(token: String) -> Endpoint {
-        Endpoint(path: "/refresh/", headers: updateHeaders)
-    }
-
-    /// [POST] Authenticate ID token from Google and creates a user if account does not exist
+    
+    // MARK: - Authentication
+    
+    /// [POST] Authenticate ID token from Google and creates a user if account does not exist. Returns a session for the user.
     static func createUser(idToken: String) -> Endpoint {
         let body = UserSessionBody(idToken: idToken)
         return Endpoint(path: "/auth/login/", body: body)
     }
 
-    /// [POST] Update demographics information about the user
+    /// [GET] Authenticates the refresh token and returns a new user session.
+    static func refreshUserToken(token: String) -> Endpoint {
+        Endpoint(path: "/refresh/", headers: updateHeaders)
+    }
+    
+    // MARK: - Get User
+    
+    /// [GET] Get information about the user.
+    static func getUser(netId: String) -> Endpoint {
+        return Endpoint(path: "/user/", headers: standardHeaders)
+    }
+
+    /// [GET] Get clubs of the user.
+    static func getUserClubs() -> Endpoint {
+        Endpoint(path: "/user/clubs/")
+    }
+
+    /// [GET] Get major of the user
+    static func getUserMajor() -> Endpoint {
+        Endpoint(path: "/user/majors/")
+    }
+    
+    /// [GET] Get talking points of the user.
+    static func getUserTalkingPoints(netId: String) -> Endpoint {
+        Endpoint(path: "/user/talkingPoints/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+
+    /// [GET] Get interests of the user.
+    static func getUserInterests() -> Endpoint {
+        Endpoint(path: "/user/interests/")
+    }
+    
+    /// [GET] Get social media of the user.
+    static func getUserSocialMedia(netId: String) -> Endpoint {
+        Endpoint(path: "/user/sociaMedia/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+    
+    /// [GET] Get goals of the user.
+    static func getUserGoals(netId: String) -> Endpoint {
+        Endpoint(path: "/user/goals/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+    
+    /// [GET] Get availabilities of user by netID.
+    static func getUserAvailabilities(netId: String) -> Endpoint {
+        Endpoint(path: "/user/availabilities/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+    
+    /// [GET] Gets another user's matches, given their netID. If none provided, gets current user's matches.
+    static func getUserMatches(netId: String) -> Endpoint {
+        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+
+    /// [GET] Get preferred locations of user by netID.
+    static func getUserPreferredLocations(netId: String) -> Endpoint {
+        Endpoint(path: "/user/preferredLocations/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
+    
+    // MARK: - Get users
+    
+    /// [GET] Get all users.
+    static func getUsers() -> Endpoint {
+        Endpoint(path: "/user/all/", headers: standardHeaders)
+    }
+
+    /// [GET] Get searched users.
+    static func searchUsers(query: String) -> Endpoint {
+        Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
+    }
+    
+    // MARK: - Update user.
+
+    /// [POST] Update demographics information about the user.
     static func updateUserDemographics(
         graduationYear: String,
         hometown: String,
@@ -74,25 +145,25 @@ extension Endpoint {
         return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
     }
 
-    /// [POST] Update interests information about the user
+    /// [POST] Update interests information about the user.
     static func updateUserInterests(interests: [String]) -> Endpoint {
         let body = UpdateUserInterestsBody(interests: interests)
         return Endpoint(path: "/user/interests/", headers: standardHeaders, body: body)
     }
 
-    /// [POST] Update groups information about the user
+    /// [POST] Update groups information about the user.
     static func updateUserGroups(groups: [String]) -> Endpoint {
         let body = UpdateUserGroupsBody(groups: groups)
         return Endpoint(path: "/user/groups/", headers: standardHeaders, body: body)
     }
 
-    /// [POST] Update goals information about the user
+    /// [POST] Update goals information about the user.
     static func updateUserGoals(goals: [String]) -> Endpoint {
         let body = UpdateUserGoalsBody(goals: goals)
         return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
     }
 
-    /// [POST] Update goals information about the user
+    /// [POST] Update social media information about the user.
     static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
         let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
         return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
@@ -104,77 +175,29 @@ extension Endpoint {
         return Endpoint(path: "/user/organizations/", headers: standardHeaders, body: body)
     }
 
-    /// [POST] Update talking points information about the user
+    /// [POST] Update talking points information about the user.
     static func updateUserTalkingPoints(talkingPoints: [String]) -> Endpoint {
         let body = UpdateUserTalkingPointsBody(talkingPoints: talkingPoints)
         return Endpoint(path: "/user/talkingPoints/", headers: standardHeaders, body: body)
     }
 
-    /// [GET] Get information about the user
-    static func getUser(netId: String) -> Endpoint {
-        return Endpoint(path: "/user/", headers: standardHeaders)
-    }
-
-    /// [GET] Get clubs of the user
-    static func getUserClubs() -> Endpoint {
-        Endpoint(path: "/user/clubs/")
-    }
-
-    /// [GET] Get major of the user
-    static func getUserMajor() -> Endpoint {
-        Endpoint(path: "/user/majors/")
-    }
-
-    /// [GET] Get interests of the user
-    static func getUserInterests() -> Endpoint {
-        Endpoint(path: "/user/interests/")
-    }
-
-    /// [GET] Get all users
-    static func getUsers() -> Endpoint {
-        Endpoint(path: "/user/all/", headers: standardHeaders)
-    }
-
-    /// [GET] Get searched users
-    static func searchUsers(query: String) -> Endpoint {
-        Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
-    }
-
-    /// [GET] Get all student groups
-    static func getAllGroups() -> Endpoint {
-        Endpoint(path: "/group/all/", headers: standardHeaders)
-    }
-
-    /// [GET] Get all interests
-    static func getAllInterests() -> Endpoint {
-        Endpoint(path: "/interest/all/", headers: standardHeaders)
-    }
-
-    /// [GET] Get all majors
-    static func getAllMajors() -> Endpoint {
-        Endpoint(path: "/major/all/", headers: standardHeaders)
-    }
-
-    /// [GET] Get user time availabilities
-    static func getTimeAvailabilities() -> Endpoint {
-        Endpoint(path: "/user/", headers: standardHeaders)
-    }
-
-    /// [POST] Update user time availabilities
+    /// [POST] Update time availabilities of the user.
     static func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Endpoint {
         let body = UpdateTimeAvailabilitiesBody(schedule: savedAvailabilities)
         return Endpoint(path: "/user/availabilities/", headers: standardHeaders, body: body)
     }
-
-    /// [GET] Gets current user's matches
-    static func getMatch(netId: String) -> Endpoint {
-        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
-
+    
+    /// [POST] Updates the preferred location of current user.
+    static func updatePreferredLocations(locations: [Location]) -> Endpoint {
+        let body = UpdatePreferredLocationsBody(preferences: locations)
+        return Endpoint(path: "/user/preferredLocations/", headers: standardHeaders, body: body)
     }
     
-    /// [GET] Gets another user's matches, given their netID
-    static func getMatch() -> Endpoint {
-        Endpoint(path: "/match/", headers: standardHeaders)
+    // MARK: - Matches
+    
+    /// [GET] Gets another user's matches, given their netID.
+    static func getMatch(netId: String) -> Endpoint {
+        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
     /// [POST] Update the availabilities for the given match.
@@ -193,9 +216,21 @@ extension Endpoint {
         Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
     }
     
-    static func updatePreferredLocations(locations: [Location]) -> Endpoint {
-        let body = UpdatePreferredLocationsBody(preferences: locations)
-        return Endpoint(path: "/user/preferredLocations/", headers: standardHeaders, body: body)
+    // MARK: - Stored
+    
+    /// [GET] Get all student groups.
+    static func getAllGroups() -> Endpoint {
+        Endpoint(path: "/group/all/", headers: standardHeaders)
+    }
+
+    /// [GET] Get all interests.
+    static func getAllInterests() -> Endpoint {
+        Endpoint(path: "/interest/all/", headers: standardHeaders)
+    }
+
+    /// [GET] Get all majors.
+    static func getAllMajors() -> Endpoint {
+        Endpoint(path: "/major/all/", headers: standardHeaders)
     }
 
 }

@@ -143,17 +143,17 @@ class MatchViewController: UIViewController {
         }
 
         NetworkManager.shared.getUser(netId: pairNetId).observe { response in
-            switch response {
-            case .value(let result):
-                guard result.success else {
-                    print("Network error: could not get user's pair.")
-                    return
-                }
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let result):
+                    guard result.success else {
+                        print("Network error: could not get user's pair.")
+                        return
+                    }
                     closure(result.data)
+                case .error:
+                    print("Network error: could not get user's pair.")
                 }
-            case .error:
-                print("Network error: could not get user's pair.")
             }
         }
     }
@@ -225,7 +225,7 @@ class MatchViewController: UIViewController {
         matchProfileImageView.layer.masksToBounds = true
         matchProfileImageView.contentMode = .scaleAspectFill
         matchProfileImageView.clipsToBounds = true
-        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.googleID))
+        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.netID))
    
         view.addSubview(matchProfileImageView)
 
