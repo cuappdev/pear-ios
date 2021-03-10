@@ -34,6 +34,8 @@ class FeedbackViewController: UIViewController {
     private let finishButton = UIButton()
 
     // MARK: - Private Data Vars
+    let screenHeight = UIScreen.main.bounds.height
+    let finishButtonY = UIScreen.main.bounds.height - Constants.Onboarding.nextBottomPadding - (Constants.Onboarding.mainButtonSize.height / 2)
     private let collectionViewSpacing: CGFloat = 12
     private let initialFeedbackOptions: [[FeedbackOption]] = [
         [FeedbackOption(text: "Yes", image: "schedule", hasImage: true, isRating: false),
@@ -157,30 +159,19 @@ class FeedbackViewController: UIViewController {
         headerLabel.center.y = UIScreen.main.bounds.height
         questionLabel.center.y = UIScreen.main.bounds.height
         answerCollectionView.center.y = UIScreen.main.bounds.height
-
         animateView(duration: 0.4, delay: 0, previousY: 160, yOffset: 0, animateView: headerLabel)
-//        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-//            self.headerLabel.alpha = 1
-//            self.headerLabel.center.y = 160
-//        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 0.4, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.questionLabel.alpha = 1
-            self.questionLabel.center.y = self.headerLabel.center.y + 120
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 0.8, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-                self.answerCollectionView.alpha = 1
-            self.answerCollectionView.center.y = self.questionLabel.center.y + 110
-        }, completion: nil)
+        animateView(duration: 0.4, delay: 0.4, previousY: self.headerLabel.center.y, yOffset: 120, animateView: questionLabel)
+        animateView(duration: 0.4, delay: 0.8, previousY: self.questionLabel.center.y, yOffset: 110, animateView: self.answerCollectionView)
     }
 
     private func removeInitialAnimation() {
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn) {
             self.questionLabel.alpha = 0
-            self.questionLabel.center.y = 160
+            self.questionLabel.center.y = 240
         } completion: { _ in
             UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
                 self.answerCollectionView.alpha = 0
-                self.answerCollectionView.center.y = 0
+                self.answerCollectionView.center.y = 240
             }, completion: { _ in
                 self.feedbackStatus == .didNotMeet ? self.notMeetAnimation() : self.didMeetAnimation()
             })
@@ -189,7 +180,6 @@ class FeedbackViewController: UIViewController {
 
     private func notMeetAnimation() {
         questionLabel.text = "Aww, why didn’t you meet?"
-        let screenHeight = UIScreen.main.bounds.height
         questionLabel.center.y = screenHeight
         answerCollectionView.center.y = screenHeight
         finishButton.center.y = screenHeight
@@ -198,23 +188,13 @@ class FeedbackViewController: UIViewController {
         DispatchQueue.main.async {
             self.answerCollectionView.reloadData()
         }
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.questionLabel.alpha = 1
-            self.questionLabel.center.y = self.headerLabel.center.y + 120
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 0.4, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-                self.answerCollectionView.alpha = 1
-            self.answerCollectionView.center.y = self.questionLabel.center.y + 110
-        }, completion: nil)
-        UIView.animate(withDuration: 0.6, delay: 0.8, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.finishButton.alpha = 1
-            self.finishButton.center.y = screenHeight - Constants.Onboarding.nextBottomPadding - (Constants.Onboarding.mainButtonSize.height / 2)
-        }, completion: nil)
+        animateView(duration: 0.4, delay: 0, previousY: self.headerLabel.center.y, yOffset: 120, animateView: questionLabel)
+        animateView(duration: 0.4, delay: 0.4, previousY: self.questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
+        animateView(duration: 0.6, delay: 0.8, previousY: finishButtonY, yOffset: 0, animateView: finishButton)
     }
 
     private func didMeetAnimation() {
         questionLabel.text = "Yay! How did your chat go?"
-        let screenHeight = UIScreen.main.bounds.height
         questionLabel.center.y = screenHeight
         answerCollectionView.center.y = screenHeight
         finishButton.center.y = screenHeight
@@ -232,33 +212,13 @@ class FeedbackViewController: UIViewController {
             make.centerY.equalTo(questionLabel.snp.centerY).offset(110)
             make.bottom.equalTo(view.snp.centerY)
         }
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.questionLabel.alpha = 1
-            self.questionLabel.center.y = self.headerLabel.center.y + 120
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 0.4, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.answerCollectionView.alpha = 1
-            self.answerCollectionView.center.x = self.view.center.x
-            self.answerCollectionView.center.y = self.questionLabel.center.y + 110
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 0.8, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.lowRatingLabel.alpha = 1
-            self.highRatngLabel.alpha = 1
-            self.lowRatingLabel.center.y = self.answerCollectionView.center.y - 5
-            self.highRatngLabel.center.y = self.answerCollectionView.center.y - 5
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 1.2, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.askDetailLabel.alpha = 1
-            self.askDetailLabel.center.y = self.lowRatingLabel.center.y + 80
-        }, completion: nil)
-        UIView.animate(withDuration: 0.4, delay: 1.6, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.detailTextView.alpha = 1
-            self.detailTextView.center.y = self.askDetailLabel.center.y + 60
-        }, completion: nil)
-        UIView.animate(withDuration: 0.6, delay: 2.0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.finishButton.alpha = 1
-            self.finishButton.center.y = screenHeight - Constants.Onboarding.nextBottomPadding - (Constants.Onboarding.mainButtonSize.height / 2)
-        }, completion: nil)
+        animateView(duration: 0.4, delay: 0, previousY: headerLabel.center.y, yOffset: 120, animateView: questionLabel)
+        animateView(duration: 0.4, delay: 0.4, previousY: questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
+        animateView(duration: 0.4, delay: 0.8, previousY: answerCollectionView.center.y, yOffset: -5, animateView: lowRatingLabel)
+        animateView(duration: 0.4, delay: 0.8, previousY: answerCollectionView.center.y, yOffset: -5, animateView: highRatngLabel)
+        animateView(duration: 0.4, delay: 1.2, previousY: lowRatingLabel.center.y, yOffset: 80, animateView: askDetailLabel)
+        animateView(duration: 0.4, delay: 1.6, previousY: askDetailLabel.center.y, yOffset: 60, animateView: detailTextView)
+        animateView(duration: 0.6, delay: 2.0, previousY: finishButtonY, yOffset: 0, animateView: finishButton)
     }
 
     @objc private func closeFeedback() {
