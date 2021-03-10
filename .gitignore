@@ -1,6 +1,7 @@
 # Keys
 Pear/Supporting/GoogleService-Info.plist
 Pear/Supporting/Keys.plist
+Pear/Supporting/Secrets.plist
 
 # CocoaPods
 Pods/

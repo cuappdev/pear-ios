@@ -8,6 +8,7 @@
 
 import GoogleSignIn
 import FutureNova
+import AppDevAnnouncements
 import UIKit
 
 @UIApplicationMain
@@ -17,6 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Configure Google sign-in with client ID
         GIDSignIn.sharedInstance().clientID = Keys.googleClientID
+
+        // Set up AppDev Announcements Feedback
+        AnnouncementNetworking.setupConfig(
+            scheme: Secrets.announcementsScheme,
+            host: Secrets.announcementsHost,
+            commonPath: Secrets.announcementsCommonPath,
+            announcementPath: Secrets.announcementsPath
+        )
 
         // Setup networking
         Endpoint.setupEndpointConfig()

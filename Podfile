@@ -13,6 +13,9 @@ use_frameworks!
     pod 'SwiftyJSON'
     pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'
 
+    # Feedback
+    pod 'AppDevAnnouncements', :git => 'https://github.com/cuappdev/appdev-announcements.git', :commit => '4cfbcd46af092037ac6632fe5616a13e5f280615'
+    pod 'CHIPageControl/Jaloro'
 
     # UI Frameworks
     pod 'IQKeyboardManagerSwift'
