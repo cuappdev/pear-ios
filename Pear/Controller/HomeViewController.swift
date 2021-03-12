@@ -25,7 +25,6 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
-    private var showShowMenu = false
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
@@ -87,8 +86,12 @@ class HomeViewController: UIViewController {
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
             guard let self = self else { return }
-            if self.user == nil || self.user != newUser {
-                self.setUserAndTabPage(newUser: newUser)
+            self.getUserMatchThen(netId: newUser.netID) { [weak self] matches in
+                guard let self = self else { return }
+                if self.user == nil || self.user != newUser {
+                    let firstActiveMatch = matches.filter({ $0.status != "inactive" }).first
+                    self.setUserAndTabPage(newUser: newUser, match: firstActiveMatch)
+                }
             }
         }
     }
@@ -112,28 +115,44 @@ class HomeViewController: UIViewController {
         center.add(request)
     }
 
-    private func setUserAndTabPage(newUser: User) {
-        self.user = newUser
-        self.profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.googleID))
-        let firstActiveMatch = newUser.matches.filter({ $0.status != "inactive" }).first
-        self.setupTabPageViewController(with: firstActiveMatch, user: newUser)
+    private func setUserAndTabPage(newUser: User, match: Match? = nil) {
+        user = newUser
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.netID))
+        setupTabPageViewController(with: match, user: newUser)
     }
 
     private func getUserThen(_ completion: @escaping (User) -> Void) {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-
         NetworkManager.shared.getUser(netId: netId).observe { result in
-            switch result {
-            case .value(let response):
-                guard response.success else {
-                    print("Network error: could not get user.")
-                    return
-                }
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    guard response.success else {
+                        print("Network error: could not get user.")
+                        return
+                    }
                     completion(response.data)
+                case .error:
+                    print("Network error: could not get user.")
                 }
-            case .error:
-                print("Network error: could not get user.")
+            }
+        }
+    }
+
+    private func getUserMatchThen(netId: String, completion: @escaping ([Match]) -> Void) {
+        NetworkManager.shared.getUserMatches(netId: netId).observe { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    guard response.success else {
+                        print("Network error: could not get user match.")
+                        return
+                    }
+                    completion(response.data)
+                case .error:
+                    print("Network error: could not get user match.")
+                }
+
             }
         }
     }
@@ -153,7 +172,6 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
-        showShowMenu = true
         presentMenu(animated: true)
     }
     
@@ -170,7 +188,6 @@ class HomeViewController: UIViewController {
     }
 
     private func setUpConstraints() {
-
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
             make.leading.equalToSuperview().inset(20)
@@ -187,19 +204,15 @@ class HomeViewController: UIViewController {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
-
     }
-
 }
 
 extension HomeViewController: UICollectionViewDelegate {
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeTabIndex = indexPath.item
         tabPageViewController?.setViewController(to: indexPath.item)
         tabCollectionView.reloadData()
     }
-
 }
 
 extension HomeViewController: UICollectionViewDataSource {

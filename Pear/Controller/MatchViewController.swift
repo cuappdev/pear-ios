@@ -70,7 +70,6 @@ enum ChatStatus {
             return .planning
         }
     }
-
 }
 
 class MatchViewController: UIViewController {
@@ -136,24 +135,24 @@ class MatchViewController: UIViewController {
         }
     }
 
-    private func getPairThen(_ closure: @escaping (User) -> Void) {
+    private func getPairThen(_ completion: @escaping (User) -> Void) {
         guard let pairNetId = match.pair else {
             print("Unable to get the pair's netid from the match.")
             return
         }
 
         NetworkManager.shared.getUser(netId: pairNetId).observe { response in
-            switch response {
-            case .value(let result):
-                guard result.success else {
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let result):
+                    guard result.success else {
+                        print("Network error: could not get user's pair.")
+                        return
+                    }
+                    completion(result.data)
+                case .error:
                     print("Network error: could not get user's pair.")
-                    return
                 }
-                DispatchQueue.main.async {
-                    closure(result.data)
-                }
-            case .error:
-                print("Network error: could not get user's pair.")
             }
         }
     }
@@ -225,7 +224,7 @@ class MatchViewController: UIViewController {
         matchProfileImageView.layer.masksToBounds = true
         matchProfileImageView.contentMode = .scaleAspectFill
         matchProfileImageView.clipsToBounds = true
-        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.googleID))
+        matchProfileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: pair.profilePictureURL, cacheKey: pair.netID))
    
         view.addSubview(matchProfileImageView)
 

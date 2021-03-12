@@ -179,7 +179,7 @@ class EditTimeAvailabilityViewController: UIViewController {
 
     private func getTimeAvailabilities() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { response in
+        NetworkManager.shared.getUserAvailabilities(netId: netId).observe { response in
             switch response {
             case .value(let value):
                 guard value.success else {
@@ -187,7 +187,7 @@ class EditTimeAvailabilityViewController: UIViewController {
                     return
                 }
                 var userAvailabilities: [String: [String]] = [:]
-                for availability in value.data.availabilities {
+                for availability in value.data {
                     userAvailabilities[availability.day.localizedCapitalized] = availability.times.map({Time.floatToStringTime(time: $0)})
                 }
                 self.savedAvailabilities = userAvailabilities

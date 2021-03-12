@@ -80,7 +80,7 @@ class ProfileMenuViewController: UIViewController {
         profileImageView.clipsToBounds = true
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
    
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)

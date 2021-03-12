@@ -102,13 +102,13 @@ class TalkingPointsViewController: UIViewController {
     
     private func getUserTalkingPoints() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        NetworkManager.shared.getUserTalkingPoints(netId: netId).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .value(let response):
                     if response.success {
-                        let userTalkingPoints = response.data.talkingPoints.map {
+                        let userTalkingPoints = response.data.map {
                             return SimpleOnboardingCell(name: $0, subtitle: nil)
                         }
                         self.selectedInterestsGroups = userTalkingPoints

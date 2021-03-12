@@ -46,7 +46,7 @@ class EditDemographicsViewController: UIViewController {
         demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.googleID))
+        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -271,7 +271,7 @@ class EditDemographicsViewController: UIViewController {
                         switch result {
                         case .value(let response):
                             if response.success {
-                                ImageCache.default.removeImage(forKey: self.user.googleID)
+                                ImageCache.default.removeImage(forKey: self.user.netID)
                                 self.navigationController?.popViewController(animated: true)
                             } else {
                                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)
