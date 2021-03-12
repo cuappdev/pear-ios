@@ -106,9 +106,8 @@ class CommunityUserTableViewCell: UITableViewCell {
                 interestsCollectionView.reloadData()
             }
 
-             if let profilePictureURL = user.profilePictureURL,
-                let userNetId = user.netID {
-                 profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: profilePictureURL, cacheKey: userNetId))
+             if let profilePictureURL = user.profilePictureURL {
+                 profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: profilePictureURL, cacheKey: user.netID))
              }
         }
     }

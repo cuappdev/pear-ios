@@ -63,6 +63,8 @@
 		D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4349978253C14320024A992 /* LeftAlignedFlowLayour.swift */; };
 		D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */; };
 		D434997D253C151C0024A992 /* InterestTagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */; };
+		D440924B25FB11EA00A4690A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440924A25FB11EA00A4690A /* ProfileViewController.swift */; };
+		D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440925025FB145400A4690A /* ProfileSummaryTableViewCell.swift */; };
 		D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */; };
 		D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */; };
 		D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */; };
@@ -177,6 +179,8 @@
 		D4349978253C14320024A992 /* LeftAlignedFlowLayour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedFlowLayour.swift; sourceTree = "<group>"; };
 		D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingCollectionView.swift; sourceTree = "<group>"; };
 		D434997C253C151C0024A992 /* InterestTagCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestTagCollectionViewCell.swift; sourceTree = "<group>"; };
+		D440924A25FB11EA00A4690A /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		D440925025FB145400A4690A /* ProfileSummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryTableViewCell.swift; sourceTree = "<group>"; };
 		D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchDropdownView.swift; sourceTree = "<group>"; };
 		D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSelectDropdownView.swift; sourceTree = "<group>"; };
 		D4490F4B2512F9A1002AA934 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
@@ -330,6 +334,15 @@
 			path = Layouts;
 			sourceTree = "<group>";
 		};
+		D440924F25FB143900A4690A /* ProfileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				D440924A25FB11EA00A4690A /* ProfileViewController.swift */,
+				D440925025FB145400A4690A /* ProfileSummaryTableViewCell.swift */,
+			);
+			path = ProfileScreen;
+			sourceTree = "<group>";
+		};
 		D474108F25C729780062E2B4 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -444,6 +457,7 @@
 		D48BB00923DE099200E88129 /* Pear */ = {
 			isa = PBXGroup;
 			children = (
+				D440924F25FB143900A4690A /* ProfileScreen */,
 				D48E320E25D9CFF7009AB253 /* Settings */,
 				D474108F25C729780062E2B4 /* Onboarding */,
 				D4349977253C14190024A992 /* Layouts */,
@@ -827,6 +841,7 @@
 				D46A363025F3CA4F00EADA9F /* UserSocialMedia.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
+				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
 				50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */,
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
@@ -879,6 +894,7 @@
 				50038699252E74E80036A3E6 /* SettingsViewController.swift in Sources */,
 				D42961A02526246600C677C3 /* HomeViewController.swift in Sources */,
 				D4FFD108252BE0780036C4B2 /* SocialMediaViewController.swift in Sources */,
+				D440924B25FB11EA00A4690A /* ProfileViewController.swift in Sources */,
 				303F81A624395F63002937CD /* MenuOption.swift in Sources */,
 				4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */,
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,

@@ -41,6 +41,7 @@ class CommunityViewController: UIViewController {
         communityTableView.isScrollEnabled = true
         communityTableView.separatorStyle = .none
         communityTableView.backgroundColor = .clear
+        communityTableView.showsVerticalScrollIndicator = false
         communityTableView.rowHeight = UITableView.automaticDimension
         communityTableView.estimatedRowHeight = 140
         communityTableView.sizeToFit()
@@ -109,6 +110,16 @@ extension CommunityViewController: UITableViewDataSource {
         let user = users[indexPath.row]
         cell.configure(with: user)
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = users[indexPath.row]
+        navigationController?.pushViewController(
+            ProfileViewController(
+                userId: user.netID,
+                userName: "\(user.firstName ?? "") \(user.lastName ?? "")",
+                profilePicture: user.profilePictureURL ?? ""
+            ), animated: true)
     }
 
 }
