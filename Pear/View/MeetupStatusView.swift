@@ -162,12 +162,12 @@ class MeetupStatusView: UIView {
             .underlinedFont("\(formatDate(date))")
             .normalFont(".")
 
-//        if user.instagram != nil || user.facebook != nil {
-//            fullText
-//                .normalFont("\nYou can reach \(user.firstName) on ")
-//                .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
-//                .normalFont(".")
-//        }
+        if user.instagram != nil || user.facebook != nil {
+            fullText
+                .normalFont("\nYou can reach \(user.firstName) on ")
+                .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
+                .normalFont(".")
+        }
 
         messageTextView.attributedText = fullText
     }
@@ -202,12 +202,12 @@ class MeetupStatusView: UIView {
         let fullText = NSMutableAttributedString()
             .normalFont("Oh no, it looks like your schedules don’t line up 😢 I hope it works out next time!")
 
-//        if user.instagram != nil || user.facebook != nil {
-//            fullText
-//                .normalFont("\nYou can still reach \(user.firstName) on ")
-//                .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
-//                .normalFont(".")
-//        }
+        if user.instagram != nil || user.facebook != nil {
+            fullText
+                .normalFont("\nYou can still reach \(user.firstName) on ")
+                .socialMediaLinks(instagram: user.instagram, facebook: user.facebook)
+                .normalFont(".")
+        }
         messageTextView.attributedText = fullText
     }
 
