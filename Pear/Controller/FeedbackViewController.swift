@@ -276,7 +276,7 @@ class FeedbackViewController: UIViewController {
             make.centerY.equalTo(askDetailLabel.snp.centerY).offset(60)
         }
     }
-
+    
 }
 
 // MARK: - UICollectionViewDataSource

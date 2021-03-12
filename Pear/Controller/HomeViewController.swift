@@ -38,7 +38,9 @@ class HomeViewController: UIViewController {
 
         view.backgroundColor = .backgroundLightGreen
 
-        presentAnnouncement(completion: nil)
+        presentAnnouncement { (bool) in
+            print(bool)
+        }
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profilePressed))
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
