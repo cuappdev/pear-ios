@@ -290,7 +290,7 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    private func getUserAvailabilitiesThen(_ closure: @escaping ([DaySchedule]) -> Void) {
+    private func getUserAvailabilitiesThen(_ completion: @escaping ([DaySchedule]) -> Void) {
         NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { response in
             DispatchQueue.main.async {
                 switch response {
@@ -299,7 +299,7 @@ class SchedulingTimeViewController: UIViewController {
                         print("Network error: could not get user's availabilities.")
                         return
                     }
-                    closure(result.data)
+                    completion(result.data)
                 case .error:
                     print("Network error: could not get user's availabilities.")
                 }

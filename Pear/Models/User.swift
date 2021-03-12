@@ -20,18 +20,11 @@ struct User: Codable, Equatable {
     let pronouns: String
     let interests: [String]
     let groups: [String]
+    let facebook: String?
+    let instagram: String?
 
     static func == (lhs: User, rhs: User) -> Bool {
-        lhs.firstName == rhs.firstName &&
-        lhs.graduationYear == rhs.graduationYear &&
-        lhs.groups == rhs.groups &&
-        lhs.hometown == rhs.hometown &&
-        lhs.interests == rhs.interests &&
-        lhs.lastName == rhs.lastName &&
-        lhs.major == rhs.major &&
-        lhs.netID == rhs.netID &&
-        lhs.profilePictureURL == rhs.profilePictureURL &&
-        lhs.pronouns == rhs.pronouns
+        lhs.netID == rhs.netID
     }
 
 }
