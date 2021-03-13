@@ -29,7 +29,6 @@ class HomeViewController: UIViewController {
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
-
     // Temporary button to trigger in-app match feedback
     private var feedbackButton = UIButton()
 
@@ -76,7 +75,7 @@ class HomeViewController: UIViewController {
 
         feedbackButton.setTitle("Feedback", for: .normal)
         feedbackButton.setTitleColor(.darkGreen, for: .normal)
-        feedbackButton.titleLabel?.font = UIFont.getFont(.medium, size: 18)
+        feedbackButton.titleLabel?.font = .getFont(.medium, size: 18)
         feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
@@ -218,10 +217,9 @@ class HomeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
-        // TODO - remove later
         feedbackButton.snp.makeConstraints { make in
-            make.centerY.equalTo(tabCollectionView.snp.centerY)
-            make.left.equalTo(tabCollectionView.snp.right).offset(10)
+            make.centerY.equalTo(tabCollectionView)
+            make.leading.equalTo(tabCollectionView.snp.trailing).offset(10)
         }
 
         tabContainerView.snp.makeConstraints { make in

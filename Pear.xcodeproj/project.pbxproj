@@ -36,8 +36,7 @@
 		4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */; };
 		4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */; };
 		50038699252E74E80036A3E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50038698252E74E80036A3E6 /* SettingsViewController.swift */; };
-		5012B51025F835A700F5F713 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5012B50F25F835A700F5F713 /* Secrets.swift */; };
-		5012B51525F835AF00F5F713 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5012B51425F835AF00F5F713 /* Secrets.plist */; };
+		5012B51525F835AF00F5F713 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5012B51425F835AF00F5F713 /* Keys.plist */; };
 		5012B55125F840FF00F5F713 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5012B55025F840FE00F5F713 /* FeedbackViewController.swift */; };
 		5012B55625F8414D00F5F713 /* FeedbackOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5012B55525F8414D00F5F713 /* FeedbackOption.swift */; };
 		5012B55B25F841A300F5F713 /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5012B55A25F841A300F5F713 /* FeedbackCollectionViewCell.swift */; };
@@ -60,7 +59,6 @@
 		D41FE85C246463FC0048900F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85B246463FC0048900F /* User.swift */; };
 		D41FE85E2464640F0048900F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85D2464640F0048900F /* Match.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
-		D41FE86824661E260048900F /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D41FE86724661E260048900F /* Keys.plist */; };
 		D42961842525F1C800C677C3 /* TalkingPointsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */; };
 		D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961882526012400C677C3 /* SimpleOnboardingCell.swift */; };
 		D42961A02526246600C677C3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D429619F2526246600C677C3 /* HomeViewController.swift */; };
@@ -151,8 +149,7 @@
 		4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
 		50038698252E74E80036A3E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		5012B50F25F835A700F5F713 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
-		5012B51425F835AF00F5F713 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		5012B51425F835AF00F5F713 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		5012B55025F840FE00F5F713 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		5012B55525F8414D00F5F713 /* FeedbackOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackOption.swift; sourceTree = "<group>"; };
 		5012B55A25F841A300F5F713 /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -179,7 +176,6 @@
 		D41FE85B246463FC0048900F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D41FE85D2464640F0048900F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
-		D41FE86724661E260048900F /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkingPointsViewController.swift; sourceTree = "<group>"; };
 		D42961882526012400C677C3 /* SimpleOnboardingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingCell.swift; sourceTree = "<group>"; };
 		D429619F2526246600C677C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -414,11 +410,9 @@
 			children = (
 				30304E0A23F4B6AC006DC6C3 /* Fonts */,
 				4FCE3AD2252006D5004E2E33 /* GoogleService-Info.plist */,
-				5012B50F25F835A700F5F713 /* Secrets.swift */,
-				5012B51425F835AF00F5F713 /* Secrets.plist */,
+				5012B51425F835AF00F5F713 /* Keys.plist */,
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
 				30304E0823E78228006DC6C3 /* Constants.swift */,
-				D41FE86724661E260048900F /* Keys.plist */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -647,8 +641,7 @@
 				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
 				D48BB01223DE099200E88129 /* Main.storyboard in Resources */,
-				5012B51525F835AF00F5F713 /* Secrets.plist in Resources */,
-				D41FE86824661E260048900F /* Keys.plist in Resources */,
+				5012B51525F835AF00F5F713 /* Keys.plist in Resources */,
 				30304E0F23F4B6E4006DC6C3 /* CircularStd-Black.otf in Resources */,
 				30304E1123F4B6E4006DC6C3 /* CircularStd-Medium.otf in Resources */,
 			);
@@ -889,7 +882,6 @@
 				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
 				5012B55B25F841A300F5F713 /* FeedbackCollectionViewCell.swift in Sources */,
 				D41FE85E2464640F0048900F /* Match.swift in Sources */,
-				5012B51025F835A700F5F713 /* Secrets.swift in Sources */,
 				D4DD8E3D25E1C8F800CF15D5 /* Endpoints.swift in Sources */,
 				5029873825389E4700E52EDA /* PausePearView.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,

@@ -9,8 +9,10 @@
 import Foundation
 
 struct FeedbackOption {
-    let text: String
-    let image: String
+
     let hasImage: Bool
+    let image: String
     let isRating: Bool
+    let text: String
+    
 }

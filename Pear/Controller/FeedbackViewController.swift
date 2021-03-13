@@ -23,38 +23,37 @@ enum FeedbackStatus {
 class FeedbackViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let closeButton = UIButton()
-    private let headerLabel = UILabel()
-    private let questionLabel = UILabel()
     private var answerCollectionView: UICollectionView!
-    private let lowRatingLabel = UILabel()
-    private let highRatngLabel = UILabel()
     private let askDetailLabel = UILabel()
+    private let closeButton = UIButton()
     private let detailTextView = UITextView()
     private let finishButton = UIButton()
+    private let headerLabel = UILabel()
+    private let highRatngLabel = UILabel()
+    private let lowRatingLabel = UILabel()
+    private let questionLabel = UILabel()
 
     // MARK: - Private Data Vars
-    let screenHeight = UIScreen.main.bounds.height
-    let finishButtonY = UIScreen.main.bounds.height - Constants.Onboarding.nextBottomPadding - (Constants.Onboarding.mainButtonSize.height / 2)
+    private let screenHeight = UIScreen.main.bounds.height
+    private let finishButtonY = UIScreen.main.bounds.height - Constants.Onboarding.nextBottomPadding - (Constants.Onboarding.mainButtonSize.height / 2)
     private let collectionViewSpacing: CGFloat = 12
     private let initialFeedbackOptions: [[FeedbackOption]] = [
-        [FeedbackOption(text: "Yes", image: "schedule", hasImage: true, isRating: false),
-         FeedbackOption(text: "No", image: "cancelled", hasImage: true, isRating: false)]
+        [FeedbackOption(hasImage: true, image: "schedule", isRating: false, text: "Yes"),
+        FeedbackOption(hasImage: true, image: "cancelled", isRating: false, text: "No")]
     ]
     private let didNotMeetFeedbackOptions: [[FeedbackOption]] = [
-        [FeedbackOption(text: "Not a good fit", image: "", hasImage: false, isRating: false),
-         FeedbackOption(text: "They didn't respond", image: "", hasImage: false, isRating: false)],
-        [FeedbackOption(text: "Not interested", image: "", hasImage: false, isRating: false),
-         FeedbackOption(text: "Too busy", image: "", hasImage: false, isRating: false),
-         FeedbackOption(text: "Other", image: "", hasImage: false, isRating: false)]
+        [FeedbackOption(hasImage: false, image: "", isRating: false, text: "Not a good fit"),
+         FeedbackOption(hasImage: false, image: "", isRating: false, text: "They didn't respond")],
+        [FeedbackOption(hasImage: false, image: "", isRating: false, text: "Not interested"),
+         FeedbackOption(hasImage: false, image: "", isRating: false, text: "Too busy"),
+         FeedbackOption(hasImage: false, image: "", isRating: false, text: "Other")]
     ]
     private let didMeetFeedbackOptions: [[FeedbackOption]] = [
-        [FeedbackOption(text: "1", image: "", hasImage: false, isRating: true),
-         FeedbackOption(text: "2", image: "", hasImage: false, isRating: true),
-         FeedbackOption(text: "3", image: "", hasImage: false, isRating: true),
-         FeedbackOption(text: "4", image: "", hasImage: false, isRating: true),
-         FeedbackOption(text: "5", image: "", hasImage: false, isRating: true)
-        ]
+        [FeedbackOption(hasImage: false, image: "", isRating: true, text: "1"),
+         FeedbackOption(hasImage: false, image: "", isRating: true, text: "2"),
+         FeedbackOption(hasImage: false, image: "", isRating: true, text: "3"),
+         FeedbackOption(hasImage: false, image: "", isRating: true, text: "4"),
+         FeedbackOption(hasImage: false, image: "", isRating: true, text: "5")]
     ]
     private var feedbackOptions: [[FeedbackOption]] = []
     private var feedbackStatus: FeedbackStatus = .initial
@@ -152,7 +151,7 @@ class FeedbackViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             animateView.alpha = 1
             animateView.center.y = previousY + yOffset
-        }, completion: nil)
+        })
     }
 
     private func setupAnimation() {
@@ -160,8 +159,8 @@ class FeedbackViewController: UIViewController {
         questionLabel.center.y = UIScreen.main.bounds.height
         answerCollectionView.center.y = UIScreen.main.bounds.height
         animateView(duration: 0.4, delay: 0, previousY: 160, yOffset: 0, animateView: headerLabel)
-        animateView(duration: 0.4, delay: 0.4, previousY: self.headerLabel.center.y, yOffset: 120, animateView: questionLabel)
-        animateView(duration: 0.4, delay: 0.8, previousY: self.questionLabel.center.y, yOffset: 110, animateView: self.answerCollectionView)
+        animateView(duration: 0.4, delay: 0.4, previousY: headerLabel.center.y, yOffset: 120, animateView: questionLabel)
+        animateView(duration: 0.4, delay: 0.8, previousY: questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
     }
 
     private func removeInitialAnimation() {
@@ -266,12 +265,12 @@ class FeedbackViewController: UIViewController {
         }
 
         askDetailLabel.snp.makeConstraints { make in
-            make.left.equalTo(questionLabel.snp.left)
+            make.leading.equalTo(questionLabel.snp.leading)
             make.centerY.equalTo(lowRatingLabel.snp.centerY).offset(80)
         }
 
         detailTextView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(36)
+            make.leading.trailing.equalToSuperview().inset(36)
             make.height.equalTo(70)
             make.centerY.equalTo(askDetailLabel.snp.centerY).offset(60)
         }

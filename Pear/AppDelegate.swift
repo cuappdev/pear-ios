@@ -6,9 +6,9 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import GoogleSignIn
-import FutureNova
 import AppDevAnnouncements
+import FutureNova
+import GoogleSignIn
 import UIKit
 
 @UIApplicationMain
@@ -21,10 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Set up AppDev Announcements Feedback
         AnnouncementNetworking.setupConfig(
-            scheme: Secrets.announcementsScheme,
-            host: Secrets.announcementsHost,
-            commonPath: Secrets.announcementsCommonPath,
-            announcementPath: Secrets.announcementsPath
+            scheme: Keys.announcementsScheme,
+            host: Keys.announcementsHost,
+            commonPath: Keys.announcementsCommonPath,
+            announcementPath: Keys.announcementsPath
         )
 
         // Setup networking

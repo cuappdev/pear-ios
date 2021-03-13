@@ -37,7 +37,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(optionImage)
 
         optionLabel.textColor = .darkGreen
-        optionLabel.font = UIFont.getFont(.book, size: 14)
+        optionLabel.font = .getFont(.book, size: 14)
         contentView.addSubview(optionLabel)
 
         setupConstraints()
@@ -48,39 +48,36 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        let imageSize = CGSize(width: 10, height: 10)
-
         optionImage.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(15)
-            make.size.equalTo(imageSize)
+            make.leading.equalToSuperview().inset(15)
+            make.size.equalTo(CGSize(width: 10, height: 10))
             make.centerY.equalToSuperview()
         }
 
         optionLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(optionImage.snp.right).offset(12)
+            make.leading.equalTo(optionImage.snp.trailing).offset(12)
         }
     }
 
     private func resetConstraints() {
         optionLabel.snp.remakeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.center.equalToSuperview()
         }
     }
 
     func configure(for feedback: FeedbackOption) {
+        optionImage.isHidden = !feedback.hasImage
+        optionLabel.text = feedback.text
         if feedback.hasImage {
-            optionImage.isHidden = false
             optionImage.image = UIImage(named: feedback.image)
         } else {
-            optionImage.isHidden = true
             optionImage.image = UIImage()
             resetConstraints()
             if feedback.isRating {
                 contentView.layer.cornerRadius = 18
             }
         }
-        optionLabel.text = feedback.text
     }
 
 }
