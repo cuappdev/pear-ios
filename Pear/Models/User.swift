@@ -16,7 +16,7 @@ struct User: Codable, Equatable {
     let hometown: String
     let profilePictureURL: String
     let major: String
-    let graduationYear: String?
+    let graduationYear: String
     let pronouns: String
     let interests: [String]
     let groups: [String]

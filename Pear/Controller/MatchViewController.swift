@@ -200,7 +200,7 @@ class MatchViewController: UIViewController {
         matchNetIdLabel.numberOfLines = 0
         matchProfileBackgroundView.insertArrangedSubview(matchNetIdLabel, at: 1)
         
-        let graduationYear = String(pair.graduationYear?.suffix(2) ?? "")
+        let graduationYear = String(pair.graduationYear.suffix(2))
         matchClassLabel.text = "\(pair.major) '\(graduationYear)"
         matchClassLabel.textColor = .textGreen
         matchClassLabel.font = ._16CircularStdBook

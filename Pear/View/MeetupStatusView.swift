@@ -251,7 +251,17 @@ fileprivate extension NSAttributedString {
 
 // MARK: - NSMutableAttributedString Extension
 
-fileprivate extension NSMutableAttributedString {
+extension NSMutableAttributedString {
+
+    func thinFont(_ string: String) -> NSMutableAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont._16CircularStdBook as Any,
+            .paragraphStyle: createParagraphStyle(),
+            .foregroundColor: UIColor.black
+        ]
+        self.append(NSMutableAttributedString(string: string, attributes: attributes))
+        return self
+    }
 
     func normalFont(_ string: String) -> NSMutableAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [

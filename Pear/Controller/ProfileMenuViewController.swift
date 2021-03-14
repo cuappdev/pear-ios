@@ -44,12 +44,7 @@ class ProfileMenuViewController: UIViewController {
         let lastName = user.lastName
         let major = user.major
 
-        let year: String
-        if let graduationYear = user.graduationYear {
-            year = graduationYear
-        } else {
-            year = String(Time.thisYear)
-        }
+        let year = user.graduationYear
         let hometown = user.hometown
 
         editButton.backgroundColor = .backgroundWhite
