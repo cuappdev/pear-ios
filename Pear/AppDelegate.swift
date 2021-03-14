@@ -6,8 +6,9 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
-import GoogleSignIn
+import AppDevAnnouncements
 import FutureNova
+import GoogleSignIn
 import UIKit
 
 @UIApplicationMain
@@ -17,6 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Configure Google sign-in with client ID
         GIDSignIn.sharedInstance().clientID = Keys.googleClientID
+
+        // Set up AppDev Announcements Feedback
+        AnnouncementNetworking.setupConfig(
+            scheme: Keys.announcementsScheme,
+            host: Keys.announcementsHost,
+            commonPath: Keys.announcementsCommonPath,
+            announcementPath: Keys.announcementsPath
+        )
 
         // Setup networking
         Endpoint.setupEndpointConfig()
