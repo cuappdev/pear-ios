@@ -1,62 +1,53 @@
 //
 //  ProfileViewController.swift
-//  Pear
+//  CoffeeChat
 //
-//  Created by Lucy Xu on 3/11/21.
-//  Copyright © 2021 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 1/29/20.
+//  Copyright © 2020 cuappdev. All rights reserved.
 //
-
+import GoogleSignIn
+import Kingfisher
 import UIKit
 
-enum ProfileSectionType {
-    case summary
-    case basics
-    case interests
-    case groups
-    case matches
-
-    func getReuseIdentifier() -> String {
-        switch self {
-        case .summary:
-            return ProfileSummaryTableViewCell.reuseIdentifier
-        case .basics:
-            return ProfilePromptTableViewCell.reuseIdentifier
-        case .interests, .groups, .matches:
-            return ProfileSectionTableViewCell.reuseIdentifier
-        }
-    }
-
-    func getTitle(for user: User) -> String {
-        switch self {
-        case .summary:
-            return "\(user.firstName) \(user.lastName)"
-        case .basics:
-            return "The basics"
-        case .interests:
-            return "Things I love"
-        case .groups:
-            return "Groups I'm a part of"
-        case .matches:
-            return "Pears I last chatted with"
-        }
-    }
+enum ProfileType {
+    case match, user
 }
 
 class ProfileViewController: UIViewController {
 
     private let backButton = UIButton()
-    private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private var user: User?
-    private var userId: String
-    private var userName: String
-    private var profilePicture: String
-
+    private var type: ProfileType
+    private let match: Match?
+    private let user: User?
+    private var pair: User?
+    private var chatStatus: ChatStatus?
     private var profileSections = [ProfileSectionType]()
 
-    init(userId: String, userName: String, profilePicture: String) {
+    private var userId: String?
+
+    private var meetupStatusView: MeetupStatusView?
+    private let profileTableView = UITableView(frame: .zero, style: .plain)
+    private var reachOutButton = UIButton()
+
+    private let imageSize = CGSize(width: 120, height: 120)
+    private let reachOutButtonSize = CGSize(width: 200, height: 50)
+
+    private var shouldShowReachOutButton: Bool {
+        switch chatStatus {
+        case .finished, .cancelled:
+            return false
+        default:
+            return false
+        }
+    }
+
+    private var matchSummaries: [MatchSummary] = []
+
+    init(match: Match?, user: User?, userId: String?, type: ProfileType) {
+        self.match = match
+        self.user = user
+        self.type = type
         self.userId = userId
-        self.userName = userName
-        self.profilePicture = profilePicture
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -64,20 +55,125 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if type == .match {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if type == .user {
+            navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .backgroundLightGreen
+        let userFunctionThen = type == .user ? getUserThen : getPairThen
 
-        navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
-        navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.getFont(.medium, size: 24)
-        ]
-        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        if type == .user {
+            navigationController?.navigationBar.isHidden = false
+            navigationController?.navigationBar.barTintColor = .backgroundLightGreen
+            navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
+            navigationController?.navigationBar.titleTextAttributes = [
+                .font: UIFont.getFont(.medium, size: 24)
+            ]
+            backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+            backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        }
+
+        userFunctionThen { [weak self] pair in
+            guard let self = self else { return }
+
+            self.pair = pair
+
+            if let match = self.match, self.type == .match {
+                self.chatStatus = ChatStatus.forMatch(match: match, pair: pair)
+            }
+
+            self.setupViews(pair: pair)
+            self.setupConstraints()
+
+            self.profileSections = [.summary, .basics]
+            if pair.interests.count > 0 {
+                self.profileSections.append(.interests)
+            }
+            if pair.groups.count > 0 {
+                self.profileSections.append(.groups)
+            }
+            self.profileTableView.reloadData()
+        }
+    }
+
+    private func getPairThen(_ completion: @escaping (User) -> Void) {
+        guard let match = match, let pairNetId = match.pair else {
+            print("Unable to get the pair's netid from the match.")
+            return
+        }
+
+        NetworkManager.shared.getUser(netId: pairNetId).observe { response in
+            DispatchQueue.main.async {
+                switch response {
+                case .value(let result):
+                    guard result.success else {
+                        print("Network error: could not get user's pair.")
+                        return
+                    }
+                    completion(result.data)
+                case .error:
+                    print("Network error: could not get user's pair.")
+                }
+            }
+        }
+    }
+
+    private func getUserThen(_ completion: @escaping (User) -> Void) {
+        guard let userId = userId else { return }
+        NetworkManager.shared.getUser(netId: userId).observe { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        completion(response.data)
+                    }
+                case .error:
+                    print("Network error: could not get user.")
+                }
+            }
+        }
+    }
+
+    private func setupViews(pair: User) {
+        if shouldShowReachOutButton {
+            reachOutButton = UIButton()
+            reachOutButton.backgroundColor = .backgroundOrange
+            reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
+            reachOutButton.titleLabel?.font = ._20CircularStdBold
+            reachOutButton.setTitleColor(.white, for: .normal)
+            reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+
+            switch chatStatus {
+            case .planning, .noResponses:
+                reachOutButton.setTitle("Reach out", for: .normal)
+            case .respondingTo:
+                reachOutButton.setTitle("Pick a time", for: .normal)
+            default:
+                reachOutButton.setTitle("Enter availability", for: .normal)
+            }
+            view.addSubview(reachOutButton)
+        }
+
+        if let chatStatus = chatStatus {
+            meetupStatusView = MeetupStatusView(for: chatStatus)
+        }
+
+        if let meetupStatusView = meetupStatusView {
+            view.addSubview(meetupStatusView)
+        }
 
         profileTableView.dataSource = self
         profileTableView.delegate = self
@@ -91,54 +187,53 @@ class ProfileViewController: UIViewController {
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
         profileTableView.showsVerticalScrollIndicator = false
-
         view.addSubview(profileTableView)
-
-        setupConstraints()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        getUser()
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    private func setupConstraints() {
+        let padding = 35
+        let reachOutPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
+        let meetupPadding = 24
+        let meetupWidth: CGFloat = 319
+
+        meetupStatusView?.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(meetupPadding)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(meetupPadding)
+            make.width.equalTo(meetupWidth)
+            make.height.equalTo(meetupStatusView?.getRecommendedHeight(for: meetupWidth) ?? 0)
+        }
+
+        if let meetupStatusView = meetupStatusView {
+            profileTableView.snp.makeConstraints { make in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalTo(meetupStatusView.snp.bottom).offset(8)
+            }
+        } else {
+            profileTableView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+    }
+
+    @objc private func reachOutPressed() {
+        guard let pair = pair, let match = match, let user = user else { return }
+        let schedulingVC: SchedulingTimeViewController
+
+        switch chatStatus {
+        case .planning, .noResponses:
+            schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
+        case .waitingOn, .respondingTo:
+            schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
+        default:
+            print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
+            schedulingVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
+        }
+        navigationController?.pushViewController(schedulingVC, animated: true)
     }
 
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
     }
-
-    private func setupConstraints() {
-        profileTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
-
-    private func getUser() {
-        NetworkManager.shared.getUser(netId: userId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.profileSections = [.summary, .basics]
-                        let user = response.data
-                        self.user = user
-                        if user.interests.count > 0 {
-                            self.profileSections.append(.interests)
-                        }
-                        if user.groups.count > 0 {
-                            self.profileSections.append(.groups)
-                        }
-                        self.profileTableView.reloadData()
-                    }
-                case .error:
-                    print("Network error: could not get user.")
-                }
-            }
-        }
-    }
-
-
 }
 
 extension ProfileViewController: UITableViewDelegate {}
@@ -149,26 +244,26 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let user = user else { return UITableViewCell() }
+        guard let pair = pair else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.getReuseIdentifier()
 
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user)
+            cell.configure(for: pair)
             return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user, type: section)
+            cell.configure(for: pair, type: section)
             return cell
         case .interests:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user, type: section)
+            cell.configure(for: pair, type: section)
             return cell
         case .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user, type: section)
+            cell.configure(for: pair, type: section)
             return cell
         case .matches:
             return UITableViewCell()
@@ -178,12 +273,10 @@ extension ProfileViewController: UITableViewDataSource {
 }
 
 extension ProfileViewController: UIGestureRecognizerDelegate {
-
       func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
          if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
              navigationController?.popViewController(animated: true)
          }
          return false
      }
-
   }
