@@ -79,7 +79,7 @@ class HomeViewController: UIViewController {
         feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
-        setupLocalNotifications()
+//        setupLocalNotifications()
         setUpConstraints()
     }
 
@@ -105,25 +105,6 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-    }
-
-    private func setupLocalNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            print("granted: \(granted)")
-        }
-        let content = UNMutableNotificationContent()
-        content.title = "Meet your new pear!"
-        content.body = "Set up this week's chat today 😊"
-        var dateComponents = DateComponents()
-        dateComponents.weekday = 2
-        dateComponents.hour = 8
-        dateComponents.minute = 0
-        dateComponents.second = 0
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let uuid = UUID().uuidString
-        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
-        center.add(request)
     }
 
     private func setUserAndTabPage(newUser: User, match: Match? = nil) {
@@ -259,4 +240,4 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         let cellWidth = indexPath.item == 0 ? 151 : 50
         return CGSize(width: cellWidth, height: 40)
     }
-}
+} 
