@@ -37,7 +37,11 @@ class ProfileViewController: UIViewController {
         case .finished, .cancelled:
             return false
         default:
-            return false
+            if let match = self.match {
+                return !userAlreadyReachedOut(to: match)
+            } else {
+                return false
+            }
         }
     }
 
@@ -148,25 +152,6 @@ class ProfileViewController: UIViewController {
     }
 
     private func setupViews(pair: User) {
-        if shouldShowReachOutButton {
-            reachOutButton = UIButton()
-            reachOutButton.backgroundColor = .backgroundOrange
-            reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
-            reachOutButton.titleLabel?.font = ._20CircularStdBold
-            reachOutButton.setTitleColor(.white, for: .normal)
-            reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-
-            switch chatStatus {
-            case .planning, .noResponses:
-                reachOutButton.setTitle("Reach out", for: .normal)
-            case .respondingTo:
-                reachOutButton.setTitle("Pick a time", for: .normal)
-            default:
-                reachOutButton.setTitle("Enter availability", for: .normal)
-            }
-            view.addSubview(reachOutButton)
-        }
-
         if let chatStatus = chatStatus {
             meetupStatusView = MeetupStatusView(for: chatStatus)
         }
@@ -186,12 +171,12 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
+        profileTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
     }
 
     private func setupConstraints() {
-        let padding = 35
         let reachOutPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
         let meetupPadding = 24
         let meetupWidth: CGFloat = 319
@@ -211,6 +196,32 @@ class ProfileViewController: UIViewController {
         } else {
             profileTableView.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
+            }
+        }
+
+        if shouldShowReachOutButton {
+            reachOutButton = UIButton()
+            reachOutButton.backgroundColor = .backgroundOrange
+            reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
+            reachOutButton.titleLabel?.font = ._20CircularStdBold
+            reachOutButton.setTitleColor(.white, for: .normal)
+            reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+
+            switch chatStatus {
+            case .planning, .noResponses:
+                reachOutButton.setTitle("Reach out", for: .normal)
+            case .respondingTo:
+                reachOutButton.setTitle("Pick a time", for: .normal)
+            default:
+                reachOutButton.setTitle("Enter availability", for: .normal)
+            }
+
+            view.addSubview(reachOutButton)
+
+            reachOutButton.snp.makeConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
+                make.centerX.equalToSuperview()
+                make.size.equalTo(reachOutButtonSize)
             }
         }
     }
@@ -268,7 +279,6 @@ extension ProfileViewController: UITableViewDataSource {
         case .matches:
             return UITableViewCell()
         }
-
     }
 }
 

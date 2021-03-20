@@ -349,18 +349,18 @@
 			path = Layouts;
 			sourceTree = "<group>";
 		};
-		D440924F25FB143900A4690A /* ProfileScreen */ = {
+		D440924F25FB143900A4690A /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				D480EC0523E2470000513063 /* ProfileViewController.swift */,
 				D440925025FB145400A4690A /* ProfileSummaryTableViewCell.swift */,
 				D440927F25FDA3CC00A4690A /* ProfileSectionTableViewCell.swift */,
 				D440928425FDA68500A4690A /* ProfilePromptTableViewCell.swift */,
 				D440928925FDB10700A4690A /* ProfilePillCollectionViewCell.swift */,
-				D480EC0523E2470000513063 /* ProfileViewController.swift */,
 				D4645ABE25FE2EF30029F9A5 /* ChatStatus.swift */,
 				D4645AC625FE2F6C0029F9A5 /* ProfileSectionType.swift */,
 			);
-			path = ProfileScreen;
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		D474108F25C729780062E2B4 /* Onboarding */ = {
@@ -478,7 +478,7 @@
 		D48BB00923DE099200E88129 /* Pear */ = {
 			isa = PBXGroup;
 			children = (
-				D440924F25FB143900A4690A /* ProfileScreen */,
+				D440924F25FB143900A4690A /* Profile */,
 				D48E320E25D9CFF7009AB253 /* Settings */,
 				D474108F25C729780062E2B4 /* Onboarding */,
 				D4349977253C14190024A992 /* Layouts */,
@@ -1110,7 +1110,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.1;
+				CURRENT_PROJECT_VERSION = 1.2.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1131,7 +1131,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.1;
+				CURRENT_PROJECT_VERSION = 1.2.3;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;

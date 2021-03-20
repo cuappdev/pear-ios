@@ -45,6 +45,7 @@ class CommunityViewController: UIViewController {
         communityTableView.rowHeight = UITableView.automaticDimension
         communityTableView.estimatedRowHeight = 140
         communityTableView.sizeToFit()
+        communityTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
         

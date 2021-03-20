@@ -24,7 +24,18 @@ struct User: Codable, Equatable {
     let instagram: String?
 
     static func == (lhs: User, rhs: User) -> Bool {
-        lhs.netID == rhs.netID
+        return lhs.netID == rhs.netID &&
+        lhs.firstName == rhs.firstName &&
+        lhs.lastName == rhs.lastName &&
+        lhs.hometown == rhs.hometown &&
+        lhs.profilePictureURL == rhs.profilePictureURL &&
+        lhs.major == rhs.major &&
+        lhs.graduationYear == rhs.graduationYear &&
+        lhs.pronouns == rhs.pronouns &&
+        lhs.interests == rhs.interests &&
+        lhs.groups == rhs.groups &&
+        lhs.facebook == rhs.facebook &&
+        lhs.instagram == rhs.instagram
     }
 
 }

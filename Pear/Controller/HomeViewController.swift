@@ -29,9 +29,6 @@ class HomeViewController: UIViewController {
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
-    // Temporary button to trigger in-app match feedback
-    private var feedbackButton = UIButton()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,12 +69,6 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowOpacity = 1
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
-
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.setTitleColor(.darkGreen, for: .normal)
-        feedbackButton.titleLabel?.font = .getFont(.medium, size: 18)
-        feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
-        view.addSubview(feedbackButton)
 
         setupLocalNotifications()
         setUpConstraints()
@@ -188,6 +179,7 @@ class HomeViewController: UIViewController {
 
     private func presentMenu(animated: Bool) {
         guard let user = user else { return }
+        print(user)
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
@@ -196,12 +188,6 @@ class HomeViewController: UIViewController {
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
         present(menu, animated: animated)
-    }
-
-    @objc private func presentFeedback() {
-        let navController = UINavigationController(rootViewController: FeedbackViewController())
-        navController.modalPresentationStyle = .overFullScreen
-        present(navController, animated: true, completion: nil)
     }
 
     private func setUpConstraints() {
@@ -215,11 +201,6 @@ class HomeViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
             make.size.equalTo(CGSize(width: 227, height: 40))
             make.centerX.equalToSuperview()
-        }
-
-        feedbackButton.snp.makeConstraints { make in
-            make.centerY.equalTo(tabCollectionView)
-            make.leading.equalTo(tabCollectionView.snp.trailing).offset(10)
         }
 
         tabContainerView.snp.makeConstraints { make in
