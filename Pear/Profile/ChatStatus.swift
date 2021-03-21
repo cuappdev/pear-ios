@@ -28,9 +28,9 @@ enum ChatStatus {
     case chatScheduled(User, Date)
 
     static func forMatch(match: Match, pair: User) -> ChatStatus {
-//        if match.allAvailibilitiesPassed {
-//            return .finished
-//        }
+        if match.allAvailibilitiesPassed {
+            return .finished
+        }
 
         switch match.status {
         case Constants.Match.created:
