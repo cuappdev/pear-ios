@@ -37,6 +37,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         profileImageView.layer.cornerRadius = 18
         profileImageView.layer.backgroundColor = UIColor.gray.cgColor
         profileImageView.layer.masksToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         containerView.addSubview(profileImageView)
 

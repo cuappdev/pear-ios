@@ -14,7 +14,7 @@ struct Match: Codable, Equatable {
     let status: String
     let meetingTime: Float?
     let users: [String]
-    let availabilities: [DaySchedule]
+    var availabilities: [DaySchedule]
 
     /**
         Returns the netid of the person the user is paired with.

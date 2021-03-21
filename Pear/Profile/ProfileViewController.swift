@@ -32,19 +32,6 @@ class ProfileViewController: UIViewController {
     private let imageSize = CGSize(width: 120, height: 120)
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
-    private var shouldShowReachOutButton: Bool {
-        switch chatStatus {
-        case .finished, .cancelled:
-            return false
-        default:
-            if let match = self.match {
-                return !userAlreadyReachedOut(to: match)
-            } else {
-                return false
-            }
-        }
-    }
-
     private var matchSummaries: [MatchSummary] = []
 
     init(match: Match?, user: User?, userId: String?, type: ProfileType) {
@@ -174,6 +161,24 @@ class ProfileViewController: UIViewController {
         profileTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
+
+        reachOutButton = UIButton()
+        reachOutButton.backgroundColor = .backgroundOrange
+        reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
+        reachOutButton.titleLabel?.font = ._20CircularStdBold
+        reachOutButton.setTitleColor(.white, for: .normal)
+        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+
+        switch chatStatus {
+        case .planning:
+            reachOutButton.setTitle("Reach out", for: .normal)
+        case .respondingTo:
+            reachOutButton.setTitle("Pick a time", for: .normal)
+        default:
+            reachOutButton.setTitle("Send email", for: .normal)
+        }
+
+        view.addSubview(reachOutButton)
     }
 
     private func setupConstraints() {
@@ -199,47 +204,34 @@ class ProfileViewController: UIViewController {
             }
         }
 
-        if shouldShowReachOutButton {
-            reachOutButton = UIButton()
-            reachOutButton.backgroundColor = .backgroundOrange
-            reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
-            reachOutButton.titleLabel?.font = ._20CircularStdBold
-            reachOutButton.setTitleColor(.white, for: .normal)
-            reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-
-            switch chatStatus {
-            case .planning, .noResponses:
-                reachOutButton.setTitle("Reach out", for: .normal)
-            case .respondingTo:
-                reachOutButton.setTitle("Pick a time", for: .normal)
-            default:
-                reachOutButton.setTitle("Enter availability", for: .normal)
-            }
-
-            view.addSubview(reachOutButton)
-
-            reachOutButton.snp.makeConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
-                make.centerX.equalToSuperview()
-                make.size.equalTo(reachOutButtonSize)
-            }
+        reachOutButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
+            make.centerX.equalToSuperview()
+            make.size.equalTo(reachOutButtonSize)
         }
     }
 
     @objc private func reachOutPressed() {
-        guard let pair = pair, let match = match, let user = user else { return }
-        let schedulingVC: SchedulingTimeViewController
+        switch type {
+        case .match:
+            guard let pair = pair, let match = match, let user = user else { return }
+            let schedulingVC: SchedulingTimeViewController
 
-        switch chatStatus {
-        case .planning, .noResponses:
-            schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
-        case .waitingOn, .respondingTo:
-            schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
-        default:
-            print("Creating a SchedulingTimeViewController for a ChatStatus that shouldn't schedule times; will show pickingTypical instead")
-            schedulingVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
+            switch chatStatus {
+            case .planning, .noResponses:
+                schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
+                navigationController?.pushViewController(schedulingVC, animated: true)
+            case .respondingTo:
+                print("thsi is my match", match)
+                schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
+                navigationController?.pushViewController(schedulingVC, animated: true)
+            default:
+                URLScheme.openGmail(to: "\(pair.netID)@cornell.edu", subject: "Hello from Pear!")
+            }
+        case .user:
+            guard let pair = pair else { return }
+            URLScheme.openGmail(to: "\(pair.netID)@cornell.edu", subject: "Hello from Pear!")
         }
-        navigationController?.pushViewController(schedulingVC, animated: true)
     }
 
     @objc func backPressed() {

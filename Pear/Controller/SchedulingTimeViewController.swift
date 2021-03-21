@@ -194,7 +194,7 @@ class SchedulingTimeViewController: UIViewController {
     // MARK: ViewController State
     private let user: User
     private let pair: User?
-    private let match: Match?
+    private var match: Match?
     private var schedulingStatus: SchedulingStatus
 
     private var isChoosing: Bool { .choosing ~= schedulingStatus }
@@ -214,7 +214,6 @@ class SchedulingTimeViewController: UIViewController {
         self.user = user
         self.pair = pair
         super.init(nibName: nil, bundle: nil)
-        getSelectedTimes()
     }
 
     required init?(coder: NSCoder) {
@@ -233,7 +232,6 @@ class SchedulingTimeViewController: UIViewController {
         ]
         let dayIndex = Calendar.current.component(.weekday, from: Date()) - 1
         daysLeftForMatch.removeSubrange(0..<dayIndex)
-
         return availabilities.filter { daysLeftForMatch.contains($0.day) }
     }
 
@@ -241,13 +239,13 @@ class SchedulingTimeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
 
+        getSelectedTimes()
         setupViews()
         setupDaysAndTimes()
         setupForStatus()
         
         setupTimeSections()
         setupConstraints()
-        updateNextButton()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -264,6 +262,7 @@ class SchedulingTimeViewController: UIViewController {
         if isConfirming || isChoosing {
             removePassedDaysFromDisplay()
         }
+
         if isChoosing {
             removeUnavailableDaysFromDisplay()
         }
@@ -271,8 +270,8 @@ class SchedulingTimeViewController: UIViewController {
         guard let firstDay = daysAbbrev.first else {
             fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
         }
-        selectedDayAbbrev = firstDay
-        changeDisplayedTimes(for: abbrevToDayDict[firstDay] ?? "Sunday")
+        selectedDayAbbrev = daysAbbrev.first!
+        changeDisplayedTimes(for: abbrevToDayDict[daysAbbrev.first!] ?? "Sunday")
     }
 
     private func getSelectedTimes() {
@@ -282,11 +281,14 @@ class SchedulingTimeViewController: UIViewController {
             case .confirming:
                 let availabilitiesLeftForMatch = self.getAvailabilitiesLeftForMatch(availabilities: userAvailabilities)
                 self.selectedTimes = SelectedSchedules(availabilities: availabilitiesLeftForMatch)
+            case .choosing:
+                self.selectedTimes = SelectedSchedules(availabilities: [])
             default:
                 self.selectedTimes = SelectedSchedules(availabilities: userAvailabilities)
             }
             self.dayCollectionView.reloadData()
             self.timeCollectionView.reloadData()
+            self.updateNextButton()
         }
     }
 
@@ -584,20 +586,7 @@ class SchedulingTimeViewController: UIViewController {
                 guard let self = self else { return }
                 guard let match = self.match else { return }
                 if !dismiss {
-                    let matchEmail = "\(match.pair ?? "")@cornell.edu"
-                    let emailSubject = "Hello%20from%20your%20pear!"
-                    let emailBody = "Hi!"
-                    let googleUrlString = "googlegmail:///co?to=\(matchEmail)&subject=\(emailSubject)&body=\(emailBody)"
-                    if let googleUrl = URL(string: googleUrlString) {
-                        // show alert to choose app
-                        if UIApplication.shared.canOpenURL(googleUrl) {
-                            if #available(iOS 10.0, *) {
-                                UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
-                            } else {
-                                UIApplication.shared.openURL(googleUrl)
-                            }
-                        }
-                    }
+                    URLScheme.openGmail(to: "\(match.pair ?? "")@cornell.edu", subject: "Hello from your pear!")
                 }
                 self.updateMatchAvailabilities()
                 self.navigationController?.pushViewController(HomeViewController(), animated: true)
@@ -634,6 +623,12 @@ class SchedulingTimeViewController: UIViewController {
     }
     
     private func updateMatchAvailabilities() {
+        match?.availabilities = selectedTimes?.schedules ?? []
+        print("here are my matches blah blah", selectedTimes?.schedules ?? [])
+        print("fdsfdsfsdfsdf")
+        selectedTimes?.schedules.map {
+            print($0.day, $0.times)
+        }
         guard let match = match else { return }
         NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
             guard let self = self else { return }
@@ -655,6 +650,7 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Button Related
     private func updateNextButton() {
+        print("selected times", selectedTimes)
         guard let selectedTimes = selectedTimes else { return }
         nextButton.isEnabled = selectedTimes.numberSelected > 0
         if nextButton.isEnabled {
@@ -869,6 +865,10 @@ extension SchedulingTimeViewController: UICollectionViewDelegate {
     private func selectNewTime(indexPath: IndexPath) {
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.item]
+
+        if schedulingStatus == .choosing {
+            self.selectedTimes = SelectedSchedules(availabilities: [])
+        }
 
         guard let time = item.getTime(),
               let day = abbrevToDayDict[selectedDayAbbrev],

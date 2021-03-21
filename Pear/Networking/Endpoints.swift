@@ -65,6 +65,7 @@ extension Endpoint {
     
     /// [GET] Get information about the user.
     static func getUser(netId: String) -> Endpoint {
+        print(standardHeaders)
         return Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
@@ -202,6 +203,7 @@ extension Endpoint {
 
     /// [POST] Update the availabilities for the given match.
     static func updateMatchAvailabilities(match: Match) -> Endpoint {
+        print("match here ladidadada", match)
         let body = UpdateMatchBody(matchID: match.matchID, schedule: match.availabilities)
         return Endpoint(path: "/match/availabilities/", headers: standardHeaders, body: body)
     }

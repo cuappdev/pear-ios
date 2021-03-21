@@ -75,6 +75,7 @@
 		D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */; };
 		D4645ABF25FE2EF30029F9A5 /* ChatStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4645ABE25FE2EF30029F9A5 /* ChatStatus.swift */; };
 		D4645AC725FE2F6C0029F9A5 /* ProfileSectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4645AC625FE2F6C0029F9A5 /* ProfileSectionType.swift */; };
+		D4645ADE2606C96B0029F9A5 /* URLSchemeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4645ADD2606C96B0029F9A5 /* URLSchemeHelper.swift */; };
 		D46A363025F3CA4F00EADA9F /* UserSocialMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46A362F25F3CA4F00EADA9F /* UserSocialMedia.swift */; };
 		D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D471EDA7244DBE260079665D /* MessageAlertView.swift */; };
 		D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D474105525C6E7CE0062E2B4 /* UIImage.swift */; };
@@ -198,6 +199,7 @@
 		D4490F4E2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		D4645ABE25FE2EF30029F9A5 /* ChatStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatStatus.swift; sourceTree = "<group>"; };
 		D4645AC625FE2F6C0029F9A5 /* ProfileSectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSectionType.swift; sourceTree = "<group>"; };
+		D4645ADD2606C96B0029F9A5 /* URLSchemeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemeHelper.swift; sourceTree = "<group>"; };
 		D46A362F25F3CA4F00EADA9F /* UserSocialMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocialMedia.swift; sourceTree = "<group>"; };
 		D471EDA7244DBE260079665D /* MessageAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAlertView.swift; sourceTree = "<group>"; };
 		D474105525C6E7CE0062E2B4 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 			children = (
 				D4D3EFF123FE546B00229587 /* LayoutHelper.swift */,
 				30E3A3C4245678EA0049D09B /* Time+Helper.swift */,
+				D4645ADD2606C96B0029F9A5 /* URLSchemeHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -901,6 +904,7 @@
 				D480EC0623E2470000513063 /* ProfileViewController.swift in Sources */,
 				5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */,
 				D4645ABF25FE2EF30029F9A5 /* ChatStatus.swift in Sources */,
+				D4645ADE2606C96B0029F9A5 /* URLSchemeHelper.swift in Sources */,
 				D41FE85A246463E10048900F /* UserSession.swift in Sources */,
 				D48BB00B23DE099200E88129 /* AppDelegate.swift in Sources */,
 				4FE2ED2C23E92BD700472355 /* OnboardingTableViewCell.swift in Sources */,
@@ -1110,7 +1114,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.3;
+				CURRENT_PROJECT_VERSION = 1.2.6;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1131,7 +1135,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.3;
+				CURRENT_PROJECT_VERSION = 1.2.6;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
