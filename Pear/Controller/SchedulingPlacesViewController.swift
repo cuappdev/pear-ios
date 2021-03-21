@@ -446,7 +446,7 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
         let numberRows = isChoosing
             ? CGFloat(totalSelectedLocations)
             : CGFloat(campusLocations.count/2).rounded() + CGFloat(ctownLocations.count/2).rounded()
-        let itemWidth = indexPath.section == 0 ? (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns) : (locationsCollectionView.bounds.size.width - lineSpacing)
+        let itemWidth = indexPath.section == 0 ? (locationsCollectionView.bounds.size.width - lineSpacing) : (locationsCollectionView.bounds.size.width - lineSpacing) / CGFloat(numberColumns)
         let itemHeight = (locationsCollectionView.bounds.size.height - headersSize) / numberRows - lineSpacing
     
         return CGSize(width: itemWidth, height: min(isChoosing ? 50 : 43, itemHeight))
@@ -459,7 +459,10 @@ extension SchedulingPlacesViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        if (section == 0) {
+            return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        }
+        return CGSize(width: 0, height: 0)
     }
 
 }

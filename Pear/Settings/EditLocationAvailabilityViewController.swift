@@ -101,7 +101,6 @@ class EditLocationAvailabilityViewController: UIViewController {
         locationsCollectionView.register(LocationFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: onlineFooterId)
         locationsCollectionView.register(LocationHeaderLabelView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderId)
         locationsCollectionView.register(LocationHeaderLabelView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderId)
-        locationsCollectionView.isScrollEnabled = false
         view.addSubview(locationsCollectionView)
 
         selectedCampusLocations = onlineLocations.filter {
@@ -360,6 +359,9 @@ extension EditLocationAvailabilityViewController: UICollectionViewDelegateFlowLa
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        if (section == 0) {
+            return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        }
+        return CGSize(width: 0, height: 0)
     }
 }

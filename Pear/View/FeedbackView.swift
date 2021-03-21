@@ -11,10 +11,14 @@ import UIKit
 class FeedbackView: UIView {
 
     // MARK: - Private View Vars
+    private var arrowbackgroundView = UIView()
     private let feedbackTableView = UITableView()
+    private let feedbackBackgroundView = UIView()
+    private var arrowView: UIView!
 
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
+    private let size = 20
 
     init() {
         super.init(frame: .zero)
@@ -27,18 +31,51 @@ class FeedbackView: UIView {
     }
 
     private func setUpViews() {
+        arrowbackgroundView.backgroundColor = .clear
+        addSubview(arrowbackgroundView)
+
+        arrowView = UIView(frame: .zero)
+        let path = CGMutablePath()
+        path.move(to: CGPoint(x: 0, y: size))
+        path.addLine(to: CGPoint(x:size/2, y: size/2))
+        path.addLine(to: CGPoint(x:size, y:size))
+        path.addLine(to: CGPoint(x:0, y:size))
+        let shape = CAShapeLayer()
+        shape.path = path
+        shape.fillColor = UIColor.white.cgColor
+        arrowView.layer.insertSublayer(shape, at: 0)
+        arrowbackgroundView.addSubview(arrowView)
+
+        feedbackBackgroundView.backgroundColor = .white
+        addSubview(feedbackBackgroundView)
+
         feedbackTableView.backgroundColor = .backgroundWhite
         feedbackTableView.separatorStyle = .none
         feedbackTableView.showsVerticalScrollIndicator = false
         feedbackTableView.delegate = self
         feedbackTableView.dataSource = self
+        feedbackTableView.isScrollEnabled = false
         feedbackTableView.register(FeedbackMenuTableViewCell.self, forCellReuseIdentifier: FeedbackMenuTableViewCell.reuseIdentifier)
-        addSubview(feedbackTableView)
+        feedbackBackgroundView.addSubview(feedbackTableView)
     }
 
     private func setupConstraints() {
+        arrowbackgroundView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(size/2)
+        }
+        arrowView.snp.makeConstraints { make in
+            make.trailing.equalTo(arrowbackgroundView.snp.trailing)
+            make.bottom.equalTo(arrowbackgroundView.snp.bottom)
+            make.width.equalTo(size)
+            make.height.equalTo(size)
+        }
+        feedbackBackgroundView.snp.makeConstraints { make in
+            make.top.equalTo(arrowbackgroundView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
         feedbackTableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
+            make.leading.trailing.top.bottom.equalTo(feedbackBackgroundView)
         }
     }
 }
@@ -55,7 +92,6 @@ extension FeedbackView: UITableViewDataSource {
         cell.configure(for: feedbackOption)
         return cell
     }
-
 
 }
 

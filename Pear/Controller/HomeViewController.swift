@@ -30,7 +30,6 @@ class HomeViewController: UIViewController {
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
-    // Temporary button to trigger in-app match feedback
     private var feedbackButton = UIButton()
 
     override func viewDidLoad() {
@@ -74,9 +73,7 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.setTitleColor(.darkGreen, for: .normal)
-        feedbackButton.titleLabel?.font = .getFont(.medium, size: 18)
+        feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
         feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
@@ -207,14 +204,19 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func presentFeedback() {
-        feedbackMenuView = FeedbackView()
-        view.addSubview(feedbackMenuView)
+        if (feedbackMenuView == nil || !(feedbackMenuView.isDescendant(of: self.view))) {
+            feedbackMenuView = FeedbackView()
+            feedbackMenuView.layer.cornerRadius = 20
+            view.addSubview(feedbackMenuView)
 
-        feedbackMenuView.snp.makeConstraints { make in
-            make.top.equalTo(feedbackButton.snp.bottom).offset(10)
-            make.trailing.equalTo(view.snp.trailing).offset(-20)
-            make.width.equalTo(150)
-            make.height.equalTo(125)
+            feedbackMenuView.snp.makeConstraints { make in
+                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
+                make.trailing.equalTo(view.snp.trailing).offset(-20)
+                make.width.equalTo(150)
+                make.height.equalTo(130)
+            }
+        } else {
+            feedbackMenuView.removeFromSuperview()
         }
     }
 
@@ -233,7 +235,7 @@ class HomeViewController: UIViewController {
 
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
-            make.leading.equalTo(tabCollectionView.snp.trailing).offset(10)
+            make.trailing.equalTo(view.snp.trailing).inset(20)
         }
 
         tabContainerView.snp.makeConstraints { make in
