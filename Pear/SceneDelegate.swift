@@ -98,12 +98,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: UNUserNotificationCenterDelegate {
 
     private func setupLocalNotifications() {
-        createNotifications(day: 2, hour: 8)
-        createNotifications(day: 4, hour: 14)
-        createNotifications(day: 6, hour: 12)
-    }
-
-    private func createNotifications(day: Int, hour: Int) {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             print("granted: \(granted)")
@@ -111,6 +105,13 @@ extension SceneDelegate: UNUserNotificationCenterDelegate {
         center.delegate = self
         // get rid of previously scheduled notifications
         center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
+        createNotifications(center: center, day: 2, hour: 8)
+        createNotifications(center: center, day: 4, hour: 14)
+        createNotifications(center: center, day: 6, hour: 12)
+    }
+
+    private func createNotifications(center: UNUserNotificationCenter, day: Int, hour: Int) {
         let content = UNMutableNotificationContent()
         content.title = "Meet your new pear!"
         content.body = "Set up this week's chat today 😊"
@@ -122,7 +123,6 @@ extension SceneDelegate: UNUserNotificationCenterDelegate {
         dateComponents.second = 0
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let uuid = UUID().uuidString
-        print(uuid)
         let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
         center.add(request)
     }
