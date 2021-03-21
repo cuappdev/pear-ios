@@ -115,10 +115,9 @@ extension SceneDelegate: UNUserNotificationCenterDelegate {
 //        dateComponents.hour = 8
 //        dateComponents.minute = 0
 //        dateComponents.second = 0
-
-        dateComponents.weekday = 5
-        dateComponents.hour = 0
-        dateComponents.minute = 23
+        dateComponents.weekday = 1
+        dateComponents.hour = 7
+        dateComponents.minute = 17
         dateComponents.second = 0
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let uuid = UUID().uuidString
