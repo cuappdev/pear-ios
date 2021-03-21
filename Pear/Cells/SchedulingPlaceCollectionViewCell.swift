@@ -11,6 +11,7 @@ import UIKit
 class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
 
     private let titleLabel = UILabel()
+    static let onlineReuseId = "onlineReuseIdentifier"
     static let campusReuseId = "campusReuseIdentifier"
     static let ctownReuseId = "ctownReuseIdentiifier"
 

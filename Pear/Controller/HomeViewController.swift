@@ -106,6 +106,8 @@ class HomeViewController: UIViewController {
                 }
                 var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
                 previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
+                print("previous match history: \(previousMatchHistorySize)")
+                print("current match history size: \(value.data.count)")
                 if (value.data.count > previousMatchHistorySize) {
                     DispatchQueue.main.async {
                         let navController = UINavigationController(rootViewController: FeedbackViewController())

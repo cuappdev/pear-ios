@@ -72,9 +72,10 @@ extension FeedbackView: UITableViewDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         } else {
-            let email = "cornellappdev@gmail.com"
+            let email = "team@cornellappdev.com"
             let emailSubject = optionSelected == "Contact us" ? "Pear%20Feedback" : "Report%20User"
-            URLScheme.openGmail(to: email, subject: emailSubject)
+            // TODO: uncomment after merge
+//            URLScheme.openGmail(to: email, subject: emailSubject)
         }
     }
 }

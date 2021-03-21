@@ -19,23 +19,31 @@ class EditLocationAvailabilityViewController: UIViewController {
 
     // MARK: - Location CollectionView Sections
     private enum LocationSection {
+        case online([String])
         case campus([String])
         case ctown([String])
     }
 
     // MARK: - Location Data Vars
+    private let onlineHeaderId = "onlineHeaderIdentifier"
+    private let onlineFooterId = "onlineFooterIdentifier"
     private let campusHeaderId = "campusHeaderIdentifier"
     private let ctownHeaderId = "ctownHeaderIdentifier"
 
     private var locationSections: [LocationSection] = []
+    private var selectedOnlineLocations: [String] = []
     private var selectedCampusLocations: [String] = []
     private var selectedCtownLocations: [String] = []
 
     private let headerHeight: CGFloat = 50
+    private let footerHeight: CGFloat = 60
     private let locationinteritemSpacing: CGFloat = 12
     private let locationLineSpacing: CGFloat = 12
 
     // TODO: Replace with networking when available
+    private var onlineLocations = [
+        "Video chat"
+    ]
     private var campusLocations = [
         "Atrium Café",
         "Café Jennie",
@@ -86,17 +94,23 @@ class EditLocationAvailabilityViewController: UIViewController {
         locationsCollectionView.dataSource = self
         locationsCollectionView.backgroundColor = .clear
         locationsCollectionView.layer.masksToBounds = false
+        locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.onlineReuseId)
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.campusReuseId)
         locationsCollectionView.register(SchedulingPlaceCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingPlaceCollectionViewCell.ctownReuseId)
+        locationsCollectionView.register(LocationHeaderLabelView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: onlineHeaderId)
+        locationsCollectionView.register(LocationFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: onlineFooterId)
         locationsCollectionView.register(LocationHeaderLabelView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderId)
         locationsCollectionView.register(LocationHeaderLabelView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ctownHeaderId)
         locationsCollectionView.isScrollEnabled = false
         view.addSubview(locationsCollectionView)
 
+        selectedCampusLocations = onlineLocations.filter {
+            savedLocations.contains($0) }
         selectedCampusLocations = campusLocations.filter { savedLocations.contains($0) }
         selectedCtownLocations = ctownLocations.filter { savedLocations.contains($0) }
 
         locationSections = [
+            .online(onlineLocations),
             .campus(campusLocations),
             .ctown(ctownLocations)
         ]
@@ -132,9 +146,11 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
+        let onlineLocations = selectedOnlineLocations.map {
+            Location(area: "Online", name: $0) }
         let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
-        let locations = ctownLocations + campusLocations
+        let locations = ctownLocations + campusLocations + onlineLocations
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
@@ -187,7 +203,9 @@ class EditLocationAvailabilityViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.savedLocations = value.data.map(\.name)
                     for location in value.data {
-                        if location.area == "Campus" {
+                        if location.area == "Online" {
+                            self.selectedOnlineLocations.append(location.name)
+                        } else if location.area == "Campus" {
                             self.selectedCampusLocations.append(location.name)
                         } else {
                             self.selectedCtownLocations.append(location.name)
@@ -206,11 +224,12 @@ class EditLocationAvailabilityViewController: UIViewController {
 extension EditLocationAvailabilityViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        2
+        3
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch locationSections[section] {
+        case .online(let locations): return locations.count
         case .campus(let locations): return locations.count
         case .ctown(let locations): return locations.count
         }
@@ -218,6 +237,15 @@ extension EditLocationAvailabilityViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch locationSections[indexPath.section] {
+        case .online(let locations):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingPlaceCollectionViewCell.onlineReuseId, for: indexPath) as? SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
+            let location = locations[indexPath.item]
+            cell.configure(with: location, isPicking: false)
+            if savedLocations.contains(location) {
+                cell.isSelected = true
+                locationsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+            }
+            return cell
         case .campus(let locations):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingPlaceCollectionViewCell.campusReuseId, for: indexPath) as? SchedulingPlaceCollectionViewCell else { return UICollectionViewCell() }
                 let location = locations[indexPath.item]
@@ -241,6 +269,18 @@ extension EditLocationAvailabilityViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if indexPath.section == 0 {
+            if (kind == UICollectionView.elementKindSectionHeader) {
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: onlineHeaderId, for: indexPath)
+                guard let headerView = header as? LocationHeaderLabelView else { return header }
+                headerView.configure(with: "Online")
+                return headerView
+            }
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: onlineFooterId, for: indexPath)
+            guard let footerView = footer as? LocationFooterView else {
+                return footer }
+            footerView.configure(with: "If your Pear also chooses Video chat, you must send a meeting link at the time of the meeting")
+            return footerView
+        } else if indexPath.section == 1 {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: campusHeaderId, for: indexPath)
             guard let headerView = header as? LocationHeaderLabelView else { return header }
             headerView.configure(with: "Campus")
@@ -257,13 +297,18 @@ extension EditLocationAvailabilityViewController: UICollectionViewDataSource {
 extension EditLocationAvailabilityViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        selectedCampusLocations.count + selectedCtownLocations.count < 3
+        selectedOnlineLocations.count  + selectedCampusLocations.count + selectedCtownLocations.count < 3
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if selectedCampusLocations.count + selectedCtownLocations.count < 3 {
+        if selectedOnlineLocations.count + selectedCampusLocations.count + selectedCtownLocations.count < 3 {
             let section = locationSections[indexPath.section]
             switch section {
+            case .online(let locations):
+                let location = locations[indexPath.row]
+                if !selectedOnlineLocations.contains(location) {
+                    selectedOnlineLocations.append(location)
+                }
             case .campus(let locations):
                 let location = locations[indexPath.row]
                 if !selectedCampusLocations.contains(location) {
@@ -284,6 +329,8 @@ extension EditLocationAvailabilityViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let section = locationSections[indexPath.section]
         switch section {
+        case .online(let locations):
+            selectedOnlineLocations.removeAll { $0 == locations[indexPath.row] }
         case .campus(let locations):
             selectedCampusLocations.removeAll { $0 == locations[indexPath.row] }
         case .ctown(let locations):
@@ -299,15 +346,20 @@ extension EditLocationAvailabilityViewController: UICollectionViewDelegate {
 extension EditLocationAvailabilityViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let numberColumns: CGFloat = 2
-            let itemWidth = (locationsCollectionView.bounds.size.width - locationLineSpacing) / CGFloat(numberColumns)
+        let numberColumns: CGFloat = 2
+        if (indexPath.section == 0) {
+            let itemWidth = (locationsCollectionView.bounds.size.width - locationLineSpacing)
             return CGSize(width: itemWidth, height: 42)
+        }
+        let itemWidth = (locationsCollectionView.bounds.size.width - locationLineSpacing) / CGFloat(numberColumns)
+        return CGSize(width: itemWidth, height: 42)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if collectionView == locationsCollectionView {
-            return CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
-        }
-        return CGSize(width: 0, height: 0)
+        return CGSize(width: locationsCollectionView.bounds.size.width, height: headerHeight)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
     }
 }
