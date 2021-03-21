@@ -270,8 +270,8 @@ class SchedulingTimeViewController: UIViewController {
         guard let firstDay = daysAbbrev.first else {
             fatalError("At least one day must be available to select, but daysAbbrev was empty; have all available times passed or did the pear not have any available times?")
         }
-        selectedDayAbbrev = daysAbbrev.first!
-        changeDisplayedTimes(for: abbrevToDayDict[daysAbbrev.first!] ?? "Sunday")
+        selectedDayAbbrev = firstDay
+        changeDisplayedTimes(for: abbrevToDayDict[firstDay] ?? "Sunday")
     }
 
     private func getSelectedTimes() {
@@ -624,11 +624,6 @@ class SchedulingTimeViewController: UIViewController {
     
     private func updateMatchAvailabilities() {
         match?.availabilities = selectedTimes?.schedules ?? []
-        print("here are my matches blah blah", selectedTimes?.schedules ?? [])
-        print("fdsfdsfsdfsdf")
-        selectedTimes?.schedules.map {
-            print($0.day, $0.times)
-        }
         guard let match = match else { return }
         NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
             guard let self = self else { return }
@@ -650,7 +645,6 @@ class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Button Related
     private func updateNextButton() {
-        print("selected times", selectedTimes)
         guard let selectedTimes = selectedTimes else { return }
         nextButton.isEnabled = selectedTimes.numberSelected > 0
         if nextButton.isEnabled {

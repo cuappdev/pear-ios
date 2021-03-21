@@ -88,7 +88,6 @@ class HomeViewController: UIViewController {
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
             guard let self = self else { return }
-            print(newUser)
             self.getUserMatchThen(netId: newUser.netID) { [weak self] matches in
                 guard let self = self else { return }
                 if self.user == nil || self.user != newUser {
@@ -151,7 +150,6 @@ class HomeViewController: UIViewController {
                         print("Network error: could not get user match.")
                         return
                     }
-                    print(response.data)
                     completion(response.data)
                 case .error:
                     print("Network error: could not get user match.")
@@ -181,7 +179,6 @@ class HomeViewController: UIViewController {
 
     private func presentMenu(animated: Bool) {
         guard let user = user else { return }
-//        print(user)
         let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
