@@ -15,6 +15,7 @@ import AppDevAnnouncements
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
+    private var feedbackMenuView: FeedbackView!
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -204,9 +205,15 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func presentFeedback() {
-        let navController = UINavigationController(rootViewController: FeedbackViewController())
-        navController.modalPresentationStyle = .overFullScreen
-        present(navController, animated: true, completion: nil)
+        feedbackMenuView = FeedbackView()
+        view.addSubview(feedbackMenuView)
+
+        feedbackMenuView.snp.makeConstraints { make in
+            make.top.equalTo(feedbackButton.snp.bottom).offset(10)
+            make.trailing.equalTo(view.snp.trailing).offset(-20)
+            make.width.equalTo(150)
+            make.height.equalTo(125)
+        }
     }
 
     private func setUpConstraints() {

@@ -111,13 +111,9 @@ extension SceneDelegate: UNUserNotificationCenterDelegate {
         content.body = "Set up this week's chat today 😊"
         content.sound = UNNotificationSound.default
         var dateComponents = DateComponents()
-//        dateComponents.weekday = 2
-//        dateComponents.hour = 8
-//        dateComponents.minute = 0
-//        dateComponents.second = 0
-        dateComponents.weekday = 1
-        dateComponents.hour = 7
-        dateComponents.minute = 17
+        dateComponents.weekday = 2
+        dateComponents.hour = 8
+        dateComponents.minute = 0
         dateComponents.second = 0
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let uuid = UUID().uuidString
