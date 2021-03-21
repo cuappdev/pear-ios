@@ -273,7 +273,6 @@ class EditDemographicsViewController: UIViewController {
                         case .value(let response):
                             if response.success {
                                 ImageCache.default.removeImage(forKey: self.user.netID)
-                                print("new photo", profileImageBase64)
                                 self.navigationController?.popViewController(animated: true)
                             } else {
                                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)
