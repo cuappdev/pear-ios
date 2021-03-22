@@ -114,4 +114,5 @@ extension FeedbackView: UITableViewDelegate {
 //            URLScheme.openGmail(to: email, subject: emailSubject)
         }
     }
+    
 }

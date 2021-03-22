@@ -9,7 +9,6 @@
 import GoogleSignIn
 import IQKeyboardManagerSwift
 import UIKit
-import UserNotifications
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Set up keyboard management library, helps to shift up view when keyboard becomes active
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
-        setupLocalNotifications()
         
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoadingViewController())
@@ -93,42 +91,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-}
-
-extension SceneDelegate: UNUserNotificationCenterDelegate {
-
-    private func setupLocalNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            print("granted: \(granted)")
-        }
-        center.delegate = self
-        // get rid of previously scheduled notifications
-        center.removeAllDeliveredNotifications()
-        center.removeAllPendingNotificationRequests()
-        let content = UNMutableNotificationContent()
-        content.title = "Meet your new pear!"
-        content.body = "Set up this week's chat today 😊"
-        content.sound = UNNotificationSound.default
-        var dateComponents = DateComponents()
-        dateComponents.weekday = 2
-        dateComponents.hour = 8
-        dateComponents.minute = 0
-        dateComponents.second = 0
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let uuid = UUID().uuidString
-        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
-        center.add(request)
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .sound])
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let navController = UINavigationController(rootViewController: FeedbackViewController())
-        navController.modalPresentationStyle = .overFullScreen
-        self.window?.rootViewController?.present(navController, animated: true, completion: nil)
-        completionHandler()
-    }
 }

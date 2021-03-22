@@ -77,7 +77,6 @@ class HomeViewController: UIViewController {
         feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
-        showInAppFeedback()
         setUpConstraints()
     }
 
@@ -90,30 +89,6 @@ class HomeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-
-    private func showInAppFeedback() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get user match history")
-                    return
-                }
-                var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
-                previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
-                if (value.data.count > previousMatchHistorySize) {
-                    DispatchQueue.main.async {
-                        let navController = UINavigationController(rootViewController: FeedbackViewController())
-                        navController.modalPresentationStyle = .overFullScreen
-                        self.present(navController, animated: true, completion: nil)
-                    }
-                }
-            case .error(let error):
-                print("error: \(error)")
-            }
-        }
     }
 
     private func updateUserAndTabPage() {
