@@ -105,6 +105,7 @@ class EditDemographicsViewController: UIViewController {
 
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
+        imagePickerController.allowsEditing = true
 
         nameTextField.delegate = self
         nameTextField.tag = 0

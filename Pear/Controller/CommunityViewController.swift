@@ -41,9 +41,11 @@ class CommunityViewController: UIViewController {
         communityTableView.isScrollEnabled = true
         communityTableView.separatorStyle = .none
         communityTableView.backgroundColor = .clear
+        communityTableView.showsVerticalScrollIndicator = false
         communityTableView.rowHeight = UITableView.automaticDimension
         communityTableView.estimatedRowHeight = 140
         communityTableView.sizeToFit()
+        communityTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(communityTableView)
         
@@ -111,6 +113,10 @@ extension CommunityViewController: UITableViewDataSource {
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = users[indexPath.row]
+        navigationController?.pushViewController(ProfileViewController(match: nil, user: nil, userId: user.netID, type: .user), animated: true)
+    }
 }
 
 // MARK: - SearchBarDelegate

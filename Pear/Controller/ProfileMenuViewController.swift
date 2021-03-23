@@ -44,12 +44,7 @@ class ProfileMenuViewController: UIViewController {
         let lastName = user.lastName
         let major = user.major
 
-        let year: String
-        if let graduationYear = user.graduationYear {
-            year = graduationYear
-        } else {
-            year = String(Time.thisYear)
-        }
+        let year = user.graduationYear
         let hometown = user.hometown
 
         editButton.backgroundColor = .backgroundWhite
@@ -75,12 +70,15 @@ class ProfileMenuViewController: UIViewController {
         optionsTableView.register(MenuOptionTableViewCell.self, forCellReuseIdentifier: MenuOptionTableViewCell.reuseIdentifier)
         view.addSubview(optionsTableView)
 
+        let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(editPressed))
         profileImageView.backgroundColor = .inactiveGreen
         profileImageView.layer.cornerRadius = profileImageSize.width/2
         profileImageView.clipsToBounds = true
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
+        profileImageView.isUserInteractionEnabled = true
         profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
+        profileImageView.addGestureRecognizer(profileTapGesture)
    
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
@@ -132,7 +130,7 @@ class ProfileMenuViewController: UIViewController {
         }
     }
 
-    @objc private func editPressed() {
+    @objc func editPressed() {
         let editDemographicsVC = EditDemographicsViewController(user: user)
         navigationController?.pushViewController(editDemographicsVC, animated: true)
     }
