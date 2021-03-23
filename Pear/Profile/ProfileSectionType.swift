@@ -9,13 +9,14 @@
 import UIKit
 
 enum ProfileSectionType {
-    case summary
-    case basics
-    case interests
-    case groups
-    case matches
 
-    func getReuseIdentifier() -> String {
+    case basics
+    case groups
+    case interests
+    case matches
+    case summary
+
+    var reuseIdentifier: String {
         switch self {
         case .summary:
             return ProfileSummaryTableViewCell.reuseIdentifier
@@ -40,4 +41,5 @@ enum ProfileSectionType {
             return "Pears I last chatted with"
         }
     }
+
 }

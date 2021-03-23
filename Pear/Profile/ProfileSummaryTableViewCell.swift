@@ -6,15 +6,15 @@
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class ProfileSummaryTableViewCell: UITableViewCell {
 
     // MARK: - Private View Vars
     private let nameLabel = UILabel()
-    private let profileImageView = UIImageView()
     private let netIdLabel = UILabel()
+    private let profileImageView = UIImageView()
 
     private let profileImageSize = CGSize(width: 150, height: 150)
 
@@ -33,11 +33,11 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         profileImageView.contentMode = .scaleAspectFill
         contentView.addSubview(profileImageView)
 
-        nameLabel.font = .boldSystemFont(ofSize: 24)
+        nameLabel.font = ._24CircularStdMedium
         nameLabel.textColor = .black
         contentView.addSubview(nameLabel)
 
-        netIdLabel.font = .systemFont(ofSize: 14)
+        netIdLabel.font = ._14CircularStdBook
         netIdLabel.textColor = .greenGray
         netIdLabel.textAlignment = .center
         contentView.addSubview(netIdLabel)

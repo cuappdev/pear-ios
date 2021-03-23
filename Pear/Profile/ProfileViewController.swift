@@ -16,12 +16,12 @@ enum ProfileType {
 class ProfileViewController: UIViewController {
 
     private let backButton = UIButton()
-    private var type: ProfileType
-    private let match: Match?
-    private let user: User?
-    private var pair: User?
     private var chatStatus: ChatStatus?
+    private let match: Match?
+    private var pair: User?
     private var profileSections = [ProfileSectionType]()
+    private var type: ProfileType
+    private let user: User?
 
     private var userId: String?
 
@@ -51,10 +51,6 @@ class ProfileViewController: UIViewController {
         if type == .match {
             navigationController?.setNavigationBarHidden(true, animated: true)
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         if type == .user {
             navigationController?.interactivePopGestureRecognizer?.delegate = self
         }
@@ -148,7 +144,6 @@ class ProfileViewController: UIViewController {
         }
 
         profileTableView.dataSource = self
-        profileTableView.delegate = self
         profileTableView.backgroundColor = .clear
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
@@ -158,11 +153,10 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 150, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
-        reachOutButton = UIButton()
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
         reachOutButton.titleLabel?.font = ._20CircularStdBold
@@ -172,7 +166,7 @@ class ProfileViewController: UIViewController {
         switch chatStatus {
         case .planning:
             reachOutButton.setTitle("Reach out", for: .normal)
-        case .respondingTo:
+        case .responding:
             reachOutButton.setTitle("Pick a time", for: .normal)
         default:
             reachOutButton.setTitle("Send email", for: .normal)
@@ -221,8 +215,8 @@ class ProfileViewController: UIViewController {
             case .planning, .noResponses:
                 schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
                 navigationController?.pushViewController(schedulingVC, animated: true)
-            case .respondingTo:
-                print("thsi is my match", match)
+            case .responding:
+                print("this is my match", match)
                 schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
                 navigationController?.pushViewController(schedulingVC, animated: true)
             default:
@@ -237,11 +231,11 @@ class ProfileViewController: UIViewController {
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
     }
+
 }
 
-extension ProfileViewController: UITableViewDelegate {}
-
 extension ProfileViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return profileSections.count
     }
@@ -249,7 +243,7 @@ extension ProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let pair = pair else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
-        let reuseIdentifier = section.getReuseIdentifier()
+        let reuseIdentifier = section.reuseIdentifier
 
         switch section {
         case .summary:
@@ -260,11 +254,7 @@ extension ProfileViewController: UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
             cell.configure(for: pair, type: section)
             return cell
-        case .interests:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
-            return cell
-        case .groups:
+        case .interests, .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
             cell.configure(for: pair, type: section)
             return cell
@@ -272,13 +262,16 @@ extension ProfileViewController: UITableViewDataSource {
             return UITableViewCell()
         }
     }
+
 }
 
 extension ProfileViewController: UIGestureRecognizerDelegate {
+
       func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
          if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
              navigationController?.popViewController(animated: true)
          }
          return false
      }
+    
   }

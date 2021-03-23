@@ -6,14 +6,14 @@
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class ProfilePromptTableViewCell: UITableViewCell {
 
     // MARK: - Private View Vars
-    private let titleLabel = UILabel()
     private let descriptionTextView = UITextView()
+    private let titleLabel = UILabel()
 
     static let reuseIdentifier = "ProfilePromptTableViewCell"
 
@@ -23,7 +23,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
 
-        titleLabel.font = .boldSystemFont(ofSize: 12)
+        titleLabel.font = ._12CircularStdMedium
         titleLabel.textColor = .greenGray
         contentView.addSubview(titleLabel)
 
@@ -31,7 +31,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         descriptionTextView.layer.backgroundColor = UIColor.paleGreen.cgColor
-        descriptionTextView.font = .systemFont(ofSize: 14)
+        descriptionTextView.font = ._14CircularStdBook
         descriptionTextView.textColor = .black
         descriptionTextView.isUserInteractionEnabled = true
         descriptionTextView.layer.cornerRadius = 16

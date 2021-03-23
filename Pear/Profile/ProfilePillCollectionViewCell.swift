@@ -18,7 +18,6 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        clipsToBounds = false
         layer.cornerRadius = 18
         backgroundColor = .paleGreen
 
@@ -39,7 +38,8 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
 
         label.snp.makeConstraints { make in
             make.leading.equalTo(imageView.snp.trailing).offset(6)
-            make.top.bottom.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().inset(12)
         }
     }
 

@@ -12,8 +12,8 @@ import Kingfisher
 class ProfileSectionTableViewCell: UITableViewCell {
 
     // MARK: - Private View Vars
-    private let titleLabel = UILabel()
     private let itemsCollectionView = SelfSizingCollectionView()
+    private let titleLabel = UILabel()
 
     static let reuseIdentifier = "ProfileSectionTableViewCell"
     private var sectionType: ProfileSectionType? = nil
@@ -25,7 +25,7 @@ class ProfileSectionTableViewCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
 
-        titleLabel.font = .boldSystemFont(ofSize: 12)
+        titleLabel.font = ._12CircularStdMedium
         titleLabel.textColor = .greenGray
         contentView.addSubview(titleLabel)
 
@@ -78,13 +78,6 @@ class ProfileSectionTableViewCell: UITableViewCell {
 }
 
 extension ProfileSectionTableViewCell: UICollectionViewDataSource {
-}
-
-extension ProfileSectionTableViewCell: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
-    }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let sectionType = sectionType,
@@ -92,6 +85,10 @@ extension ProfileSectionTableViewCell: UICollectionViewDelegate {
                  ProfilePillCollectionViewCell else { return UICollectionViewCell() }
         cell.configure(with: items[indexPath.item], type: sectionType)
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
     }
 
 }
@@ -107,8 +104,7 @@ extension ProfileSectionTableViewCell: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let totalHorizontalPadding: CGFloat = 52
-        return CGSize(width: calculateNecessaryWidth(text: items[indexPath.item]) + totalHorizontalPadding, height: 32)
+        return CGSize(width: calculateNecessaryWidth(text: items[indexPath.item]) + 52, height: 32)
     }
 
 }
