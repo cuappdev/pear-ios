@@ -20,13 +20,19 @@ enum ChatStatus {
     /// `SubUser` already reached out, and user is responding
     case responding(to: User)
 
-    /// The chat date has passed  
+    /// The chat date has passed
     case finished
     /// The chat has been cancelled with `SubUser`
     case cancelled(User)
 
     /// Chat between the User and `SubUser` has been scheduled and is coming up on `Date`
     case chatScheduled(User, Date)
+
+    /// If the local stored matchID matches the current match from backend, then the user has already reached out
+    static func userAlreadyReachedOut(to match: Match) -> Bool {
+        let matchIDLastReachedOut = UserDefaults.standard.string(forKey: Constants.UserDefaults.matchIDLastReachedOut)
+        return matchIDLastReachedOut == match.matchID
+    }
 
     static func forMatch(match: Match, pair: User) -> ChatStatus {
         if match.allAvailibilitiesPassed {
@@ -65,10 +71,4 @@ enum ChatStatus {
         }
     }
 
-}
-
-/// If the local stored matchID matches the current match from backend, then the user has already reached out
-func userAlreadyReachedOut(to match: Match) -> Bool {
-    let matchIDLastReachedOut = UserDefaults.standard.string(forKey: Constants.UserDefaults.matchIDLastReachedOut)
-    return matchIDLastReachedOut == match.matchID
 }
