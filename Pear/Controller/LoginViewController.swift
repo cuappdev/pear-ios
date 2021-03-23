@@ -111,7 +111,6 @@ extension LoginViewController: GIDSignInDelegate {
         }
 
         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
         let loginVC = LoginViewController()
         var base64Str = ""
         if let idToken = user.authentication.idToken,
@@ -126,10 +125,6 @@ extension LoginViewController: GIDSignInDelegate {
                 base64Str = profileImagePngData.base64EncodedString()
             }
             let userNetId = userEmail[..<userEmail.firstIndex(of: "@")!]
-            UserDefaults.standard.set(userNetId, forKey: Constants.UserDefaults.userNetId)
-            UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
-            UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            UserDefaults.standard.set(base64Str, forKey: Constants.UserDefaults.userProfilePictureURL)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
@@ -138,9 +133,8 @@ extension LoginViewController: GIDSignInDelegate {
                         let userSession = response.data
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                        UserDefaults.standard.set(userSession.sessionExpiration, forKey: Constants.UserDefaults.sessionExpiration)
-                        let vc = onboardingCompleted ? HomeViewController() : onboardingVC
-                        self.navigationController?.pushViewController(vc, animated: false)
+//                        let vc = onboardingCompleted ? HomeViewController() : onboardingVC
+                        self.navigationController?.pushViewController(HomeViewController(), animated: false)
                     case .error:
                         self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         self.navigationController?.pushViewController(loginVC, animated: false)

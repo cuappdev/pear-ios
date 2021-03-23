@@ -32,7 +32,6 @@ struct Constants {
         static let accessToken = "accessToken"
         static let onboardingCompletion = "onboardingCompletion"
         static let refreshToken = "refreshToken"
-        static let sessionExpiration = "sessionExpiration"
 
         // User Info
         static let userFirstName = "userFirstName"

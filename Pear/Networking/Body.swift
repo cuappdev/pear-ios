@@ -36,6 +36,7 @@ struct UpdateUserSocialMediaBody: Codable {
 
     let facebook: String
     let instagram: String
+    let didOnboard: Bool
 
 }
 
