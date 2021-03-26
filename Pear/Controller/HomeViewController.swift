@@ -84,32 +84,6 @@ class HomeViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
-    private func showInAppFeedback() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get user match history")
-                    return
-                }
-                var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
-                previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
-                print("previous match history: \(previousMatchHistorySize)")
-                print("current match history size: \(value.data.count)")
-                if (value.data.count > previousMatchHistorySize) {
-                    DispatchQueue.main.async {
-                        let navController = UINavigationController(rootViewController: FeedbackViewController())
-                        navController.modalPresentationStyle = .overFullScreen
-                        self.present(navController, animated: true, completion: nil)
-                    }
-                }
-            case .error(let error):
-                print("error: \(error)")
-            }
-        }
-    }
-
     private func updateUserAndTabPage() {
         getUserThen { [weak self] newUser in
             guard let self = self else { return }
