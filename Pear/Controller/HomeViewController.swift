@@ -15,6 +15,7 @@ import AppDevAnnouncements
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
+    private var feedbackMenuView: FeedbackView!
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -29,7 +30,6 @@ class HomeViewController: UIViewController {
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
-    // Temporary button to trigger in-app match feedback
     private var feedbackButton = UIButton()
 
     override func viewDidLoad() {
@@ -73,13 +73,10 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.setTitleColor(.darkGreen, for: .normal)
-        feedbackButton.titleLabel?.font = .getFont(.medium, size: 18)
+        feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
         feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
-        showInAppFeedback()
         setUpConstraints()
     }
 
@@ -92,30 +89,6 @@ class HomeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-
-    private func showInAppFeedback() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get user match history")
-                    return
-                }
-                var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
-                previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
-                if (value.data.count > previousMatchHistorySize) {
-                    DispatchQueue.main.async {
-                        let navController = UINavigationController(rootViewController: FeedbackViewController())
-                        navController.modalPresentationStyle = .overFullScreen
-                        self.present(navController, animated: true, completion: nil)
-                    }
-                }
-            case .error(let error):
-                print("error: \(error)")
-            }
-        }
     }
 
     private func updateUserAndTabPage() {
@@ -204,9 +177,20 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func presentFeedback() {
-        let navController = UINavigationController(rootViewController: FeedbackViewController())
-        navController.modalPresentationStyle = .overFullScreen
-        present(navController, animated: true, completion: nil)
+        if (feedbackMenuView == nil || !(feedbackMenuView.isDescendant(of: self.view))) {
+            feedbackMenuView = FeedbackView()
+            feedbackMenuView.layer.cornerRadius = 20
+            view.addSubview(feedbackMenuView)
+
+            feedbackMenuView.snp.makeConstraints { make in
+                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
+                make.trailing.equalTo(view.snp.trailing).offset(-20)
+                make.width.equalTo(150)
+                make.height.equalTo(130)
+            }
+        } else {
+            feedbackMenuView.removeFromSuperview()
+        }
     }
 
     private func setUpConstraints() {
@@ -224,7 +208,7 @@ class HomeViewController: UIViewController {
 
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
-            make.leading.equalTo(tabCollectionView.snp.trailing).offset(10)
+            make.trailing.equalTo(view.snp.trailing).inset(20)
         }
 
         tabContainerView.snp.makeConstraints { make in

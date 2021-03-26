@@ -47,9 +47,6 @@ struct Constants {
 
         // Matching
         static let matchIDLastReachedOut = "matchIDLastReachedOut"
-
-        // Form Showing
-        static let previousMatchHistorySize = "previousMatchHistorySize"
     }
 
     struct Match {
