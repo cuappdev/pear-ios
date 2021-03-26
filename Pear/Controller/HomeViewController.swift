@@ -29,14 +29,12 @@ class HomeViewController: UIViewController {
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
 
-    // Temporary button to trigger in-app match feedback
-    private var feedbackButton = UIButton()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .backgroundLightGreen
         presentAnnouncement(completion: nil)
+        setupLocalNotifications()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profilePressed))
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
@@ -73,13 +71,8 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        feedbackButton.setTitle("Feedback", for: .normal)
-        feedbackButton.setTitleColor(.darkGreen, for: .normal)
-        feedbackButton.titleLabel?.font = .getFont(.medium, size: 18)
-        feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
-        view.addSubview(feedbackButton)
-
-        showInAppFeedback()
+//        TODO: uncomment when feedback route is done
+//        showInAppFeedback()
         setUpConstraints()
     }
 
@@ -98,18 +91,19 @@ class HomeViewController: UIViewController {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
             switch response {
-            case .value(let value):
-                guard value.success else {
+            case .value(let currentMatchHistory):
+                guard currentMatchHistory.success else {
                     print("Network error: could not get user match history")
                     return
                 }
                 var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
+                // the default value for previousMatchHistorySize is 0, but it should be 1 since the app feedback form should only be shown when the user has a match history of size 2 or more
                 previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
-                if (value.data.count > previousMatchHistorySize) {
+                if currentMatchHistory.data.count > previousMatchHistorySize {
                     DispatchQueue.main.async {
                         let navController = UINavigationController(rootViewController: FeedbackViewController())
                         navController.modalPresentationStyle = .overFullScreen
-                        self.present(navController, animated: true, completion: nil)
+                        self.present(navController, animated: true)
                     }
                 }
             case .error(let error):
@@ -203,12 +197,6 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
-    @objc private func presentFeedback() {
-        let navController = UINavigationController(rootViewController: FeedbackViewController())
-        navController.modalPresentationStyle = .overFullScreen
-        present(navController, animated: true, completion: nil)
-    }
-
     private func setUpConstraints() {
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
@@ -220,11 +208,6 @@ class HomeViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
             make.size.equalTo(CGSize(width: 227, height: 40))
             make.centerX.equalToSuperview()
-        }
-
-        feedbackButton.snp.makeConstraints { make in
-            make.centerY.equalTo(tabCollectionView)
-            make.leading.equalTo(tabCollectionView.snp.trailing).offset(10)
         }
 
         tabContainerView.snp.makeConstraints { make in
@@ -265,3 +248,32 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: cellWidth, height: 40)
     }
 } 
+
+extension HomeViewController: UNUserNotificationCenterDelegate {
+    private func setupLocalNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            if granted {
+                center.delegate = self
+                // get rid of previously scheduled notifications
+                center.removeAllDeliveredNotifications()
+                center.removeAllPendingNotificationRequests()
+                self.scheduleNotifications(center: center, day: 2, hour: 8)
+                self.scheduleNotifications(center: center, day: 4, hour: 14)
+                self.scheduleNotifications(center: center, day: 6, hour: 12)
+            }
+        }
+    }
+
+    private func scheduleNotifications(center: UNUserNotificationCenter, day: Int, hour: Int) {
+        let content = UNMutableNotificationContent()
+        content.title = "Meet your new pear!"
+        content.body = "Set up this week's chat today 😊"
+        content.sound = .default
+        let dateComponents = DateComponents(hour: hour, minute: 0, second: 0, weekday: day)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
+        center.add(request)
+    }
+}
