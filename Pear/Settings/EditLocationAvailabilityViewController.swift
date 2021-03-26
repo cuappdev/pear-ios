@@ -224,7 +224,7 @@ class EditLocationAvailabilityViewController: UIViewController {
 extension EditLocationAvailabilityViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        3
+        locationSections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -360,6 +360,9 @@ extension EditLocationAvailabilityViewController: UICollectionViewDelegateFlowLa
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        if (section == 0) {
+            return CGSize(width: locationsCollectionView.bounds.size.width, height: footerHeight)
+        }
+        return .zero
     }
 }

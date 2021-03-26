@@ -28,6 +28,8 @@ class LocationFooterView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with text: String) { label.text = text }
+    func configure(with text: String) {
+        label.text = text
+    }
 
 }

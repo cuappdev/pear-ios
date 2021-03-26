@@ -10,10 +10,10 @@ import UIKit
 
 class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
 
-    private let titleLabel = UILabel()
-    static let onlineReuseId = "onlineReuseIdentifier"
     static let campusReuseId = "campusReuseIdentifier"
     static let ctownReuseId = "ctownReuseIdentiifier"
+    static let onlineReuseId = "onlineReuseIdentifier"
+    private let titleLabel = UILabel()
 
     override var isSelected: Bool {
         didSet {
