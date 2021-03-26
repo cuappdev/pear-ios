@@ -73,7 +73,7 @@ class HomeViewController: UIViewController {
 
 //        TODO: uncomment when feedback route is done
 //        showInAppFeedback()
-        setUpConstraints()
+        setupConstraints()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -197,7 +197,7 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
-    private func setUpConstraints() {
+    private func setupConstraints() {
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
             make.leading.equalToSuperview().inset(20)
