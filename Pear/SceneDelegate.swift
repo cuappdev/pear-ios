@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
         // Set up keyboard management library, helps to shift up view when keyboard becomes active
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 200z 
         
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoadingViewController())
