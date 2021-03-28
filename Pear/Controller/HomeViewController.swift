@@ -77,6 +77,11 @@ class HomeViewController: UIViewController {
         feedbackButton.addTarget(self, action: #selector(toggleFeedbackMenu), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
+
         setUpConstraints()
     }
 
@@ -176,7 +181,17 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
+    @objc private func dismissMenu() {
+        print("display menu 1: \(displayMenu)")
+        if !displayMenu {
+            feedbackMenuView?.removeFromSuperview()
+            displayMenu.toggle()
+        }
+        print("display menu 2: \(displayMenu)")
+    }
+
     @objc private func toggleFeedbackMenu() {
+        print("display menu 3: \(displayMenu)")
         if displayMenu {
             feedbackMenuView = FeedbackView()
             guard let feedbackMenuView = feedbackMenuView else { return }
@@ -193,6 +208,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView?.removeFromSuperview()
         }
         displayMenu.toggle()
+        print("display menu 4: \(displayMenu)")
     }
 
     private func setUpConstraints() {
@@ -217,6 +233,12 @@ class HomeViewController: UIViewController {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
+    }
+}
+
+extension HomeViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return !(touch.view is UIButton)
     }
 }
 
