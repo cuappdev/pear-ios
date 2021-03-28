@@ -47,12 +47,14 @@ class OnboardingPageViewController: UIPageViewController {
         let interestsViewController = InterestsViewController(delegate: self)
         let talkingPointsViewController = TalkingPointsViewController(delegate: self)
         let groupsViewController = GroupsViewController(delegate: self)
+        let promptsViewController = ProfilePromptsViewController(delegate: self)
         let goalsViewController = GoalsViewController(delegate: self)
         let socialMediaViewController = SocialMediaViewController(delegate: self)
         onboardingPages = [
             demographicsViewController,
             interestsViewController,
             groupsViewController,
+            promptsViewController,
             goalsViewController,
             talkingPointsViewController,
             socialMediaViewController

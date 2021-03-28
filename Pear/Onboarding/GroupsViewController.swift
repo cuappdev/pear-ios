@@ -5,7 +5,6 @@
 //  Created by Lucy Xu on 2/9/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
-
 import UIKit
 import SnapKit
 
@@ -57,13 +56,13 @@ class GroupsViewController: UIViewController {
         searchBar.layer.cornerRadius = 8
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
-        
+
         subtitleLabel.text = "You may select more than 1."
         subtitleLabel.textColor = .greenGray
         subtitleLabel.font = ._12CircularStdBook
         subtitleLabel.textAlignment = .center
         view.addSubview(subtitleLabel)
-        
+
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
@@ -96,13 +95,13 @@ class GroupsViewController: UIViewController {
         skipButton.backgroundColor = .none
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
         displayedGroups = groups
-        
+
         getUserGroups()
         setupConstraints()
     }
@@ -121,7 +120,7 @@ class GroupsViewController: UIViewController {
             make.height.equalTo(30)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
-        
+
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(clubLabel.snp.bottom).offset(4)
             make.centerX.width.equalTo(clubLabel)
@@ -154,7 +153,6 @@ class GroupsViewController: UIViewController {
     }
 
     // MARK: - Search Bar
-
     /// Filters table view results based on text typed in search
     private func filterTableView(searchText: String) {
         displayedGroups = searchText.isEmpty
@@ -199,11 +197,11 @@ class GroupsViewController: UIViewController {
     @objc func skipButtonPressed() {
         delegate?.nextPage(index: 3)
     }
-    
+
     @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
-    
+
     private func getAllGroups() {
         NetworkManager.shared.getAllGroups().observe { [weak self] result in
             guard let self = self else { return }
@@ -246,7 +244,7 @@ class GroupsViewController: UIViewController {
             }
         }
     }
-    
+
 }
 
 // MARK: - TableViewDelegate

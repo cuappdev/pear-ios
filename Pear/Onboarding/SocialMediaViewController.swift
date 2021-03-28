@@ -182,7 +182,7 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func backButtonPressed() {
-        delegate?.backPage(index: 4)
+        delegate?.backPage(index: 5)
     }
 
     @objc func nextButtonPressed() {

@@ -143,7 +143,7 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func backButtonPressed() {
-        delegate?.backPage(index: 2)
+        delegate?.backPage(index: 3)
     }
 
     @objc func nextButtonPressed() {
@@ -165,7 +165,7 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 4)
+        delegate?.nextPage(index: 5)
     }
 
     private func getUserGoals() {
