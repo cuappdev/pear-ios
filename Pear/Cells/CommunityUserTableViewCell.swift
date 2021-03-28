@@ -37,6 +37,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         profileImageView.layer.cornerRadius = 18
         profileImageView.layer.backgroundColor = UIColor.gray.cgColor
         profileImageView.layer.masksToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         containerView.addSubview(profileImageView)
 
@@ -105,10 +106,8 @@ class CommunityUserTableViewCell: UITableViewCell {
                 interests = userInterests
                 interestsCollectionView.reloadData()
             }
-            
-             if let profilePictureURL = user.profilePictureURL,
-                let userNetId = user.netID {
-                 profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: profilePictureURL, cacheKey: userNetId))
+             if let profilePictureURL = user.profilePictureURL {
+                 profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: profilePictureURL, cacheKey: user.netID))
              }
         }
     }
@@ -116,7 +115,6 @@ class CommunityUserTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 extension CommunityUserTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {

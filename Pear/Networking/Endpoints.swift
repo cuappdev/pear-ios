@@ -26,7 +26,6 @@ extension Endpoint {
 
     static var standardHeaders: [String: String] {
         if let token = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) {
-            print(token)
             return ["Authorization": "Bearer \(token)"]
         } else {
             return [:]

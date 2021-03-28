@@ -161,8 +161,8 @@ class DemographicsViewController: UIViewController {
                         if user.major != "" {
                             self.majorDropdownView.setTitle(title: user.major)
                         }
-                        if let graduationYear = user.graduationYear, graduationYear != "" {
-                            self.classDropdownView.setTitle(title: graduationYear)
+                        if user.graduationYear != "" {
+                            self.classDropdownView.setTitle(title: user.graduationYear)
                         }
                         if user.hometown != "" {
                             self.hometownDropdownView.setTitle(title: user.hometown)

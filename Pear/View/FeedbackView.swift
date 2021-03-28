@@ -110,8 +110,7 @@ extension FeedbackView: UITableViewDelegate {
         } else {
             let email = "team@cornellappdev.com"
             let emailSubject = optionSelected == "Contact us" ? "Pear%20Feedback" : "Report%20User"
-            // TODO: uncomment after merge
-//            URLScheme.openGmail(to: email, subject: emailSubject)
+            URLScheme.openGmail(to: email, subject: emailSubject)
         }
     }
 
