@@ -149,6 +149,8 @@ extension SettingsViewController: UITableViewDataSource {
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.accessToken)
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.refreshToken)
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.onboardingCompletion)
+            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userNetId)
+            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userProfilePictureURL)
             self.view.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             self.view.window?.makeKeyAndVisible()
         }

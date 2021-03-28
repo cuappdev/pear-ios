@@ -78,7 +78,7 @@ class SocialMediaViewController: UIViewController {
         nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = 26
         nextButton.isEnabled = false
-        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(completeOnboarding), for: .touchUpInside)
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
@@ -86,7 +86,7 @@ class SocialMediaViewController: UIViewController {
         skipButton.setTitleColor(.inactiveGreen, for: .normal)
         skipButton.backgroundColor = .none
         skipButton.isEnabled = false
-        skipButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(completeOnboarding), for: .touchUpInside)
         view.addSubview(skipButton)
 
         getUserSocialMedia()
@@ -185,7 +185,7 @@ class SocialMediaViewController: UIViewController {
         delegate?.backPage(index: 4)
     }
 
-    @objc func nextButtonPressed() {
+    @objc func completeOnboarding() {
         let instagramHandle = instagramTextField.text ?? ""
         let facebookHandle = facebookTextField.text ?? ""
         NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle, didOnboard: true).observe { [weak self] result in
