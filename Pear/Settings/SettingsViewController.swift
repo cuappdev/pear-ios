@@ -148,6 +148,7 @@ extension SettingsViewController: UITableViewDataSource {
             GIDSignIn.sharedInstance()?.signOut()
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.accessToken)
             UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.refreshToken)
+            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.onboardingCompletion)
             self.view.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             self.view.window?.makeKeyAndVisible()
         }

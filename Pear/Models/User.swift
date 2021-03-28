@@ -22,7 +22,7 @@ struct User: Codable, Equatable {
     let groups: [String]
     let facebook: String?
     let instagram: String?
-    let didOnboard: Bool?
+    let didOnboard: Bool
 
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.netID == rhs.netID &&

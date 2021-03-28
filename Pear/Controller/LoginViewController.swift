@@ -90,6 +90,62 @@ class LoginViewController: UIViewController {
         })
     }
 
+    private func loginUser(user: GIDGoogleUser) {
+        if let idToken = user.authentication.idToken,
+           let userEmail = user.profile.email,
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 40) {
+            let profileURLData = try? Data(contentsOf: userProfilePictureURL)
+            if let profileURLData = profileURLData,
+               let profilePictureBase64String = UIImage(data: profileURLData)?.toBase64() {
+                UserDefaults.standard.set(
+                    profilePictureBase64String,
+                    forKey: Constants.UserDefaults.userProfilePictureURL
+                )
+            }
+            UserDefaults.standard.set(
+                userEmail[..<userEmail.firstIndex(of: "@")!],
+                forKey: Constants.UserDefaults.userNetId
+            )
+            NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    switch result {
+                    case .value(let response):
+                        let userSession = response.data
+                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
+                        self.getUser()
+                    case .error:
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                        self.navigationController?.pushViewController(LoginViewController(), animated: false)
+                    }
+                }
+            }
+        }
+    }
+
+    private func getUser() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .value(let response):
+                    if response.success {
+                        let onboardingCompleted = response.data.didOnboard
+                        UserDefaults.standard.set(onboardingCompleted, forKey: Constants.UserDefaults.onboardingCompletion)
+                        let viewController = onboardingCompleted ?
+                            HomeViewController() :
+                            OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                        self.navigationController?.pushViewController(viewController, animated: false)
+                    }
+                case .error:
+                    print("Network error: could not get user.")
+                }
+            }
+        }
+    }
+
 }
 
 extension LoginViewController: GIDSignInDelegate {
@@ -104,44 +160,14 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        if let email = user.profile.email, !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
+        if let email = user.profile.email,
+           !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
             GIDSignIn.sharedInstance().signOut()
             self.showErrorMessageAlertView()
             return
         }
 
-        let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        let loginVC = LoginViewController()
-        var base64Str = ""
-        if let idToken = user.authentication.idToken,
-           let userFirstName = user.profile.givenName,
-           let userFullName = user.profile.name,
-           let userEmail = user.profile.email,
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 40) {
-            let profileURLData = try? Data(contentsOf: userProfilePictureURL)
-            if let profileURLData = profileURLData,
-               let profileImage = UIImage(data: profileURLData),
-               let profileImagePngData = profileImage.pngData() {
-                base64Str = profileImagePngData.base64EncodedString()
-            }
-            let userNetId = userEmail[..<userEmail.firstIndex(of: "@")!]
-            NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        let userSession = response.data
-                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-//                        let vc = onboardingCompleted ? HomeViewController() : onboardingVC
-                        self.navigationController?.pushViewController(HomeViewController(), animated: false)
-                    case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        self.navigationController?.pushViewController(loginVC, animated: false)
-                    }
-                }
-            }
-        }
+        loginUser(user: user)
     }
 
 }

@@ -194,6 +194,7 @@ class SocialMediaViewController: UIViewController {
                 switch result {
                 case .value(let response):
                     if response.success {
+                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
                         self.navigationController?.pushViewController(HomeViewController(), animated: true)
                     } else {
                         self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
