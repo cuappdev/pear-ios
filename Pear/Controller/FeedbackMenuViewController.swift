@@ -1,37 +1,37 @@
 //
-//  FeedbackView.swift
+//  FeedbackMenuViewController.swift
 //  Pear
 //
-//  Created by Amy Chin Siu Huang on 3/21/21.
+//  Created by Amy Chin Siu Huang on 3/27/21.
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
+
 import UIKit
 
-class FeedbackView: UIView {
+class FeedbackMenuViewController: UIViewController {
 
     // MARK: - Private View Vars
     private var arrowBackgroundView = UIView()
     private let feedbackTableView = UITableView()
-    private let feedbackBackgroundView = UIView()
     private var arrowView = UIView()
 
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
     private let size = 20
 
-    init() {
-        super.init(frame: .zero)
-        setUpViews()
-        setupConstraints()
-    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+        view.backgroundColor = .red
 
-    private func setUpViews() {
-        arrowBackgroundView.backgroundColor = .clear
-        addSubview(arrowBackgroundView)
+        feedbackTableView.backgroundColor = .backgroundWhite
+        feedbackTableView.separatorStyle = .none
+        feedbackTableView.showsVerticalScrollIndicator = false
+        feedbackTableView.delegate = self
+        feedbackTableView.dataSource = self
+        feedbackTableView.isScrollEnabled = false
+        feedbackTableView.register(FeedbackMenuTableViewCell.self, forCellReuseIdentifier: FeedbackMenuTableViewCell.reuseIdentifier)
+        view.addSubview(feedbackTableView)
 
         let path = CGMutablePath()
         path.move(to: CGPoint(x: 0, y: size))
@@ -42,44 +42,12 @@ class FeedbackView: UIView {
         shape.path = path
         shape.fillColor = UIColor.white.cgColor
         arrowView.layer.insertSublayer(shape, at: 0)
-        arrowBackgroundView.addSubview(arrowView)
 
-        feedbackBackgroundView.backgroundColor = .white
-        addSubview(feedbackBackgroundView)
-
-        feedbackTableView.backgroundColor = .backgroundWhite
-        feedbackTableView.separatorStyle = .none
-        feedbackTableView.showsVerticalScrollIndicator = false
-        feedbackTableView.delegate = self
-        feedbackTableView.dataSource = self
-        feedbackTableView.isScrollEnabled = false
-        feedbackTableView.register(FeedbackMenuTableViewCell.self, forCellReuseIdentifier: FeedbackMenuTableViewCell.reuseIdentifier)
-        feedbackBackgroundView.addSubview(feedbackTableView)
     }
 
-    private func setupConstraints() {
-        arrowBackgroundView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(size/2)
-        }
-        arrowView.snp.makeConstraints { make in
-            make.trailing.equalTo(arrowBackgroundView.snp.trailing)
-            make.bottom.equalTo(arrowBackgroundView.snp.bottom)
-            make.width.equalTo(size)
-            make.height.equalTo(size)
-        }
-        feedbackBackgroundView.snp.makeConstraints { make in
-            make.top.equalTo(arrowBackgroundView.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        feedbackTableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalTo(feedbackBackgroundView)
-        }
-    }
-    
 }
 
-extension FeedbackView: UITableViewDataSource {
+extension FeedbackMenuViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         feedbackOptions.count
@@ -91,7 +59,6 @@ extension FeedbackView: UITableViewDataSource {
         cell.configure(for: feedbackOption)
         return cell
     }
-
 }
 
 extension FeedbackView: UITableViewDelegate {

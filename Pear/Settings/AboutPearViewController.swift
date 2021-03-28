@@ -102,7 +102,7 @@ class AboutPearViewController: UIViewController {
     }
 
     @objc private func sendFeedback() {
-        let feedbackURL = "https://forms.gle/t9umWjckEs4NNWNS8/"
+        let feedbackURL = Keys.feedbackURL
         if let url = URL(string: feedbackURL), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }

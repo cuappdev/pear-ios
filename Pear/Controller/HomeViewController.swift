@@ -15,7 +15,7 @@ import AppDevAnnouncements
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private var feedbackMenuView: FeedbackView!
+    private var feedbackMenuView: FeedbackView?
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -74,7 +74,7 @@ class HomeViewController: UIViewController {
         view.addSubview(tabCollectionView)
 
         feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
-        feedbackButton.addTarget(self, action: #selector(presentFeedback), for: .touchUpInside)
+        feedbackButton.addTarget(self, action: #selector(toggleFeedback), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
         setUpConstraints()
@@ -176,21 +176,36 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
-    @objc private func presentFeedback() {
-        if (feedbackMenuView == nil || !(feedbackMenuView.isDescendant(of: self.view))) {
-            feedbackMenuView = FeedbackView()
-            feedbackMenuView.layer.cornerRadius = 20
-            view.addSubview(feedbackMenuView)
-
-            feedbackMenuView.snp.makeConstraints { make in
-                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
-                make.trailing.equalTo(view.snp.trailing).offset(-20)
-                make.width.equalTo(150)
-                make.height.equalTo(130)
-            }
-        } else {
+    @objc private func toggleFeedback() {
+        if let feedbackMenuView = feedbackMenuView, feedbackMenuView.isDescendant(of: self.view) {
             feedbackMenuView.removeFromSuperview()
+        } else {
+                feedbackMenuView = FeedbackView()
+                feedbackMenuView.layer.cornerRadius = 20
+                view.addSubview(feedbackMenuView)
+    
+                feedbackMenuView.snp.makeConstraints { make in
+                    make.top.equalTo(feedbackButton.snp.bottom).offset(5)
+                    make.trailing.equalTo(view.snp.trailing).offset(-20)
+                    make.width.equalTo(150)
+                    make.height.equalTo(130)
+                }
         }
+
+//        if (feedbackMenuView == nil || !(feedbackMenuView.isDescendant(of: self.view))) {
+//            feedbackMenuView = FeedbackView()
+//            feedbackMenuView.layer.cornerRadius = 20
+//            view.addSubview(feedbackMenuView)
+//
+//            feedbackMenuView.snp.makeConstraints { make in
+//                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
+//                make.trailing.equalTo(view.snp.trailing).offset(-20)
+//                make.width.equalTo(150)
+//                make.height.equalTo(130)
+//            }
+//        } else {
+//            feedbackMenuView.removeFromSuperview()
+//        }
     }
 
     private func setUpConstraints() {

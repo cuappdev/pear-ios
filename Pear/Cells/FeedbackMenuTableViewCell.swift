@@ -10,9 +10,8 @@ import UIKit
 
 class FeedbackMenuTableViewCell: UITableViewCell {
 
-    private let feedbackOptionLabel = UILabel()
-
     static let reuseIdentifier = "FeedbackMenuTableViewCell"
+    private let feedbackOptionLabel = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
