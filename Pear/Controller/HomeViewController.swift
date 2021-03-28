@@ -74,7 +74,7 @@ class HomeViewController: UIViewController {
         view.addSubview(tabCollectionView)
 
         feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
-        feedbackButton.addTarget(self, action: #selector(displayFeedbackMenu), for: .touchUpInside)
+        feedbackButton.addTarget(self, action: #selector(toggleFeedbackMenu), for: .touchUpInside)
         view.addSubview(feedbackButton)
 
         setUpConstraints()
@@ -176,7 +176,7 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
-    @objc private func displayFeedbackMenu() {
+    @objc private func toggleFeedbackMenu() {
         if displayMenu {
             feedbackMenuView = FeedbackView()
             guard let feedbackMenuView = feedbackMenuView else { return }
@@ -192,7 +192,7 @@ class HomeViewController: UIViewController {
         } else {
             feedbackMenuView?.removeFromSuperview()
         }
-            displayMenu.toggle()
+        displayMenu.toggle()
     }
 
     private func setUpConstraints() {

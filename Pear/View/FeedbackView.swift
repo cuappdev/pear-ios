@@ -11,9 +11,9 @@ class FeedbackView: UIView {
 
     // MARK: - Private View Vars
     private var arrowBackgroundView = UIView()
+    private var arrowView = UIView()
     private let feedbackTableView = UITableView()
     private let feedbackBackgroundView = UIView()
-    private var arrowView = UIView()
 
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
