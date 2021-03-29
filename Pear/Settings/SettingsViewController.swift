@@ -146,13 +146,12 @@ extension SettingsViewController: UITableViewDataSource {
             pushEditSocialMediaViewController()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userNetId)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userFirstName)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userFullName)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.userProfilePictureURL)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.accessToken)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.refreshToken)
-            UserDefaults.standard.removeObject(forKey: Constants.UserDefaults.sessionExpiration)
+            [Constants.UserDefaults.accessToken,
+             Constants.UserDefaults.refreshToken,
+             Constants.UserDefaults.onboardingCompletion,
+             Constants.UserDefaults.userNetId,
+             Constants.UserDefaults.userProfilePictureURL
+            ].forEach(UserDefaults.standard.removeObject(forKey:))
             self.view.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             self.view.window?.makeKeyAndVisible()
         }

@@ -10,18 +10,19 @@ import Foundation
 
 struct User: Codable, Equatable {
 
-    let netID: String
-    let firstName: String
-    let lastName: String
-    let hometown: String
-    let profilePictureURL: String
-    let major: String
+    let didOnboard: Bool
     let graduationYear: String
-    let pronouns: String
-    let interests: [String]
     let groups: [String]
+    let hometown: String
     let facebook: String?
+    let firstName: String
+    let interests: [String]
     let instagram: String?
+    let lastName: String
+    let major: String
+    let netID: String
+    let profilePictureURL: String
+    let pronouns: String
 
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.netID == rhs.netID &&

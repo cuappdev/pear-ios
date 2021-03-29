@@ -139,8 +139,8 @@ class NetworkManager {
     }
 
     /// [POST] Update social media information about the user.
-    func updateUserSocialMedia(facebook: String, instagram: String) -> Future<SuccessResponse> {
-        networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram)).decode()
+    func updateUserSocialMedia(facebook: String, instagram: String, didOnboard: Bool) -> Future<SuccessResponse> {
+        networking(Endpoint.updateUserSocialMedia(facebook: facebook, instagram: instagram, didOnboard: didOnboard)).decode()
     }
     
     /// [POST] Update time availabilities of the user.

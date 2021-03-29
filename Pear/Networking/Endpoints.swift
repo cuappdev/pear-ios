@@ -163,8 +163,8 @@ extension Endpoint {
     }
 
     /// [POST] Update social media information about the user.
-    static func updateUserSocialMedia(facebook: String, instagram: String) -> Endpoint {
-        let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram)
+    static func updateUserSocialMedia(facebook: String, instagram: String, didOnboard: Bool) -> Endpoint {
+        let body = UpdateUserSocialMediaBody(facebook: facebook, instagram: instagram, didOnboard: didOnboard)
         return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
     }
 
