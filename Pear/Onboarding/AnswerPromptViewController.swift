@@ -50,7 +50,7 @@ class AnswerPromptViewController: UIViewController {
 
         guard let selectedPrompt = prompt?.promptQuestion else { return }
         questionLabel.text = selectedPrompt
-        questionLabel.textColor = .greenGray
+        questionLabel.textColor = .darkGreen
         questionLabel.numberOfLines = 0
         questionLabel.font = ._16CircularStdBook
         view.addSubview(questionLabel)
@@ -66,10 +66,11 @@ class AnswerPromptViewController: UIViewController {
         responseTextView.layer.shadowOpacity = 1
         responseTextView.layer.shadowRadius = 4
         responseTextView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        responseTextView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         view.addSubview(responseTextView)
 
         characterCountLabel.text = "150"
-        characterCountLabel.textColor = .greenGray
+        characterCountLabel.textColor = .darkGreen
         characterCountLabel.font = ._12CircularStdBook
         view.addSubview(characterCountLabel)
 

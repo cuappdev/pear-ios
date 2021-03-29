@@ -60,11 +60,11 @@ class ProfilePromptsViewController: UIViewController {
         titleLabel.numberOfLines = 0
         view.addSubview(titleLabel)
 
-        subtitleLabel.text = "Answer three prompts to share a little bit about who you are"
+        subtitleLabel.text = "Answer three prompts to share a little bit about\nwho you are"
         subtitleLabel.font = ._12CircularStdBook
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 0
-        subtitleLabel.textColor = .greenGray
+        subtitleLabel.textColor = .darkGreen
         view.addSubview(subtitleLabel)
 
         fadeTableView.view.clipsToBounds = true

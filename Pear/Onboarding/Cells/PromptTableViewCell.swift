@@ -51,7 +51,7 @@ class PromptTableViewCell: UITableViewCell {
 
         promptLabel.font = ._12CircularStdBook
         promptLabel.numberOfLines = 0
-        promptLabel.textColor = .greenGray
+        promptLabel.textColor = .darkGreen
         promptBackgroundView.addSubview(promptLabel)
 
         promptResponseLabel.font = ._16CircularStdBook
@@ -99,7 +99,7 @@ class PromptTableViewCell: UITableViewCell {
 
         promptResponseLabel.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview().inset(16)
-            make.top.equalTo(promptLabel.snp.bottom).offset(14)
+            make.top.equalTo(promptLabel.snp.bottom).offset(12)
         }
 
         removePromptButton.snp.makeConstraints { make in

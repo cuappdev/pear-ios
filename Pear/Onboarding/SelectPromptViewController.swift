@@ -82,7 +82,7 @@ class SelectPromptViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(40)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(57)
         }
     }
 
