@@ -182,16 +182,13 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func dismissMenu() {
-        print("display menu 1: \(displayMenu)")
         if !displayMenu {
             feedbackMenuView?.removeFromSuperview()
             displayMenu.toggle()
         }
-        print("display menu 2: \(displayMenu)")
     }
 
     @objc private func toggleFeedbackMenu() {
-        print("display menu 3: \(displayMenu)")
         if displayMenu {
             feedbackMenuView = FeedbackView()
             guard let feedbackMenuView = feedbackMenuView else { return }
@@ -208,7 +205,6 @@ class HomeViewController: UIViewController {
             feedbackMenuView?.removeFromSuperview()
         }
         displayMenu.toggle()
-        print("display menu 4: \(displayMenu)")
     }
 
     private func setUpConstraints() {
