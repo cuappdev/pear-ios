@@ -153,7 +153,7 @@ class GoalsViewController: UIViewController {
                 case .value(let response):
                     DispatchQueue.main.async {
                         if response.success {
-                            self.delegate?.nextPage(index: 4)
+                            self.delegate?.nextPage(index: 5)
                         } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }

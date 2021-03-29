@@ -19,6 +19,7 @@ class PromptTableViewCell: UITableViewCell {
     private let removePromptButton = UIButton()
 
     // MARK: - Data Vars
+    weak var delegate: RemoveProfilePromptDelegate?
     static let reuseIdentifier = "PromptTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -70,7 +71,7 @@ class PromptTableViewCell: UITableViewCell {
     }
 
     @objc private func removePrompt() {
-        print("removing TODO - add delegate")
+        delegate?.removePrompt(cell: self)
     }
 
     private func setupConstraints() {
@@ -110,21 +111,14 @@ class PromptTableViewCell: UITableViewCell {
     }
 
     func configure(for prompt: Prompt) {
-        // factor out the ishiddens
+        selectLabel.isHidden = prompt.didAnswerPrompt
+        selectImageView.isHidden = prompt.didAnswerPrompt
+        promptLabel.isHidden = !prompt.didAnswerPrompt
+        promptResponseLabel.isHidden = !prompt.didAnswerPrompt
+        removePromptButton.isHidden = !prompt.didAnswerPrompt
         if prompt.didAnswerPrompt {
-            selectLabel.isHidden = true
-            selectImageView.isHidden = true
-            promptLabel.isHidden = false
-            promptResponseLabel.isHidden = false
-            removePromptButton.isHidden = false
-            promptLabel.text = prompt.selectedPrompt
+            promptLabel.text = prompt.promptQuestion
             promptResponseLabel.text = prompt.promptResponse
-        } else {
-            selectLabel.isHidden = false
-            selectImageView.isHidden = false
-            promptLabel.isHidden = true
-            promptResponseLabel.isHidden = true
-            removePromptButton.isHidden = true
         }
     }
 

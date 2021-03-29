@@ -20,7 +20,20 @@ class SelectPromptViewController: UIViewController {
 
     // MARK: Private Data Vars
     // TODO: change when networking done with backend
-    private var prompts = Constants.Options.profilePrompts
+    private var prompts: [Prompt]?
+    private weak var delegate: AddProfilePromptDelegate?
+    private var index: Int?
+
+    init(prompts: [Prompt], delegate: AddProfilePromptDelegate, index: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.prompts = prompts
+        self.delegate = delegate
+        self.index = index
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,13 +91,16 @@ class SelectPromptViewController: UIViewController {
 extension SelectPromptViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        prompts.count
+        guard let prompts = prompts else { return 0 }
+        return prompts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SelectPromptTableViewCell.reuseIdentifier, for: indexPath) as? SelectPromptTableViewCell else { return UITableViewCell() }
-        let prompt = prompts[indexPath.row]
-        cell.configure(for: prompt)
+        if let prompts = prompts {
+            let prompt = prompts[indexPath.row]
+            cell.configure(for: prompt)
+        }
         return cell
     }
 
@@ -94,8 +110,19 @@ extension SelectPromptViewController: UITableViewDataSource {
 extension SelectPromptViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let prompts = prompts else { return }
+        guard let index = index else { return }
         let prompt = prompts[indexPath.row]
-        let selectedPrompt = Prompt(didAnswerPrompt: false, promptResponse: nil, selectedPrompt: prompt)
-        navigationController?.pushViewController(AnswerPromptViewController(prompt: selectedPrompt), animated: true)
+        navigationController?.pushViewController(AnswerPromptViewController(prompt: prompt, delegate: self, index: index), animated: true)
     }
+
+}
+
+extension SelectPromptViewController: AddProfilePromptDelegate {
+    
+    func addPrompt(prompt: Prompt, index: Int) {
+        delegate?.addPrompt(prompt: prompt, index: index)
+        navigationController?.popViewController(animated: true)
+    }
+
 }

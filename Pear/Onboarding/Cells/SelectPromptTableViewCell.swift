@@ -54,8 +54,8 @@ class SelectPromptTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for prompt: String) {
-        promptLabel.text = prompt
+    func configure(for prompt: Prompt) {
+        promptLabel.text = prompt.promptQuestion
     }
 
     required init?(coder: NSCoder) {

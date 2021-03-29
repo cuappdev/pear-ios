@@ -8,10 +8,14 @@
 
 import Foundation
 
-struct Prompt {
+struct Prompt: Equatable {
 
     let didAnswerPrompt: Bool
     let promptResponse: String?
-    let selectedPrompt: String?
-    
+    let promptQuestion: String?
+
+    static func == (lhs: Prompt, rhs: Prompt) -> Bool {
+        return lhs.promptQuestion == rhs.promptQuestion
+    }
+
 }

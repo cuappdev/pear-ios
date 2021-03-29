@@ -254,7 +254,7 @@ class TalkingPointsViewController: UIViewController {
     }
 
     @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 5)
+        delegate?.nextPage(index: 6)
     }
 
 }

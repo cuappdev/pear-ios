@@ -20,10 +20,14 @@ class AnswerPromptViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var prompt: Prompt?
+    private var index: Int?
+    private weak var delegate: AddProfilePromptDelegate?
 
-    init(prompt: Prompt) {
+    init(prompt: Prompt, delegate: AddProfilePromptDelegate, index: Int) {
         super.init(nibName: nil, bundle: nil)
         self.prompt = prompt
+        self.delegate = delegate
+        self.index = index
     }
 
     required init?(coder: NSCoder) {
@@ -44,7 +48,7 @@ class AnswerPromptViewController: UIViewController {
         titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
 
-        guard let selectedPrompt = prompt?.selectedPrompt else { return }
+        guard let selectedPrompt = prompt?.promptQuestion else { return }
         questionLabel.text = selectedPrompt
         questionLabel.textColor = .greenGray
         questionLabel.numberOfLines = 0
@@ -71,9 +75,9 @@ class AnswerPromptViewController: UIViewController {
 
         if let promptResponse = prompt?.promptResponse {
             responseTextView.text = promptResponse
+            responseTextView.textColor = .black
             characterCountLabel.text = "\(150 - promptResponse.count)"
         }
-
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.titleLabel?.font = ._20CircularStdBold
@@ -101,7 +105,11 @@ class AnswerPromptViewController: UIViewController {
     }
 
     @objc private func saveButtonPressed() {
-        print("saving")
+        if let promptQuestion = prompt?.promptQuestion, let promptResponse = responseTextView.text, let index = index {
+            let newPrompt = Prompt(didAnswerPrompt: true, promptResponse: promptResponse, promptQuestion: promptQuestion)
+            delegate?.addPrompt(prompt: newPrompt, index: index)
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func dismissKeyboard() {
@@ -154,21 +162,7 @@ extension AnswerPromptViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         characterCountLabel.text = "\(150 - textView.text.count)"
-//        if !textView.text.isEmpty {
-//            textView.textColor =
-//        }
-//        if textView.textColor == .inactiveGreen {
-//            textView.text = ""
-//            textView.textColor = .black
-//        }
-//        let characterCount = textView.text.count
-//        characterCountLabel.text = "\(150 - characterCount)"
-//        if textView.text.isEmpty {
-//            textView.textColor = .inactiveGreen
-//            textView.text = "Type your response..."
-//        }
         updateSave()
-
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -183,6 +177,20 @@ extension AnswerPromptViewController: UITextViewDelegate {
             textView.text = ""
             textView.textColor = .black
         }
+    }
+
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        let numberOfChars = newText.count
+        return numberOfChars <= 150
+    }
+
+}
+
+extension AnswerPromptViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return !(touch.view is UITextView)
     }
 
 }
