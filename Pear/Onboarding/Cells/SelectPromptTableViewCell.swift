@@ -34,7 +34,6 @@ class SelectPromptTableViewCell: UITableViewCell {
         promptBackgroundView.layer.shadowRadius = 4
         contentView.addSubview(promptBackgroundView)
 
-
         promptLabel.textColor = .black
         promptLabel.numberOfLines = 0
         promptLabel.font = ._16CircularStdBook

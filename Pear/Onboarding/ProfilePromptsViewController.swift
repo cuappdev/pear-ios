@@ -168,7 +168,6 @@ extension ProfilePromptsViewController: UITableViewDataSource {
         return cell
     }
 
-
 }
 
 extension ProfilePromptsViewController: UITableViewDelegate {
@@ -204,6 +203,5 @@ extension ProfilePromptsViewController: RemoveProfilePromptDelegate {
         updateNext()
         fadeTableView.view.reloadData()
     }
-
 
 }
