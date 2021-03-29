@@ -91,7 +91,7 @@ struct Constants {
         static let organizationsMap: [String: Group] = [
             "Cornell AppDev": Group(name: "Cornell AppDev", imageName: "appdev"),
             "The Milstein Program in Technology in Humanity": Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
-            "Under Represented User Experience (URUX)": Group(name: "Underrepresented User Experience (URUX)", imageName: "urux"),
+            "Under Represented User Experience (URUX)": Group(name: "Under Represented User Experience (URUX)", imageName: "urux"),
             "Women in Computing at Cornell (WICC)": Group(name: "Women in Computing at Cornell (WICC)", imageName: "wicc")
         ]
         

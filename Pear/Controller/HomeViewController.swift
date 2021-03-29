@@ -34,7 +34,6 @@ class HomeViewController: UIViewController {
 
         view.backgroundColor = .backgroundLightGreen
         presentAnnouncement(completion: nil)
-        setupLocalNotifications()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profilePressed))
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
@@ -73,6 +72,7 @@ class HomeViewController: UIViewController {
 
 //        TODO: uncomment when feedback route is done
 //        showInAppFeedback()
+        setupLocalNotifications()
         setupConstraints()
     }
 

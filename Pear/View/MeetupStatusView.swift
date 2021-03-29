@@ -29,9 +29,9 @@ class MeetupStatusView: UIView {
         self.init()
 
         switch status {
-        case .respondingTo(let user):
+        case .responding(to: let user):
             setupForResponding(to: user)
-        case .waitingOn(let user):
+        case .waiting(on: let user):
             setupForWaiting(for: user)
         case .chatScheduled(let user, let date):
             if Time.isTommorow(date) {
@@ -251,7 +251,17 @@ fileprivate extension NSAttributedString {
 
 // MARK: - NSMutableAttributedString Extension
 
-fileprivate extension NSMutableAttributedString {
+extension NSMutableAttributedString {
+
+    func thinFont(_ string: String) -> NSMutableAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont._16CircularStdBook as Any,
+            .paragraphStyle: createParagraphStyle(),
+            .foregroundColor: UIColor.black
+        ]
+        append(NSMutableAttributedString(string: string, attributes: attributes))
+        return self
+    }
 
     func normalFont(_ string: String) -> NSMutableAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
@@ -259,7 +269,7 @@ fileprivate extension NSMutableAttributedString {
             .paragraphStyle: createParagraphStyle(),
             .foregroundColor: UIColor.black
         ]
-        self.append(NSMutableAttributedString(string: string, attributes: attributes))
+        append(NSMutableAttributedString(string: string, attributes: attributes))
         return self
     }
 
@@ -271,7 +281,7 @@ fileprivate extension NSMutableAttributedString {
             .foregroundColor: UIColor.black
         ]
 
-        self.append(NSMutableAttributedString(string: string, attributes: attributes))
+        append(NSMutableAttributedString(string: string, attributes: attributes))
         return self
     }
 
@@ -289,7 +299,7 @@ fileprivate extension NSMutableAttributedString {
             socialMedia.hyperlinkedFont("Instagram", link: instagram)
         }
 
-        self.append(socialMedia)
+        append(socialMedia)
         return self
     }
 
