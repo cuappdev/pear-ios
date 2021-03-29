@@ -162,7 +162,7 @@ class EditSocialMediaViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.trailing.equalToSuperview().inset(63)
-            make.height.equalTo(90)
+            make.height.equalTo(110)
         }
 
         instaTextField.snp.makeConstraints { make in
