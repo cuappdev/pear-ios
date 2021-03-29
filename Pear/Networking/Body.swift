@@ -34,9 +34,9 @@ struct UpdateUserTalkingPointsBody: Codable {
 
 struct UpdateUserSocialMediaBody: Codable {
 
+    let didOnboard: Bool
     let facebook: String
     let instagram: String
-    let didOnboard: Bool
 
 }
 
