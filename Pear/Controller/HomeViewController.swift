@@ -139,7 +139,9 @@ class HomeViewController: UIViewController {
 
     private func setUserAndTabPage(newUser: User, match: Match? = nil) {
         user = newUser
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: newUser.profilePictureURL, cacheKey: newUser.netID))
+        if let profilePictureURL = URL(string: newUser.profilePictureURL ?? "") {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
         setupTabPageViewController(with: match, user: newUser)
     }
 

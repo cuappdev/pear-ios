@@ -17,6 +17,11 @@ class NetworkManager {
 
     private init() {}
 
+    // MARK: - Photo Upload
+    func uploadPhoto(base64: String) -> Future<Response<String>> {
+        networking(Endpoint.uploadPhoto(base64: base64)).decode()
+    }
+
     // MARK: - General
     
     /// [GET] Checks if server application is running.

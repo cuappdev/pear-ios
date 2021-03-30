@@ -21,7 +21,7 @@ struct User: Codable, Equatable {
     let lastName: String
     let major: String
     let netID: String
-    let profilePictureURL: String
+    let profilePictureURL: String?
     let pronouns: String
 
     static func == (lhs: User, rhs: User) -> Bool {

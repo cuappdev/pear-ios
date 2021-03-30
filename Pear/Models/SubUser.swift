@@ -17,7 +17,7 @@ struct SubUser: Codable {
     let lastName: String
     let major: String
     let netID: String
-    let profilePictureURL: String
+    let profilePictureURL: String?
     let pronouns: String
     let facebook: String?
     let instagram: String?
