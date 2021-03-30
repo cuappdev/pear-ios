@@ -227,7 +227,6 @@ class FeedbackViewController: UIViewController {
     @objc private func finishFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         responses.append(detailTextView.text)
-        print(responses)
         NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
             switch response {
             case .value(let value):
