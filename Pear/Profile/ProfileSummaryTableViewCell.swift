@@ -69,7 +69,9 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     func configure(for user: User) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         netIdLabel.text = "Reach me at \(user.netID)"
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
+        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
     }
 
     required init?(coder: NSCoder) {

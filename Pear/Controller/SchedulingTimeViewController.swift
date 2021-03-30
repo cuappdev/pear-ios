@@ -589,7 +589,6 @@ class SchedulingTimeViewController: UIViewController {
                     URLScheme.openGmail(to: "\(match.pair ?? "")@cornell.edu", subject: "Hello from your pear!")
                 }
                 self.updateMatchAvailabilities()
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 UIView.animate(withDuration: 0.15, animations: {
                     self.emailMessageVisualEffectView.alpha = 0
                     self.emailMessageAlertView.alpha = 0

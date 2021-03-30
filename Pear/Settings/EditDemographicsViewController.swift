@@ -35,9 +35,10 @@ class EditDemographicsViewController: UIViewController {
     private let saveBarButtonItem = UIBarButtonItem()
     private let uploadPhotoButton = UIButton()
 
-    // MARK: - Private Constants
+    // MARK: - Private Data Variables
     private let textFieldHeight: CGFloat = 49
     private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
+    private var didUpdatePhoto = false
 
     init(user: User) {
         self.user = user
@@ -46,7 +47,9 @@ class EditDemographicsViewController: UIViewController {
         demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
+        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -135,7 +138,7 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: user.graduationYear ?? String(Time.thisYear))
+        classDropdownView.setSelectValue(value: user.graduationYear)
         editScrollView.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
@@ -253,26 +256,22 @@ class EditDemographicsViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    @objc private func savePressed() {
-        // TODO: Save name to backend
-        let base64ProfileImageString = profileImageView.image?.pngData()?.base64EncodedString()
+    private func saveProfile(profilePictureURL: String) {
         if let graduationYear = demographics.graduationYear,
            let major = demographics.major,
            let hometown = demographics.hometown,
-           let pronouns = demographics.pronouns,
-           let profileImageBase64 = base64ProfileImageString {
+           let pronouns = demographics.pronouns {
             NetworkManager.shared.updateUserDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: profileImageBase64).observe { [weak self] result in
+                profilePictureURL: profilePictureURL).observe { [weak self] result in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
                             if response.success {
-                                ImageCache.default.removeImage(forKey: self.user.netID)
                                 self.navigationController?.popViewController(animated: true)
                             } else {
                                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)
@@ -283,6 +282,33 @@ class EditDemographicsViewController: UIViewController {
                     }
                 }
             }
+    }
+
+    @objc private func savePressed() {
+        if didUpdatePhoto {
+            if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
+                NetworkManager.shared.uploadPhoto(base64: profileImageBase64).observe { [weak self] result in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .value(let response):
+                            print("There was a response")
+                            if response.success {
+                                self.saveProfile(profilePictureURL: response.data)
+                            } else {
+                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                            }
+                        case .error:
+                            print("There was no a response")
+                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                        }
+                    }
+                }
+            }
+        } else {
+            saveProfile(profilePictureURL: user.profilePictureURL ?? "")
+        }
+
     }
 
     @objc private func uploadPhotoPressed() {
@@ -372,7 +398,8 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        profileImageView.image = image.resize(toSize: CGSize(width: 40, height: 40))
+        profileImageView.image = image.resize(toSize: CGSize(width: 100, height: 100))
+        didUpdatePhoto = true
         dismiss(animated: true, completion: nil)
     }
 

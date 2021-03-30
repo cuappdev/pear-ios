@@ -216,7 +216,6 @@ class ProfileViewController: UIViewController {
                 schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
                 navigationController?.pushViewController(schedulingVC, animated: true)
             case .responding:
-                print("this is my match", match)
                 schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
                 navigationController?.pushViewController(schedulingVC, animated: true)
             default:

@@ -77,7 +77,9 @@ class ProfileMenuViewController: UIViewController {
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.isUserInteractionEnabled = true
-        profileImageView.kf.setImage(with: Base64ImageDataProvider(base64String: user.profilePictureURL, cacheKey: user.netID))
+        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
         profileImageView.addGestureRecognizer(profileTapGesture)
    
         view.addSubview(profileImageView)

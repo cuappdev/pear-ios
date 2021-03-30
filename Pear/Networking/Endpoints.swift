@@ -5,6 +5,7 @@
 //  Created by Lucy Xu on 3/8/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
+
 import Foundation
 import FutureNova
 
@@ -38,6 +39,18 @@ extension Endpoint {
         } else {
             return [:]
         }
+    }
+
+    // MARK: - Photo Upload
+    static func uploadPhoto(base64: String) -> Endpoint {
+        let body = PhotoUploadBody(bucket: "pear", image: "data:image/png;base64,\(base64)")
+        return Endpoint(
+            path: "/upload/",
+            body: body,
+            useCommonPath: false,
+            customHost: "upload.cornellappdev.com",
+            customScheme: "https"
+        )
     }
     
     // MARK: - General

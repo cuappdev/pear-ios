@@ -7,6 +7,15 @@
 //
 import Foundation
 
+// MARK: - Photo Upload
+
+struct PhotoUploadBody: Codable {
+
+    let bucket: String
+    let image: String
+
+}
+
 // MARK: - Request Bodies
 struct UserSessionBody: Codable {
 
