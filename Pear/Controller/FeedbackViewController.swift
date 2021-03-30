@@ -75,7 +75,7 @@ class FeedbackViewController: UIViewController {
         view.addSubview(headerLabel)
 
         closeButton.setImage(UIImage(named: "cancelled"), for: .normal)
-        closeButton.addTarget(self, action: #selector(closeFeedback), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
 
         questionLabel.text = "Did you meet your last Pear?"
@@ -219,15 +219,18 @@ class FeedbackViewController: UIViewController {
         animateView(duration: 0.4, delay: 1.6, previousY: askDetailLabel.center.y, yOffset: 60, animateView: detailTextView)
         animateView(duration: 0.6, delay: 2.0, previousY: finishButtonY, yOffset: 0, animateView: finishButton)
     }
-
-    @objc private func closeFeedback() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
+    
     @objc private func finishFeedback() {
-        print("finish feedback")
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         responses.append(detailTextView.text)
-        print(responses)
+        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
+            switch response {
+            case .value(let value):
+                UserDefaults.standard.setValue(value.data.count, forKey: Constants.UserDefaults.previousMatchHistorySize)
+            case .error(let error):
+                print(error)
+            }
+        }
         self.dismiss(animated: true, completion: nil)
     }
 
