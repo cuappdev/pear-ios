@@ -48,7 +48,7 @@ extension Endpoint {
             path: "/upload/",
             body: body,
             useCommonPath: false,
-            customHost: "upload.cornellappdev.com",
+            customHost: Keys.appdevServerURL,
             customScheme: "https"
         )
     }

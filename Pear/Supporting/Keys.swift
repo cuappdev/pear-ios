@@ -16,6 +16,7 @@ struct Keys {
     static let announcementsScheme = Keys.keyDict["announcements-scheme"] as! String
     static let googleClientID = Keys.googleServiceDict["CLIENT_ID"] as? String ?? ""
     static let serverURL = Keys.keyDict["SERVER_URL"] as? String ?? ""
+    static let appdevServerURL = Keys.keyDict["APPDEV_SERVER_URL"] as? String ?? ""
 
     private static let googleServiceDict: NSDictionary = {
         guard let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) else { return [:] }
