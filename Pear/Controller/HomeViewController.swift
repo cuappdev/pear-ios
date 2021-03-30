@@ -82,7 +82,10 @@ class HomeViewController: UIViewController {
         tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
 
-        setUpConstraints()
+//        TODO: uncomment when feedback route is done
+//        showInAppFeedback()
+        setupLocalNotifications()
+        setupConstraints()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +97,31 @@ class HomeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    private func showInAppFeedback() {
+        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
+            switch response {
+            case .value(let currentMatchHistory):
+                guard currentMatchHistory.success else {
+                    print("Network error: could not get user match history")
+                    return
+                }
+                var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
+                // the default value for previousMatchHistorySize is 0, but it should be 1 since the app feedback form should only be shown when the user has a match history of size 2 or more
+                previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
+                if currentMatchHistory.data.count > previousMatchHistorySize {
+                    DispatchQueue.main.async {
+                        let navController = UINavigationController(rootViewController: FeedbackViewController())
+                        navController.modalPresentationStyle = .overFullScreen
+                        self.present(navController, animated: true)
+                    }
+                }
+            case .error(let error):
+                print("error: \(error)")
+            }
+        }
     }
 
     private func updateUserAndTabPage() {
@@ -206,7 +234,7 @@ class HomeViewController: UIViewController {
         displayMenu.toggle()
     }
 
-    private func setUpConstraints() {
+    private func setupConstraints() {
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
             make.leading.equalToSuperview().inset(20)
@@ -275,5 +303,34 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         let cellWidth = indexPath.item == 0 ? 151 : 50
         return CGSize(width: cellWidth, height: 40)
     }
-    
+
 } 
+
+extension HomeViewController: UNUserNotificationCenterDelegate {
+    private func setupLocalNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            if granted {
+                center.delegate = self
+                // get rid of previously scheduled notifications
+                center.removeAllDeliveredNotifications()
+                center.removeAllPendingNotificationRequests()
+                self.scheduleNotifications(center: center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊")
+                self.scheduleNotifications(center: center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!")
+                self.scheduleNotifications(center: center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️")
+            }
+        }
+    }
+
+    private func scheduleNotifications(center: UNUserNotificationCenter, day: Int, hour: Int, title: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        let dateComponents = DateComponents(hour: hour, minute: 0, second: 0, weekday: day)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
+        center.add(request)
+    }
+}
