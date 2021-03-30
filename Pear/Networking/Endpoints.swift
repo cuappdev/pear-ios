@@ -12,7 +12,7 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-        let baseURL = Keys.serverURL
+        let baseURL = Keys.pearServerURL
 
         #if LOCAL
             Endpoint.config.scheme = "http"
