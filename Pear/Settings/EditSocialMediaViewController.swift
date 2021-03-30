@@ -111,7 +111,7 @@ class EditSocialMediaViewController: UIViewController {
     @objc private func saveSocialMedia() {
         let instagramHandle = instaTextField.text ?? ""
         let facebookHandle = fbTextField.text ?? ""
-        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle).observe { [weak self] result in
+        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle, didOnboard: true).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
@@ -162,7 +162,7 @@ class EditSocialMediaViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.trailing.equalToSuperview().inset(63)
-            make.height.equalTo(90)
+            make.height.equalTo(110)
         }
 
         instaTextField.snp.makeConstraints { make in
