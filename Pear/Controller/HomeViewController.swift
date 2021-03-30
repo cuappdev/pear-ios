@@ -15,6 +15,8 @@ import AppDevAnnouncements
 class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
+    private var feedbackButton = UIButton()
+    private var feedbackMenuView: FeedbackView?
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -28,6 +30,7 @@ class HomeViewController: UIViewController {
     private var activeTabIndex = 0
     private let tabs = ["Weekly Pear", "People"]
     private var user: User?
+    private var displayMenu = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +73,15 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        setupLocalNotifications()
+        feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
+        feedbackButton.addTarget(self, action: #selector(toggleFeedbackMenu), for: .touchUpInside)
+        view.addSubview(feedbackButton)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
+
         setUpConstraints()
     }
 
@@ -96,25 +107,6 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-    }
-
-    private func setupLocalNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            print("granted: \(granted)")
-        }
-        let content = UNMutableNotificationContent()
-        content.title = "Meet your new pear!"
-        content.body = "Set up this week's chat today 😊"
-        var dateComponents = DateComponents()
-        dateComponents.weekday = 2
-        dateComponents.hour = 8
-        dateComponents.minute = 0
-        dateComponents.second = 0
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let uuid = UUID().uuidString
-        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
-        center.add(request)
     }
 
     private func setUserAndTabPage(newUser: User, match: Match? = nil) {
@@ -189,6 +181,31 @@ class HomeViewController: UIViewController {
         present(menu, animated: animated)
     }
 
+    @objc private func dismissMenu() {
+        if !displayMenu {
+            feedbackMenuView?.removeFromSuperview()
+            displayMenu.toggle()
+        }
+    }
+
+    @objc private func toggleFeedbackMenu() {
+        if displayMenu {
+            feedbackMenuView = FeedbackView()
+            guard let feedbackMenuView = feedbackMenuView else { return }
+            feedbackMenuView.layer.cornerRadius = 20
+            view.addSubview(feedbackMenuView)
+
+            feedbackMenuView.snp.makeConstraints { make in
+                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
+                make.trailing.equalTo(view.snp.trailing).offset(-25)
+                make.size.equalTo(CGSize(width: 150, height: 130))
+            }
+        } else {
+            feedbackMenuView?.removeFromSuperview()
+        }
+        displayMenu.toggle()
+    }
+
     private func setUpConstraints() {
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(tabCollectionView)
@@ -202,22 +219,39 @@ class HomeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
+        feedbackButton.snp.makeConstraints { make in
+            make.centerY.equalTo(tabCollectionView)
+            make.trailing.equalToSuperview().inset(20)
+        }
+
         tabContainerView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
     }
+
+}
+
+extension HomeViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return !(touch.view is UIButton)
+    }
+    
 }
 
 extension HomeViewController: UICollectionViewDelegate {
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeTabIndex = indexPath.item
         tabPageViewController?.setViewController(to: indexPath.item)
         tabCollectionView.reloadData()
     }
+
 }
 
 extension HomeViewController: UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         tabs.count
     }
@@ -230,13 +264,16 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.configure(with: tabs[indexPath.item])
         return cell
     }
+
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = indexPath.item == 0 ? 151 : 50
         return CGSize(width: cellWidth, height: 40)
     }
-}
+    
+} 

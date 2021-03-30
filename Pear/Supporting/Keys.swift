@@ -14,6 +14,8 @@ struct Keys {
     static let announcementsHost = Keys.keyDict["announcements-host"] as! String
     static let announcementsPath = Keys.keyDict["announcements-path"] as! String
     static let announcementsScheme = Keys.keyDict["announcements-scheme"] as! String
+    static let feedbackURL = Keys.keyDict["FEEDBACK_URL"] as? String ?? ""
+    static let feedbackEmail = Keys.keyDict["feedback-email"] as? String ?? ""
     static let googleClientID = Keys.googleServiceDict["CLIENT_ID"] as? String ?? ""
     static let serverURL = Keys.keyDict["SERVER_URL"] as? String ?? ""
 

@@ -50,6 +50,7 @@
 		5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD082532D65600374F7B /* AboutParagraph.swift */; };
 		50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */; };
 		50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */; };
+		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
 		50E1A7722558E95E008932F8 /* CommunityUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E1A7712558E95E008932F8 /* CommunityUser.swift */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
 		AA13E270058A9586289C15C3 /* Pods_PearTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 456B22D4569E541B74BA9430 /* Pods_PearTests.framework */; };
@@ -173,6 +174,7 @@
 		5030DD082532D65600374F7B /* AboutParagraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutParagraph.swift; sourceTree = "<group>"; };
 		50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLocationAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHeaderLabelView.swift; sourceTree = "<group>"; };
+		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		50E1A7712558E95E008932F8 /* CommunityUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUser.swift; sourceTree = "<group>"; };
 		653B0EFB0F103F02645B2D54 /* Pods-Pear-PearUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pear-PearUITests.release.xcconfig"; path = "Target Support Files/Pods-Pear-PearUITests/Pods-Pear-PearUITests.release.xcconfig"; sourceTree = "<group>"; };
 		6916F22E573B3429E4ACDF72 /* Pods-PearTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.release.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -421,6 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */,
+				50DA489126078B7B007654D5 /* FeedbackView.swift */,
 				D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */,
 				D471EDA7244DBE260079665D /* MessageAlertView.swift */,
 				5029873725389E4700E52EDA /* PausePearView.swift */,
@@ -855,6 +858,7 @@
 				D4DDBF49257560B000D5C43A /* Demographics.swift in Sources */,
 				D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */,
 				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,
+				50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				D440928025FDA3CC00A4690A /* ProfileSectionTableViewCell.swift in Sources */,
 				4F811F42253A4F1300F5A15C /* FadeWrapperView.swift in Sources */,
