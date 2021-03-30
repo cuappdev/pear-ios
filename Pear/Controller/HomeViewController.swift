@@ -198,8 +198,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.width.equalTo(150)
-                make.height.equalTo(130)
+                make.size.equalTo(CGSize(width: 150, height: 130))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -222,7 +221,7 @@ class HomeViewController: UIViewController {
 
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
-            make.trailing.equalTo(view.snp.trailing).inset(20)
+            make.trailing.equalToSuperview().inset(20)
         }
 
         tabContainerView.snp.makeConstraints { make in
@@ -230,23 +229,29 @@ class HomeViewController: UIViewController {
             make.top.equalTo(tabCollectionView.snp.bottom)
         }
     }
+
 }
 
 extension HomeViewController: UIGestureRecognizerDelegate {
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         return !(touch.view is UIButton)
     }
+    
 }
 
 extension HomeViewController: UICollectionViewDelegate {
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeTabIndex = indexPath.item
         tabPageViewController?.setViewController(to: indexPath.item)
         tabCollectionView.reloadData()
     }
+
 }
 
 extension HomeViewController: UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         tabs.count
     }
@@ -259,13 +264,16 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.configure(with: tabs[indexPath.item])
         return cell
     }
+
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = indexPath.item == 0 ? 151 : 50
         return CGSize(width: cellWidth, height: 40)
     }
+    
 } 

@@ -18,6 +18,7 @@ class FeedbackView: UIView {
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
     private let size = 20
+    private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
     init() {
         super.init(frame: .zero)
@@ -50,10 +51,11 @@ class FeedbackView: UIView {
         feedbackTableView.backgroundColor = .backgroundWhite
         feedbackTableView.separatorStyle = .none
         feedbackTableView.showsVerticalScrollIndicator = false
+        feedbackTableView.rowHeight = 40
         feedbackTableView.delegate = self
         feedbackTableView.dataSource = self
         feedbackTableView.isScrollEnabled = false
-        feedbackTableView.register(FeedbackMenuTableViewCell.self, forCellReuseIdentifier: FeedbackMenuTableViewCell.reuseIdentifier)
+        feedbackTableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         feedbackBackgroundView.addSubview(feedbackTableView)
     }
 
@@ -63,8 +65,7 @@ class FeedbackView: UIView {
             make.height.equalTo(size/2)
         }
         arrowView.snp.makeConstraints { make in
-            make.trailing.equalTo(arrowBackgroundView.snp.trailing)
-            make.bottom.equalTo(arrowBackgroundView.snp.bottom)
+            make.trailing.bottom.equalToSuperview()
             make.width.equalTo(size)
             make.height.equalTo(size)
         }
@@ -73,7 +74,7 @@ class FeedbackView: UIView {
             make.leading.trailing.bottom.equalToSuperview()
         }
         feedbackTableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalTo(feedbackBackgroundView)
+            make.leading.trailing.top.bottom.equalToSuperview()
         }
     }
     
@@ -86,9 +87,13 @@ extension FeedbackView: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = feedbackTableView.dequeueReusableCell(withIdentifier: FeedbackMenuTableViewCell.reuseIdentifier, for: indexPath) as? FeedbackMenuTableViewCell else { return UITableViewCell() }
-        let feedbackOption = feedbackOptions[indexPath.row]
-        cell.configure(for: feedbackOption)
+        let cell = feedbackTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        cell.textLabel?.text = feedbackOptions[indexPath.row]
+        cell.textLabel?.font = ._16CircularStdBook
+        cell.selectionStyle = .none
+        cell.textLabel?.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
         return cell
     }
 
@@ -96,21 +101,15 @@ extension FeedbackView: UITableViewDataSource {
 
 extension FeedbackView: UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        40
-    }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let optionSelected = feedbackOptions[indexPath.row]
         if optionSelected == "Send feedback" {
-            let feedbackURL = Keys.feedbackURL
-            if let url = URL(string: feedbackURL), UIApplication.shared.canOpenURL(url) {
+            if let url = URL(string: Keys.feedbackURL), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         } else {
-            let email = "team@cornellappdev.com"
-            let emailSubject = optionSelected == "Contact us" ? "Pear%20Feedback" : "Report%20User"
-            URLScheme.openGmail(to: email, subject: emailSubject)
+            let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
+            URLScheme.openGmail(to: Keys.feedbackEmail, subject: emailSubject)
         }
     }
 

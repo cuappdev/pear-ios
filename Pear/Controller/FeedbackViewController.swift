@@ -221,7 +221,9 @@ class FeedbackViewController: UIViewController {
     }
     
     @objc private func finishFeedback() {
+        responses.append(detailTextView.text)
         print(responses)
+        self.dismiss(animated: true, completion: nil)
     }
 
     private func setupConstraints() {
