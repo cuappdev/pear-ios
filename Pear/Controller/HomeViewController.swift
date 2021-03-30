@@ -258,17 +258,17 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
                 // get rid of previously scheduled notifications
                 center.removeAllDeliveredNotifications()
                 center.removeAllPendingNotificationRequests()
-                self.scheduleNotifications(center: center, day: 2, hour: 8)
-                self.scheduleNotifications(center: center, day: 4, hour: 14)
-                self.scheduleNotifications(center: center, day: 6, hour: 12)
+                self.scheduleNotifications(center: center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊")
+                self.scheduleNotifications(center: center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!")
+                self.scheduleNotifications(center: center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️")
             }
         }
     }
 
-    private func scheduleNotifications(center: UNUserNotificationCenter, day: Int, hour: Int) {
+    private func scheduleNotifications(center: UNUserNotificationCenter, day: Int, hour: Int, title: String, body: String) {
         let content = UNMutableNotificationContent()
-        content.title = "Meet your new pear!"
-        content.body = "Set up this week's chat today 😊"
+        content.title = title
+        content.body = body
         content.sound = .default
         let dateComponents = DateComponents(hour: hour, minute: 0, second: 0, weekday: day)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
