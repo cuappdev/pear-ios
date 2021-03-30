@@ -292,14 +292,12 @@ class EditDemographicsViewController: UIViewController {
                     DispatchQueue.main.async {
                         switch result {
                         case .value(let response):
-                            print("There was a response")
                             if response.success {
                                 self.saveProfile(profilePictureURL: response.data)
                             } else {
                                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                             }
                         case .error:
-                            print("There was no a response")
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     }

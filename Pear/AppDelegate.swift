@@ -30,7 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Setup networking
         Endpoint.setupEndpointConfig()
         
-
         return true
     }
 
