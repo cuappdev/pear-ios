@@ -138,7 +138,7 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: user.graduationYear)
+        classDropdownView.setSelectValue(value: user.graduationYear ?? "")
         editScrollView.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
@@ -152,14 +152,14 @@ class EditDemographicsViewController: UIViewController {
                                                             placeholder: "Hometown",
                                                             tableData: hometownSearchFields)
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
-        hometownDropdownView.setSelectValue(value: user.hometown)
+        hometownDropdownView.setSelectValue(value: user.hometown ?? "")
         editScrollView.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                             placeholder: "Pronouns",
                                                             tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
-        pronounsDropdownView.setSelectValue(value: user.pronouns)
+        pronounsDropdownView.setSelectValue(value: user.pronouns ?? "")
         editScrollView.addSubview(pronounsDropdownView)
 
         setupConstraints()

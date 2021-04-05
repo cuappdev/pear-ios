@@ -11,9 +11,9 @@ import Foundation
 struct User: Codable, Equatable {
 
     let didOnboard: Bool
-    let graduationYear: String
+    let graduationYear: String?
     let groups: [String]
-    let hometown: String
+    let hometown: String?
     let facebook: String?
     let firstName: String
     let interests: [String]
@@ -22,7 +22,7 @@ struct User: Codable, Equatable {
     let major: String
     let netID: String
     let profilePictureURL: String?
-    let pronouns: String
+    let pronouns: String?
 
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.netID == rhs.netID &&

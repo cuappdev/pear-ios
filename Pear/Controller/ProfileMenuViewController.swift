@@ -85,7 +85,9 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
-        profileInfoLabel.text = "\(major) \(year)\nFrom \(hometown)"
+        if let year = year, let hometown = hometown {
+            profileInfoLabel.text = "\(major) \(year)\nFrom \(hometown)"
+        }
         profileInfoLabel.textColor = .greenGray
         profileInfoLabel.font = ._16CircularStdBook
         profileInfoLabel.numberOfLines = 0

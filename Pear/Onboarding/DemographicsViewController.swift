@@ -129,8 +129,8 @@ class DemographicsViewController: UIViewController {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                         }
                     }
+                }
             }
-        }
     }
 
     private func getAllMajors() {
@@ -158,17 +158,20 @@ class DemographicsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let user = response.data
-                        if user.major != "" {
+                        if user.major != "" && user.major != "Undeclared" {
                             self.majorDropdownView.setTitle(title: user.major)
                         }
-                        if user.graduationYear != "" {
-                            self.classDropdownView.setTitle(title: user.graduationYear)
+                        if let graduationYear = user.graduationYear,
+                           graduationYear != "" {
+                            self.classDropdownView.setTitle(title: graduationYear)
                         }
-                        if user.hometown != "" {
-                            self.hometownDropdownView.setTitle(title: user.hometown)
+                        if let hometown = user.hometown,
+                           hometown != "" {
+                            self.hometownDropdownView.setTitle(title: hometown)
                         }
-                        if user.pronouns != "" {
-                            self.pronounsDropdownView.setTitle(title: user.pronouns)
+                        if let pronouns = user.pronouns,
+                           pronouns != "" {
+                            self.pronounsDropdownView.setTitle(title: pronouns)
                         }
                     }
                 case .error:

@@ -92,11 +92,16 @@ class LoginViewController: UIViewController {
 
     private func loginUser(user: GIDGoogleUser) {
         if let idToken = user.authentication.idToken,
+           let userFirstName = user.profile.givenName,
+           let userFullName = user.profile.name,
            let userEmail = user.profile.email,
            let addressSignIndex = userEmail.firstIndex(of: "@"),
-           let userProfilePictureURL = user.profile.imageURL(withDimension: 100) {
+           let userProfilePictureURL = user.profile.imageURL(withDimension: 100)?.absoluteString {
+            print(userProfilePictureURL)
             UserDefaults.standard.set(userProfilePictureURL, forKey: Constants.UserDefaults.userProfilePictureURL)
             UserDefaults.standard.set(userEmail[..<addressSignIndex], forKey: Constants.UserDefaults.userNetId)
+            UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
+            UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
             NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
