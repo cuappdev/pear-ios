@@ -112,7 +112,30 @@ struct Constants {
         
         static let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
 
-        static let profilePrompts = ["Why are you on Pear?", "Why should other students reach out to you?", "How would you introduce yourself to someone new?", "What do you like most about your major?", "What do you hope to accomplish this semester?", "What could you talk about for hours?", "What's a funny story with no context?", "What are your most recent 5 emojis?", "What's your favorite food (besides pears)?", "What are your go-to songs?", "What are 3 things on your bucket list?", "What's something you want to do before you graduate?", "Last book you read that you loved?", "The last tv show series you watched?", "When you were younger what did you want to be?", "What is something about you that you take pride in?", "What is a social cause that you care about?", "If you could go anywhere in the world, where would you go?", "Where do you spend time on campus?", "What is your favorite restaurant?", "What is something you want to learn?", "What is a fact about you that surprises people?", "What is your ideal day?"
+        static let profilePrompts = [
+            "Why are you on Pear?",
+            "Why should other students reach out to you?",
+            "How would you introduce yourself to someone new?",
+            "What do you like most about your major?",
+            "What do you hope to accomplish this semester?",
+            "What could you talk about for hours?",
+            "What's a funny story with no context?",
+            "What are your most recent 5 emojis?",
+            "What's your favorite food (besides pears)?",
+            "What are your go-to songs?",
+            "What are 3 things on your bucket list?",
+            "What's something you want to do before you graduate?",
+            "Last book you read that you loved?",
+            "The last tv show series you watched?",
+            "When you were younger what did you want to be?",
+            "What is something about you that you take pride in?",
+            "What is a social cause that you care about?",
+            "If you could go anywhere in the world, where would you go?",
+            "Where do you spend time on campus?",
+            "What is your favorite restaurant?",
+            "What is something you want to learn?",
+            "What is a fact about you that surprises people?",
+            "What is your ideal day?"
         ]
 
         static let interestsMap: [String: Interest] = [

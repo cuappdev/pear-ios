@@ -20,15 +20,15 @@ class SelectPromptViewController: UIViewController {
 
     // MARK: Private Data Vars
     // TODO: change when networking done with backend
-    private var prompts: [Prompt]?
-    private weak var delegate: AddProfilePromptDelegate?
-    private var index: Int?
+    private var prompts: [Prompt]
+    private var index: Int
+    private var addPrompt: (Prompt, Int) -> ()
 
-    init(prompts: [Prompt], delegate: AddProfilePromptDelegate, index: Int) {
-        super.init(nibName: nil, bundle: nil)
+    init(prompts: [Prompt], addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
         self.prompts = prompts
-        self.delegate = delegate
+        self.addPrompt = addPrompt
         self.index = index
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -64,7 +64,7 @@ class SelectPromptViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let tableViewTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+        let tableViewTopPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
 
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -79,7 +79,6 @@ class SelectPromptViewController: UIViewController {
         }
 
         fadeTableView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(40)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(57)
@@ -91,38 +90,27 @@ class SelectPromptViewController: UIViewController {
 extension SelectPromptViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let prompts = prompts else { return 0 }
         return prompts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SelectPromptTableViewCell.reuseIdentifier, for: indexPath) as? SelectPromptTableViewCell else { return UITableViewCell() }
-        if let prompts = prompts {
-            let prompt = prompts[indexPath.row]
-            cell.configure(for: prompt)
-        }
+        let prompt = prompts[indexPath.row]
+        cell.configure(for: prompt)
         return cell
     }
-
 
 }
 
 extension SelectPromptViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let prompts = prompts else { return }
-        guard let index = index else { return }
         let prompt = prompts[indexPath.row]
-        navigationController?.pushViewController(AnswerPromptViewController(prompt: prompt, delegate: self, index: index), animated: true)
-    }
-
-}
-
-extension SelectPromptViewController: AddProfilePromptDelegate {
-    
-    func addPrompt(prompt: Prompt, index: Int) {
-        delegate?.addPrompt(prompt: prompt, index: index)
-        navigationController?.popViewController(animated: true)
+        let answerPromptViewController = AnswerPromptViewController(prompt: prompt, addPrompt: { (prompt, index) in
+            self.addPrompt(prompt, index)
+            self.navigationController?.popViewController(animated: true)
+        }, index: index)
+        navigationController?.pushViewController(answerPromptViewController, animated: true)
     }
 
 }

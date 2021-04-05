@@ -8,14 +8,6 @@
 
 import UIKit
 
-protocol AddProfilePromptDelegate: class {
-    func addPrompt(prompt: Prompt, index: Int)
-}
-
-protocol RemoveProfilePromptDelegate: class {
-    func removePrompt(cell: PromptTableViewCell)
-}
-
 class ProfilePromptsViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -31,7 +23,9 @@ class ProfilePromptsViewController: UIViewController {
     // MARK: - Private Data Vars
     private weak var delegate: OnboardingPageDelegate?
     private var prompts: [Prompt] = []
-    private var promptOptions = Constants.Options.profilePrompts.map { Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: $0) }
+    private var promptOptions = Constants.Options.profilePrompts.map {
+        Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: $0)
+    }
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -47,7 +41,11 @@ class ProfilePromptsViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
 
         // TODO: change when networking with backend
-        prompts = [Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil), Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil), Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil)]
+        prompts = [
+            Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil),
+            Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil),
+            Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil)
+        ]
 
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
@@ -110,8 +108,7 @@ class ProfilePromptsViewController: UIViewController {
 
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
-            make.height.equalTo(61)
-            make.width.equalTo(295)
+            make.size.equalTo(CGSize(width: 295, height: 61))
             make.centerX.equalToSuperview()
         }
 
@@ -122,14 +119,12 @@ class ProfilePromptsViewController: UIViewController {
         }
 
         subtitleLabel.snp.makeConstraints { make in
-            make.width.equalTo(titleLabel)
-            make.height.equalTo(34)
+            make.size.equalTo(CGSize(width: 295, height: 34))
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.centerX.equalToSuperview()
         }
 
         fadeTableView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(48)
             make.bottom.equalTo(nextButton.snp.top).offset(-57)
             make.top.equalTo(subtitleLabel.snp.bottom).offset(28)
@@ -164,7 +159,16 @@ extension ProfilePromptsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PromptTableViewCell.reuseIdentifier, for: indexPath) as? PromptTableViewCell else { return UITableViewCell() }
         let prompt = prompts[indexPath.row]
         cell.configure(for: prompt)
-        cell.delegate = self
+        cell.removePrompt = { [weak self] selectedCell in
+            guard let self = self else { return }
+            guard let indexPath = self.fadeTableView.view.indexPath(for: cell) else { return }
+            self.prompts[indexPath.row] = Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil)
+            self.promptOptions = Constants.Options.profilePrompts.map {
+                Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: $0)
+            }.filter { !self.prompts.contains($0) }
+            self.updateNext()
+            self.fadeTableView.view.reloadData()
+        }
         return cell
     }
 
@@ -175,33 +179,23 @@ extension ProfilePromptsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let prompt = prompts[indexPath.row]
         if prompt.didAnswerPrompt {
-            navigationController?.pushViewController(AnswerPromptViewController(prompt: prompt, delegate: self, index: indexPath.row), animated: true)
+            let answerPromptViewController = AnswerPromptViewController(prompt: prompt, addPrompt: { (prompt, index) in
+                self.updateProfilePrompt(prompt: prompt, index: index)
+            }, index: indexPath.row)
+            navigationController?.pushViewController(answerPromptViewController, animated: true)
         } else {
-            navigationController?.pushViewController(SelectPromptViewController(prompts: promptOptions, delegate: self, index: indexPath.row), animated: true)
+            let selectPromptViewController = SelectPromptViewController(prompts: promptOptions, addPrompt: { (prompt, index) in
+                self.updateProfilePrompt(prompt: prompt, index: index)
+            }, index: indexPath.row)
+            navigationController?.pushViewController(selectPromptViewController, animated: true)
         }
     }
 
-}
-
-extension ProfilePromptsViewController: AddProfilePromptDelegate {
-
-    func addPrompt(prompt: Prompt, index: Int) {
-        prompts[index] = prompt
-        promptOptions = promptOptions.filter{ $0.promptQuestion != prompt.promptQuestion }
-        updateNext()
-        fadeTableView.view.reloadData()
-    }
-
-}
-
-extension ProfilePromptsViewController: RemoveProfilePromptDelegate {
-
-    func removePrompt(cell: PromptTableViewCell) {
-        guard let indexPath = fadeTableView.view.indexPath(for: cell) else { return }
-        prompts[indexPath.row] = Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: nil)
-        promptOptions = Constants.Options.profilePrompts.map { Prompt(didAnswerPrompt: false, promptResponse: nil, promptQuestion: $0) }.filter { !prompts.contains($0) }
-        updateNext()
-        fadeTableView.view.reloadData()
+    private func updateProfilePrompt(prompt: Prompt, index: Int) {
+        self.prompts[index] = prompt
+        self.promptOptions = self.promptOptions.filter{ $0.promptQuestion != prompt.promptQuestion }
+        self.updateNext()
+        self.fadeTableView.view.reloadData()
     }
 
 }

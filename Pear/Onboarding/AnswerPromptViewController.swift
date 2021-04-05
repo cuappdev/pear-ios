@@ -12,22 +12,23 @@ class AnswerPromptViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let titleLabel = UILabel()
+    private let characterCountLabel = UILabel()
     private let questionLabel = UILabel()
     private let responseTextView = UITextView()
-    private let characterCountLabel = UILabel()
     private let saveButton = UIButton()
+    private let titleLabel = UILabel()
 
     // MARK: - Private Data Vars
-    private var prompt: Prompt?
-    private var index: Int?
-    private weak var delegate: AddProfilePromptDelegate?
+    private var addPrompt: (Prompt, Int) -> ()
+    private var index: Int
+    private let maxCharacters = 150
+    private var prompt: Prompt
 
-    init(prompt: Prompt, delegate: AddProfilePromptDelegate, index: Int) {
-        super.init(nibName: nil, bundle: nil)
+    init(prompt: Prompt, addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
         self.prompt = prompt
-        self.delegate = delegate
+        self.addPrompt = addPrompt
         self.index = index
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -48,8 +49,7 @@ class AnswerPromptViewController: UIViewController {
         titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
 
-        guard let selectedPrompt = prompt?.promptQuestion else { return }
-        questionLabel.text = selectedPrompt
+        questionLabel.text = prompt.promptQuestion
         questionLabel.textColor = .darkGreen
         questionLabel.numberOfLines = 0
         questionLabel.font = ._16CircularStdBook
@@ -69,15 +69,15 @@ class AnswerPromptViewController: UIViewController {
         responseTextView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         view.addSubview(responseTextView)
 
-        characterCountLabel.text = "150"
+        characterCountLabel.text = "\(maxCharacters)"
         characterCountLabel.textColor = .darkGreen
         characterCountLabel.font = ._12CircularStdBook
         view.addSubview(characterCountLabel)
 
-        if let promptResponse = prompt?.promptResponse {
+        if let promptResponse = prompt.promptResponse, !promptResponse.isEmpty {
             responseTextView.text = promptResponse
             responseTextView.textColor = .black
-            characterCountLabel.text = "\(150 - promptResponse.count)"
+            characterCountLabel.text = "\(maxCharacters - promptResponse.count)"
         }
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
@@ -97,7 +97,7 @@ class AnswerPromptViewController: UIViewController {
     }
 
     private func updateSave() {
-        saveButton.isEnabled = responseTextView.text.count > 0
+        saveButton.isEnabled = responseTextView.text.count > 0 && responseTextView.text != "Type your response..."
         saveButton.backgroundColor = saveButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
@@ -106,9 +106,9 @@ class AnswerPromptViewController: UIViewController {
     }
 
     @objc private func saveButtonPressed() {
-        if let promptQuestion = prompt?.promptQuestion, let promptResponse = responseTextView.text, let index = index {
+        if let promptQuestion = prompt.promptQuestion, let promptResponse = responseTextView.text, promptResponse != "Type your response..." {
             let newPrompt = Prompt(didAnswerPrompt: true, promptResponse: promptResponse, promptQuestion: promptQuestion)
-            delegate?.addPrompt(prompt: newPrompt, index: index)
+            addPrompt(newPrompt, index)
             navigationController?.popViewController(animated: true)
         }
     }
@@ -118,12 +118,11 @@ class AnswerPromptViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let questionLabelTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
+        let questionLabelTopPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
 
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
-            make.height.equalTo(61)
-            make.width.equalTo(295)
+            make.size.equalTo(CGSize(width: 295, height: 61))
             make.centerX.equalToSuperview()
         }
 
@@ -154,7 +153,6 @@ class AnswerPromptViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(responseTextView.snp.bottom).offset(60)
         }
-
     }
 
 }
@@ -162,7 +160,7 @@ class AnswerPromptViewController: UIViewController {
 extension AnswerPromptViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
-        characterCountLabel.text = "\(150 - textView.text.count)"
+        characterCountLabel.text = "\(maxCharacters - textView.text.count)"
         updateSave()
     }
 
@@ -183,7 +181,7 @@ extension AnswerPromptViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         let numberOfChars = newText.count
-        return numberOfChars <= 150
+        return numberOfChars <= maxCharacters
     }
 
 }

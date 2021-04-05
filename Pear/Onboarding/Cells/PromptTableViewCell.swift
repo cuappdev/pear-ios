@@ -12,20 +12,19 @@ class PromptTableViewCell: UITableViewCell {
 
     // MARK: - Private View Vars
     private let promptBackgroundView = UIView()
+    private let promptLabel = UILabel()
+    private let removePromptButton = UIButton()
+    private let promptResponseLabel = UILabel()
     private let selectLabel = UILabel()
     private let selectImageView = UIImageView()
-    private let promptLabel = UILabel()
-    private let promptResponseLabel = UILabel()
-    private let removePromptButton = UIButton()
 
     // MARK: - Data Vars
-    weak var delegate: RemoveProfilePromptDelegate?
+    var removePrompt: ((PromptTableViewCell) -> ())?
     static let reuseIdentifier = "PromptTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-
         backgroundColor = .clear
         contentView.backgroundColor = .clear
 
@@ -60,7 +59,7 @@ class PromptTableViewCell: UITableViewCell {
         promptBackgroundView.addSubview(promptResponseLabel)
 
         removePromptButton.setImage(UIImage(named: "cancelled"), for: .normal)
-        removePromptButton.addTarget(self, action: #selector(removePrompt), for: .touchUpInside)
+        removePromptButton.addTarget(self, action: #selector(handleRemovePrompt), for: .touchUpInside)
         promptBackgroundView.addSubview(removePromptButton)
 
         setupConstraints()
@@ -70,12 +69,13 @@ class PromptTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func removePrompt() {
-        delegate?.removePrompt(cell: self)
+    @objc private func handleRemovePrompt() {
+        if let removePrompt = removePrompt {
+            removePrompt(self)
+        }
     }
 
     private func setupConstraints() {
-
         promptBackgroundView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(6)
             make.top.bottom.equalToSuperview().inset(8)
@@ -92,9 +92,8 @@ class PromptTableViewCell: UITableViewCell {
         }
 
         promptLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
+            make.leading.top.equalToSuperview().offset(16)
             make.width.equalTo(235)
-            make.top.equalToSuperview().offset(16)
         }
 
         promptResponseLabel.snp.makeConstraints { make in
@@ -107,19 +106,18 @@ class PromptTableViewCell: UITableViewCell {
             make.trailing.equalToSuperview().inset(16)
             make.top.equalTo(promptLabel.snp.top)
         }
-
     }
 
     func configure(for prompt: Prompt) {
+        if prompt.didAnswerPrompt {
+            promptLabel.text = prompt.promptQuestion
+            promptResponseLabel.text = prompt.promptResponse
+        }
         selectLabel.isHidden = prompt.didAnswerPrompt
         selectImageView.isHidden = prompt.didAnswerPrompt
         promptLabel.isHidden = !prompt.didAnswerPrompt
         promptResponseLabel.isHidden = !prompt.didAnswerPrompt
         removePromptButton.isHidden = !prompt.didAnswerPrompt
-        if prompt.didAnswerPrompt {
-            promptLabel.text = prompt.promptQuestion
-            promptResponseLabel.text = prompt.promptResponse
-        }
     }
 
 }

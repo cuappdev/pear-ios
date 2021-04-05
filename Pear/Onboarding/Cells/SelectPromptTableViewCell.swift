@@ -49,7 +49,7 @@ class SelectPromptTableViewCell: UITableViewCell {
         }
 
         promptLabel.snp.makeConstraints { make in
-            make.top.bottom.leading.trailing.equalTo(promptBackgroundView).inset(12)
+            make.edges.equalTo(promptBackgroundView).inset(12)
         }
     }
 
