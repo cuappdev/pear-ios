@@ -8,6 +8,24 @@
 
 import Foundation
 
+struct LoginUser: Codable {
+
+    let didOnboard: Bool
+    let graduationYear: String?
+    let groups: [String]
+    let hometown: String?
+    let facebook: String?
+    let firstName: String
+    let interests: [String]
+    let instagram: String?
+    let lastName: String
+    let major: String
+    let netID: String
+    let profilePictureURL: String?
+    let pronouns: String?
+    
+}
+
 struct User: Codable, Equatable {
 
     let didOnboard: Bool

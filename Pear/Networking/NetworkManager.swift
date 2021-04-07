@@ -43,6 +43,11 @@ class NetworkManager {
     
     // MARK: - Get User
 
+    /// [GET] Get information about the user after login.
+    func getLoginUser(netId: String) -> Future<Response<LoginUser>> {
+        networking(Endpoint.getLoginUser(netId: netId)).decode()
+    }
+
     /// [GET] Get information about the user.
     func getUser(netId: String) -> Future<Response<User>> {
         networking(Endpoint.getUser(netId: netId)).decode()
