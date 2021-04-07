@@ -72,6 +72,11 @@ extension Endpoint {
     static func refreshUserToken(token: String) -> Endpoint {
         Endpoint(path: "/refresh/", headers: updateHeaders)
     }
+
+    /// [GET] Get information about the user.
+    static func getLoginUser(netId: String) -> Endpoint {
+        return Endpoint(path: "/user/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
+    }
     
     // MARK: - Get User
     

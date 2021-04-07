@@ -158,7 +158,7 @@ class DemographicsViewController: UIViewController {
                 case .value(let response):
                     if response.success {
                         let user = response.data
-                        if user.major != "" {
+                        if user.major != "" && user.major != "Undeclared" {
                             self.majorDropdownView.setTitle(title: user.major)
                         }
                         if user.graduationYear != "" {
