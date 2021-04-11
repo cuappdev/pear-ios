@@ -17,6 +17,7 @@ class EditTimeAvailabilityViewController: UIViewController {
     private let saveBarButtonItem = UIBarButtonItem()
     private let scheduleTimeLabel = UILabel()
     private var timeCollectionView: UICollectionView!
+    private let timezoneLabel = UILabel()
 
     // MARK: - Time CollectionView Sections
     private struct TimeSection {
@@ -109,6 +110,11 @@ class EditTimeAvailabilityViewController: UIViewController {
         dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
+
+        timezoneLabel.text = "All times are in eastern time"
+        timezoneLabel.textColor = .greenGray
+        timezoneLabel.font = ._16CircularStdBook
+        view.addSubview(timezoneLabel)
 
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = timeInteritemSpacing
@@ -237,15 +243,19 @@ class EditTimeAvailabilityViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
+        timezoneLabel.snp.makeConstraints { make in
+            make.top.equalTo(dayLabel.snp.bottom).offset(5)
+            make.centerX.equalToSuperview()
+        }
+
         timeCollectionView.snp.makeConstraints { make in
             let timeCollectionViewWidth = timeSections.count * 105
             let timeCollectionViewHeight = 400
-            make.top.equalTo(dayLabel.snp.bottom).offset(20)
+            make.top.equalTo(timezoneLabel.snp.bottom).offset(20)
             make.height.equalTo(timeCollectionViewHeight)
             make.width.equalTo(timeCollectionViewWidth)
             make.centerX.equalToSuperview()
         }
-
     }
 
 }

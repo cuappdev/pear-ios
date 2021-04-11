@@ -75,6 +75,8 @@ class HomeViewController: UIViewController {
 
         feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
         feedbackButton.addTarget(self, action: #selector(toggleFeedbackMenu), for: .touchUpInside)
+        feedbackButton.contentHorizontalAlignment = .fill
+        feedbackButton.contentVerticalAlignment = .fill
         view.addSubview(feedbackButton)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
@@ -252,6 +254,7 @@ class HomeViewController: UIViewController {
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
             make.trailing.equalToSuperview().inset(20)
+            make.width.height.equalTo(35)
         }
 
         tabContainerView.snp.makeConstraints { make in

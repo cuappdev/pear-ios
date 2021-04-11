@@ -29,7 +29,9 @@ class GoalsViewController: UIViewController {
     private let nextButton = UIButton()
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
-    private let tableView = UITableView()
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen)
     private let titleLabel = UILabel()
 
     init(delegate: OnboardingPageDelegate) {
@@ -48,16 +50,16 @@ class GoalsViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
 
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .none
-        tableView.bounces = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
-        tableView.allowsMultipleSelection = true
-        tableView.register(SimpleOnboardingTableViewCell.self,
+        fadeTableView.view.delegate = self
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.bounces = true
+        fadeTableView.view.showsVerticalScrollIndicator = false
+        fadeTableView.view.separatorStyle = .none
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.register(SimpleOnboardingTableViewCell.self,
                            forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
-        view.addSubview(tableView)
+        view.addSubview(fadeTableView)
 
         titleLabel.text = "How do you want to use\nPear?"
         titleLabel.numberOfLines = 0
@@ -114,7 +116,7 @@ class GoalsViewController: UIViewController {
             make.height.equalTo(20)
         }
 
-        tableView.snp.makeConstraints { make in
+        fadeTableView.snp.makeConstraints { make in
             make.top.equalTo(subtitleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(nextButton.snp.top).offset(-tableViewBottomPadding)
             make.leading.trailing.equalToSuperview().inset(40)
@@ -178,7 +180,7 @@ class GoalsViewController: UIViewController {
                     if response.success {
                         let userGoals = response.data
                         self.selectedGoals = userGoals
-                        self.tableView.reloadData()
+                        self.fadeTableView.view.reloadData()
                         self.updateNext()
                     } else {
                         print("Network error: could not get user goals.")

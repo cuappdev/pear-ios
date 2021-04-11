@@ -11,7 +11,9 @@ import UIKit
 class CommunityViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let communityTableView = UITableView()
+    private let fadeCommunityTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen)
     private let searchBar = UISearchBar()
 
     // MARK: - Private Data Vars
@@ -36,18 +38,18 @@ class CommunityViewController: UIViewController {
         searchBar.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.addSubview(searchBar)
 
-        communityTableView.delegate = self
-        communityTableView.dataSource = self
-        communityTableView.isScrollEnabled = true
-        communityTableView.separatorStyle = .none
-        communityTableView.backgroundColor = .clear
-        communityTableView.showsVerticalScrollIndicator = false
-        communityTableView.rowHeight = UITableView.automaticDimension
-        communityTableView.estimatedRowHeight = 140
-        communityTableView.sizeToFit()
-        communityTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
-        communityTableView.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
-        view.addSubview(communityTableView)
+        fadeCommunityTableView.view.delegate = self
+        fadeCommunityTableView.view.dataSource = self
+        fadeCommunityTableView.view.isScrollEnabled = true
+        fadeCommunityTableView.view.separatorStyle = .none
+        fadeCommunityTableView.view.backgroundColor = .clear
+        fadeCommunityTableView.view.showsVerticalScrollIndicator = false
+        fadeCommunityTableView.view.rowHeight = UITableView.automaticDimension
+        fadeCommunityTableView.view.estimatedRowHeight = 140
+        fadeCommunityTableView.view.sizeToFit()
+        fadeCommunityTableView.view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
+        fadeCommunityTableView.view.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
+        view.addSubview(fadeCommunityTableView)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -66,7 +68,7 @@ class CommunityViewController: UIViewController {
                         return
                     }
                     self.users = value.data
-                    self.communityTableView.reloadData()
+                    self.fadeCommunityTableView.view.reloadData()
                 case .error:
                     print("Network error: could not get users.")
                 }
@@ -81,7 +83,7 @@ class CommunityViewController: UIViewController {
             make.height.equalTo(40)
         }
 
-        communityTableView.snp.makeConstraints { make in
+        fadeCommunityTableView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.equalTo(searchBar.snp.bottom).offset(20)
             make.bottom.equalToSuperview()
@@ -132,7 +134,7 @@ extension CommunityViewController: UISearchBarDelegate {
                             return
                         }
                         self.users = value.data
-                        self.communityTableView.reloadData()
+                        self.fadeCommunityTableView.view.reloadData()
                 case .error:
                     print("Network error: could not search users")
                 }

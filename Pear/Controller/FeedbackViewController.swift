@@ -170,7 +170,7 @@ class FeedbackViewController: UIViewController {
                 make.centerX.equalToSuperview()
                 make.top.equalTo(questionLabel.snp.bottom).offset(10)
                 make.leading.trailing.equalToSuperview().inset(80)
-                make.bottom.equalTo(view.snp.centerY)
+                make.height.equalTo(50)
             }
         }
         DispatchQueue.main.async {
@@ -191,13 +191,13 @@ class FeedbackViewController: UIViewController {
 
         questionLabel.snp.makeConstraints { make in
             make.leading.equalTo(headerLabel.snp.leading)
-            make.top.equalTo(headerLabel.snp.bottom).offset(60)
+            make.top.equalTo(headerLabel.snp.bottom).offset(50)
         }
 
         answerCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(36)
             make.top.equalTo(questionLabel.snp.bottom).offset(10)
-            make.bottom.equalTo(view.snp.centerY)
+            make.height.equalTo(200)
         }
 
         finishButton.snp.makeConstraints { make in
@@ -208,17 +208,17 @@ class FeedbackViewController: UIViewController {
 
         lowRatingLabel.snp.makeConstraints { make in
             make.centerX.equalTo(answerCollectionView.snp.left).inset(12)
-            make.centerY.equalTo(answerCollectionView.snp.centerY)
+            make.top.equalTo(answerCollectionView.snp.bottom).offset(10)
         }
 
         highRatngLabel.snp.makeConstraints { make in
             make.centerX.equalTo(answerCollectionView.snp.right).inset(12)
-            make.centerY.equalTo(lowRatingLabel.snp.centerY)
+            make.top.equalTo(lowRatingLabel)
         }
 
         askDetailLabel.snp.makeConstraints { make in
             make.leading.equalTo(questionLabel.snp.leading)
-            make.centerY.equalTo(lowRatingLabel.snp.centerY).offset(80)
+            make.top.equalTo(lowRatingLabel.snp.bottom).offset(30)
         }
 
         detailTextView.snp.makeConstraints { make in
