@@ -104,7 +104,13 @@ extension ProfileSectionTableViewCell: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: calculateNecessaryWidth(text: items[indexPath.item]) + 52, height: 32)
+        let cellWidth = calculateNecessaryWidth(text: items[indexPath.item]) + 52
+        let maxWidth = UIScreen.main.bounds.width - 40
+        if cellWidth < maxWidth {
+            return CGSize(width: cellWidth, height: 32)
+        } else {
+            return CGSize(width: maxWidth, height: 32*(cellWidth/maxWidth).rounded(.up))
+        }
     }
 
 }
