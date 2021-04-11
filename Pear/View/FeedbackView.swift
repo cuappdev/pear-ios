@@ -7,6 +7,10 @@
 //
 import UIKit
 
+protocol FeedbackDelegate: class {
+    func presentActionSheet(alert: UIAlertController)
+}
+
 class FeedbackView: UIView {
 
     // MARK: - Private View Vars
@@ -14,13 +18,15 @@ class FeedbackView: UIView {
     private var arrowView = UIView()
     private let feedbackTableView = UITableView()
     private let feedbackBackgroundView = UIView()
+    weak var delegate: FeedbackDelegate?
 
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init() {
+    init(delegate: FeedbackDelegate) {
+        self.delegate = delegate
         super.init(frame: .zero)
         setUpViews()
         setupConstraints()
@@ -108,13 +114,12 @@ extension FeedbackView: UITableViewDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         } else {
-//            let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
-//            URLScheme.openGmail(to: Keys.feedbackEmail, subject: emailSubject)
-//            if let emailURL = URL(string: "mailto: \(Keys.feedbackEmail)"),
-//               UIApplication.shared.canOpenURL(emailURL) {
-//                UIApplication.shared.open(emailURL, options: [:], completionHandler: nil)
-//            }
-//            present(UIAlertController.getEmailAlertController(), animated: true)
+            let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
+            let emailAlertController = UIAlertController.getEmailAlertController(
+                email: Keys.feedbackEmail,
+                subject: emailSubject
+            )
+            delegate?.presentActionSheet(alert: emailAlertController)
         }
     }
 

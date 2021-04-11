@@ -8,18 +8,29 @@
 
 import UIKit
 
+enum MailType {
+    case gmail, mail
+}
+
 class URLScheme {
-    static func openGmail(to email: String, subject: String) {
-        let emailSubject = subject.replacingOccurrences(of: " ", with: "%20")
-        let emailBody = ""
-        let googleUrlString = "googlegmail:///co?to=\(email)&subject=\(emailSubject)&body=\(emailBody)"
-        if let googleUrl = URL(string: googleUrlString) {
-            // show alert to choose app
-            if UIApplication.shared.canOpenURL(googleUrl) {
+    static func openMail(to email: String, subject: String, type: MailType) {
+        let subjectEncoded = subject.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+        let bodyEncoded = ""
+        var urlString: String {
+            switch type {
+            case .gmail:
+                return "googlegmail:///co?to=\(email)&subject=\(subjectEncoded)&body=\(bodyEncoded)"
+            case .mail:
+                return "mailto:\(email)?subject=\(subjectEncoded)&body=\(bodyEncoded)"
+            }
+        }
+
+        if let url = URL(string: urlString) {
+            if UIApplication.shared.canOpenURL(url) {
                 if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(googleUrl, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 } else {
-                    UIApplication.shared.openURL(googleUrl)
+                    UIApplication.shared.openURL(url)
                 }
             }
         }
