@@ -20,6 +20,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             contentView.backgroundColor = isSelected ? .pearGreen: .backgroundWhite
+            print("selected \(isSelected)")
         }
     }
 
