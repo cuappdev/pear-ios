@@ -52,6 +52,7 @@ class InterestsViewController: UIViewController {
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.dataSource = self
         fadeTableView.view.delegate = self
+        fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)

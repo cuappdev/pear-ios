@@ -16,5 +16,24 @@ extension UIAlertController {
         standardErrorAlert.addAction(standardErrorAlertAction)
         return standardErrorAlert
     }
+
+    static func getEmailAlertController(email: String, subject: String) -> UIAlertController {
+        let defaultMail = UIAlertAction(title: "Mail (Default)", style: .default) { _ in
+            URLScheme.openMail(to: email, subject: subject, type: .mail)
+        }
+
+        let gmail = UIAlertAction(title: "Gmail", style: .default) { _ in
+            URLScheme.openMail(to: email, subject: subject, type: .gmail)
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let alert = UIAlertController(title: "Mail Options", message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(defaultMail)
+        alert.addAction(gmail)
+        alert.addAction(cancelAction)
+
+        return alert
+    }
     
 }

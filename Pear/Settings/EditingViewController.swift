@@ -148,6 +148,7 @@ class EditingViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.sectionFooterHeight = 0
+        tableView.keyboardDismissMode = .onDrag
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in

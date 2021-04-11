@@ -32,7 +32,7 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
 
         imageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 20, height: 20))
-            make.top.bottom.equalToSuperview().inset(6)
+            make.centerY.equalTo(label)
             make.leading.equalToSuperview().inset(12)
         }
 

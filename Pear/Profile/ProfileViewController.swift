@@ -219,11 +219,19 @@ class ProfileViewController: UIViewController {
                 schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
                 navigationController?.pushViewController(schedulingVC, animated: true)
             default:
-                URLScheme.openGmail(to: "\(pair.netID)@cornell.edu", subject: "Hello from Pear!")
+                let emailAlertController = UIAlertController.getEmailAlertController(
+                    email: "\(pair.netID)@cornell.edu",
+                    subject: "Hello from Pear!"
+                )
+                present(emailAlertController, animated: true)
             }
         case .user:
             guard let pair = pair else { return }
-            URLScheme.openGmail(to: "\(pair.netID)@cornell.edu", subject: "Hello from Pear!")
+            let emailAlertController = UIAlertController.getEmailAlertController(
+                email: "\(pair.netID)@cornell.edu",
+                subject: "Hello from Pear!"
+            )
+            present(emailAlertController, animated: true)
         }
     }
 
