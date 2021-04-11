@@ -108,8 +108,13 @@ extension FeedbackView: UITableViewDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         } else {
-            let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
-            URLScheme.openGmail(to: Keys.feedbackEmail, subject: emailSubject)
+//            let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
+//            URLScheme.openGmail(to: Keys.feedbackEmail, subject: emailSubject)
+//            if let emailURL = URL(string: "mailto: \(Keys.feedbackEmail)"),
+//               UIApplication.shared.canOpenURL(emailURL) {
+//                UIApplication.shared.open(emailURL, options: [:], completionHandler: nil)
+//            }
+//            present(UIAlertController.getEmailAlertController(), animated: true)
         }
     }
 

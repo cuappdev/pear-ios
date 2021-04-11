@@ -38,6 +38,7 @@ class CommunityViewController: UIViewController {
 
         communityTableView.delegate = self
         communityTableView.dataSource = self
+        communityTableView.keyboardDismissMode = .onDrag
         communityTableView.isScrollEnabled = true
         communityTableView.separatorStyle = .none
         communityTableView.backgroundColor = .clear

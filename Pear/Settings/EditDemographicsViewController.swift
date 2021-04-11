@@ -395,7 +395,14 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        var image: UIImage!
+
+        if let img = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            image = img
+        } else if let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            image = img
+        }
+
         profileImageView.image = image.resize(toSize: CGSize(width: 100, height: 100))
         didUpdatePhoto = true
         dismiss(animated: true, completion: nil)

@@ -11,7 +11,7 @@ import UIKit
 class URLScheme {
     static func openGmail(to email: String, subject: String) {
         let emailSubject = subject.replacingOccurrences(of: " ", with: "%20")
-        let emailBody = "Hi!"
+        let emailBody = ""
         let googleUrlString = "googlegmail:///co?to=\(email)&subject=\(emailSubject)&body=\(emailBody)"
         if let googleUrl = URL(string: googleUrlString) {
             // show alert to choose app
