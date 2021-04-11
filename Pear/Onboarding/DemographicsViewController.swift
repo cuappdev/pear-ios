@@ -28,6 +28,7 @@ class DemographicsViewController: UIViewController {
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
     private var pronounsDropdownView: OnboardingSelectDropdownView!
+    private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
 
     // MARK: - Private Constants
@@ -59,6 +60,11 @@ class DemographicsViewController: UIViewController {
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         view.addSubview(titleLabel)
+
+        subtitleLabel.text = "Pick one option from each dropdown."
+        subtitleLabel.textColor = .greenGray
+        subtitleLabel.font = ._12CircularStdBook
+        view.addSubview(subtitleLabel)
 
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -187,6 +193,12 @@ class DemographicsViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(29)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
+        }
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(20)
         }
 
         classDropdownView.snp.makeConstraints { make in
