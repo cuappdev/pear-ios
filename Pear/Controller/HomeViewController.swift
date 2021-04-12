@@ -222,7 +222,7 @@ class HomeViewController: UIViewController {
 
     @objc private func toggleFeedbackMenu() {
         if displayMenu {
-            feedbackMenuView = FeedbackView()
+            feedbackMenuView = FeedbackView(delegate: self)
             guard let feedbackMenuView = feedbackMenuView else { return }
             feedbackMenuView.layer.cornerRadius = 20
             view.addSubview(feedbackMenuView)
@@ -337,5 +337,11 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
         let uuid = UUID().uuidString
         let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
         center.add(request)
+    }
+}
+
+extension HomeViewController: FeedbackDelegate {
+    func presentActionSheet(alert: UIAlertController) {
+        present(alert, animated: true)
     }
 }

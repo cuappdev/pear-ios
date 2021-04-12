@@ -69,6 +69,7 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._20CircularStdBook
         searchBar.searchTextField.clearButtonMode = .whileEditing
+        searchBar.searchTextField.returnKeyType = .done
         searchBar.layer.cornerRadius = fieldsCornerRadius
         searchBar.layer.shadowColor = UIColor.black.cgColor
         searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)

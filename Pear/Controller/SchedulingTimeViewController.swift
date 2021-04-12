@@ -597,7 +597,11 @@ class SchedulingTimeViewController: UIViewController {
                 guard let self = self else { return }
                 guard let match = self.match else { return }
                 if !dismiss {
-                    URLScheme.openGmail(to: "\(match.pair ?? "")@cornell.edu", subject: "Hello from your pear!")
+                    let emailAlertController = UIAlertController.getEmailAlertController(
+                        email: "\(match.pair ?? "")@cornell.edu",
+                        subject: "Hello from your pear!"
+                    )
+                    self.present(emailAlertController, animated: true)
                 }
                 self.updateMatchAvailabilities()
                 UIView.animate(withDuration: 0.15, animations: {

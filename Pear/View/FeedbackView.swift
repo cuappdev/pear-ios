@@ -7,6 +7,10 @@
 //
 import UIKit
 
+protocol FeedbackDelegate: class {
+    func presentActionSheet(alert: UIAlertController)
+}
+
 class FeedbackView: UIView {
 
     // MARK: - Private View Vars
@@ -14,13 +18,15 @@ class FeedbackView: UIView {
     private var arrowView = UIView()
     private let feedbackTableView = UITableView()
     private let feedbackBackgroundView = UIView()
+    weak var delegate: FeedbackDelegate?
 
     // MARK: - Private Data Vars
     private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init() {
+    init(delegate: FeedbackDelegate) {
+        self.delegate = delegate
         super.init(frame: .zero)
         setUpViews()
         setupConstraints()
@@ -109,7 +115,11 @@ extension FeedbackView: UITableViewDelegate {
             }
         } else {
             let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
-            URLScheme.openGmail(to: Keys.feedbackEmail, subject: emailSubject)
+            let emailAlertController = UIAlertController.getEmailAlertController(
+                email: Keys.feedbackEmail,
+                subject: emailSubject
+            )
+            delegate?.presentActionSheet(alert: emailAlertController)
         }
     }
 
