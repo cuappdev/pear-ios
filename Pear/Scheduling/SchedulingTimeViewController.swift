@@ -7,18 +7,6 @@
 //
 import UIKit
 
-// MARK: - SchedulingStatus
-
-/// The context in which the user is picking times
-enum SchedulingStatus {
-    /// If the user has no pear, they can input their typical availabilities
-    case pickingTypical
-    /// If the user reaches out first, they confirm all of their availabilities
-    case confirming
-    /// If the pear reached out first, the user chooses 1 time from the availabilities
-    case choosing
-}
-
 // MARK: - SelectedSchedules
 
 /**
@@ -704,33 +692,29 @@ class SchedulingTimeViewController: UIViewController {
         }
     }
 
-    /* Places scheduling not currently supported on backend.
-
-    private func continueToSchedulingPlaces() {
-
-        guard let match = match else {
-            print("Tried to continue to scheduling places view controller, but match is nil")
-            navigationController?.popViewController(animated: true)
-            return
-        }
-
-        let editedMatch = Match(
-            matchID: match.matchID,
-            status: match.status,
-            meetingTime: match.meetingTime,
-            users: match.users,
-            availabilities: selectedTimes.schedules
-        )
-
-         let placesVC = SchedulingPlacesViewController(
-            status: schedulingStatus,
-            match: editedMatch
-        )
-        navigationController?.pushViewController(placesVC, animated: true)
-
-    }
-
-     */
+//    private func continueToSchedulingPlaces() {
+//
+//        guard let match = match else {
+//            print("Tried to continue to scheduling places view controller, but match is nil")
+//            navigationController?.popViewController(animated: true)
+//            return
+//        }
+//
+//        let editedMatch = Match(
+//            matchID: match.matchID,
+//            status: match.status,
+//            meetingTime: match.meetingTime,
+//            users: match.users,
+//            availabilities: selectedTimes.schedules
+//        )
+//
+//         let placesVC = SchedulingPlacesViewController(
+//            status: schedulingStatus,
+//            match: editedMatch
+//        )
+//        navigationController?.pushViewController(placesVC, animated: true)
+//
+//    }
 
 }
 
