@@ -29,7 +29,7 @@ class FeedbackViewController: UIViewController {
     private let detailTextView = UITextView()
     private let finishButton = UIButton()
     private let headerLabel = UILabel()
-    private let highRatngLabel = UILabel()
+    private let highRatingLabel = UILabel()
     private let lowRatingLabel = UILabel()
     private let questionLabel = UILabel()
 
@@ -113,11 +113,11 @@ class FeedbackViewController: UIViewController {
         lowRatingLabel.isHidden = true
         view.addSubview(lowRatingLabel)
 
-        highRatngLabel.text = "Had a blast"
-        highRatngLabel.font = ._12CircularStdBook
-        highRatngLabel.textColor = .greenGray
-        highRatngLabel.isHidden = true
-        view.addSubview(highRatngLabel)
+        highRatingLabel.text = "Had a blast"
+        highRatingLabel.font = ._12CircularStdBook
+        highRatingLabel.textColor = .greenGray
+        highRatingLabel.isHidden = true
+        view.addSubview(highRatingLabel)
 
         askDetailLabel.text = "Want to share why?"
         askDetailLabel.textColor = .black
@@ -163,7 +163,7 @@ class FeedbackViewController: UIViewController {
             questionLabel.text = "Yay! How did your chat go?"
             feedbackOptions = didMeetFeedbackOptions
             lowRatingLabel.isHidden = false
-            highRatngLabel.isHidden = false
+            highRatingLabel.isHidden = false
             askDetailLabel.isHidden = false
             detailTextView.isHidden = false
             answerCollectionView.snp.remakeConstraints { make in
@@ -211,7 +211,7 @@ class FeedbackViewController: UIViewController {
             make.top.equalTo(answerCollectionView.snp.bottom).offset(10)
         }
 
-        highRatngLabel.snp.makeConstraints { make in
+        highRatingLabel.snp.makeConstraints { make in
             make.centerX.equalTo(answerCollectionView.snp.right).inset(12)
             make.top.equalTo(lowRatingLabel)
         }
