@@ -18,7 +18,6 @@ class AboutPearViewController: UIViewController {
     private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
     private let feedbackButton = UIButton()
     private let moreAppsButton = UIButton()
-    private let settingsTableView = UITableView()
     private let visitWebsiteButton = UIButton()
 
     // MARK: - Private Data Vars
@@ -49,7 +48,7 @@ class AboutPearViewController: UIViewController {
         aboutTableView.delegate = self
         aboutTableView.dataSource = self
         aboutTableView.backgroundColor = .clear
-        aboutTableView.bounces = false
+        aboutTableView.bounces = true
         aboutTableView.register(AboutPearTableViewCell.self, forCellReuseIdentifier: AboutPearTableViewCell.reuseIdentifier)
         view.addSubview(aboutTableView)
 

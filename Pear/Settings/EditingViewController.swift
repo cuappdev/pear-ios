@@ -79,7 +79,8 @@ class EditingViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let saveBarButtonItem = UIBarButtonItem()
-    private let tableView = UITableView(frame: .zero, style: .grouped)
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .grouped), fadeColor: .backgroundLightGreen)
 
     // MARK: - Display Settings
     private var isShowingGroups = true
@@ -136,22 +137,21 @@ class EditingViewController: UIViewController {
         self.title = "Edit \(isShowingGroups ? "Groups" : "Interests")"
         view.backgroundColor = .backgroundLightGreen
 
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        tableView.isScrollEnabled = true
-        tableView.clipsToBounds = true
-        tableView.backgroundColor = .none
-        tableView.allowsMultipleSelection = true
-        tableView.bounces = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
-        tableView.sectionFooterHeight = 0
-        tableView.keyboardDismissMode = .onDrag
-        view.addSubview(tableView)
+        fadeTableView.view.delegate = self
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.isScrollEnabled = true
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.bounces = true
+        fadeTableView.view.showsHorizontalScrollIndicator = false
+        fadeTableView.view.showsVerticalScrollIndicator = false
+        fadeTableView.view.separatorStyle = .none
+        fadeTableView.view.sectionFooterHeight = 0
+        view.addSubview(fadeTableView)
 
-        tableView.snp.makeConstraints { make in
+        fadeTableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
@@ -198,7 +198,7 @@ class EditingViewController: UIViewController {
                 Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
             ]
         }
-        tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
     private func setupSectionsFomGroups() {
@@ -217,7 +217,7 @@ class EditingViewController: UIViewController {
                     Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageName: "")) })
                 ]
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self.fadeTableView.view.reloadData()
                 }
             case .error(let error):
                 print("Error when getting groups for user: \(error)")
@@ -241,7 +241,7 @@ class EditingViewController: UIViewController {
                     Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
                 ]
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self.fadeTableView.view.reloadData()
                 }
             case .error:
                 print("Network error: could not get interests.")
@@ -384,7 +384,7 @@ extension EditingViewController: UITableViewDelegate {
             moveData(named: itemName, from: moreSection, to: yourSection)
         }
 
-        tableView.reloadData()
+        fadeTableView.view.reloadData()
     }
 
 }
@@ -457,7 +457,7 @@ extension EditingViewController: UITableViewDataSource {
                 headerView.searchDelegate = { searchText in
                     self.moreSection?.filterString = searchText
                     self.moreSection?.refilter()
-                    self.tableView.reloadData()
+                    self.fadeTableView.view.reloadData()
                 }
             }
         }
@@ -472,8 +472,8 @@ extension EditingViewController: UITableViewDataSource {
             footerView.updateViewState()
             footerView.delegate = {
                 self.isCollapsed = $0
-                self.tableView.reloadData()
-                self.tableView.setNeedsLayout()
+                self.fadeTableView.view.reloadData()
+                self.fadeTableView.view.setNeedsLayout()
             }
 
             return footerView
@@ -647,7 +647,7 @@ private class EditFooterView: UIButton {
 
         arrowView.image = UIImage(named: "rightArrow")
         arrowView.isUserInteractionEnabled = false
-        arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+        arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
 
         stackView.isUserInteractionEnabled = false
         stackView.alignment = .center
@@ -667,17 +667,17 @@ private class EditFooterView: UIButton {
 
         stackView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalToSuperview().inset(44)
+            make.width.equalToSuperview().inset(40)
         }
     }
 
     func updateViewState() {
         if sectionIsCollapsed {
             label.text = "View your other \(isShowingGroups ? "groups" : "interests")"
-            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
+            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
         } else {
             label.text = "View fewer \(isShowingGroups ? "groups" : "interests")"
-            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+            arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
         }
 
         delegate?(sectionIsCollapsed)

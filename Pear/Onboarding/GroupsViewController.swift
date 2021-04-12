@@ -68,6 +68,7 @@ class GroupsViewController: UIViewController {
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
         fadeTableView.view.isMultipleTouchEnabled = true
+        fadeTableView.view.bounces = true
         fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.separatorStyle = .none
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)

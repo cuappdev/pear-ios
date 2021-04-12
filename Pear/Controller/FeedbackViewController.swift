@@ -29,7 +29,7 @@ class FeedbackViewController: UIViewController {
     private let detailTextView = UITextView()
     private let finishButton = UIButton()
     private let headerLabel = UILabel()
-    private let highRatngLabel = UILabel()
+    private let highRatingLabel = UILabel()
     private let lowRatingLabel = UILabel()
     private let questionLabel = UILabel()
 
@@ -70,17 +70,15 @@ class FeedbackViewController: UIViewController {
         headerLabel.text = "I’m so glad you’re back! But\nfirst, a few quick\nquestions..."
         headerLabel.textColor = .black
         headerLabel.numberOfLines = 0
-        headerLabel.alpha = 0
         headerLabel.font = ._24CircularStdMedium
         view.addSubview(headerLabel)
 
         closeButton.setImage(UIImage(named: "cancelled"), for: .normal)
         closeButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        view.addSubview(closeButton)
 
         questionLabel.text = "Did you meet your last Pear?"
         questionLabel.textColor = .black
-        questionLabel.alpha = 0
         questionLabel.font = ._20CircularStdBook
         view.addSubview(questionLabel)
 
@@ -97,7 +95,6 @@ class FeedbackViewController: UIViewController {
         answerCollectionView.dataSource = self
         answerCollectionView.backgroundColor = .clear
         answerCollectionView.layer.masksToBounds = false
-        answerCollectionView.alpha = 0
         answerCollectionView.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.reuseIdentifier)
         view.addSubview(answerCollectionView)
 
@@ -107,24 +104,24 @@ class FeedbackViewController: UIViewController {
         finishButton.backgroundColor = .backgroundOrange
         finishButton.layer.cornerRadius = 26
         finishButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
-        finishButton.alpha = 0
+        finishButton.isHidden = true
         view.addSubview(finishButton)
 
         lowRatingLabel.text = "Not so fun"
         lowRatingLabel.font = ._12CircularStdBook
         lowRatingLabel.textColor = .greenGray
-        lowRatingLabel.alpha = 0
+        lowRatingLabel.isHidden = true
         view.addSubview(lowRatingLabel)
 
-        highRatngLabel.text = "Had a blast"
-        highRatngLabel.font = ._12CircularStdBook
-        highRatngLabel.textColor = .greenGray
-        highRatngLabel.alpha = 0
-        view.addSubview(highRatngLabel)
+        highRatingLabel.text = "Had a blast"
+        highRatingLabel.font = ._12CircularStdBook
+        highRatingLabel.textColor = .greenGray
+        highRatingLabel.isHidden = true
+        view.addSubview(highRatingLabel)
 
         askDetailLabel.text = "Want to share why?"
         askDetailLabel.textColor = .black
-        askDetailLabel.alpha = 0
+        askDetailLabel.isHidden = true
         askDetailLabel.font = ._20CircularStdBook
         view.addSubview(askDetailLabel)
 
@@ -136,88 +133,10 @@ class FeedbackViewController: UIViewController {
         detailTextView.layer.shadowOffset = CGSize(width: 0, height: 2)
         detailTextView.font = ._16CircularStdBook
         detailTextView.isEditable = true
-        detailTextView.alpha = 0
+        detailTextView.isHidden = true
         view.addSubview(detailTextView)
 
         setupConstraints()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        setupAnimation()
-    }
-
-    private func animateView(duration: Double, delay: Double, previousY: CGFloat, yOffset: CGFloat, animateView: UIView) {
-        UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            animateView.alpha = 1
-            animateView.center.y = previousY + yOffset
-        })
-    }
-
-    private func setupAnimation() {
-        headerLabel.center.y = UIScreen.main.bounds.height
-        questionLabel.center.y = UIScreen.main.bounds.height
-        answerCollectionView.center.y = UIScreen.main.bounds.height
-        animateView(duration: 0.4, delay: 0, previousY: 160, yOffset: 0, animateView: headerLabel)
-        animateView(duration: 0.4, delay: 0.4, previousY: headerLabel.center.y, yOffset: 120, animateView: questionLabel)
-        animateView(duration: 0.4, delay: 0.8, previousY: questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
-    }
-
-    private func removeInitialAnimation() {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn) {
-            self.questionLabel.alpha = 0
-            self.questionLabel.center.y = 240
-        } completion: { _ in
-            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-                self.answerCollectionView.alpha = 0
-                self.answerCollectionView.center.y = 240
-            }, completion: { _ in
-                self.feedbackStatus == .didNotMeet ? self.notMeetAnimation() : self.didMeetAnimation()
-            })
-        }
-    }
-
-    private func notMeetAnimation() {
-        questionLabel.text = "Aww, why didn’t you meet?"
-        questionLabel.center.y = screenHeight
-        answerCollectionView.center.y = screenHeight
-        finishButton.center.y = screenHeight
-        feedbackOptions = didNotMeetFeedbackOptions
-        answerCollectionView.allowsMultipleSelection = true
-        DispatchQueue.main.async {
-            self.answerCollectionView.reloadData()
-        }
-        animateView(duration: 0.4, delay: 0, previousY: self.headerLabel.center.y, yOffset: 120, animateView: questionLabel)
-        animateView(duration: 0.4, delay: 0.4, previousY: self.questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
-        animateView(duration: 0.6, delay: 0.8, previousY: finishButtonY, yOffset: 0, animateView: finishButton)
-    }
-
-    private func didMeetAnimation() {
-        questionLabel.text = "Yay! How did your chat go?"
-        questionLabel.center.y = screenHeight
-        answerCollectionView.center.y = screenHeight
-        finishButton.center.y = screenHeight
-        lowRatingLabel.center.y = screenHeight
-        highRatngLabel.center.y = screenHeight
-        askDetailLabel.center.y = screenHeight
-        detailTextView.center.y = screenHeight
-        feedbackOptions = didMeetFeedbackOptions
-        DispatchQueue.main.async {
-            self.answerCollectionView.reloadData()
-        }
-        answerCollectionView.snp.remakeConstraints { make in
-            make.width.equalTo(260)
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(questionLabel.snp.centerY).offset(110)
-            make.bottom.equalTo(view.snp.centerY)
-        }
-        animateView(duration: 0.4, delay: 0, previousY: headerLabel.center.y, yOffset: 120, animateView: questionLabel)
-        animateView(duration: 0.4, delay: 0.4, previousY: questionLabel.center.y, yOffset: 110, animateView: answerCollectionView)
-        animateView(duration: 0.4, delay: 0.8, previousY: answerCollectionView.center.y, yOffset: -5, animateView: lowRatingLabel)
-        animateView(duration: 0.4, delay: 0.8, previousY: answerCollectionView.center.y, yOffset: -5, animateView: highRatngLabel)
-        animateView(duration: 0.4, delay: 1.2, previousY: lowRatingLabel.center.y, yOffset: 80, animateView: askDetailLabel)
-        animateView(duration: 0.4, delay: 1.6, previousY: askDetailLabel.center.y, yOffset: 60, animateView: detailTextView)
-        animateView(duration: 0.6, delay: 2.0, previousY: finishButtonY, yOffset: 0, animateView: finishButton)
     }
     
     @objc private func finishFeedback() {
@@ -234,7 +153,37 @@ class FeedbackViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
 
+    private func setupAdditionalResponse() {
+        finishButton.isHidden = false
+        if feedbackStatus == .didNotMeet {
+            questionLabel.text = "Aww, why didn't you meet?"
+            feedbackOptions = didNotMeetFeedbackOptions
+            answerCollectionView.allowsMultipleSelection = true
+        } else {
+            questionLabel.text = "Yay! How did your chat go?"
+            feedbackOptions = didMeetFeedbackOptions
+            lowRatingLabel.isHidden = false
+            highRatingLabel.isHidden = false
+            askDetailLabel.isHidden = false
+            detailTextView.isHidden = false
+            answerCollectionView.snp.remakeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(questionLabel.snp.bottom).offset(10)
+                make.leading.trailing.equalToSuperview().inset(80)
+                make.height.equalTo(50)
+            }
+        }
+        DispatchQueue.main.async {
+            self.answerCollectionView.reloadData()
+        }
+    }
+
     private func setupConstraints() {
+        closeButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(36)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(25)
+        }
+
         headerLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(36)
             make.top.equalToSuperview().offset(110)
@@ -242,13 +191,13 @@ class FeedbackViewController: UIViewController {
 
         questionLabel.snp.makeConstraints { make in
             make.leading.equalTo(headerLabel.snp.leading)
-            make.top.equalTo(headerLabel.snp.bottom).offset(60)
+            make.top.equalTo(headerLabel.snp.bottom).offset(50)
         }
 
         answerCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(36)
-            make.centerY.equalTo(questionLabel.snp.centerY).offset(110)
-            make.bottom.equalTo(view.snp.centerY)
+            make.top.equalTo(questionLabel.snp.bottom).offset(10)
+            make.height.equalTo(200)
         }
 
         finishButton.snp.makeConstraints { make in
@@ -258,18 +207,18 @@ class FeedbackViewController: UIViewController {
         }
 
         lowRatingLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(answerCollectionView.snp.left)
-            make.centerY.equalTo(answerCollectionView.snp.centerY)
+            make.centerX.equalTo(answerCollectionView.snp.left).inset(12)
+            make.top.equalTo(answerCollectionView.snp.bottom).offset(10)
         }
 
-        highRatngLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(answerCollectionView.snp.right)
-            make.centerY.equalTo(lowRatingLabel.snp.centerY)
+        highRatingLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(answerCollectionView.snp.right).inset(12)
+            make.top.equalTo(lowRatingLabel)
         }
 
         askDetailLabel.snp.makeConstraints { make in
             make.leading.equalTo(questionLabel.snp.leading)
-            make.centerY.equalTo(lowRatingLabel.snp.centerY).offset(80)
+            make.top.equalTo(lowRatingLabel.snp.bottom).offset(30)
         }
 
         detailTextView.snp.makeConstraints { make in
@@ -321,9 +270,12 @@ extension FeedbackViewController: UICollectionViewDelegate {
             let selected = feedbackOptions[indexPath.section][indexPath.row].text
             feedbackStatus = selected == "Yes" ? .didMeet : .didNotMeet
             responses.append(selected)
-            removeInitialAnimation()
+            setupAdditionalResponse()
         case .didNotMeet, .didMeet:
-            responses.append(feedbackOptions[indexPath.section][indexPath.row].text)
+            let selectedResponse = feedbackOptions[indexPath.section][indexPath.row].text
+            if (!responses.contains(selectedResponse)) {
+                responses.append(feedbackOptions[indexPath.section][indexPath.row].text)
+            }
         }
         print(responses)
     }

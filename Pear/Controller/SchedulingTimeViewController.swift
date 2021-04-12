@@ -118,6 +118,7 @@ class SchedulingTimeViewController: UIViewController {
     private var timeCollectionView: UICollectionView!
     private var timeScrollView: FadeWrapperView<UIScrollView>!
     private let titleLabel = UILabel()
+    private let timezoneLabel = UILabel()
     
     private var errorMessageAlertView: MessageAlertView!
     private var errorMessageVisualEffectView: UIVisualEffectView!
@@ -352,6 +353,11 @@ class SchedulingTimeViewController: UIViewController {
         dayLabel.font = ._20CircularStdBook
         view.addSubview(dayLabel)
 
+        timezoneLabel.text = "All times are in eastern time"
+        timezoneLabel.textColor = .greenGray
+        timezoneLabel.font = ._16CircularStdBook
+        view.addSubview(timezoneLabel)
+
         infoLabel.font = ._16CircularStdMedium
         infoLabel.text = "Here's when \(pair?.firstName ?? "") is free"
         infoLabel.textAlignment = .center
@@ -445,6 +451,11 @@ class SchedulingTimeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
+        timezoneLabel.snp.makeConstraints { make in
+            make.top.equalTo(dayLabel.snp.bottom).offset(5)
+            make.centerX.equalToSuperview()
+        }
+
         nextButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(bottomPadding)
             make.centerX.equalToSuperview()
@@ -470,7 +481,7 @@ class SchedulingTimeViewController: UIViewController {
 
     private func setupTimeCollectionViewConstraints() {
         timeScrollView.snp.updateConstraints { update in
-            update.top.equalTo(dayLabel.snp.bottom).offset(8)
+            update.top.equalTo(timezoneLabel.snp.bottom).offset(8)
             update.bottom.equalTo(nextButton.snp.top).offset(-20)
             update.centerX.equalToSuperview()
             update.width.equalTo(timeCollectionViewWidth)

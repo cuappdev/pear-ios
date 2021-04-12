@@ -65,6 +65,7 @@ class TalkingPointsViewController: UIViewController {
         fadeTableView.view.dataSource = self
         fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.delegate = self
+        fadeTableView.view.bounces = true
         fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
