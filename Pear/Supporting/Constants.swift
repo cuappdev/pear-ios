@@ -133,4 +133,9 @@ struct Constants {
         ]
     }
 
+    struct Notifications {
+        /// Stores the time interval for check build notification scheduling. 1209600 is the time interval corresponding to two weeks
+        static let checkBuildNotifInterval: Double = 1209600
+    }
+
 }
