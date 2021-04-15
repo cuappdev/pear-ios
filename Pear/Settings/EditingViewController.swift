@@ -203,7 +203,7 @@ class EditingViewController: UIViewController {
                 let stringToGroup = {
                     ItemType.group(
                         Constants.Options.organizationsMap[$0] ??
-                        Group(name: $0, imageName: "")
+                        Group(name: $0, imageName: "groups")
                     )
                 }
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)

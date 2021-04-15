@@ -47,6 +47,7 @@ class CommunityViewController: UIViewController {
         fadeCommunityTableView.view.rowHeight = UITableView.automaticDimension
         fadeCommunityTableView.view.estimatedRowHeight = 140
         fadeCommunityTableView.view.sizeToFit()
+        fadeCommunityTableView.view.bounces = true
         fadeCommunityTableView.view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
         fadeCommunityTableView.view.register(CommunityUserTableViewCell.self, forCellReuseIdentifier: CommunityUserTableViewCell.reuseIdentifier)
         view.addSubview(fadeCommunityTableView)
