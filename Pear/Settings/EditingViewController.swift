@@ -180,24 +180,14 @@ class EditingViewController: UIViewController {
 
     private func setupSections() {
         if isShowingGroups {
-//            setupSectionsFomGroups()
-            let organizationStrings = Constants.Options.organizations.map(\.name)
-            let yoursAndMore = removeDuplicates(yourStrings: user.groups, moreStrings: organizationStrings)
-            let stringToGroup = { ItemType.group(Constants.Options.organizationsMap[$0]!) }
-            sections = [
-               Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
-               Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
-            ]
+            setupSectionsFomGroups()
         } else {
-//            setupSectionsFromInterests()
-            let interestsStrings = Constants.Options.interests.map(\.name)
-            let yoursAndMore = removeDuplicates(yourStrings: user.interests, moreStrings: interestsStrings)
-            let stringToInterest = { ItemType.interest(Constants.Options.interestsMap[$0]!) }
-            sections = [
-                Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
-                Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
-            ]
+            setupSectionsFromInterests()
         }
+        sections = [
+            Section(type: .yours, items: []),
+            Section(type: .more, items: [])
+        ]
         fadeTableView.view.reloadData()
     }
 
@@ -210,11 +200,16 @@ class EditingViewController: UIViewController {
                     print("Response not successful when getting groups for user")
                     return
                 }
-
+                let stringToGroup = {
+                    ItemType.group(
+                        Constants.Options.organizationsMap[$0] ??
+                        Group(name: $0, imageName: "")
+                    )
+                }
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
                 self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.map { .group(Group(name: $0, imageName: "")) }),
-                    Section(type: .more, items: yoursAndMore.more.map { .group(Group(name: $0, imageName: "")) })
+                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
+                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
                 ]
                 DispatchQueue.main.async {
                     self.fadeTableView.view.reloadData()
@@ -235,7 +230,12 @@ class EditingViewController: UIViewController {
                     return
                 }
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
-                let stringToInterest = { ItemType.interest(Interest(name: $0, categories: nil, imageName: "")) }
+                let stringToInterest = {
+                    ItemType.interest(
+                        Constants.Options.interestsMap[$0] ??
+                        Interest(name: $0, categories: nil, imageName: "")
+                    )
+                }
                 self.sections = [
                     Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
                     Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))

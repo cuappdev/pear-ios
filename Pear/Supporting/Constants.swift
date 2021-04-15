@@ -121,6 +121,7 @@ struct Constants {
             "Design": Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
             "Fashion": Interest(name: "Fashion", categories: nil, imageName: "fashion"),
             "Fitness": Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
+            "Fitness & Sports": Interest(name: "Fitness & Sports", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
             "Food": Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
             "Humanities": Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
             "Music": Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
