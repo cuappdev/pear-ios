@@ -118,7 +118,7 @@ extension CommunityViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        navigationController?.pushViewController(ProfileViewController(match: nil, user: nil, userId: user.netID, type: .user), animated: true)
+        navigationController?.pushViewController(ProfileViewController(userId: user.netID), animated: true)
     }
 }
 

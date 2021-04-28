@@ -59,6 +59,7 @@
 		D41FE85C246463FC0048900F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85B246463FC0048900F /* User.swift */; };
 		D41FE85E2464640F0048900F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE85D2464640F0048900F /* Match.swift */; };
 		D41FE862246464310048900F /* SubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE861246464310048900F /* SubUser.swift */; };
+		D42873F5263A0A180033678A /* MatchProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42873F4263A0A180033678A /* MatchProfileViewController.swift */; };
 		D42961842525F1C800C677C3 /* TalkingPointsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */; };
 		D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42961882526012400C677C3 /* SimpleOnboardingCell.swift */; };
 		D42961A02526246600C677C3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D429619F2526246600C677C3 /* HomeViewController.swift */; };
@@ -185,6 +186,7 @@
 		D41FE85B246463FC0048900F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D41FE85D2464640F0048900F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		D41FE861246464310048900F /* SubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubUser.swift; sourceTree = "<group>"; };
+		D42873F4263A0A180033678A /* MatchProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProfileViewController.swift; sourceTree = "<group>"; };
 		D42961832525F1C800C677C3 /* TalkingPointsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkingPointsViewController.swift; sourceTree = "<group>"; };
 		D42961882526012400C677C3 /* SimpleOnboardingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOnboardingCell.swift; sourceTree = "<group>"; };
 		D429619F2526246600C677C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				D440928925FDB10700A4690A /* ProfilePillCollectionViewCell.swift */,
 				D4645ABE25FE2EF30029F9A5 /* ChatStatus.swift */,
 				D4645AC625FE2F6C0029F9A5 /* ProfileSectionType.swift */,
+				D42873F4263A0A180033678A /* MatchProfileViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -893,6 +896,7 @@
 				D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */,
 				D474105B25C6EA350062E2B4 /* String.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
+				D42873F5263A0A180033678A /* MatchProfileViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
 				4FCE3AEA25200DF0004E2E33 /* MeetupStatusView.swift in Sources */,
