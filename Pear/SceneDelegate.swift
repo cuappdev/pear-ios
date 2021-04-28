@@ -29,11 +29,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            
-//            let onboardingCompleted = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let onboardingCompleted = false
+
+            let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
             let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
-            let rootVC = onboardingCompleted ?
+            let rootVC = didCompleteOnboarding ?
                 HomeViewController() :
                 OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
 

@@ -15,7 +15,7 @@ class GroupsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
     private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups = Constants.Options.organizations.map { SimpleOnboardingCell(name: $0.name, subtitle: nil) }
+    private var groups: [SimpleOnboardingCell] = []
     private var selectedGroups: [SimpleOnboardingCell] = []
 
     // MARK: - Private View Vars
@@ -103,7 +103,8 @@ class GroupsViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
 
         displayedGroups = groups
-        
+
+        getAllGroups()
         getUserGroups()
         setupConstraints()
     }

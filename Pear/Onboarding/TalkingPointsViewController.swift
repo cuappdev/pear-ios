@@ -96,9 +96,13 @@ class TalkingPointsViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
-        getTalkingPoints()
-        getUserTalkingPoints()
         setupConstraints()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getAllTalkingPoints()
+        getUserTalkingPoints()
     }
     
     private func getUserTalkingPoints() {
