@@ -50,7 +50,7 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
             imageView.image = UIImage(named: image ?? "")
         } else if type == .groups {
             let image = Constants.Options.organizationsMap[item]?.imageName
-            imageView.image = UIImage(named: image ?? "")
+            imageView.image = UIImage(named: image ?? "groupsPlaceholder")
         }
     }
 

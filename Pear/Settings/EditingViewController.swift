@@ -180,7 +180,7 @@ class EditingViewController: UIViewController {
 
     private func setupSections() {
         if isShowingGroups {
-            setupSectionsFomGroups()
+            setupSectionsFromGroups()
         } else {
             setupSectionsFromInterests()
         }
@@ -191,7 +191,7 @@ class EditingViewController: UIViewController {
         fadeTableView.view.reloadData()
     }
 
-    private func setupSectionsFomGroups() {
+    private func setupSectionsFromGroups() {
         NetworkManager.shared.getAllGroups().observe { [weak self] response in
             guard let self = self else { return }
             switch response {
@@ -203,7 +203,7 @@ class EditingViewController: UIViewController {
                 let stringToGroup = {
                     ItemType.group(
                         Constants.Options.organizationsMap[$0] ??
-                        Group(name: $0, imageName: "groups")
+                        Group(name: $0, imageName: "groupsPlaceholder")
                     )
                 }
                 let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
