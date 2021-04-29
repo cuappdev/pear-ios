@@ -20,8 +20,8 @@ class MatchProfileViewController: UIViewController {
     private var pair: User?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private let user: User?
     private var reachOutButton = UIButton()
+    private let user: User?
 
     // MARK: - Private Data Vars
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
@@ -163,15 +163,11 @@ class MatchProfileViewController: UIViewController {
 
     @objc private func reachOutPressed() {
         guard let pair = pair, let match = match, let user = user else { return }
-        let schedulingVC: SchedulingTimeViewController
-
         switch chatStatus {
         case .planning, .noResponses:
-            schedulingVC = SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match)
-            navigationController?.pushViewController(schedulingVC, animated: true)
+            navigationController?.pushViewController(SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match), animated: true)
         case .responding:
-            schedulingVC = SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match)
-            navigationController?.pushViewController(schedulingVC, animated: true)
+            navigationController?.pushViewController(SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match), animated: true)
         default:
             let emailAlertController = UIAlertController.getEmailAlertController(
                 email: "\(pair.netID)@cornell.edu",

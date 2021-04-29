@@ -73,7 +73,7 @@ class HomeViewController: UIViewController {
         tabCollectionView.layer.shadowRadius = 4
         view.addSubview(tabCollectionView)
 
-        feedbackButton.setImage(UIImage(named: "menuicon"), for: .normal)
+        feedbackButton.setImage(UIImage(named: "infoIcon"), for: .normal)
         feedbackButton.addTarget(self, action: #selector(toggleFeedbackMenu), for: .touchUpInside)
         feedbackButton.contentHorizontalAlignment = .fill
         feedbackButton.contentVerticalAlignment = .fill
@@ -230,7 +230,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 130))
+                make.size.equalTo(CGSize(width: 67, height: 67))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
