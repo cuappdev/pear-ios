@@ -21,7 +21,7 @@ class TabPageViewController: UIPageViewController {
         self.user = user
 
         if let match = match {
-            matchViewController = ProfileViewController(match: match, user: user, userId: nil, type: .match)
+            matchViewController = MatchProfileViewController(match: match, user: user)
         } else {
             matchViewController = NoMatchViewController(user: user)
         }
