@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(with match: Match? = nil, user: User) {
-        tabPageViewController = TabPageViewController(match: match, user: user)
+        tabPageViewController = TabPageViewController(match: match, user: user, tabDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -346,5 +346,13 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
 extension HomeViewController: FeedbackDelegate {
     func presentActionSheet(alert: UIAlertController) {
         present(alert, animated: true)
+    }
+}
+
+extension HomeViewController: TabDelegate {
+    func setActiveTabIndex(to index: Int) {
+        activeTabIndex = index
+        tabPageViewController?.setViewController(to: index)
+        tabCollectionView.reloadData()
     }
 }
