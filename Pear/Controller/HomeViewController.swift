@@ -230,7 +230,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 67, height: 67))
+                make.size.equalTo(CGSize(width: 150, height: 130))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -254,7 +254,7 @@ class HomeViewController: UIViewController {
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
             make.trailing.equalToSuperview().inset(20)
-            make.width.height.equalTo(35)
+            make.width.height.equalTo(32)
         }
 
         tabContainerView.snp.makeConstraints { make in
