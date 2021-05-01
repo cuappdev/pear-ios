@@ -350,9 +350,11 @@ extension HomeViewController: FeedbackDelegate {
 }
 
 extension HomeViewController: TabDelegate {
+
     func setActiveTabIndex(to index: Int) {
         activeTabIndex = index
         tabPageViewController?.setViewController(to: index)
         tabCollectionView.reloadData()
     }
+    
 }
