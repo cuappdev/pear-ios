@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(with match: Match? = nil, user: User) {
-        tabPageViewController = TabPageViewController(match: match, user: user)
+        tabPageViewController = TabPageViewController(match: match, user: user, tabDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -230,7 +230,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 67, height: 67))
+                make.size.equalTo(CGSize(width: 150, height: 130))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -254,7 +254,7 @@ class HomeViewController: UIViewController {
         feedbackButton.snp.makeConstraints { make in
             make.centerY.equalTo(tabCollectionView)
             make.trailing.equalToSuperview().inset(20)
-            make.width.height.equalTo(35)
+            make.width.height.equalTo(32)
         }
 
         tabContainerView.snp.makeConstraints { make in
@@ -347,4 +347,14 @@ extension HomeViewController: FeedbackDelegate {
     func presentActionSheet(alert: UIAlertController) {
         present(alert, animated: true)
     }
+}
+
+extension HomeViewController: TabDelegate {
+
+    func setActiveTabIndex(to index: Int) {
+        activeTabIndex = index
+        tabPageViewController?.setViewController(to: index)
+        tabCollectionView.reloadData()
+    }
+    
 }
