@@ -104,7 +104,6 @@ class SchedulingLocationCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
 
         collectionView.backgroundColor = .clear
-
         collectionView.allowsMultipleSelection = schedulingStatus != .choosing
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
