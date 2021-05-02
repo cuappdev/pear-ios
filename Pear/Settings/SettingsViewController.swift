@@ -108,7 +108,7 @@ class SettingsViewController: UIViewController {
     }
 
     private func pushEditLocationAvailabilitiesViewController() {
-        navigationController?.pushViewController(EditLocationAvailabilityViewController(), animated: true)
+        navigationController?.pushViewController(SchedulingPlacesViewController(status: .pickingTypical, match: Match(matchID: "ach243", status: "confirming", meetingTime: 17, users: [], availabilities: [])), animated: true)
     }
 
     private func pushEditSocialMediaViewController() {

@@ -13,6 +13,7 @@ class SchedulingPlaceCollectionViewCell: UICollectionViewCell {
     private let titleLabel = UILabel()
     static let campusReuseId = "campusReuseIdentifier"
     static let ctownReuseId = "ctownReuseIdentiifier"
+    static let onlineReuseId = "onlineReuseIdentifier"
 
     override var isSelected: Bool {
         didSet {

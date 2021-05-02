@@ -22,6 +22,7 @@ class EditLocationAvailabilityViewController: UIViewController {
 
     private var selectedCampusLocations: [String] = []
     private var selectedCtownLocations: [String] = []
+    private var selectedOnlineLocations: [String] = []
     private var savedLocations: [String] = []
 
     override func viewDidLoad() {
@@ -44,9 +45,10 @@ class EditLocationAvailabilityViewController: UIViewController {
         locationsCollectionViewLayout.minimumLineSpacing = lineSpacing
         locationsCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
-        locationCollectionView = SchedulingLocationCollectionViewController(updateSelections: { selectedCampus, selectedCtown in
+        locationCollectionView = SchedulingLocationCollectionViewController(updateSelections: { selectedCampus, selectedCtown, selectedOnline  in
             self.selectedCampusLocations = selectedCampus
             self.selectedCtownLocations = selectedCtown
+            self.selectedOnlineLocations = selectedOnline
         }, updateNext: nil, updatePickedLocation: nil
         , schedulingStatus: nil, isChoosing: nil, collectionViewLayout: locationsCollectionViewLayout, interitemSpacing: interitemSpacing, lineSpacing: lineSpacing)
         addChild(locationCollectionView)
@@ -86,7 +88,8 @@ class EditLocationAvailabilityViewController: UIViewController {
     @objc private func saveAvailability() {
         let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
-        let locations = ctownLocations + campusLocations
+        let onlineLocations = selectedOnlineLocations.map { Location(area: "Online", name: $0) }
+        let locations = ctownLocations + campusLocations + onlineLocations
         NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
             switch response {
             case .value(let value):
@@ -141,8 +144,10 @@ class EditLocationAvailabilityViewController: UIViewController {
                     for location in value.data {
                         if location.area == "Campus" {
                             self.selectedCampusLocations.append(location.name)
-                        } else {
+                        } else if location.area == "Collegetown" {
                             self.selectedCtownLocations.append(location.name)
+                        } else {
+                            self.selectedOnlineLocations.append(location.name)
                         }
                     }
                     self.locationCollectionView.collectionView.reloadData()

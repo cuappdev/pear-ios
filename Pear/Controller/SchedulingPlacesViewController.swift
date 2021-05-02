@@ -25,6 +25,7 @@ class SchedulingPlacesViewController: UIViewController {
 
     private var selectedCampusLocations: [String] = []
     private var selectedCtownLocations: [String] = []
+    private var selectedOnlineLocations: [String] = []
     private let interitemSpacing: CGFloat = 12
     private let lineSpacing: CGFloat = 12
 
@@ -87,9 +88,10 @@ class SchedulingPlacesViewController: UIViewController {
         locationsCollectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
 
-        locationCollectionView = SchedulingLocationCollectionViewController(updateSelections: { selectedCampus, selectedCtown in
+        locationCollectionView = SchedulingLocationCollectionViewController(updateSelections: { selectedCampus, selectedCtown, selectedOnline  in
             self.selectedCampusLocations = selectedCampus
             self.selectedCtownLocations = selectedCtown
+            self.selectedOnlineLocations = selectedOnline
         }, updateNext: { totalSelected in
             self.updateNext(totalSelectedLocations: totalSelected)
         }, updatePickedLocation: { location in

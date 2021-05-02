@@ -48,6 +48,7 @@
 		5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */; };
 		5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */; };
 		5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD082532D65600374F7B /* AboutParagraph.swift */; };
+		5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */; };
 		504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */; };
 		50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */; };
 		50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */; };
@@ -173,6 +174,7 @@
 		5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearViewController.swift; sourceTree = "<group>"; };
 		5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearTableViewCell.swift; sourceTree = "<group>"; };
 		5030DD082532D65600374F7B /* AboutParagraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutParagraph.swift; sourceTree = "<group>"; };
+		5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFooterLabelView.swift; sourceTree = "<group>"; };
 		504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingLocationCollectionViewController.swift; sourceTree = "<group>"; };
 		50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLocationAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHeaderLabelView.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */,
 				4F811F41253A4F1300F5A15C /* FadeWrapperView.swift */,
 				50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */,
+				5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -940,6 +943,7 @@
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */,
 				D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */,
+				5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
