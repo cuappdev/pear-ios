@@ -48,6 +48,10 @@
 		5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */; };
 		5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */; };
 		5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD082532D65600374F7B /* AboutParagraph.swift */; };
+		5048B4BE263F56FD00A382AD /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4BD263F56FD00A382AD /* MessagesViewController.swift */; };
+		5048B4C0263F5F4600A382AD /* MessagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */; };
+		5048B4C2263F623E00A382AD /* PearMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4C1263F623E00A382AD /* PearMessage.swift */; };
+		5048B4C6263FA06800A382AD /* MessageUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4C5263FA06800A382AD /* MessageUser.swift */; };
 		50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */; };
 		50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */; };
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
@@ -173,6 +177,10 @@
 		5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearViewController.swift; sourceTree = "<group>"; };
 		5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearTableViewCell.swift; sourceTree = "<group>"; };
 		5030DD082532D65600374F7B /* AboutParagraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutParagraph.swift; sourceTree = "<group>"; };
+		5048B4BD263F56FD00A382AD /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesTableViewCell.swift; sourceTree = "<group>"; };
+		5048B4C1263F623E00A382AD /* PearMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PearMessage.swift; sourceTree = "<group>"; };
+		5048B4C5263FA06800A382AD /* MessageUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageUser.swift; sourceTree = "<group>"; };
 		50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLocationAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHeaderLabelView.swift; sourceTree = "<group>"; };
 		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
@@ -286,6 +294,8 @@
 			isa = PBXGroup;
 			children = (
 				4FD8152C23F781790095EC17 /* MatchSummary.swift */,
+				5048B4C1263F623E00A382AD /* PearMessage.swift */,
+				5048B4C5263FA06800A382AD /* MessageUser.swift */,
 				5030DD082532D65600374F7B /* AboutParagraph.swift */,
 				4FD8152E23F7817B0095EC17 /* Interest.swift */,
 				303F81A524395F63002937CD /* MenuOption.swift */,
@@ -389,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */,
+				5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */,
 				5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */,
 				5030DCF92532C1D300374F7B /* SettingOptionTableViewCell.swift */,
 				4FE2ED2B23E92BD700472355 /* OnboardingTableViewCell.swift */,
@@ -409,6 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
+				5048B4BD263F56FD00A382AD /* MessagesViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
 				D4CFCDEC240CBFCB00875F8D /* NoMatchViewController.swift */,
@@ -500,10 +512,10 @@
 				D480EBFD23E2425C00513063 /* Cells */,
 				D48BB00A23DE099200E88129 /* AppDelegate.swift */,
 				D48BB00C23DE099200E88129 /* SceneDelegate.swift */,
+				D48BB01823DE099800E88129 /* Info.plist */,
 				D48BB01023DE099200E88129 /* Main.storyboard */,
 				D48BB01323DE099800E88129 /* Assets.xcassets */,
 				D48BB01523DE099800E88129 /* LaunchScreen.storyboard */,
-				D48BB01823DE099800E88129 /* Info.plist */,
 			);
 			path = Pear;
 			sourceTree = "<group>";
@@ -872,6 +884,7 @@
 				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
 				D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */,
 				D46A363025F3CA4F00EADA9F /* UserSocialMedia.swift in Sources */,
+				5048B4C6263FA06800A382AD /* MessageUser.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
@@ -904,6 +917,7 @@
 				305064532403960F00C5E491 /* SchedulingDayCollectionViewCell.swift in Sources */,
 				303F81A424395EC2002937CD /* MenuOptionTableViewCell.swift in Sources */,
 				30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */,
+				5048B4C2263F623E00A382AD /* PearMessage.swift in Sources */,
 				4F12A7102419925C00AEA21C /* EditingViewController.swift in Sources */,
 				4F51324F23F3AE6B00DBDE96 /* Group.swift in Sources */,
 				5030DCF52532B5F600374F7B /* SettingOption.swift in Sources */,
@@ -927,6 +941,7 @@
 				5012B55B25F841A300F5F713 /* FeedbackCollectionViewCell.swift in Sources */,
 				D41FE85E2464640F0048900F /* Match.swift in Sources */,
 				D4DD8E3D25E1C8F800CF15D5 /* Endpoints.swift in Sources */,
+				5048B4C0263F5F4600A382AD /* MessagesTableViewCell.swift in Sources */,
 				5029873825389E4700E52EDA /* PausePearView.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */,
@@ -943,6 +958,7 @@
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
+				5048B4BE263F56FD00A382AD /* MessagesViewController.swift in Sources */,
 				50E1A7722558E95E008932F8 /* CommunityUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

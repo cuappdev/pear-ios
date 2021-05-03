@@ -26,6 +26,9 @@ class HomeViewController: UIViewController {
     private var tabPageViewController: TabPageViewController?
     private let profileButtonSize = CGSize(width: 35, height: 35)
 
+    // TODO: - delete this button after adding messaging entry point
+    private let messagingButton = UIButton()
+
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
     private let tabs = ["Weekly Pear", "People"]
@@ -84,10 +87,21 @@ class HomeViewController: UIViewController {
         tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
 
+        // TODO - delete
+        messagingButton.setImage(UIImage(named: "socialMedia"), for: .normal)
+        messagingButton.addTarget(self, action: #selector(presentMessaging), for: .touchUpInside)
+        view.addSubview(messagingButton)
+
 //        TODO: uncomment when feedback route is done
 //        showInAppFeedback()
         setupLocalNotifications()
         setupConstraints()
+    }
+
+    // TODO - delete
+    @objc func presentMessaging() {
+        guard let user = user else { return }
+        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -255,6 +269,12 @@ class HomeViewController: UIViewController {
             make.centerY.equalTo(tabCollectionView)
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(32)
+        }
+
+        // TODO - delete
+        messagingButton.snp.makeConstraints { make in
+            make.trailing.equalTo(feedbackButton.snp.leading).offset(-15)
+            make.centerY.equalTo(feedbackButton)
         }
 
         tabContainerView.snp.makeConstraints { make in

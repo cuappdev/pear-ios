@@ -97,7 +97,7 @@ class NetworkManager {
     func getUserMatches(netId: String) -> Future<Response<[Match]>> {
         networking(Endpoint.getUserMatches(netId: netId)).decode()
     }
-    
+
     // MARK: - Get users.
     
     /// [GET] Get all users.
@@ -109,7 +109,7 @@ class NetworkManager {
     func searchUsers(query: String) -> Future<Response<[CommunityUser]>> {
         networking(Endpoint.searchUsers(query: query)).decode()
     }
-    
+
     // MARK: - Update users.
     
     /// [POST] Update demographics information about the user.
