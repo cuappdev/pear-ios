@@ -11,11 +11,9 @@ import UIKit
 class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var classSearchFields: [String] = []
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    // TODO: Update with networking values from backend (use states for now)
     private let hometownSearchFields = Constants.Options.hometownSearchFields
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
@@ -32,7 +30,6 @@ class DemographicsViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Private Constants
-    private let fieldsCornerRadius: CGFloat = 8
     private let fieldMap = [
         Constants.UserDefaults.userGraduationYear,
         Constants.UserDefaults.userMajor,
@@ -51,6 +48,7 @@ class DemographicsViewController: UIViewController {
     }
 
     override func viewDidLoad() {
+
         navigationController?.navigationBar.isHidden = true
         
         let userFirstName = UserDefaults.standard.string(forKey: "userFirstName") ?? "user"
@@ -69,24 +67,22 @@ class DemographicsViewController: UIViewController {
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
-        classSearchFields = (currentYear...gradYear).map { "\($0)" }
-
         classDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                          placeholder: "Class of...",
-                                                         tableData: classSearchFields,
+                                                         tableData: (currentYear...gradYear).map { "\($0)" },
                                                          textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(delegate: self,
                                                          placeholder: "Major",
-                                                         tableData: majorSearchFields)
+                                                         tableData: majorSearchFields, searchType: "major")
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "State",
-                                                            tableData: hometownSearchFields)
+                                                            placeholder: "City, State, Country",
+                                                            tableData: hometownSearchFields, searchType: "places")
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
 
@@ -153,6 +149,7 @@ class DemographicsViewController: UIViewController {
                 }
             }
         }
+
     }
 
     private func getUser() {

@@ -8,6 +8,7 @@ use_frameworks!
 # Pods for Pear
     # User Data
     pod 'GoogleSignIn'
+    pod 'GooglePlaces', '4.2.0'
 
     # Networking
     pod 'SwiftyJSON'

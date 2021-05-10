@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GooglePlaces
+import GoogleMapsBase
 
 protocol OnboardingDropdownViewDelegate: class {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
@@ -36,21 +38,30 @@ class OnboardingSearchDropdownView: UIView {
     // MARK: - Private View Vars
     private let searchBar = UISearchBar()
     private let tableView = OnboardingSelectTableView()
+    private var placesClient: GMSPlacesClient!
 
     // MARK: - Private Data Vars
     private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
     private var resultsTableData: [String] = []
+    private let searchType: String
     private var tableData: [String]
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
-    init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String]) {
+    init(
+        delegate: OnboardingDropdownViewDelegate,
+        placeholder: String,
+        tableData: [String],
+        searchType: String
+    ) {
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
+        self.searchType = searchType
         super.init(frame: .zero)
+        placesClient = GMSPlacesClient.shared()
         setupViews()
         setupConstraints()
     }
@@ -145,6 +156,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     /// Updates searchbar text when a cell is selected in the table view and hides the table view.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedText = resultsTableData[indexPath.row]
+        print("this is my selected text", selectedText)
         searchBar.text = selectedText
         tableView.isHidden = true
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)
@@ -159,11 +171,50 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     /// Expands and updates search results table view when text is changed in the search bar.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
-        resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        if searchType == "places" {
+          searchPlaces(place: searchText)
+        } else {
+            resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        }
         delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height
         delegate?.updateDropdownViewHeight(dropdownView: self, height: newHeight)
+    }
+
+    func searchPlaces(place: String) {
+        /**
+         * Create a new session token. Be sure to use the same token for calling
+         * findAutocompletePredictions, as well as the subsequent place details request.
+         * This ensures that the user's query and selection are billed as a single session.
+         */
+
+        let token = GMSAutocompleteSessionToken.init()
+
+        // Create a type filter.
+        let filter = GMSAutocompleteFilter()
+        filter.type = .city
+
+        placesClient?.findAutocompletePredictions(
+            fromQuery: place,
+            filter: filter,
+            sessionToken: token
+        ) { [weak self] (results, error) in
+
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Autocomplete error: \(error)")
+                return
+            }
+
+            if let results = results {
+                self.resultsTableData = results.map { $0.attributedFullText.string }
+                self.tableView.reloadData()
+            }
+                
+        }
+
     }
 }
