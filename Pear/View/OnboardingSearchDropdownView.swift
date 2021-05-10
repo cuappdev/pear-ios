@@ -33,6 +33,11 @@ class OnboardingSelectTableView: UITableView {
     }
 }
 
+enum OnboardingSearchDropdownType {
+    case places // search from Google Places API
+    case local // search locally
+}
+
 class OnboardingSearchDropdownView: UIView {
 
     // MARK: - Private View Vars
@@ -44,7 +49,7 @@ class OnboardingSearchDropdownView: UIView {
     private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
     private var resultsTableData: [String] = []
-    private let searchType: String
+    private let searchType: OnboardingSearchDropdownType
     private var tableData: [String]
 
     // MARK: - Private Constants
@@ -54,7 +59,7 @@ class OnboardingSearchDropdownView: UIView {
         delegate: OnboardingDropdownViewDelegate,
         placeholder: String,
         tableData: [String],
-        searchType: String
+        searchType: OnboardingSearchDropdownType
     ) {
         self.delegate = delegate
         self.placeholder = placeholder
@@ -135,55 +140,8 @@ class OnboardingSearchDropdownView: UIView {
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
     }
 
-}
-
-extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        44
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        resultsTableData.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier, for: indexPath)
-            as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
-        cell.configure(with: resultsTableData[indexPath.row])
-        return cell
-    }
-
-    /// Updates searchbar text when a cell is selected in the table view and hides the table view.
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedText = resultsTableData[indexPath.row]
-        print("this is my selected text", selectedText)
-        searchBar.text = selectedText
-        tableView.isHidden = true
-        delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)
-        delegate?.sendDropdownViewToBack(dropdownView: self)
-    }
-
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        let height = tableView.contentSize.height
-        delegate?.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: false)
-    }
-
-    /// Expands and updates search results table view when text is changed in the search bar.
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        tableView.isHidden = false
-        if searchType == "places" {
-          searchPlaces(place: searchText)
-        } else {
-            resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        }
-        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
-        tableView.reloadData()
-        // Recalculate height of table view and update view height in parent view.
-        let newHeight = tableView.contentSize.height
-        delegate?.updateDropdownViewHeight(dropdownView: self, height: newHeight)
-    }
-
     func searchPlaces(place: String) {
+
         /**
          * Create a new session token. Be sure to use the same token for calling
          * findAutocompletePredictions, as well as the subsequent place details request.
@@ -213,8 +171,57 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
                 self.resultsTableData = results.map { $0.attributedFullText.string }
                 self.tableView.reloadData()
             }
-                
+
         }
 
     }
+
+}
+
+extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        44
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        resultsTableData.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingDropdownTableViewCell.reuseIdentifier, for: indexPath)
+            as? OnboardingDropdownTableViewCell else { return UITableViewCell() }
+        cell.configure(with: resultsTableData[indexPath.row])
+        return cell
+    }
+
+    /// Updates searchbar text when a cell is selected in the table view and hides the table view.
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedText = resultsTableData[indexPath.row]
+        searchBar.text = selectedText
+        tableView.isHidden = true
+        delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)
+        delegate?.sendDropdownViewToBack(dropdownView: self)
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        let height = tableView.contentSize.height
+        delegate?.bringDropdownViewToFront(dropdownView: self, height: height, isSelect: false)
+    }
+
+    /// Expands and updates search results table view when text is changed in the search bar.
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        tableView.isHidden = false
+        switch searchType {
+        case .places:
+            searchPlaces(place: searchText)
+        case .local:
+            resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        }
+        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
+        tableView.reloadData()
+        // Recalculate height of table view and update view height in parent view.
+        let newHeight = tableView.contentSize.height
+        delegate?.updateDropdownViewHeight(dropdownView: self, height: newHeight)
+    }
+
 }

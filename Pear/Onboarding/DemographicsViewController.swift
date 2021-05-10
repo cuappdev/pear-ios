@@ -67,28 +67,39 @@ class DemographicsViewController: UIViewController {
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
-        classDropdownView = OnboardingSelectDropdownView(delegate: self,
-                                                         placeholder: "Class of...",
-                                                         tableData: (currentYear...gradYear).map { "\($0)" },
-                                                         textTemplate: "Class of")
+        classDropdownView = OnboardingSelectDropdownView(
+            delegate: self,
+             placeholder: "Class of...",
+             tableData: (currentYear...gradYear).map { "\($0)" },
+             textTemplate: "Class of"
+        )
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                         placeholder: "Major",
-                                                         tableData: majorSearchFields, searchType: "major")
+        majorDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Major",
+            tableData: majorSearchFields,
+            searchType: .local
+        )
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "City, State, Country",
-                                                            tableData: hometownSearchFields, searchType: "places")
+        hometownDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "City, State, Country",
+            tableData: hometownSearchFields,
+            searchType: .places
+        )
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
-                                                            placeholder: "Pronouns",
-                                                            tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView = OnboardingSelectDropdownView(
+            delegate: self,
+            placeholder: "Pronouns",
+            tableData: pronounSearchFields,
+            textTemplate: ""
+        )
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 

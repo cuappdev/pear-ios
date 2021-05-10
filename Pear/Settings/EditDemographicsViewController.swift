@@ -141,16 +141,22 @@ class EditDemographicsViewController: UIViewController {
         classDropdownView.setSelectValue(value: user.graduationYear)
         editScrollView.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                         placeholder: "Major",
-                                                         tableData: majorSearchFields, searchType: "major")
+        majorDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Major",
+            tableData: majorSearchFields,
+            searchType: .local
+        )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
         majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "Hometown",
-                                                            tableData: hometownSearchFields, searchType: "places")
+        hometownDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Hometown",
+            tableData: hometownSearchFields,
+            searchType: .places
+        )
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
         hometownDropdownView.setSelectValue(value: user.hometown)
         editScrollView.addSubview(hometownDropdownView)
