@@ -18,11 +18,14 @@ class MessagesTableViewCell: UITableViewCell {
     private let profileImage = UIImageView()
     private let timeLabel = UILabel()
 
-    // MARK: - Priavte Data Vars
+    // MARK: - Private Data Vars
     private let profileImageWidth: CGFloat = 50
     private let statusData: [String: [String]] = [
         "active": ["Current pear", "currentPear"],
-        "canceled": ["Cancelled", "cancelled"]
+        "created": ["Current pear", "currentPear"],
+        "proposed": ["Current pear", "currentPear"],
+        "inactive": ["Past pear", "finished"],
+        "canceled": ["Past pear", "finished"]
     ]
     static let reuseId = "messagesReuseIdentifier"
 
@@ -93,13 +96,12 @@ class MessagesTableViewCell: UITableViewCell {
     func configure(for messageUser: MessageUser) {
         profileImage.kf.setImage(with: URL(string: messageUser.profilePictureURL))
         nameLabel.text = "\(messageUser.firstName) \(messageUser.lastName)"
-        print(messageUser.status)
         if let imageName = statusData[messageUser.status]?[1], let status = statusData[messageUser.status]?[0] {
             infoImage.image = UIImage(named: imageName)
-            print(imageName)
             infoLabel.text = status
         }
-        timeLabel.text = "TODO - add timestamp"
+        // TODO - add timestamp after new backend
+//        timeLabel.text = "TODO"
     }
 
 }

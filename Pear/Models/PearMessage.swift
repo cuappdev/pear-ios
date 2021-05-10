@@ -24,8 +24,20 @@ class PearMessage {
         self.time = snapshotValue["time"] as? String ?? ""
     }
 
-    func getRecipientNetID(currentUserNetID: String) -> String {
-        return currentUserNetID == senderNetID ? recipientNetID : senderNetID
+    func getMessageHeight(currentUserNetID: String) -> CGFloat {
+        var messageLabel: UILabel
+        if self.senderNetID == currentUserNetID {
+            messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 230, height: CGFloat.greatestFiniteMagnitude))
+        }
+        else {
+            messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+        }
+        messageLabel.numberOfLines = 0
+        messageLabel.font = UIFont.getFont(.book, size: 16)
+        messageLabel.text = self.message
+        messageLabel.sizeToFit()
+        let messageHeight = messageLabel.frame.height + 30
+        return messageHeight
     }
 
 }

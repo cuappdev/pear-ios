@@ -19,7 +19,6 @@ class MessagesViewController: UIViewController {
     // MARK: - Private Data Vars
     private let databaseRef = Database.database().reference()
     private var messageUsers: [MessageUser] = []
-    private var messagesDict: [String: MessageUser] = [:]
     private var user: User
     var timer: Timer?
 
@@ -90,7 +89,7 @@ class MessagesViewController: UIViewController {
                     return
                 }
                 self.getMessageUserData(pairNetId: pairNetId) { pair in
-                    let messageUser = MessageUser(netID: pair.netID, firstName: pair.firstName, lastName: pair.lastName, status: match.status, meetingTime: match.meetingTime, profilePictureURL: pair.profilePictureURL ?? "", messageTimeStamp: "")
+                    let messageUser = MessageUser(netID: pair.netID, firstName: pair.firstName, lastName: pair.lastName, status: match.status, meetingTime: match.meetingTime, profilePictureURL: pair.profilePictureURL ?? "")
                     self.messageUsers.append(messageUser)
                     self.reloadMessagesTableView()
                 }
@@ -104,16 +103,7 @@ class MessagesViewController: UIViewController {
     }
 
     @objc private func reloadTableViewWithTimer() {
-//        TODO - uncomment when timestamps added to the backend
-//        self.messageUsers.sort { (messageUser1, messageUser2) -> Bool in
-//            if let time1 = Double(messageUser1.messageTimeStamp), let time2 = Double(messageUser2.messageTimeStamp) {
-//                return time1 > time2
-//            }
-//            else {
-//                return true
-//            }
-//        }
-//        print(self.messageUsers)
+//        TODO - sort by time when timestamps added to backend
         DispatchQueue.main.async {
             self.messagesTableView.reloadData()
         }
@@ -176,11 +166,10 @@ extension MessagesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 88
     }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let message = messages[indexPath.row]
-//        let pearNetID = message.getRecipientNetID(currentUserNetID: Constants.UserDefaults.userNetId)
-//
-//    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let messageUser = messageUsers[indexPath.row]
+        navigationController?.pushViewController(ChatViewController(messageUser: messageUser, currentUser: user), animated: true)
+    }
 
 }
