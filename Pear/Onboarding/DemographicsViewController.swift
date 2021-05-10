@@ -14,7 +14,6 @@ class DemographicsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    private let hometownSearchFields = Constants.Options.hometownSearchFields
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
 
@@ -88,7 +87,7 @@ class DemographicsViewController: UIViewController {
         hometownDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "City, State, Country",
-            tableData: hometownSearchFields,
+            tableData: [],
             searchType: .places
         )
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.

@@ -14,7 +14,6 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let hometownSearchFields = Constants.Options.hometownSearchFields
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: User
@@ -154,7 +153,7 @@ class EditDemographicsViewController: UIViewController {
         hometownDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "Hometown",
-            tableData: hometownSearchFields,
+            tableData: [],
             searchType: .places
         )
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
