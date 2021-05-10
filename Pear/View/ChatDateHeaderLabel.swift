@@ -15,7 +15,7 @@ class ChatDateHeaderLabel: UILabel {
         self.backgroundColor = UIColor(hue: 0.5417, saturation: 0.25, brightness: 0.83, alpha: 1.0)
         self.layer.cornerRadius = 10
         self.layer.masksToBounds = true
-        self.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        self.font = UIFont.getFont(.book, size: 14)
         self.textColor = .white
         self.textAlignment = .center
     }
