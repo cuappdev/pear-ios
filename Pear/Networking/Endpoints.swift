@@ -12,7 +12,7 @@ import FutureNova
 extension Endpoint {
 
     static func setupEndpointConfig() {
-        let baseURL = Keys.pearServerURL
+        let baseURL = Keys.pearServerURLV2
 
         #if LOCAL
             Endpoint.config.scheme = "http"
@@ -22,7 +22,7 @@ extension Endpoint {
             Endpoint.config.scheme = "https"
             Endpoint.config.host = baseURL
         #endif
-        Endpoint.config.commonPath = "/api/v1"
+        Endpoint.config.commonPath = "/api"
     }
 
     static var standardHeaders: [String: String] {
@@ -65,7 +65,7 @@ extension Endpoint {
     /// [POST] Authenticate ID token from Google and creates a user if account does not exist. Returns a session for the user.
     static func createUser(idToken: String) -> Endpoint {
         let body = UserSessionBody(idToken: idToken)
-        return Endpoint(path: "/auth/login/", body: body)
+        return Endpoint(path: "/authenticate/", body: body)
     }
 
     /// [GET] Authenticates the refresh token and returns a new user session.

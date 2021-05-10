@@ -13,9 +13,8 @@ class DemographicsViewController: UIViewController {
     // MARK: - Private Data vars
     private var classSearchFields: [String] = []
     private weak var delegate: OnboardingPageDelegate?
-    private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
+    private var fieldsEntered: [Bool] = [false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    // TODO: Update with networking values from backend (use states for now)
     private let hometownSearchFields = Constants.Options.hometownSearchFields
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
@@ -24,7 +23,7 @@ class DemographicsViewController: UIViewController {
     private var activeDropdownView: UIView? // Keep track of currently active field
     private var classDropdownView: OnboardingSelectDropdownView!
     private let greetingLabel = UILabel()
-    private var hometownDropdownView: OnboardingSearchDropdownView!
+    private let hometownTextField = UITextField()
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
     private var pronounsDropdownView: OnboardingSelectDropdownView!
@@ -36,7 +35,6 @@ class DemographicsViewController: UIViewController {
     private let fieldMap = [
         Constants.UserDefaults.userGraduationYear,
         Constants.UserDefaults.userMajor,
-        Constants.UserDefaults.userHometown,
         Constants.UserDefaults.userPronouns
     ]
     private let textFieldHeight: CGFloat = 49
@@ -84,16 +82,28 @@ class DemographicsViewController: UIViewController {
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "State",
-                                                            tableData: hometownSearchFields)
-        hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
-        view.addSubview(hometownDropdownView)
+        hometownTextField.attributedPlaceholder = NSAttributedString(
+            string:  "City, State, Country",
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.metaData
+            ]
+        )
+        hometownTextField.textColor = .black
+        hometownTextField.backgroundColor = .backgroundWhite
+        hometownTextField.font = ._20CircularStdBook
+        hometownTextField.layer.cornerRadius = 8
+        hometownTextField.layer.shadowColor = UIColor.black.cgColor
+        hometownTextField.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        hometownTextField.layer.shadowOpacity = 0.15
+        hometownTextField.layer.shadowRadius = 2
+        hometownTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        hometownTextField.leftViewMode = .always
+        view.addSubview(hometownTextField)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                             placeholder: "Pronouns",
                                                             tableData: pronounSearchFields, textTemplate: "")
-        pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
+        pronounsDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
         nextButton.setTitle("Next", for: .normal)
@@ -140,19 +150,7 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getAllMajors() {
-        NetworkManager.shared.getAllMajors().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.majorDropdownView.setTableData(tableData: response.data)
-                    }
-                case .error:
-                    print("Network error: could not get all major fields.")
-                }
-            }
-        }
+        majorDropdownView.setTableData(tableData: ["Computer Science"])
     }
 
     private func getUser() {
@@ -170,9 +168,9 @@ class DemographicsViewController: UIViewController {
                         if user.graduationYear != "" {
                             self.classDropdownView.setTitle(title: user.graduationYear)
                         }
-                        if user.hometown != "" {
-                            self.hometownDropdownView.setTitle(title: user.hometown)
-                        }
+//                        if user.hometown != "" {
+//                            self.hometownDropdownView.setTitle(title: user.hometown)
+//                        }
                         if user.pronouns != "" {
                             self.pronounsDropdownView.setTitle(title: user.pronouns)
                         }
@@ -215,7 +213,7 @@ class DemographicsViewController: UIViewController {
             make.height.equalTo(textFieldHeight)
         }
 
-        hometownDropdownView.snp.makeConstraints { make in
+        hometownTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(majorDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
@@ -224,7 +222,7 @@ class DemographicsViewController: UIViewController {
 
         pronounsDropdownView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(hometownDropdownView.snp.top).offset(textFieldTotalPadding)
+            make.top.equalTo(hometownTextField.snp.top).offset(textFieldTotalPadding)
             make.leading.trailing.equalToSuperview().inset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
         }

@@ -18,6 +18,7 @@ struct Keys {
     static let feedbackEmail = Keys.keyDict["feedback-email"] as? String ?? ""
     static let googleClientID = Keys.googleServiceDict["CLIENT_ID"] as? String ?? ""
     static let pearServerURL = Keys.keyDict["PEAR_SERVER_URL"] as? String ?? ""
+    static let pearServerURLV2 = Keys.keyDict["pear-server-v2"] as? String ?? ""
     static let appdevServerURL = Keys.keyDict["APPDEV_SERVER_URL"] as? String ?? ""
 
     private static let googleServiceDict: NSDictionary = {

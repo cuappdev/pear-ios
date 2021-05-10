@@ -101,19 +101,14 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(userEmail[..<addressSignIndex], forKey: Constants.UserDefaults.userNetId)
             UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
+            Networking2.authenticateUser(idToken: idToken) { [weak self] userSession in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        let userSession = response.data
-                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                        self.getUser()
-                    case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        self.navigationController?.pushViewController(LoginViewController(), animated: false)
-                    }
+                    UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                    self.navigationController?.pushViewController(
+                        OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal),
+                        animated: false
+                    )
                 }
             }
         }
@@ -155,8 +150,9 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        if let email = user.profile.email,
-           !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
+        guard let email = user.profile.email,
+              // Only allow users with Cornell emails or internal users (Pear email) to log in
+              email.contains("@cornell.edu") || email == "cornellpearapp@gmail.com" else {
             GIDSignIn.sharedInstance().signOut()
             self.showErrorMessageAlertView()
             return

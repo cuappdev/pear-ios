@@ -8,8 +8,10 @@ use_frameworks!
 # Pods for Pear
     # User Data
     pod 'GoogleSignIn'
+    pod 'GooglePlaces', '4.2.0'
 
     # Networking
+    pod 'Alamofire', '~> 5.2.1'
     pod 'SwiftyJSON'
     pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'
 

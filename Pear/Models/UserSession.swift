@@ -10,10 +10,9 @@ import Foundation
 
 struct UserSession: Codable {
 
-    // TODO: Implement user session
     let accessToken: String
-    let active: Bool
-    let refreshToken: String
-    let sessionExpiration: String
+    let username: String
+    let firstName: String
+    let lastName: String
 
 }
