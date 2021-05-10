@@ -30,33 +30,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
 
-            let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-            let refreshToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.refreshToken)
+//            let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
+            let didCompleteOnboarding = false
             let rootVC = didCompleteOnboarding ?
                 HomeViewController() :
                 OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-
-            guard let unwrappedToken = refreshToken else {
-                navigationController.pushViewController(LoginViewController(), animated: false)
-                window.rootViewController = navigationController
-                return
-            }
-            
-            NetworkManager.shared.refreshUserToken(token: unwrappedToken).observe { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        let userSession = response.data
-                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                        navigationController.pushViewController(rootVC, animated: false)
-                        window.rootViewController = navigationController
-                    case .error:
-                        navigationController.pushViewController(LoginViewController(), animated: false)
-                        window.rootViewController = navigationController
-                    }
-                }
-            }
+            navigationController.pushViewController(rootVC, animated: false)
+            window.rootViewController = navigationController
         } else {
             navigationController.pushViewController(LoginViewController(), animated: false)
             window.rootViewController = navigationController

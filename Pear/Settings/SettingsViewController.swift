@@ -147,7 +147,6 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             [Constants.UserDefaults.accessToken,
-             Constants.UserDefaults.refreshToken,
              Constants.UserDefaults.onboardingCompletion,
              Constants.UserDefaults.userNetId,
              Constants.UserDefaults.userProfilePictureURL

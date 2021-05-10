@@ -120,73 +120,40 @@ class DemographicsViewController: UIViewController {
         if let graduationYear = fieldValues[fieldMap[0]],
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
-           let pronouns = fieldValues[fieldMap[3]],
-           let profilePictureURL = UserDefaults.standard.string(forKey: Constants.UserDefaults.userProfilePictureURL) {
-            NetworkManager.shared.updateUserDemographics(
+           let pronouns = fieldValues[fieldMap[3]] {
+
+            Networking2.updateDemographics(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
-                pronouns: pronouns,
-                profilePictureURL: profilePictureURL).observe { [weak self] result in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .value(let response):
-                            if response.success {
-                                self.delegate?.nextPage(index: 1)
-                            } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                            }
-                        case .error:
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        }
+                pronouns: pronouns
+            ) { [weak self] (success) in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    if success {
+                        self.delegate?.nextPage(index: 1)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
+                }
             }
         }
     }
 
     private func getAllMajors() {
-        NetworkManager.shared.getAllMajors().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.majorDropdownView.setTableData(tableData: response.data)
-                    }
-                case .error:
-                    print("Network error: could not get all major fields.")
-                }
-            }
-        }
-
+        // TODO: Replace with call to get all possible majors from server
+        majorDropdownView.setTableData(tableData: ["Computer Science"])
     }
 
     private func getUser() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let user = response.data
-                        if user.major != "" && user.major != "Undeclared" {
-                            self.majorDropdownView.setTitle(title: user.major)
-                        }
-                        if user.graduationYear != "" {
-                            self.classDropdownView.setTitle(title: user.graduationYear)
-                        }
-                        if user.hometown != "" {
-                            self.hometownDropdownView.setTitle(title: user.hometown)
-                        }
-                        if user.pronouns != "" {
-                            self.pronounsDropdownView.setTitle(title: user.pronouns)
-                        }
-                    }
-                case .error:
-                    print("Network error: could not get user.")
+                if let graduationYear = user.graduationYear {
+                    self.classDropdownView.setTitle(title: graduationYear)
                 }
+                self.hometownDropdownView.setTitle(title: user.hometown ?? "")
+                // TODO: Add majors and pronouns to response
             }
         }
     }
