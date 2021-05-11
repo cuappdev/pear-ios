@@ -49,8 +49,7 @@ class EditLocationAvailabilityViewController: UIViewController {
             self.selectedCampusLocations = selectedCampus
             self.selectedCtownLocations = selectedCtown
             self.selectedOnlineLocations = selectedOnline
-        }, updateNext: nil, updatePickedLocation: nil
-        , schedulingStatus: nil, isChoosing: nil, collectionViewLayout: locationsCollectionViewLayout, interitemSpacing: interitemSpacing, lineSpacing: lineSpacing)
+        }, updateNext: nil, updatePickedLocation: nil, schedulingStatus: nil, isChoosing: nil, collectionViewLayout: locationsCollectionViewLayout, interitemSpacing: interitemSpacing, lineSpacing: lineSpacing)
         addChild(locationCollectionView)
         view.addSubview(locationCollectionView.view)
         locationCollectionView.didMove(toParent: self)

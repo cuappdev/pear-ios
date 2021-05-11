@@ -30,7 +30,7 @@ class SchedulingPlacesViewController: UIViewController {
     private let lineSpacing: CGFloat = 12
 
     // Data received from `SchedulingTimeViewController`
-    private var match: Match
+    private let match: Match
 
     init(status: SchedulingStatus, match: Match) {
         self.schedulingStatus = status
