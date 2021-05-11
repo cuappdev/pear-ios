@@ -10,7 +10,7 @@ import Foundation
 
 struct MessageUser {
 
-    let netID: String
+    let netID: String 
     let firstName: String
     let lastName: String
     let status: String

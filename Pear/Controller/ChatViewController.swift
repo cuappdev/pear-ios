@@ -67,6 +67,11 @@ class ChatViewController: UIViewController {
         setupConstraints(keyboardHeight: 0)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
     }
@@ -74,6 +79,7 @@ class ChatViewController: UIViewController {
     private func hideKeyboardWhenViewTapped() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
+        tap.delegate = self
         view.addGestureRecognizer(tap)
     }
 
@@ -171,7 +177,7 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func sendMessage() {
-        if let message = chatInputTextField.text, !message.isEmpty {
+        if let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !message.isEmpty {
             let messageData = ["message": message]
             addMessageToFirebase(data: messageData)
             chatInputTextField.text = ""
@@ -305,3 +311,21 @@ extension ChatViewController: UITextFieldDelegate {
     }
 
 }
+
+extension ChatViewController: UIGestureRecognizerDelegate {
+
+      func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+             navigationController?.popViewController(animated: true)
+         } else if gestureRecognizer.view == view {
+            return true
+         }
+         return false
+     }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return !(touch.view is UIButton)
+    }
+
+}
+

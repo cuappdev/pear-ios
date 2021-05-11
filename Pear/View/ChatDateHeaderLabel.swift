@@ -12,11 +12,11 @@ class ChatDateHeaderLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor(hue: 0.5417, saturation: 0.25, brightness: 0.83, alpha: 1.0)
+        self.backgroundColor = .clear
         self.layer.cornerRadius = 10
         self.layer.masksToBounds = true
         self.font = UIFont.getFont(.book, size: 14)
-        self.textColor = .white
+        self.textColor = .greenGray
         self.textAlignment = .center
     }
 

@@ -155,7 +155,7 @@ extension ProfileViewController: UITableViewDataSource {
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair)
+            cell.configure(for: nil, pair: pair)
             return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }

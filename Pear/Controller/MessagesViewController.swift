@@ -66,6 +66,11 @@ class MessagesViewController: UIViewController {
         setupConstraints()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
     @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
@@ -171,5 +176,16 @@ extension MessagesViewController: UITableViewDelegate {
         let messageUser = messageUsers[indexPath.row]
         navigationController?.pushViewController(ChatViewController(messageUser: messageUser, currentUser: user), animated: true)
     }
+
+}
+
+extension MessagesViewController: UIGestureRecognizerDelegate {
+
+      func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+             navigationController?.popViewController(animated: true)
+         }
+         return false
+     }
 
 }

@@ -197,7 +197,11 @@ extension MatchProfileViewController: UITableViewDataSource {
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair)
+            guard let user = user else { return UITableViewCell() }
+            cell.configure(for: user, pair: pair)
+            cell.showMessages = { (messageUser, currentUser) in
+                self.navigationController?.pushViewController(ChatViewController(messageUser: messageUser, currentUser: currentUser), animated: true)
+            }
             return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
