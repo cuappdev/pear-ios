@@ -31,6 +31,15 @@ class OnboardingSelectTableView: UITableView {
     }
 }
 
+enum OnboardingSearchDropdownType {
+
+    /// Search from Google Places API
+    case places
+    /// Search locally
+    case local
+
+}
+
 class OnboardingSearchDropdownView: UIView {
 
     // MARK: - Private View Vars
@@ -41,15 +50,22 @@ class OnboardingSearchDropdownView: UIView {
     private weak var delegate: OnboardingDropdownViewDelegate?
     private var placeholder: String
     private var resultsTableData: [String] = []
+    private let searchType: OnboardingSearchDropdownType
     private var tableData: [String]
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
-    init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String]) {
+    init(
+        delegate: OnboardingDropdownViewDelegate,
+        placeholder: String,
+        tableData: [String],
+        searchType: OnboardingSearchDropdownType
+    ) {
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData
+        self.searchType = searchType
         super.init(frame: .zero)
         setupViews()
         setupConstraints()
@@ -124,6 +140,20 @@ class OnboardingSearchDropdownView: UIView {
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
     }
 
+    func searchPlaces(place: String) {
+        ApiManager.getHometown(hometown: place) { [weak self] places in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.resultsTableData = places.filter {
+                    $0.type == "CITY"
+                }.map {
+                    "\($0.city), \($0.regionCode), \($0.countryCode)"
+                }
+                self.tableView.reloadData()
+            }
+        }
+    }
+
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -159,8 +189,17 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
     /// Expands and updates search results table view when text is changed in the search bar.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
-        resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
+        switch searchType {
+        case .places:
+            searchPlaces(place: searchText)
+        case .local:
+            resultsTableData =
+                searchText.isEmpty
+                ? []
+                : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        }
+        // Reset fieldSelected to false.
+        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "")
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height

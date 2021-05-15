@@ -12,6 +12,7 @@ use_frameworks!
     # Networking
     pod 'SwiftyJSON'
     pod 'FutureNova', :git => 'https://github.com/cuappdev/ios-networking.git'
+    pod 'Alamofire', '~> 5.2.1'
 
     # Feedback
     pod 'AppDevAnnouncements', :git => 'https://github.com/cuappdev/appdev-announcements.git', :commit => '8e4a569087e7ee16caf4eaaf1c9ff9926783ae9a'
