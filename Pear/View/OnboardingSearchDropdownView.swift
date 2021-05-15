@@ -53,6 +53,8 @@ class OnboardingSearchDropdownView: UIView {
     private let searchType: OnboardingSearchDropdownType
     private var tableData: [String]
 
+    private var debounceTimer: Timer?
+
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
@@ -141,15 +143,18 @@ class OnboardingSearchDropdownView: UIView {
     }
 
     func searchPlaces(place: String) {
-        ApiManager.getHometown(hometown: place) { [weak self] places in
+        debounceTimer?.invalidate()
+        debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.resultsTableData = places.filter {
-                    $0.type == "CITY"
-                }.map {
-                    "\($0.city), \($0.regionCode), \($0.countryCode)"
+            ApiManager.getHometown(hometown: place) { places in
+                DispatchQueue.main.async {
+                    self.resultsTableData = places.filter {
+                        $0.type == "CITY"
+                    }.map {
+                        "\($0.city), \($0.region), \($0.countryCode)"
+                    }
+                    self.tableView.reloadData()
                 }
-                self.tableView.reloadData()
             }
         }
     }

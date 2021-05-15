@@ -30,6 +30,7 @@ struct GeoPlace: Codable {
     let type: String
     let city: String
     let name: String
+    let country: String
     let countryCode: String
     let region: String
     let regionCode: String
