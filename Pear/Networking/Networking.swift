@@ -61,6 +61,25 @@ class Networking2 {
         }
     }
 
+    static func validateAccessToken(completion: @escaping (Bool) -> Void) {
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success:
+                completion(true)
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(false)
+            }
+        }
+
+    }
+
     static func getMe(completion: @escaping (UserV2) -> Void) {
 
         AF.request(
@@ -112,6 +131,48 @@ class Networking2 {
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
                     completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllInterests(completion: @escaping ([InterestV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/interests/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let interestData = try? jsonDecoder.decode(Response<[InterestV2]>.self, from: data) {
+                    let interests = interestData.data
+                    completion(interests)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllGroups(completion: @escaping ([GroupV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/groups/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let groupsData = try? jsonDecoder.decode(Response<[GroupV2]>.self, from: data) {
+                    let groups = groupsData.data
+                    completion(groups)
                 }
             case .failure(let error):
                 print(error.localizedDescription)

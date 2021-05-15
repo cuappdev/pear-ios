@@ -13,22 +13,26 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    // TODO: change when networking with backend
-    private var displayedGroups: [SimpleOnboardingCell] = []
-    private var groups: [SimpleOnboardingCell] = []
-    private var selectedGroups: [SimpleOnboardingCell] = []
+    private var displayedGroups: [GroupV2] = []
+    private var groups: [GroupV2] = [
+        GroupV2(
+            id: "1",
+            name: "Cornell AppDev",
+            imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle-icons-art.svg/1024px-Circle-icons-art.svg.png")
+    ]
+    private var selectedGroups: [GroupV2] = []
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let clubLabel = UILabel()
-    private let nextButton = UIButton()
-    private let searchBar = UISearchBar()
-    private let skipButton = UIButton()
-    private let subtitleLabel = UILabel()
     private let fadeTableView = FadeWrapperView(
         UITableView(),
         fadeColor: .backgroundLightGreen
     )
+    private let nextButton = UIButton()
+    private let searchBar = UISearchBar()
+    private let skipButton = UIButton()
+    private let subtitleLabel = UILabel()
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -74,7 +78,7 @@ class GroupsViewController: UIViewController {
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.delegate = self
         fadeTableView.view.dataSource = self
-        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
         fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
 
@@ -105,7 +109,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = groups
 
         getAllGroups()
-        getUserGroups()
+//        getUserGroups()
         setupConstraints()
     }
 
@@ -158,6 +162,7 @@ class GroupsViewController: UIViewController {
     // MARK: - Search Bar
 
     /// Filters table view results based on text typed in search
+    // TOD0: replace local search with search to backend once the route is created
     private func filterTableView(searchText: String) {
         displayedGroups = searchText.isEmpty
             ? groups
@@ -171,8 +176,10 @@ class GroupsViewController: UIViewController {
         nextButton.isEnabled = selectedGroups.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = selectedGroups.count == 0
-        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
-        skipButton.setTitleColor(skipButtonColor, for: .normal)
+        skipButton.setTitleColor(
+            skipButton.isEnabled ? .greenGray : .inactiveGreen,
+            for: .normal
+        )
     }
 
     @objc func backButtonPressed() {
@@ -207,47 +214,50 @@ class GroupsViewController: UIViewController {
     }
     
     private func getAllGroups() {
-        NetworkManager.shared.getAllGroups().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let groups = response.data
-                        self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
-                        self.displayedGroups = self.groups
-                        self.fadeTableView.view.reloadData()
-                    } else {
-                        print("Network error: could not get all groups.")
-                    }
-                case .error:
-                    print("Network error: could not get all groups.")
-                }
-            }
+//        NetworkManager.shared.getAllGroups().observe { [weak self] result in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let response):
+//                    if response.success {
+//                        let groups = response.data
+//                        self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
+//                        self.displayedGroups = self.groups
+//                        self.fadeTableView.view.reloadData()
+//                    } else {
+//                        print("Network error: could not get all groups.")
+//                    }
+//                case .error:
+//                    print("Network error: could not get all groups.")
+//                }
+//            }
+//        }
+        Networking2.getAllGroups { groups in
+            print(groups)
         }
     }
 
-    private func getUserGroups() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let userGroups = response.data.groups
-                        self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
-                        self.fadeTableView.view.reloadData()
-                        self.updateNext()
-                    } else {
-                        print("Network error: could not get user groups.")
-                    }
-                case .error:
-                    print("Network error: could not get user groups.")
-                }
-            }
-        }
-    }
+//    private func getUserGroups() {
+//        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+//        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let response):
+//                    if response.success {
+//                        let userGroups = response.data.groups
+//                        self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
+//                        self.fadeTableView.view.reloadData()
+//                        self.updateNext()
+//                    } else {
+//                        print("Network error: could not get user groups.")
+//                    }
+//                case .error:
+//                    print("Network error: could not get user groups.")
+//                }
+//            }
+//        }
+//    }
     
 }
 
@@ -255,7 +265,7 @@ class GroupsViewController: UIViewController {
 extension GroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        54
+        64
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -278,9 +288,9 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
                                                        for: indexPath) as?
-                SimpleOnboardingTableViewCell else { return UITableViewCell() }
+                OnboardingTableViewCell2 else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
