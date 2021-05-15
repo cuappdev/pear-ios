@@ -119,6 +119,20 @@ class OnboardingTableViewCell2: UITableViewCell {
         }
     }
 
+    func configure(with talkingPoint: TalkingPointV2) {
+        titleLabel.text = talkingPoint.name
+        categoriesLabel.text = talkingPoint.subtitle
+        if let talkingPointImageUrl = URL(string: talkingPoint.imgUrl) {
+            interestImageView.kf.setImage(with: talkingPointImageUrl)
+        }
+
+        // TODO: Lucy double check what this does...
+        if lastShownItem != .group {
+            lastShownItem = .group
+            setupConstraints()
+        }
+    }
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         if shouldSelectionChangeAppearence {
             changeColor(selected: selected)

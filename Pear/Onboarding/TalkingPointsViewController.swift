@@ -13,11 +13,13 @@ class TalkingPointsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     // TODO: change when networking with backend
-    private var displayedTalkingPoints: [SimpleOnboardingCell] = []
-    private let groups = Constants.Options.organizations
-    private let interests = Constants.Options.interests
-    private var talkingPoints: [SimpleOnboardingCell] = []
-    private var selectedInterestsGroups: [SimpleOnboardingCell] = []
+    private var displayedTalkingPoints: [TalkingPointV2] = []
+    private var talkingPoints: [TalkingPointV2] = [
+        TalkingPointV2(type: "interest", id: "12", name: "group", subtitle: "fdf", imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle-icons-art.svg/1024px-Circle-icons-art.svg.png"),
+        TalkingPointV2(type: "group", id: "12", name: "interest", subtitle: nil, imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle-icons-art.svg/1024px-Circle-icons-art.svg.png")
+
+    ]
+    private var selectedTalkingPoints: [TalkingPointV2] = []
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -66,7 +68,7 @@ class TalkingPointsViewController: UIViewController {
         fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.delegate = self
         fadeTableView.view.bounces = true
-        fadeTableView.view.register(SimpleOnboardingTableViewCell.self, forCellReuseIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
@@ -96,37 +98,18 @@ class TalkingPointsViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
+        displayedTalkingPoints = talkingPoints
+
         setupConstraints()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getAllTalkingPoints()
-        getUserTalkingPoints()
     }
     
     private func getUserTalkingPoints() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserTalkingPoints(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let userTalkingPoints = response.data.map {
-                            return SimpleOnboardingCell(name: $0, subtitle: nil)
-                        }
-                        self.selectedInterestsGroups = userTalkingPoints
-                        self.fadeTableView.view.reloadData()
-                        self.updateNext()
-                    } else {
-                        print("Network error: could not get user talking points.")
-                    }
-                case .error:
-                    print("Network error: could not get user talking points.")
-                }
-            }
-        }
+        // TODO: Fill in network call
     }
     
     @objc func dismissKeyboard() {
@@ -134,45 +117,11 @@ class TalkingPointsViewController: UIViewController {
     }
     
     private func getTalkingPoints() {
-        talkingPoints = groups.map {
-            return SimpleOnboardingCell(name: $0.name, subtitle: nil)
-        }
-        let onboardingInterests = self.interests.map {
-            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
-        }
-        talkingPoints.append(contentsOf: onboardingInterests)
-        talkingPoints.sort(by: { $0.name < $1.name })
-        displayedTalkingPoints = talkingPoints
-        fadeTableView.view.reloadData()
+        // TODO: Fill in network call
     }
     
     private func getAllTalkingPoints() {
-        NetworkManager.shared.getAllGroups().observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let groups = response.data
-                        self.talkingPoints = groups.map {
-                            return SimpleOnboardingCell(name: $0, subtitle: nil)
-                        }
-                        let onboardingInterests = self.interests.map {
-                            // TODO: Fix interest model in backend before using to populate screen
-                            return SimpleOnboardingCell(name: $0.name, subtitle: $0.categories?.joined(separator: ", ") ?? nil)
-                        }
-                        self.talkingPoints.append(contentsOf: onboardingInterests)
-                        self.talkingPoints.sort(by: { $0.name < $1.name })
-                        self.displayedTalkingPoints = self.talkingPoints
-                        self.fadeTableView.view.reloadData()
-                    } else {
-                        print("Network error: could not get all talking points.")
-                    }
-                case .error:
-                    print("Network error: could not get all talking points.")
-                }
-            }
-        }
+        // TODO: Fill in network call
     }
 
     private func setupConstraints() {
@@ -226,11 +175,11 @@ class TalkingPointsViewController: UIViewController {
     }
 
     // MARK: - Next and Previous Buttons
-    /// Updates the enabled state of next button based on the state of selectedInterestsGroups.
+    /// Updates the enabled state of next button based on the state of selectedTalkingPoints.
     private func updateNext() {
-        nextButton.isEnabled = selectedInterestsGroups.count > 0
+        nextButton.isEnabled = selectedTalkingPoints.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
-        skipButton.isEnabled = selectedInterestsGroups.count == 0
+        skipButton.isEnabled = selectedTalkingPoints.count == 0
         let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
         skipButton.setTitleColor(skipButtonColor, for: .normal)
     }
@@ -240,7 +189,7 @@ class TalkingPointsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        let talkingPoints = selectedInterestsGroups.map { $0.name }
+        let talkingPoints = selectedTalkingPoints.map { $0.name }
         NetworkManager.shared.updateUserTalkingPoints(talkingPoints: talkingPoints).observe { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -276,12 +225,12 @@ extension TalkingPointsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedInterestsGroups.append(displayedTalkingPoints[indexPath.row])
+        selectedTalkingPoints.append(displayedTalkingPoints[indexPath.row])
         updateNext()
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterestsGroups.removeAll { $0.name == displayedTalkingPoints[indexPath.row].name}
+        selectedTalkingPoints.removeAll { $0.name == displayedTalkingPoints[indexPath.row].name}
         updateNext()
     }
 
@@ -291,13 +240,13 @@ extension TalkingPointsViewController: UITableViewDelegate {
 extension TalkingPointsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
                                                        for: indexPath) as?
-                SimpleOnboardingTableViewCell else { return UITableViewCell() }
+                OnboardingTableViewCell2 else { return UITableViewCell() }
         let data = displayedTalkingPoints[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedInterestsGroups.contains(where: { $0.name == data.name }) {
+        if selectedTalkingPoints.contains(where: { $0.id == data.id }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell

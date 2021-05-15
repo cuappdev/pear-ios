@@ -84,22 +84,7 @@ class InterestsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         delegate?.nextPage(index: 2)
-        let userInterests = selectedInterests.map { $0.name }
-        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.delegate?.nextPage(index: 2)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                }
-            }
-        }
+        // TODO: Fill in network call
     }
 
     private func setupConstraints() {
@@ -142,26 +127,7 @@ class InterestsViewController: UIViewController {
     }
 
     private func getUserInterests() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-//        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .value(let response):
-//                    guard response.success else {
-//                        print("Network error: could not get user interests.")
-//                        return
-//                    }
-//                    self.selectedInterests = response.data.interests.map {
-//                        return Interest(name: $0, categories: [], imageName: "")
-//                    }
-//                    self.updateNext()
-//                    self.fadeTableView.view.reloadData()
-//                case .error:
-//                    print("Network error: could not get user interests.")
-//                }
-//            }
-//        }
+        //  TODO: Fill in network call
     }
 
     /// Updates the enabled state of next button based on the state of selectedInterests.

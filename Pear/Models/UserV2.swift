@@ -46,3 +46,11 @@ struct GroupV2: Codable {
     let name: String
     let imgUrl: String
 }
+
+struct TalkingPointV2: Codable {
+    let type: String
+    let id: String
+    let name: String
+    let subtitle: String?
+    let imgUrl: String
+}

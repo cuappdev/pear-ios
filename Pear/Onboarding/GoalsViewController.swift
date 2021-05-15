@@ -26,12 +26,13 @@ class GoalsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
+    private let fadeTableView = FadeWrapperView(
+        UITableView(frame: .zero, style: .plain),
+        fadeColor: .backgroundLightGreen
+    )
     private let nextButton = UIButton()
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
-    private let fadeTableView = FadeWrapperView(
-        UITableView(frame: .zero, style: .plain),
-        fadeColor: .backgroundLightGreen)
     private let titleLabel = UILabel()
 
     init(delegate: OnboardingPageDelegate) {
@@ -88,7 +89,7 @@ class GoalsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-        getUserGoals()
+//        getUserGoals()
         setupConstraints()
     }
 
@@ -149,21 +150,8 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        NetworkManager.shared.updateUserGoals(goals: selectedGoals).observe { [weak self] result in
-            guard let self = self else { return }
-                switch result {
-                case .value(let response):
-                    DispatchQueue.main.async {
-                        if response.success {
-                            self.delegate?.nextPage(index: 4)
-                        } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        }
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                }
-        }
+        // TODO: Fill in network call
+        self.delegate?.nextPage(index: 4)
     }
 
     @objc func skipButtonPressed() {
@@ -171,25 +159,7 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserGoals(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let userGoals = response.data
-                        self.selectedGoals = userGoals
-                        self.fadeTableView.view.reloadData()
-                        self.updateNext()
-                    } else {
-                        print("Network error: could not get user goals.")
-                    }
-                case .error:
-                    print("Network error: could not get user goals.")
-                }
-            }
-        }
+        // TODO: Fill in network call
     }
 }
 
@@ -222,9 +192,10 @@ extension GoalsViewController: UITableViewDelegate {
 extension GoalsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
-                                                       for: indexPath) as?
-                SimpleOnboardingTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: SimpleOnboardingTableViewCell.reuseIdentifier,
+                for: indexPath
+        ) as? SimpleOnboardingTableViewCell else { return UITableViewCell() }
         let goal = goals[indexPath.row]
         cell.configure(with: goal)
         if selectedGoals.contains(where: { $0 == goal.name }) {

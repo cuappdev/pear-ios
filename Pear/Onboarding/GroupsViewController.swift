@@ -187,22 +187,23 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        let userGroups = selectedGroups.map { $0.name }
-        NetworkManager.shared.updateUserGroups(groups: userGroups).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.delegate?.nextPage(index: 3)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                }
-            }
-        }
+        self.delegate?.nextPage(index: 3)
+//        let userGroups = selectedGroups.map { $0.name }
+//        NetworkManager.shared.updateUserGroups(groups: userGroups).observe { [weak self] result in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let response):
+//                    if response.success {
+//                        self.delegate?.nextPage(index: 3)
+//                    } else {
+//                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+//                    }
+//                case .error:
+//                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+//                }
+//            }
+//        }
     }
 
     @objc func skipButtonPressed() {
