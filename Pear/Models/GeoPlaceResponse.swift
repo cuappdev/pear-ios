@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import FutureNova
 
 struct GeoPlacesResponse: Codable {
 
