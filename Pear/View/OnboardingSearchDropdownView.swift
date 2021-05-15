@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import GooglePlaces
-import GoogleMapsBase
 
 protocol OnboardingDropdownViewDelegate: class {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
@@ -34,8 +32,12 @@ class OnboardingSelectTableView: UITableView {
 }
 
 enum OnboardingSearchDropdownType {
-    case places // search from Google Places API
-    case local // search locally
+
+    /// Search from Google Places API
+    case places
+    /// Search locally
+    case local
+
 }
 
 class OnboardingSearchDropdownView: UIView {
@@ -43,7 +45,6 @@ class OnboardingSearchDropdownView: UIView {
     // MARK: - Private View Vars
     private let searchBar = UISearchBar()
     private let tableView = OnboardingSelectTableView()
-    private var placesClient: GMSPlacesClient!
 
     // MARK: - Private Data Vars
     private weak var delegate: OnboardingDropdownViewDelegate?
@@ -51,6 +52,8 @@ class OnboardingSearchDropdownView: UIView {
     private var resultsTableData: [String] = []
     private let searchType: OnboardingSearchDropdownType
     private var tableData: [String]
+
+    private var debounceTimer: Timer?
 
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
@@ -66,7 +69,6 @@ class OnboardingSearchDropdownView: UIView {
         self.tableData = tableData
         self.searchType = searchType
         super.init(frame: .zero)
-        placesClient = GMSPlacesClient.shared()
         setupViews()
         setupConstraints()
     }
@@ -141,39 +143,20 @@ class OnboardingSearchDropdownView: UIView {
     }
 
     func searchPlaces(place: String) {
-
-        /**
-         * Create a new session token. Be sure to use the same token for calling
-         * findAutocompletePredictions, as well as the subsequent place details request.
-         * This ensures that the user's query and selection are billed as a single session.
-         */
-
-        let token = GMSAutocompleteSessionToken.init()
-
-        // Create a type filter.
-        let filter = GMSAutocompleteFilter()
-        filter.type = .city
-
-        placesClient?.findAutocompletePredictions(
-            fromQuery: place,
-            filter: filter,
-            sessionToken: token
-        ) { [weak self] (results, error) in
-
+        debounceTimer?.invalidate()
+        debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
             guard let self = self else { return }
-
-            if let error = error {
-                print("Autocomplete error: \(error)")
-                return
+            ApiManager.getHometown(hometown: place) { places in
+                DispatchQueue.main.async {
+                    self.resultsTableData = places.filter {
+                        $0.type == "CITY"
+                    }.map {
+                        "\($0.city), \($0.region), \($0.countryCode)"
+                    }
+                    self.tableView.reloadData()
+                }
             }
-
-            if let results = results {
-                self.resultsTableData = results.map { $0.attributedFullText.string }
-                self.tableView.reloadData()
-            }
-
         }
-
     }
 
 }
@@ -215,9 +198,13 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         case .places:
             searchPlaces(place: searchText)
         case .local:
-            resultsTableData = searchText.isEmpty ? [] : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+            resultsTableData =
+                searchText.isEmpty
+                ? []
+                : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
         }
-        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "") // Reset fieldSelected to false.
+        // Reset fieldSelected to false.
+        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "")
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height

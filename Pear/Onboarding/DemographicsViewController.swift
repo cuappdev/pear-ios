@@ -48,6 +48,8 @@ class DemographicsViewController: UIViewController {
 
     override func viewDidLoad() {
 
+        super.viewDidLoad()
+
         navigationController?.navigationBar.isHidden = true
         
         let userFirstName = UserDefaults.standard.string(forKey: "userFirstName") ?? "user"
@@ -66,12 +68,10 @@ class DemographicsViewController: UIViewController {
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
-        classDropdownView = OnboardingSelectDropdownView(
-            delegate: self,
-             placeholder: "Class of...",
-             tableData: (currentYear...gradYear).map { "\($0)" },
-             textTemplate: "Class of"
-        )
+        classDropdownView = OnboardingSelectDropdownView(delegate: self,
+                                                         placeholder: "Class of...",
+                                                         tableData: (currentYear...gradYear).map { "\($0)" },
+                                                         textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 

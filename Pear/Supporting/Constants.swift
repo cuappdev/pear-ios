@@ -78,6 +78,7 @@ struct Constants {
     }
     
     struct Options {
+
         static let organizations = [
             Group(name: "Cornell AppDev", imageName: "appdev"),
             Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),

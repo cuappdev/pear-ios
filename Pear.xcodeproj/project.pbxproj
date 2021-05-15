@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1EF7BA20E7F4CEB74BEFC199 /* Pods_PearTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D953C9D788E8FF6D2DAB3E /* Pods_PearTests.framework */; };
 		30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0023E249AC006DC6C3 /* LoginViewController.swift */; };
 		30304E0523E53BEE006DC6C3 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0423E53BEE006DC6C3 /* Keys.swift */; };
 		30304E0923E78228006DC6C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30304E0823E78228006DC6C3 /* Constants.swift */; };
@@ -49,10 +50,13 @@
 		5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */; };
 		5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */; };
 		5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5030DD082532D65600374F7B /* AboutParagraph.swift */; };
+		5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */; };
+		504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */; };
 		50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */; };
 		50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */; };
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
 		50E1A7722558E95E008932F8 /* CommunityUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E1A7712558E95E008932F8 /* CommunityUser.swift */; };
+		5D05B94141FB879B7CCA93FB /* Pods_Pear_PearUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CCE554B562C106DCFBC45EA /* Pods_Pear_PearUITests.framework */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
 		D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FC30423F112B300F8673A /* GroupsViewController.swift */; };
 		D41FE85A246463E10048900F /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41FE859246463E10048900F /* UserSession.swift */; };
@@ -95,6 +99,8 @@
 		D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48E31D025D9682B009AB253 /* UIAlertController.swift */; };
 		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
+		D4A812722650529000E3EF81 /* GeoPlaceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */; };
+		D4A8128D2650564A00E3EF81 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A8128C2650564A00E3EF81 /* ApiManager.swift */; };
 		D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */; };
 		D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */; };
 		D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */; };
@@ -173,6 +179,8 @@
 		5030DCFE2532CF9000374F7B /* AboutPearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearViewController.swift; sourceTree = "<group>"; };
 		5030DD032532D63100374F7B /* AboutPearTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPearTableViewCell.swift; sourceTree = "<group>"; };
 		5030DD082532D65600374F7B /* AboutParagraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutParagraph.swift; sourceTree = "<group>"; };
+		5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFooterLabelView.swift; sourceTree = "<group>"; };
+		504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingLocationCollectionViewController.swift; sourceTree = "<group>"; };
 		50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLocationAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHeaderLabelView.swift; sourceTree = "<group>"; };
 		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
@@ -231,6 +239,8 @@
 		D48E31D025D9682B009AB253 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
 		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
+		D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPlaceResponse.swift; sourceTree = "<group>"; };
+		D4A8128C2650564A00E3EF81 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
 		D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUserTableViewCell.swift; sourceTree = "<group>"; };
 		D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDemographicsViewController.swift; sourceTree = "<group>"; };
 		D4C8F58023EFC974007722F6 /* DemographicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemographicsViewController.swift; sourceTree = "<group>"; };
@@ -275,6 +285,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05D60345ACD459B08C703394 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6C3084388528E1660B40FD45 /* Pods_Pear.framework */,
+				8CCE554B562C106DCFBC45EA /* Pods_Pear_PearUITests.framework */,
+				88D953C9D788E8FF6D2DAB3E /* Pods_PearTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		30304E0A23F4B6AC006DC6C3 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -305,6 +325,7 @@
 				D46A362F25F3CA4F00EADA9F /* UserSocialMedia.swift */,
 				5012B55525F8414D00F5F713 /* FeedbackOption.swift */,
 				D4D6674D2648CDCC00D5E902 /* UserV2.swift */,
+				D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -413,6 +434,7 @@
 		D480EC0023E2434200513063 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
 				30304E0023E249AC006DC6C3 /* LoginViewController.swift */,
 				30304E1A23FDF336006DC6C3 /* SchedulingTimeViewController.swift */,
@@ -439,6 +461,7 @@
 				D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */,
 				4F811F41253A4F1300F5A15C /* FadeWrapperView.swift */,
 				50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */,
+				5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -462,6 +485,7 @@
 				D4DD8E3C25E1C8F800CF15D5 /* Endpoints.swift */,
 				D4DD8E4125E1C90300CF15D5 /* Body.swift */,
 				D4D667482648CB1000D5E902 /* Networking.swift */,
+				D4A8128C2650564A00E3EF81 /* ApiManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -882,6 +906,7 @@
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
+				504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */,
 				50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */,
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
 				5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */,
@@ -894,6 +919,7 @@
 				50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */,
 				5012B55125F840FF00F5F713 /* FeedbackViewController.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
+				D4A812722650529000E3EF81 /* GeoPlaceResponse.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
 				5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */,
 				5029873E253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift in Sources */,
@@ -935,6 +961,7 @@
 				D41FE85E2464640F0048900F /* Match.swift in Sources */,
 				D4DD8E3D25E1C8F800CF15D5 /* Endpoints.swift in Sources */,
 				5029873825389E4700E52EDA /* PausePearView.swift in Sources */,
+				D4A8128D2650564A00E3EF81 /* ApiManager.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
@@ -948,6 +975,7 @@
 				D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */,
 				D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */,
 				D4D6674E2648CDCC00D5E902 /* UserV2.swift in Sources */,
+				5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,

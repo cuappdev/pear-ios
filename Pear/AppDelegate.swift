@@ -8,7 +8,6 @@
 
 import AppDevAnnouncements
 import FutureNova
-import GooglePlaces
 import GoogleSignIn
 import UIKit
 
@@ -16,9 +15,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-        // Configure Google Places API with API key
-        GMSPlacesClient.provideAPIKey(Keys.googleApiKey)
 
         // Configure Google sign-in with client ID
         GIDSignIn.sharedInstance().clientID = Keys.googleClientID
