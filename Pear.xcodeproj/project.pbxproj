@@ -56,6 +56,8 @@
 		5048B4C0263F5F4600A382AD /* MessagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */; };
 		5048B4C2263F623E00A382AD /* PearMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4C1263F623E00A382AD /* PearMessage.swift */; };
 		5048B4C6263FA06800A382AD /* MessageUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4C5263FA06800A382AD /* MessageUser.swift */; };
+		5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */; };
+		504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */; };
 		50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */; };
 		50AF1CBF256DF3F300D74A00 /* LocationHeaderLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */; };
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
@@ -189,6 +191,8 @@
 		5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesTableViewCell.swift; sourceTree = "<group>"; };
 		5048B4C1263F623E00A382AD /* PearMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PearMessage.swift; sourceTree = "<group>"; };
 		5048B4C5263FA06800A382AD /* MessageUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageUser.swift; sourceTree = "<group>"; };
+		5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFooterLabelView.swift; sourceTree = "<group>"; };
+		504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingLocationCollectionViewController.swift; sourceTree = "<group>"; };
 		50705D3925676AB1000F63EE /* EditLocationAvailabilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLocationAvailabilityViewController.swift; sourceTree = "<group>"; };
 		50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHeaderLabelView.swift; sourceTree = "<group>"; };
 		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
@@ -429,6 +433,7 @@
 		D480EC0023E2434200513063 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				504CC11F263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift */,
 				4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */,
 				5048B4BD263F56FD00A382AD /* MessagesViewController.swift */,
 				502AA52626486BF300A790C8 /* ChatViewController.swift */,
@@ -458,6 +463,7 @@
 				4F811F41253A4F1300F5A15C /* FadeWrapperView.swift */,
 				50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */,
 				502AA52C2648834500A790C8 /* ChatDateHeaderLabel.swift */,
+				5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -901,6 +907,7 @@
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
+				504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */,
 				50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */,
 				D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */,
 				5030DD092532D65600374F7B /* AboutParagraph.swift in Sources */,
@@ -971,6 +978,7 @@
 				D4C8F58323EFC97F007722F6 /* OnboardingPageViewController.swift in Sources */,
 				D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */,
 				D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */,
+				5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
