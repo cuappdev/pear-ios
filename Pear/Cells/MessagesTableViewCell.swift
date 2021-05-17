@@ -6,8 +6,8 @@
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class MessagesTableViewCell: UITableViewCell {
 
@@ -20,13 +20,7 @@ class MessagesTableViewCell: UITableViewCell {
 
     // MARK: - Private Data Vars
     private let profileImageWidth: CGFloat = 50
-    private let statusData: [String: [String]] = [
-        "active": ["Current pear", "currentPear"],
-        "created": ["Current pear", "currentPear"],
-        "proposed": ["Current pear", "currentPear"],
-        "inactive": ["Past pear", "finished"],
-        "canceled": ["Past pear", "finished"]
-    ]
+
     static let reuseId = "messagesReuseIdentifier"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -96,12 +90,15 @@ class MessagesTableViewCell: UITableViewCell {
     func configure(for messageUser: MessageUser) {
         profileImage.kf.setImage(with: URL(string: messageUser.profilePictureURL))
         nameLabel.text = "\(messageUser.firstName) \(messageUser.lastName)"
-        if let imageName = statusData[messageUser.status]?[1], let status = statusData[messageUser.status]?[0] {
-            infoImage.image = UIImage(named: imageName)
-            infoLabel.text = status
+        if messageUser.status == "canceled" {
+            infoImage.image = UIImage(named: "finished")
+            infoLabel.text = "Past pear"
+        } else {
+            infoImage.image = UIImage(named: "currentPear")
+            infoLabel.text = "Current pear"
         }
         // TODO - add timestamp after new backend
-//        timeLabel.text = "TODO"
+        // timeLabel.text = "TODO"
     }
 
 }

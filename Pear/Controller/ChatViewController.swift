@@ -14,19 +14,19 @@ class ChatViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private var chatTableView = UITableView()
-    private var chatInputContainerView = UIView()
-    private var sendMessageButton = UIButton()
-    private var chatInputTextField = UITextField()
-    private var separatorView = UIView()
+    private let chatInputContainerView = UIView()
+    private let chatInputTextField = UITextField()
+    private let chatTableView = UITableView()
+    private let sendMessageButton = UIButton()
+    private let separatorView = UIView()
 
     // MARK: - Private Data Vars
-    private var currentUser: User
+    private let currentUser: User
     private let databaseRef = Database.database().reference()
-    private var messageUser: MessageUser
-    private var messages: [PearMessage] = []
-    private var groupedMessagesByDate: [[PearMessage]] = []
     private var dateKeys: [Date] = []
+    private var groupedMessagesByDate: [[PearMessage]] = []
+    private var messages: [PearMessage] = []
+    private let messageUser: MessageUser
 
     init(messageUser: MessageUser, currentUser: User) {
         self.messageUser = messageUser
@@ -47,7 +47,8 @@ class ChatViewController: UIViewController {
 
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
+        // Hide navigation bar bottom shadow
+        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
@@ -72,7 +73,7 @@ class ChatViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
-    @objc func backPressed() {
+    @objc private func backPressed() {
         navigationController?.popViewController(animated: true)
     }
 
@@ -91,7 +92,13 @@ class ChatViewController: UIViewController {
         chatInputContainerView.backgroundColor = .backgroundLightGreen
         view.addSubview(chatInputContainerView)
 
-        chatInputTextField.attributedPlaceholder = NSAttributedString(string: "Say hi", attributes: [NSAttributedString.Key.foregroundColor: UIColor.greenGray, NSAttributedString.Key.font: UIFont.getFont(.book, size: 16)])
+        chatInputTextField.attributedPlaceholder = NSAttributedString(
+            string: "Say hi",
+            attributes: [
+            NSAttributedString.Key.foregroundColor: UIColor.greenGray,
+            NSAttributedString.Key.font: UIFont.getFont(.book, size: 16)
+            ]
+        )
         chatInputTextField.layer.cornerRadius = 12
         chatInputTextField.backgroundColor = .white
         chatInputTextField.delegate = self
@@ -114,97 +121,78 @@ class ChatViewController: UIViewController {
     }
 
     private func getChatMessages() {
-        databaseRef.child("User-Messages").child(currentUser.netID).child(messageUser.netID).observe(.childAdded) { snapshot in
+        let messagesPath = "user-messages/\(currentUser.netID)/\(messageUser.netID)"
+        databaseRef.child(messagesPath).observe(.childAdded) { snapshot in
             let messageId = snapshot.key
-            let messageRef = self.databaseRef.child("Messages").child(messageId)
+            let messageRef = self.databaseRef.child("messages").child(messageId)
             messageRef.observeSingleEvent(of: .value) { snapshot in
-                self.getMessages(snapshot: snapshot)
+                if let snapshotValue = snapshot.value as? [String: Any] {
+                    let message = PearMessage(snapshot: snapshotValue)
+                    self.messages.append(message)
+                    DispatchQueue.main.async {
+                        self.groupMessagesByDate()
+                    }
+                }
             }
-        }
-    }
-
-    private func getMessages(snapshot: DataSnapshot) {
-        let message = PearMessage(snapshot: snapshot)
-        self.messages.append(message)
-        DispatchQueue.main.async {
-            self.groupMessagesByDate()
         }
     }
 
     private func groupMessagesByDate() {
-        self.groupedMessagesByDate = []
+        groupedMessagesByDate = []
         let groupedMessages = Dictionary(grouping: messages) { message -> Date in
-            var day = NSDate()
+            var date = NSDate()
             if let timeSince1970 = Double(message.time) {
-                day = NSDate(timeIntervalSince1970: timeSince1970)
+                date = NSDate(timeIntervalSince1970: timeSince1970)
             }
-            var date = day as Date
-            date = stripTimeOffDate(from: date)
-            return date
+            return Time.stripTimeOff(from: date as Date)
         }
 
-        let sortedKeys = groupedMessages.keys.sorted()
-        sortedKeys.forEach { key in
+        dateKeys = groupedMessages.keys.sorted()
+        dateKeys.forEach { key in
             let values = groupedMessages[key]
-            self.groupedMessagesByDate.append(values ?? [])
+            groupedMessagesByDate.append(values ?? [])
         }
-
-        dateKeys = sortedKeys
-
-        guard var bottomRow = self.groupedMessagesByDate.last?.count else { return }
-        bottomRow = bottomRow - 1
-        DispatchQueue.main.async {
-            self.chatTableView.reloadData()
-            let bottomSection = self.groupedMessagesByDate.count - 1
-            self.scrollToRow(row: bottomRow, section: bottomSection)
-        }
+        guard let recentDateMessagesCount = self.groupedMessagesByDate.last?.count else { return }
+        let bottomRow = recentDateMessagesCount - 1
+        self.chatTableView.reloadData()
+        let bottomSection = self.groupedMessagesByDate.count - 1
+        self.scrollToRow(row: bottomRow, section: bottomSection)
     }
 
     private func scrollToRow(row: Int, section: Int) {
-        DispatchQueue.main.async {
-            self.chatTableView.reloadData()
-            let indexPath = IndexPath(row: row, section: section)
-            if self.chatTableView.validIndexPath(indexPath: indexPath) {
-                self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            }
+        self.chatTableView.reloadData()
+        let indexPath = IndexPath(row: row, section: section)
+        if self.chatTableView.isValid(indexPath: indexPath) {
+            self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
-    }
-
-    private func stripTimeOffDate(from originalDate: Date) -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: originalDate)
-        let date = Calendar.current.date(from: components)
-        return date!
     }
 
     @objc private func sendMessage() {
         if let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !message.isEmpty {
-            let messageData = ["message": message]
-            addMessageToFirebase(data: messageData)
+            addMessageToFirebase(message: message)
             chatInputTextField.text = ""
         }
     }
 
-    @objc private func addMessageToFirebase(data: [String: Any]) {
+    @objc private func addMessageToFirebase(message: String) {
         let timeStamp = String(NSDate().timeIntervalSince1970)
-        var values: [String: Any] = [
+        let values: [String: String] = [
             "senderNetID": currentUser.netID,
             "recipientNetID": messageUser.netID,
-            "time": timeStamp
+            "time": timeStamp,
+            "message": message
         ]
-        data.forEach { (key, value) in
-            values[key] = value
-        }
-        let messageDatabaseRef = databaseRef.child("Messages").childByAutoId()
+        let messageDatabaseRef = databaseRef.child("messages").childByAutoId()
         messageDatabaseRef.updateChildValues(values) { error, reference in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
             guard let messageId = messageDatabaseRef.key else { return }
-            let userMessagesRef = self.databaseRef.child("User-Messages").child(self.currentUser.netID).child(self.messageUser.netID)
-            userMessagesRef.updateChildValues([messageId: 1])
-            let pairMessagesref = self.databaseRef.child("User-Messages").child(self.messageUser.netID).child(self.currentUser.netID)
-            pairMessagesref.updateChildValues([messageId: 1])
+            let userMessagesPath = "user-messages/\(self.currentUser.netID)/\(self.messageUser.netID)"
+            self.databaseRef.child(userMessagesPath).updateChildValues([messageId: 1])
+            let pairMessagesPath = "user-messages/\(self.messageUser.netID)/\(self.currentUser.netID)"
+            self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
         }
     }
 
@@ -213,12 +201,12 @@ class ChatViewController: UIViewController {
         guard let keyBoardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
         UIView.animate(withDuration: keyBoardDuration, animations: {
             self.view.layoutIfNeeded()
-        }, completion: nil)
+        })
     }
 
     private func setupConstraints(keyboardHeight: CGFloat) {
         let chatInputContainerHeight: CGFloat = 76
-        let chatInputButtonSize:CGFloat = 25
+        let chatInputButtonSize: CGFloat = 25
 
         chatInputContainerView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -270,9 +258,10 @@ extension ChatViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let containerView = UIView()
         let dateLabel = ChatDateHeaderLabel()
-        dateLabel.setDateString(section: section, dateKeys: dateKeys)
+        let date = dateKeys[section]
+        dateLabel.setDateString(date: date)
         containerView.addSubview(dateLabel)
-        dateLabel.snp.makeConstraints { (make) in
+        dateLabel.snp.makeConstraints { make in
             make.centerX.equalTo(containerView.snp.centerX)
             make.centerY.equalTo(containerView.snp.centerY)
         }
@@ -281,11 +270,14 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 70
+        70
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatTableViewCell.reuseId, for: indexPath) as? ChatTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier:
+            ChatTableViewCell.reuseId,
+            for: indexPath
+        ) as? ChatTableViewCell else { return UITableViewCell() }
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
         cell.selectionStyle = .none
@@ -297,8 +289,7 @@ extension ChatViewController: UITableViewDataSource {
 extension ChatViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = groupedMessagesByDate[indexPath.section][indexPath.row]
-        return message.getMessageHeight(currentUserNetID: currentUser.netID)
+        groupedMessagesByDate[indexPath.section][indexPath.row].getMessageHeight(currentUserNetID: currentUser.netID)
     }
 
 }
@@ -324,7 +315,7 @@ extension ChatViewController: UIGestureRecognizerDelegate {
      }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return !(touch.view is UIButton)
+        !(touch.view is UIButton)
     }
 
 }

@@ -6,21 +6,21 @@
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
-import UIKit
 import Firebase
+import UIKit
 
 class MessagesViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let subtitleLabel = UILabel()
     private var messagesTableView = UITableView()
+    private let subtitleLabel = UILabel()
 
     // MARK: - Private Data Vars
     private let databaseRef = Database.database().reference()
     private var messageUsers: [MessageUser] = []
+    private var timer: Timer?
     private var user: User
-    var timer: Timer?
 
     init(user: User) {
         self.user = user
@@ -88,13 +88,20 @@ class MessagesViewController: UIViewController {
 
     private func getUserMessages() {
         getMessageMatches(netId: user.netID) { matches in
-            matches.forEach { match in
+            for match in matches {
                 guard let pairNetId = match.pair  else {
                     print("Unable to get the pair's netid from the match.")
                     return
                 }
                 self.getMessageUserData(pairNetId: pairNetId) { pair in
-                    let messageUser = MessageUser(netID: pair.netID, firstName: pair.firstName, lastName: pair.lastName, status: match.status, meetingTime: match.meetingTime, profilePictureURL: pair.profilePictureURL ?? "")
+                    let messageUser = MessageUser(
+                        netID: pair.netID,
+                        firstName: pair.firstName,
+                        lastName: pair.lastName,
+                        status: match.status,
+                        meetingTime: match.meetingTime,
+                        profilePictureURL: pair.profilePictureURL ?? ""
+                    )
                     self.messageUsers.append(messageUser)
                     self.reloadMessagesTableView()
                 }
@@ -103,15 +110,13 @@ class MessagesViewController: UIViewController {
     }
 
     private func reloadMessagesTableView() {
-        self.timer?.invalidate()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(reloadTableViewWithTimer), userInfo: nil, repeats: false)
-    }
-
-    @objc private func reloadTableViewWithTimer() {
-//        TODO - sort by time when timestamps added to backend
-        DispatchQueue.main.async {
-            self.messagesTableView.reloadData()
-        }
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { timer in
+            // TODO - sort by time when timestamps added to backend
+            DispatchQueue.main.async {
+                self.messagesTableView.reloadData()
+            }
+        })
     }
 
     private func getMessageMatches(netId: String, completion: @escaping ([Match]) -> Void) {
@@ -163,13 +168,12 @@ extension MessagesViewController: UITableViewDataSource {
         return cell
     }
 
-
 }
 
 extension MessagesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 88
+        88
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

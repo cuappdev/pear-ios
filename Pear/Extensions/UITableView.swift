@@ -9,10 +9,12 @@
 import UIKit
 
 extension UITableView {
-    func validIndexPath(indexPath: IndexPath) -> Bool {
-        if indexPath.section >= self.numberOfSections || indexPath.row >= self.numberOfRows(inSection: indexPath.section){
+
+    func isValid(indexPath: IndexPath) -> Bool {
+        if indexPath.section >= numberOfSections || indexPath.row >= numberOfRows(inSection: indexPath.section) {
             return false
         }
         return true
     }
+
 }

@@ -11,9 +11,9 @@ import UIKit
 class ChatTableViewCell: UITableViewCell {
 
     // MARK: - Private View Vars
-    private var chatBubble = UIView()
-    private var chatMessage = UILabel()
-    private var pairProfilePic = UIImageView()
+    private let chatBubble = UIView()
+    private let chatMessage = UILabel()
+    private let pairProfilePic = UIImageView()
 
     // MARK: - Private Data Vars
     static let reuseId = "chatReuseIdentifier"
@@ -24,7 +24,6 @@ class ChatTableViewCell: UITableViewCell {
         contentView.backgroundColor = .backgroundLightGreen
 
         chatBubble.layer.cornerRadius = 16
-        chatBubble.backgroundColor = .red
         chatBubble.clipsToBounds = true
         contentView.addSubview(chatBubble)
 
@@ -37,7 +36,6 @@ class ChatTableViewCell: UITableViewCell {
         pairProfilePic.layer.cornerRadius = 21
         pairProfilePic.clipsToBounds = true
         contentView.addSubview(pairProfilePic)
-
     }
 
     required init?(coder: NSCoder) {
@@ -45,33 +43,26 @@ class ChatTableViewCell: UITableViewCell {
     }
 
     private func setupConstraints(message: PearMessage, currentUserNetID: String) {
-
         let messagePadding: CGFloat = 5
-        let rightMessagePadding: CGFloat = -15
-        let leftMessagePadding: CGFloat = 7
 
-        chatBubble.snp.remakeConstraints { make in
-            make.top.equalTo(contentView.snp.top).offset(messagePadding)
-            make.bottom.equalTo(contentView.snp.bottom).offset(-messagePadding)
+        chatBubble.snp.makeConstraints { make in
+            make.top.bottom.equalTo(contentView).inset(messagePadding)
             if message.senderNetID == currentUserNetID {
-                make.trailing.equalTo(contentView.snp.trailing).offset(rightMessagePadding)
+                make.trailing.equalTo(contentView.snp.trailing).offset(-15)
                 make.width.lessThanOrEqualTo(250)
             } else {
-                make.leading.equalTo(pairProfilePic.snp.trailing).offset(leftMessagePadding)
-                make.width.lessThanOrEqualTo(210)
+                make.leading.equalTo(pairProfilePic.snp.trailing).offset(7)
+                make.width.lessThanOrEqualTo(230)
             }
         }
-
         chatMessage.snp.makeConstraints { make in
-            make.top.bottom.leading.trailing.equalToSuperview().inset(messagePadding*2)
+            make.top.bottom.leading.trailing.equalToSuperview().inset(messagePadding * 2)
         }
-
         pairProfilePic.snp.makeConstraints { make in
-            make.bottom.equalTo(chatBubble.snp.bottom).offset(-3)
-            make.left.equalTo(contentView.snp.left).offset(10)
+            make.bottom.equalTo(chatBubble).offset(-3)
+            make.leading.equalTo(contentView.snp.leading).offset(10)
             make.width.height.equalTo(42)
         }
-
     }
 
     func configure(for message: PearMessage, user: User, pair: MessageUser) {
@@ -80,8 +71,7 @@ class ChatTableViewCell: UITableViewCell {
             chatBubble.backgroundColor = .pearGreen
             chatMessage.textColor = .white
             pairProfilePic.isHidden = true
-        }
-        else {
+        } else {
             chatBubble.backgroundColor = .paleGreen
             chatMessage.textColor = .black
             pairProfilePic.isHidden = false

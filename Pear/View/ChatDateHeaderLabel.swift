@@ -12,20 +12,17 @@ class ChatDateHeaderLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .clear
-        self.layer.cornerRadius = 10
-        self.layer.masksToBounds = true
-        self.font = UIFont.getFont(.book, size: 14)
-        self.textColor = .greenGray
-        self.textAlignment = .center
+        backgroundColor = .clear
+        font = ._14CircularStdBook
+        textColor = .greenGray
+        textAlignment = .center
     }
 
-    func setDateString(section: Int, dateKeys: [Date]) {
-        let date = dateKeys[section]
+    func setDateString(date: Date) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         let dateString = dateFormatter.string(from: date)
-        self.text = dateString
+        text = dateString
     }
 
     override var intrinsicContentSize: CGSize {

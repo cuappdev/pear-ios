@@ -6,38 +6,29 @@
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
-import Foundation
 import Firebase
+import Foundation
 
-class PearMessage {
+struct PearMessage {
 
-    var senderNetID: String
-    var recipientNetID: String
-    var message: String
-    var time: String
+    let senderNetID: String
+    let recipientNetID: String
+    let message: String
+    let time: String
 
-    init(snapshot: DataSnapshot) {
-        let snapshotValue = snapshot.value as! [String: Any]
-        self.senderNetID = snapshotValue["senderNetID"] as? String ?? ""
-        self.recipientNetID = snapshotValue["recipientNetID"] as? String ?? ""
-        self.message = snapshotValue["message"] as? String ?? ""
-        self.time = snapshotValue["time"] as? String ?? ""
+    init(snapshot: [String: Any]) {
+        senderNetID = snapshot["senderNetID"] as? String ?? ""
+        recipientNetID = snapshot["recipientNetID"] as? String ?? ""
+        message = snapshot["message"] as? String ?? ""
+        time = snapshot["time"] as? String ?? ""
     }
 
     func getMessageHeight(currentUserNetID: String) -> CGFloat {
-        var messageLabel: UILabel
-        if self.senderNetID == currentUserNetID {
-            messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 230, height: CGFloat.greatestFiniteMagnitude))
+        if senderNetID == currentUserNetID {
+            return message.height(withConstrainedWidth: 230, font: UIFont.getFont(.book, size: 16))
+        } else {
+            return message.height(withConstrainedWidth: 210, font: UIFont.getFont(.book, size: 16))
         }
-        else {
-            messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
-        }
-        messageLabel.numberOfLines = 0
-        messageLabel.font = UIFont.getFont(.book, size: 16)
-        messageLabel.text = self.message
-        messageLabel.sizeToFit()
-        let messageHeight = messageLabel.frame.height + 30
-        return messageHeight
     }
 
 }

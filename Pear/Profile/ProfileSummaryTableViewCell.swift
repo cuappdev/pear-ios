@@ -20,7 +20,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageSize = CGSize(width: 150, height: 150)
     private var currentUser: User?
     private var pair: User?
-    var showMessages: ((MessageUser, User) -> ())?
+    var showMessages: ((MessageUser, User) -> Void)?
 
     static let reuseIdentifier = "ProfileSummaryTableViewCell"
 
@@ -84,7 +84,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
                         print("Network error: could not get user match history")
                         return
                     }
-                    guard let match = response.data.filter({$0.status != "canceled" }).first else { return }
+                    guard let match = response.data.filter{$0.status != "canceled" }.first else { return }
                     completion(match)
                 case .error:
                     print("Network error: could not get user match history")
@@ -129,7 +129,14 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 
     @objc func presentMessaging() {
         guard let currentUser = currentUser, let pair = pair else { return }
-        let messageUser = MessageUser(netID: pair.netID, firstName: pair.firstName, lastName: pair.lastName, status: "created", meetingTime: nil, profilePictureURL: pair.profilePictureURL ?? "")
+        let messageUser = MessageUser(
+            netID: pair.netID,
+            firstName: pair.firstName,
+            lastName: pair.lastName,
+            status: "created",
+            meetingTime: nil,
+            profilePictureURL: pair.profilePictureURL ?? ""
+        )
         if let showMessages = self.showMessages {
             showMessages(messageUser, currentUser)
         }

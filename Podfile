@@ -24,8 +24,8 @@ use_frameworks!
     pod 'SideMenu'
 
     # Messaging
-    pod 'Firebase/Database'
     pod 'Firebase/Core'
+    pod 'Firebase/Database'
 
   target 'PearTests' do
     inherit! :search_paths

@@ -200,7 +200,8 @@ extension MatchProfileViewController: UITableViewDataSource {
             guard let user = user else { return UITableViewCell() }
             cell.configure(for: user, pair: pair)
             cell.showMessages = { (messageUser, currentUser) in
-                self.navigationController?.pushViewController(ChatViewController(messageUser: messageUser, currentUser: currentUser), animated: true)
+                let chatVC = ChatViewController(messageUser: messageUser, currentUser: currentUser)
+                self.navigationController?.pushViewController(chatVC, animated: true)
             }
             return cell
         case .basics:
