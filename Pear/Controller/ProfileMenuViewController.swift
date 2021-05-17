@@ -21,6 +21,7 @@ class ProfileMenuViewController: UIViewController {
     private let menuOptions: [MenuOption] = [
         MenuOption(image: "interests", text: "Your interests"),
         MenuOption(image: "groups", text: "Your groups"),
+        MenuOption(image: "messageIcon", text: "Messages"),
         MenuOption(image: "settings", text: "Settings")
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
@@ -149,6 +150,10 @@ class ProfileMenuViewController: UIViewController {
         navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
+    func pushMessagingViewController() {
+        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
+    }
+
 }
 
 extension ProfileMenuViewController: UITableViewDataSource {
@@ -174,6 +179,8 @@ extension ProfileMenuViewController: UITableViewDataSource {
             pushEditingGroupsViewController()
         } else if option.text == "Settings" {
             pushSettingsViewController()
+        } else if option.text == "Messages" {
+            pushMessagingViewController()
         }
     }
 
