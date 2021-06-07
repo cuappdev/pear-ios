@@ -14,12 +14,7 @@ class GroupsViewController: UIViewController {
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
     private var displayedGroups: [GroupV2] = []
-    private var groups: [GroupV2] = [
-        GroupV2(
-            id: "1",
-            name: "Cornell AppDev",
-            imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle-icons-art.svg/1024px-Circle-icons-art.svg.png")
-    ]
+    private var groups: [GroupV2] = []
     private var selectedGroups: [GroupV2] = []
 
     // MARK: - Private View Vars
@@ -187,7 +182,21 @@ class GroupsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        self.delegate?.nextPage(index: 3)
+        let selectedGroupsIds = selectedGroups.map { $0.id }
+        Networking2.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.nextPage(index: 3)
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
+
+
+
+
 //        let userGroups = selectedGroups.map { $0.name }
 //        NetworkManager.shared.updateUserGroups(groups: userGroups).observe { [weak self] result in
 //            guard let self = self else { return }
@@ -215,27 +224,27 @@ class GroupsViewController: UIViewController {
     }
     
     private func getAllGroups() {
-//        NetworkManager.shared.getAllGroups().observe { [weak self] result in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .value(let response):
-//                    if response.success {
-//                        let groups = response.data
-//                        self.groups = groups.map { SimpleOnboardingCell(name: $0, subtitle: nil) }
-//                        self.displayedGroups = self.groups
-//                        self.fadeTableView.view.reloadData()
-//                    } else {
-//                        print("Network error: could not get all groups.")
-//                    }
-//                case .error:
-//                    print("Network error: could not get all groups.")
-//                }
-//            }
-//        }
-        Networking2.getAllGroups { groups in
-            print(groups)
+        Networking2.getAllGroups { [weak self] groups in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.groups = groups
+                self.displayedGroups = groups
+                print("here groups: ", groups)
+                self.fadeTableView.view.reloadData()
+            }
         }
+    }
+
+    private func getUserInterests() {
+
+        Networking2.getMe { [weak self] user in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.selectedGroups = user.groups
+                self.fadeTableView.view.reloadData()
+            }
+        }
+
     }
 
 //    private func getUserGroups() {

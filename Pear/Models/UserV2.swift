@@ -18,13 +18,15 @@ struct UserV2: Codable {
     let instagramUsername: String?
 //    let major: String
     let graduationYear: String?
+    let pronouns: String?
+    let hasOnboarded: Bool?
 //    let goals: [String]
 //    let talkingPoints: [String]
 //    let matches: [Int]
 //    let availabilities: [String]
 //    let locations: [LocationV2]
-//    let interests: [InterestV2]
-//    let groups: [GroupV2]
+    let interests: [InterestV2]
+    let groups: [GroupV2]
 
 }
 
@@ -35,16 +37,17 @@ struct LocationV2: Codable {
 }
 
 struct InterestV2: Codable {
-    let id: String
+    let id: Int
     let name: String
     let subtitle: String
     let imgUrl: String
 }
 
 struct GroupV2: Codable {
-    let id: String
+    let id: Int
     let name: String
     let imgUrl: String
+    let subtitle: String
 }
 
 struct TalkingPointV2: Codable {

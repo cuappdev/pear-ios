@@ -41,6 +41,9 @@ class Networking2 {
             "id_token": idToken
         ]
 
+        print("\(hostEndpoint)/api/authenticate/")
+        print("id_token: ", idToken)
+
         AF.request(
             "\(hostEndpoint)/api/authenticate/",
             method: .post,
@@ -81,7 +84,7 @@ class Networking2 {
     }
 
     static func getMe(completion: @escaping (UserV2) -> Void) {
-
+        print("here are my headers", headers)
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .get,
@@ -131,6 +134,87 @@ class Networking2 {
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
                     completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateInterests(
+        interests: [Int],
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "interests": interests,
+        ]
+        print("here are my paraemnts: ", parameters)
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateGroups(
+        groups: [Int],
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "groups": groups,
+        ]
+        print("here are my paraemnts groups: ", parameters)
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllMajors(completion: @escaping ([MajorV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/majors/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let majorsData = try? jsonDecoder.decode(Response<[MajorV2]>.self, from: data) {
+                    let majors = majorsData.data
+                    completion(majors)
                 }
             case .failure(let error):
                 print(error.localizedDescription)

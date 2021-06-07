@@ -107,6 +107,7 @@ class OnboardingTableViewCell2: UITableViewCell {
     }
 
     func configure(with group: GroupV2) {
+        print("holfjsklfjsf")
         titleLabel.text = group.name
         categoriesLabel.text = nil
         if let groupImageUrl = URL(string: group.imgUrl) {

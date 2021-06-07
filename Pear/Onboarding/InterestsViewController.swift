@@ -22,13 +22,7 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
-    private let interests: [InterestV2] = [
-        InterestV2(
-            id: "1",
-            name: "Art",
-            subtitle: "art....",
-            imgUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Circle-icons-art.svg/1024px-Circle-icons-art.svg.png")
-    ]
+    private var interests: [InterestV2] = []
     private var selectedInterests: [InterestV2] = []
 
     init(delegate: OnboardingPageDelegate) {
@@ -74,7 +68,7 @@ class InterestsViewController: UIViewController {
         view.addSubview(nextButton)
 
         getAllInterests()
-//        getUserInterests()
+        getUserInterests()
         setupConstraints()
     }
 
@@ -83,8 +77,18 @@ class InterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 2)
-        // TODO: Fill in network call
+        print(selectedInterests)
+        let selectedInterestsIds = selectedInterests.map { $0.id }
+        Networking2.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.nextPage(index: 2)
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     private func setupConstraints() {
@@ -120,14 +124,26 @@ class InterestsViewController: UIViewController {
 
     private func getAllInterests() {
 
-        Networking2.getAllInterests { interests in
-            print("successful itnrests")
+        Networking2.getAllInterests { [weak self] interests in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.interests = interests
+                self.fadeTableView.view.reloadData()
+            }
         }
 
     }
 
     private func getUserInterests() {
-        //  TODO: Fill in network call
+
+        Networking2.getMe { [weak self] user in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.selectedInterests = user.interests
+                self.fadeTableView.view.reloadData()
+            }
+        }
+
     }
 
     /// Updates the enabled state of next button based on the state of selectedInterests.
@@ -167,7 +183,7 @@ extension InterestsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterests.removeAll { $0.name == interests[indexPath.row].name }
+        selectedInterests.removeAll { $0.id == interests[indexPath.row].id }
         updateNext()
     }
 
@@ -183,7 +199,7 @@ extension InterestsViewController: UITableViewDataSource {
         ) as? OnboardingTableViewCell2 else { return UITableViewCell() }
         let data = interests[indexPath.row]
         cell.configure(with: data)
-        if selectedInterests.contains(where: { $0.name == data.name }) {
+        if selectedInterests.contains(where: { $0.id == data.id }) {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
         return cell

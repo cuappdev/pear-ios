@@ -141,8 +141,13 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getAllMajors() {
-        // TODO: Replace with call to get all possible majors from server
-        majorDropdownView.setTableData(tableData: ["Computer Science"])
+        Networking2.getAllMajors { [weak self] majors in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                let majorsData = majors.map { $0.name }
+                self.majorDropdownView.setTableData(tableData: majorsData)
+            }
+        }
     }
 
     private func getUser() {
@@ -153,6 +158,7 @@ class DemographicsViewController: UIViewController {
                     self.classDropdownView.setTitle(title: graduationYear)
                 }
                 self.hometownDropdownView.setTitle(title: user.hometown ?? "")
+                self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
                 // TODO: Add majors and pronouns to response
             }
         }
