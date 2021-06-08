@@ -146,11 +146,9 @@ class Networking2 {
         interests: [Int],
         completion: @escaping (Bool) -> Void
     ) {
-
         let parameters: [String: Any] = [
             "interests": interests,
         ]
-        print("here are my paraemnts: ", parameters)
 
         AF.request(
             "\(hostEndpoint)/api/me/",
@@ -176,11 +174,9 @@ class Networking2 {
         groups: [Int],
         completion: @escaping (Bool) -> Void
     ) {
-
         let parameters: [String: Any] = [
             "groups": groups,
         ]
-        print("here are my paraemnts groups: ", parameters)
 
         AF.request(
             "\(hostEndpoint)/api/me/",

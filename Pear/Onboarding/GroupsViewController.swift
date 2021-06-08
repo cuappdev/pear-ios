@@ -73,7 +73,7 @@ class GroupsViewController: UIViewController {
         fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
         fadeTableView.view.delegate = self
         fadeTableView.view.dataSource = self
-        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
 
@@ -254,9 +254,9 @@ extension GroupsViewController: UITableViewDelegate {
 extension GroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier,
                                                        for: indexPath) as?
-                OnboardingTableViewCell2 else { return UITableViewCell() }
+                OnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView

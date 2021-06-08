@@ -54,7 +54,7 @@ class InterestsViewController: UIViewController {
         fadeTableView.view.delegate = self
         fadeTableView.view.bounces = true
         fadeTableView.view.keyboardDismissMode = .onDrag
-        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
@@ -195,9 +195,9 @@ extension InterestsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
+                withIdentifier: OnboardingTableViewCell.reuseIdentifier,
                 for: indexPath
-        ) as? OnboardingTableViewCell2 else { return UITableViewCell() }
+        ) as? OnboardingTableViewCell else { return UITableViewCell() }
         let data = interests[indexPath.row]
         cell.configure(with: data)
         if selectedInterests.contains(where: { $0.id == data.id }) {

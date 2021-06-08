@@ -1,11 +1,12 @@
 //
 //  OnboardingTableViewCell.swift
-//  CoffeeChat
+//  Pear
 //
-//  Created by Phillip OReggio on 2/3/20.
-//  Copyright © 2020 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 5/15/21.
+//  Copyright © 2021 cuappdev. All rights reserved.
 //
 
+import Kingfisher
 import UIKit
 
 class OnboardingTableViewCell: UITableViewCell {
@@ -25,7 +26,7 @@ class OnboardingTableViewCell: UITableViewCell {
     private var lastShownItem: LastShownItem = .none
     // Whether the cell should change its appearence when selected
     var shouldSelectionChangeAppearence = true
-    
+
     static let reuseIdentifier = "OnboardingTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -92,10 +93,12 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with interest: Interest) {
+    func configure(with interest: InterestV2) {
         titleLabel.text = interest.name
-        categoriesLabel.text = interest.categories?.joined(separator: ", ") ?? nil
-        interestImageView.image = UIImage(named: interest.imageName)
+        categoriesLabel.text = interest.subtitle
+        if let interestImageUrl = URL(string: interest.imgUrl) {
+            interestImageView.kf.setImage(with: interestImageUrl)
+        }
 
         if lastShownItem != .interest {
             lastShownItem = .interest
@@ -103,11 +106,27 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with group: Group) {
+    func configure(with group: GroupV2) {
         titleLabel.text = group.name
         categoriesLabel.text = nil
-        interestImageView.image = UIImage(named: group.imageName)
-     
+        if let groupImageUrl = URL(string: group.imgUrl) {
+            interestImageView.kf.setImage(with: groupImageUrl)
+        }
+
+        if lastShownItem != .group {
+            lastShownItem = .group
+            setupConstraints()
+        }
+    }
+
+    func configure(with talkingPoint: TalkingPointV2) {
+        titleLabel.text = talkingPoint.name
+        categoriesLabel.text = talkingPoint.subtitle
+        if let talkingPointImageUrl = URL(string: talkingPoint.imgUrl) {
+            interestImageView.kf.setImage(with: talkingPointImageUrl)
+        }
+
+        // TODO: Lucy double check what this does...
         if lastShownItem != .group {
             lastShownItem = .group
             setupConstraints()

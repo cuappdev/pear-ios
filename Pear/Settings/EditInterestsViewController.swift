@@ -76,8 +76,8 @@ class EditInterestsViewController: UIViewController {
         fadeTableView.view.delegate = self
         fadeTableView.view.dataSource = self
         fadeTableView.view.register(
-            OnboardingTableViewCell2.self,
-            forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier
+            OnboardingTableViewCell.self,
+            forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier
         )
         fadeTableView.view.isScrollEnabled = true
         fadeTableView.view.clipsToBounds = true
@@ -247,9 +247,9 @@ extension EditInterestsViewController: UITableViewDataSource {
         let interest = section.filteredItems[indexPath.row]
 
         guard let cell = tableView.dequeueReusableCell(
-                            withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
+                            withIdentifier: OnboardingTableViewCell.reuseIdentifier,
                             for: indexPath
-                        ) as? OnboardingTableViewCell2 else {
+                        ) as? OnboardingTableViewCell else {
             return UITableViewCell()
         }
 

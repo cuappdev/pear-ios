@@ -72,7 +72,7 @@ class EditGroupsViewController: UIViewController {
 
         fadeTableView.view.delegate = self
         fadeTableView.view.dataSource = self
-        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.isScrollEnabled = true
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
@@ -239,9 +239,9 @@ extension EditGroupsViewController: UITableViewDataSource {
         let group = section.filteredItems[indexPath.row]
 
         guard let cell = tableView.dequeueReusableCell(
-                            withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
+                            withIdentifier: OnboardingTableViewCell.reuseIdentifier,
                             for: indexPath
-                        ) as? OnboardingTableViewCell2 else {
+                        ) as? OnboardingTableViewCell else {
             return UITableViewCell()
         }
 

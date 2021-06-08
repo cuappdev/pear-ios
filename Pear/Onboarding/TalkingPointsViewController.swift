@@ -68,7 +68,7 @@ class TalkingPointsViewController: UIViewController {
         fadeTableView.view.keyboardDismissMode = .onDrag
         fadeTableView.view.delegate = self
         fadeTableView.view.bounces = true
-        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorStyle = .none
         view.addSubview(fadeTableView)
 
@@ -240,9 +240,9 @@ extension TalkingPointsViewController: UITableViewDelegate {
 extension TalkingPointsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier,
                                                        for: indexPath) as?
-                OnboardingTableViewCell2 else { return UITableViewCell() }
+                OnboardingTableViewCell else { return UITableViewCell() }
         let data = displayedTalkingPoints[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
