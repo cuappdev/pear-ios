@@ -154,14 +154,12 @@ class DemographicsViewController: UIViewController {
         Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                print("user is here: ", user)
                 if let graduationYear = user.graduationYear {
-                    print("")
                     self.classDropdownView.setTitle(title: graduationYear)
                 }
                 self.hometownDropdownView.setTitle(title: user.hometown ?? "")
                 self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
-                // TODO: Add majors and pronouns to response
+//                self.majorDropdownView.setTitle(title: user.major ?? "")
             }
         }
     }

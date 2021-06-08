@@ -24,13 +24,13 @@ class HomeViewController: UIViewController {
     private var tabContainerView: UIView!
     /// View Controller whose contents are shown below
     private var tabPageViewController: TabPageViewController?
-    private let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
+    private var displayMenu = true
+    private let profileButtonSize = CGSize(width: 35, height: 35)
     private let tabs = ["Weekly Pear", "People"]
     private var user: UserV2?
-    private var displayMenu = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,6 +101,10 @@ class HomeViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
+    /*
+
+     TODO: Comment this back when feedback route is done
+    
     private func showInAppFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
@@ -126,22 +130,20 @@ class HomeViewController: UIViewController {
         }
     }
 
+     */
+
     private func updateUserAndTabPage() {
         Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                let firstActiveMatch = user.matches.first
-                self.setUserAndTabPage(user: user, match: firstActiveMatch)
+                let match = user.matches.first
+                self.user = user
+                if let profilePictureURL = URL(string: user.profilePicUrl) {
+                    self.profileImageView.kf.setImage(with: profilePictureURL)
+                }
+                self.setupTabPageViewController(with: match, user: user)
             }
         }
-    }
-
-    private func setUserAndTabPage(user: UserV2, match: MatchV2? = nil) {
-        self.user = user
-        if let profilePictureURL = URL(string: user.profilePicUrl) {
-            profileImageView.kf.setImage(with: profilePictureURL)
-        }
-        setupTabPageViewController(with: match, user: user)
     }
 
     private func setupTabPageViewController(with match: MatchV2? = nil, user: UserV2) {

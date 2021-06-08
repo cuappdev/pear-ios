@@ -11,12 +11,14 @@ import UIKit
 
 class ProfileMenuViewController: UIViewController {
 
+    // MARK: - Private View Vars
     private let editButton = UIButton()
     private let optionsTableView = UITableView()
     private let profileImageView = UIImageView()
     private let profileInfoLabel = UILabel()
     private let profileNameLabel = UILabel()
 
+    // MARK: - Private Data Vars
     private let editButtonSize = CGSize(width: 70, height: 30)
     private let menuOptions: [MenuOption] = [
         MenuOption(image: "interests", text: "Your interests"),
@@ -87,7 +89,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
-        profileInfoLabel.text = "Major \(year)\nFrom \(hometown)"
+        profileInfoLabel.text = "Computer Science \(year)\nFrom \(hometown)"
         profileInfoLabel.textColor = .greenGray
         profileInfoLabel.font = ._16CircularStdBook
         profileInfoLabel.numberOfLines = 0
@@ -140,7 +142,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: false), animated: true)
+        navigationController?.pushViewController(EditInterestsViewController(user: user), animated: true)
     }
 
     func pushEditingGroupsViewController() {

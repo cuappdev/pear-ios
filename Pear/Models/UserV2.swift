@@ -16,7 +16,8 @@ struct UserV2: Codable {
     let profilePicUrl: String
     let facebookUrl: String?
     let instagramUsername: String?
-//    let major: String
+    // TODO: Remove this hard coded value once major gets added to the backend response
+//    var major: String? = "Computer Science"
     let graduationYear: String?
     let pronouns: String?
     let goals: [String]?
