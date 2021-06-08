@@ -355,7 +355,7 @@ extension EditInterestsViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        SectionType.allCases.count
+        InterestSectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

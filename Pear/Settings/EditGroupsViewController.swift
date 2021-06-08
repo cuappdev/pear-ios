@@ -1,60 +1,45 @@
 //
-//  EditingViewController.swift
-//  CoffeeChat
+//  EditGroupsViewController.swift
+//  Pear
 //
-//  Created by Phillip OReggio on 3/11/20.
-//  Copyright © 2020 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 6/8/21.
+//  Copyright © 2021 cuappdev. All rights reserved.
 //
 
 import UIKit
 
-// MARK: - TableView Sections
-enum ItemType {
-    case interest(Interest)
-    case group(Group)
-
-    func getName() -> String {
-        switch self {
-        case .interest(let interest):
-            return interest.name
-        case .group(let group):
-            return group.name
-        }
-    }
-}
-
-enum SectionType: CaseIterable {
+enum GroupsSectionType: CaseIterable {
     case yours
     case more
 }
 
 /// Section represents each section of the view
-class Section {
-    let type: SectionType
-    var items: [ItemType]
+class GroupsSection {
+    let type: GroupsSectionType
+    var items: [GroupV2]
 
     // filteredItems is always the result of items sorted by matching its name with filteredString
-    var filteredItems: [ItemType] { get { filteredItemsInternal } }
-    private var filteredItemsInternal: [ItemType]
+    var filteredItems: [GroupV2] { get { filteredItemsInternal } }
+    private var filteredItemsInternal: [GroupV2]
     var filterString: String?
 
     // How section sorts its content
-    private let sortStrategy: ((ItemType, ItemType) -> Bool) = { $0.getName() < $1.getName() }
+    private let sortStrategy: ((GroupV2, GroupV2) -> Bool) = { $0.name < $1.name }
 
-    init(type: SectionType, items: [ItemType]) {
+    init(type: GroupsSectionType, items: [GroupV2]) {
         self.type = type
         self.items = items.sorted(by: sortStrategy)
         self.filteredItemsInternal = items
     }
 
-    func addItem(_ item: ItemType) {
+    func addItem(_ item: GroupV2) {
         items.append(item)
         items.sort(by: sortStrategy)
         refilter()
     }
 
-    func removeItem(named name: String) -> ItemType? {
-        if let loc = items.firstIndex(where: { $0.getName() == name }) {
+    func removeItem(named name: String) -> GroupV2? {
+        if let loc = items.firstIndex(where: { $0.name == name }) {
             let removed = items.remove(at: loc)
             items.sort(by: sortStrategy)
             refilter()
@@ -65,7 +50,7 @@ class Section {
 
     func refilter() {
         if let str = filterString {
-            filteredItemsInternal = items.filter { $0.getName().localizedCaseInsensitiveContains(str) }
+            filteredItemsInternal = items.filter { $0.name.localizedCaseInsensitiveContains(str) }
         } else {
             filteredItemsInternal = items
         }
@@ -74,7 +59,7 @@ class Section {
 }
 
 // MARK: - UIViewController
-class EditingViewController: UIViewController {
+class EditGroupsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -83,16 +68,15 @@ class EditingViewController: UIViewController {
         UITableView(frame: .zero, style: .grouped), fadeColor: .backgroundLightGreen)
 
     // MARK: - Display Settings
-    private var isShowingGroups = true
     private var isCollapsed = true
     private var numRowsShownWhenCollapsed = 3
 
-    private var sections: [Section] = []
+    private var sections: [GroupsSection] = []
     private let user: UserV2
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
-    private var moreSection: Section? {
+    private var moreSection: GroupsSection? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
                 return sections[loc]
@@ -107,7 +91,7 @@ class EditingViewController: UIViewController {
 
     // yourSection refers to the categories the user has already selected or is saved in UserDefaults.
     // Deselecting a cell here would move it to moreSection.
-    private var yourSection: Section? {
+    private var yourSection: GroupsSection? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
                 return sections[loc]
@@ -122,9 +106,8 @@ class EditingViewController: UIViewController {
     }
 
     // MARK: - Initialization
-    init(user: UserV2, isShowingGroups: Bool) {
+    init(user: UserV2) {
         self.user = user
-        self.isShowingGroups = isShowingGroups
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -134,12 +117,12 @@ class EditingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Edit \(isShowingGroups ? "Groups" : "Interests")"
+        self.title = "Edit Groups"
         view.backgroundColor = .backgroundLightGreen
 
         fadeTableView.view.delegate = self
         fadeTableView.view.dataSource = self
-        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.register(OnboardingTableViewCell2.self, forCellReuseIdentifier: OnboardingTableViewCell2.reuseIdentifier)
         fadeTableView.view.isScrollEnabled = true
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
@@ -155,7 +138,7 @@ class EditingViewController: UIViewController {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(39)
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -163,7 +146,7 @@ class EditingViewController: UIViewController {
         setupSections()
         setupNavigationBar()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -173,81 +156,37 @@ class EditingViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 
     private func setupSections() {
-//        if isShowingGroups {
-//            setupSectionsFromGroups()
-//        } else {
-//            setupSectionsFromInterests()
-//        }
-//        sections = [
-//            Section(type: .yours, items: []),
-//            Section(type: .more, items: [])
-//        ]
-//        fadeTableView.view.reloadData()
+        setupSectionsFromGroups()
+        sections = [
+            GroupsSection(type: .yours, items: []),
+            GroupsSection(type: .more, items: [])
+        ]
+        fadeTableView.view.reloadData()
     }
 
-//    private func setupSectionsFromGroups() {
-//        NetworkManager.shared.getAllGroups().observe { [weak self] response in
-//            guard let self = self else { return }
-//            switch response {
-//            case .value(let result):
-//                guard result.success else {
-//                    print("Response not successful when getting groups for user")
-//                    return
-//                }
-//                let stringToGroup = {
-//                    ItemType.group(
-//                        Constants.Options.organizationsMap[$0] ??
-//                        Group(name: $0, imageName: "groupsPlaceholder")
-//                    )
-//                }
-//                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
-//                self.sections = [
-//                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
-//                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
-//                ]
-//                DispatchQueue.main.async {
-//                    self.fadeTableView.view.reloadData()
-//                }
-//            case .error(let error):
-//                print("Error when getting groups for user: \(error)")
-//            }
-//        }
-//    }
-
-//    private func setupSectionsFromInterests() {
-//        NetworkManager.shared.getAllInterests().observe { [weak self] response in
-//            guard let self = self else { return }
-//            switch response {
-//            case .value(let result):
-//                guard result.success else {
-//                    print("Network error: could not get interests.")
-//                    return
-//                }
-//                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
-//                let stringToInterest = {
-//                    ItemType.interest(
-//                        Constants.Options.interestsMap[$0] ??
-//                        Interest(name: $0, categories: nil, imageName: "")
-//                    )
-//                }
-//                self.sections = [
-//                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
-//                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
-//                ]
-//                DispatchQueue.main.async {
-//                    self.fadeTableView.view.reloadData()
-//                }
-//            case .error:
-//                print("Network error: could not get interests.")
-//            }
-//        }
-//    }
+    private func setupSectionsFromGroups() {
+        Networking2.getAllGroups { [weak self] groups in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                let nonselectedGroups = groups.filter { group in
+                    !self.user.groups.contains { userGroup in
+                        userGroup.id == group.id
+                    }
+                }
+                self.sections = [
+                    GroupsSection(type: .yours, items: self.user.groups),
+                    GroupsSection(type: .more, items: nonselectedGroups)
+                ]
+                self.fadeTableView.view.reloadData()
+            }
+        }
+    }
 
     private func setupNavigationBar() {
         navigationController?.navigationBar.isHidden = false
@@ -286,73 +225,21 @@ class EditingViewController: UIViewController {
             navigationController?.popViewController(animated: true)
             return
         }
-        var interests: [Interest] = []
-        var groups: [Group] = []
 
-        for item in yourSection.items {
-            switch item {
-            case .interest(let interest):
-                interests.append(interest)
-            case .group(let group):
-                groups.append(group)
+        let selectedGroups = yourSection.items.map { $0.id }
+
+        Networking2.updateGroups(groups: selectedGroups) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
             }
         }
-
-        if isShowingGroups {
-            NetworkManager.shared.updateUserGroups(groups: groups.map(\.name)).observe { [weak self] result in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        if response.success {
-                            self.navigationController?.popViewController(animated: true)
-                        } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                        }
-                    case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                    }
-                }
-            }
-        } else {
-            NetworkManager.shared.updateUserInterests(interests: interests.map(\.name)).observe { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        if response.success {
-                            self.navigationController?.popViewController(animated: true)
-                        } else {
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                        }
-                    case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                    }
-                }
-            }
-        }
-    }
-
-    /// Remove duplicated entries in `yourStrings` and `moreStrings`. If a duplicate exists in both `yourStrings`
-    /// and `moreStrings`, duplicates are removed from `moreStrings`, so only 1 exists in `yourStrings`
-    private func removeDuplicates(yourStrings: [String], moreStrings: [String]) -> (your: [String], more: [String]) {
-        var set = Set<String>()
-
-        yourStrings.forEach { set.insert($0) }
-        let yourList = Array(set).sorted()
-
-        var moreList: [String] = []
-        for string in moreStrings {
-            if set.insert(string).inserted {
-                moreList.append(string)
-            }
-        }
-        moreList.sort()
-
-        return (your: yourList, more: moreList)
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
-    private func moveData(named name: String, from source: Section, to target: Section) {
+    private func moveData(named name: String, from source: GroupsSection, to target: GroupsSection) {
         let removed = source.removeItem(named: name)
         if let removed = removed { target.addItem(removed) }
     }
@@ -360,22 +247,15 @@ class EditingViewController: UIViewController {
 }
 
 // MARK: - UITableViewDelegate
-extension EditingViewController: UITableViewDelegate {
+extension EditGroupsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = sections[indexPath.section]
-        let item = section.filteredItems[indexPath.row]
+        let group = section.filteredItems[indexPath.row]
 
-        let itemName: String
+        let itemName = group.name
         guard let yourSection = yourSection else { return }
         guard let moreSection = moreSection else { return }
-
-        switch item {
-        case .interest(let interest):
-            itemName = interest.name
-        case .group(let group):
-            itemName = group.name
-        }
 
         switch section.type {
         case .yours:
@@ -390,7 +270,7 @@ extension EditingViewController: UITableViewDelegate {
 }
 
 // MARK: - UITableViewDataSource
-extension EditingViewController: UITableViewDataSource {
+extension EditGroupsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
         switch sections[sectionIndex].type {
@@ -406,22 +286,16 @@ extension EditingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = sections[indexPath.section]
-        let itemType = section.filteredItems[indexPath.row]
+        let group = section.filteredItems[indexPath.row]
 
         guard let cell = tableView.dequeueReusableCell(
-                            withIdentifier: OnboardingTableViewCell.reuseIdentifier,
+                            withIdentifier: OnboardingTableViewCell2.reuseIdentifier,
                             for: indexPath
-                        ) as? OnboardingTableViewCell else {
+                        ) as? OnboardingTableViewCell2 else {
             return UITableViewCell()
         }
 
-        switch itemType {
-        case .interest(let interest):
-            cell.configure(with: interest)
-        case .group(let group):
-            cell.configure(with: group)
-        }
-
+        cell.configure(with: group)
         cell.changeColor(selected: section.type == .yours)
         cell.shouldSelectionChangeAppearence = false
 
@@ -436,11 +310,9 @@ extension EditingViewController: UITableViewDataSource {
 
         switch section.type {
         case .yours:
-            labelTitle = isShowingGroups ? "Your Groups" : "Your Interests"
+            labelTitle = "Your Groups"
             if yourSectionSize == 0 {
-                labelSubtext = isShowingGroups
-                    ? "Select a group so we can better help you find a pair!"
-                    : "Select at least one interest so we can better help you find a pair!"
+                labelSubtext =  "Select a group so we can better help you find a pair!"
                 saveBarButtonItem.isEnabled = false
             } else {
                 labelSubtext = "tap to deselect"
@@ -449,17 +321,16 @@ extension EditingViewController: UITableViewDataSource {
             headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: false)
 
         case .more:
-            labelTitle = isShowingGroups ? "More Groups" : "More Interests"
-            labelSubtext = isShowingGroups ? "tap or search to add" : "tap to add"
-            headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: isShowingGroups)
+            labelTitle = "More Groups"
+            labelSubtext = "tap or search to add"
+            headerView.configure(with: labelTitle, info: labelSubtext, shouldIncludeSearchBar: true)
 
-            if isShowingGroups {
-                headerView.searchDelegate = { searchText in
-                    self.moreSection?.filterString = searchText
-                    self.moreSection?.refilter()
-                    self.fadeTableView.view.reloadData()
-                }
+            headerView.searchDelegate = { searchText in
+                self.moreSection?.filterString = searchText
+                self.moreSection?.refilter()
+                self.fadeTableView.view.reloadData()
             }
+
         }
 
         return headerView
@@ -467,7 +338,7 @@ extension EditingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 0 && yourSectionSize > numRowsShownWhenCollapsed {
-            let footerView = EditFooterView(isShowingGroups: isShowingGroups)
+            let footerView = EditFooterView()
             footerView.sectionIsCollapsed = isCollapsed
             footerView.updateViewState()
             footerView.delegate = {
@@ -483,7 +354,7 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        SectionType.allCases.count
+        GroupsSectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -491,7 +362,7 @@ extension EditingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        isShowingGroups && section == 1 ? 128 : 86
+        section == 1 ? 128 : 86
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -616,7 +487,6 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
 // MARK: UITableViewFooter
 private class EditFooterView: UIButton {
 
-    private let isShowingGroups: Bool
     var sectionIsCollapsed = false
 
     private let arrowView = UIImageView()
@@ -625,10 +495,8 @@ private class EditFooterView: UIButton {
 
     var delegate: ((Bool) -> Void)?
 
-    init(isShowingGroups: Bool) {
-        self.isShowingGroups = isShowingGroups
+    init() {
         super.init(frame: .zero)
-
         setupViews()
         setupConstraints()
         configure()
@@ -673,10 +541,10 @@ private class EditFooterView: UIButton {
 
     func updateViewState() {
         if sectionIsCollapsed {
-            label.text = "View your other \(isShowingGroups ? "groups" : "interests")"
+            label.text = "View your other groups"
             arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
         } else {
-            label.text = "View fewer \(isShowingGroups ? "groups" : "interests")"
+            label.text = "View fewer groups"
             arrowView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2))
         }
 
@@ -689,18 +557,19 @@ private class EditFooterView: UIButton {
     }
 
     func configure() {
-        label.text = isShowingGroups ? "view your other groups" : "view your other interests"
+        label.text = "view your other groups"
     }
 
 }
 
-extension EditingViewController: UIGestureRecognizerDelegate {
-    
+extension EditGroupsViewController: UIGestureRecognizerDelegate {
+
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
             navigationController?.popViewController(animated: true)
         }
         return false
     }
-    
+
 }
+

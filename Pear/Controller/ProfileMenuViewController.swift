@@ -146,7 +146,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: true), animated: true)
+        navigationController?.pushViewController(EditGroupsViewController(user: user), animated: true)
     }
 
     func pushSettingsViewController() {

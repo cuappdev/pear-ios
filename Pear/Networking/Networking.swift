@@ -92,8 +92,6 @@ class Networking2 {
         ).validate().responseData { response in
             switch response.result {
             case .success(let data):
-                print("success in getting me but cant decode")
-                debugPrint(data)
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
