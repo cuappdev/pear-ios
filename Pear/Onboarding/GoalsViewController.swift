@@ -89,7 +89,7 @@ class GoalsViewController: UIViewController {
         skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         view.addSubview(skipButton)
 
-//        getUserGoals()
+        getUserGoals()
         setupConstraints()
     }
 
@@ -150,8 +150,16 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        // TODO: Fill in network call
-        self.delegate?.nextPage(index: 4)
+        Networking2.updateGoals(goals: selectedGoals) { [weak self] (success) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.nextPage(index: 4)
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     @objc func skipButtonPressed() {
@@ -159,7 +167,14 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        // TODO: Fill in network call
+        Networking2.getMe { [weak self] user in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.selectedGoals = user.goals ?? []
+                self.fadeTableView.view.reloadData()
+                self.updateNext()
+            }
+        }
     }
 }
 

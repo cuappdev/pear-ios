@@ -155,6 +155,7 @@ class DemographicsViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let graduationYear = user.graduationYear {
+                    print("")
                     self.classDropdownView.setTitle(title: graduationYear)
                 }
                 self.hometownDropdownView.setTitle(title: user.hometown ?? "")

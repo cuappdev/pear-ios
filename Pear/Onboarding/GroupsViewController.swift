@@ -104,7 +104,7 @@ class GroupsViewController: UIViewController {
         displayedGroups = groups
 
         getAllGroups()
-//        getUserGroups()
+        getUserGroups()
         setupConstraints()
     }
 
@@ -193,26 +193,6 @@ class GroupsViewController: UIViewController {
                 }
             }
         }
-
-
-
-
-//        let userGroups = selectedGroups.map { $0.name }
-//        NetworkManager.shared.updateUserGroups(groups: userGroups).observe { [weak self] result in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .value(let response):
-//                    if response.success {
-//                        self.delegate?.nextPage(index: 3)
-//                    } else {
-//                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-//                    }
-//                case .error:
-//                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-//                }
-//            }
-//        }
     }
 
     @objc func skipButtonPressed() {
@@ -229,45 +209,21 @@ class GroupsViewController: UIViewController {
             DispatchQueue.main.async {
                 self.groups = groups
                 self.displayedGroups = groups
-                print("here groups: ", groups)
                 self.fadeTableView.view.reloadData()
             }
         }
     }
 
-    private func getUserInterests() {
-
+    private func getUserGroups() {
         Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.selectedGroups = user.groups
                 self.fadeTableView.view.reloadData()
+                self.updateNext()
             }
         }
-
     }
-
-//    private func getUserGroups() {
-//        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-//        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .value(let response):
-//                    if response.success {
-//                        let userGroups = response.data.groups
-//                        self.selectedGroups = userGroups.map { SimpleOnboardingCell(name: $0, subtitle: nil)}
-//                        self.fadeTableView.view.reloadData()
-//                        self.updateNext()
-//                    } else {
-//                        print("Network error: could not get user groups.")
-//                    }
-//                case .error:
-//                    print("Network error: could not get user groups.")
-//                }
-//            }
-//        }
-//    }
     
 }
 
@@ -288,7 +244,7 @@ extension GroupsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedGroups.removeAll { $0.name == displayedGroups[indexPath.row].name}
+        selectedGroups.removeAll { $0.id == displayedGroups[indexPath.row].id}
         updateNext()
     }
 
@@ -304,7 +260,7 @@ extension GroupsViewController: UITableViewDataSource {
         let data = displayedGroups[indexPath.row]
         cell.configure(with: data)
         // Keep previous selected cell when reloading tableView
-        if selectedGroups.contains(where: { $0.name == data.name }) {
+        if selectedGroups.contains(where: { $0.id == data.id }) {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
         return cell

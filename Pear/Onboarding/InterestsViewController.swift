@@ -141,6 +141,7 @@ class InterestsViewController: UIViewController {
             DispatchQueue.main.async {
                 self.selectedInterests = user.interests
                 self.fadeTableView.view.reloadData()
+                self.updateNext()
             }
         }
 

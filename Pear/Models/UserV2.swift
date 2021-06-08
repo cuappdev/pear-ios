@@ -20,7 +20,7 @@ struct UserV2: Codable {
     let graduationYear: String?
     let pronouns: String?
     let hasOnboarded: Bool?
-//    let goals: [String]
+    let goals: [String]?
 //    let talkingPoints: [String]
 //    let matches: [Int]
 //    let availabilities: [String]

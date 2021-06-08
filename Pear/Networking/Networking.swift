@@ -115,7 +115,7 @@ class Networking2 {
     ) {
 
         let parameters: [String: Any] = [
-            "graduationYear": graduationYear,
+            "graduation_year": graduationYear,
             "major": major,
             "hometown": hometown,
             "pronouns": pronouns
@@ -180,6 +180,66 @@ class Networking2 {
             "groups": groups,
         ]
         print("here are my paraemnts groups: ", parameters)
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateSocialMedia(
+        facebookUrl: String?,
+        instagramUsername: String?,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "facebook_url": facebookUrl as Any,
+            "instagram_username": instagramUsername as Any
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateGoals(
+        goals: [String],
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "goals": goals,
+        ]
 
         AF.request(
             "\(hostEndpoint)/api/me/",
