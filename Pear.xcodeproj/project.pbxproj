@@ -98,6 +98,7 @@
 		D48F6F30266EBE1600D844B7 /* MajorV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48F6F2F266EBE1600D844B7 /* MajorV2.swift */; };
 		D48F6F3B266FE9BD00D844B7 /* EditInterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48F6F3A266FE9BC00D844B7 /* EditInterestsViewController.swift */; };
 		D48F6F40267003F400D844B7 /* EditGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48F6F3F267003F400D844B7 /* EditGroupsViewController.swift */; };
+		D48F6F4826700BDF00D844B7 /* EditSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48F6F4726700BDF00D844B7 /* EditSection.swift */; };
 		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
 		D4A812722650529000E3EF81 /* GeoPlaceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */; };
@@ -238,6 +239,7 @@
 		D48F6F2F266EBE1600D844B7 /* MajorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorV2.swift; sourceTree = "<group>"; };
 		D48F6F3A266FE9BC00D844B7 /* EditInterestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInterestsViewController.swift; sourceTree = "<group>"; };
 		D48F6F3F267003F400D844B7 /* EditGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroupsViewController.swift; sourceTree = "<group>"; };
+		D48F6F4726700BDF00D844B7 /* EditSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSection.swift; sourceTree = "<group>"; };
 		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPlaceResponse.swift; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 				50298745253C043F00E52EDA /* EditSocialMediaViewController.swift */,
 				D48F6F3A266FE9BC00D844B7 /* EditInterestsViewController.swift */,
 				D48F6F3F267003F400D844B7 /* EditGroupsViewController.swift */,
+				D48F6F4726700BDF00D844B7 /* EditSection.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -903,6 +906,7 @@
 				D46A363025F3CA4F00EADA9F /* UserSocialMedia.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
+				D48F6F4826700BDF00D844B7 /* EditSection.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
 				504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */,

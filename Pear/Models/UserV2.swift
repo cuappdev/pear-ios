@@ -42,6 +42,11 @@ struct MatchV2: Codable {
     let meetingTime: String?
 }
 
+protocol Topic {
+    var name: String { get set }
+    var id: Int { get set }
+}
+
 struct MatchedUser: Codable {
     let id: Int
     let netId: String
@@ -61,16 +66,16 @@ struct LocationV2: Codable {
     let area: String
 }
 
-struct InterestV2: Codable {
-    let id: Int
-    let name: String
+struct InterestV2: Topic, Codable {
+    var id: Int
+    var name: String
     let subtitle: String
     let imgUrl: String
 }
 
-struct GroupV2: Codable {
-    let id: Int
-    let name: String
+struct GroupV2: Topic, Codable {
+    var id: Int
+    var name: String
     let imgUrl: String
     let subtitle: String
 }

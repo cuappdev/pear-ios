@@ -8,56 +8,6 @@
 
 import UIKit
 
-enum GroupsSectionType: CaseIterable {
-    case yours
-    case more
-}
-
-/// Section represents each section of the view
-class GroupsSection {
-    let type: GroupsSectionType
-    var items: [GroupV2]
-
-    // filteredItems is always the result of items sorted by matching its name with filteredString
-    var filteredItems: [GroupV2] { get { filteredItemsInternal } }
-    private var filteredItemsInternal: [GroupV2]
-    var filterString: String?
-
-    // How section sorts its content
-    private let sortStrategy: ((GroupV2, GroupV2) -> Bool) = { $0.name < $1.name }
-
-    init(type: GroupsSectionType, items: [GroupV2]) {
-        self.type = type
-        self.items = items.sorted(by: sortStrategy)
-        self.filteredItemsInternal = items
-    }
-
-    func addItem(_ item: GroupV2) {
-        items.append(item)
-        items.sort(by: sortStrategy)
-        refilter()
-    }
-
-    func removeItem(named name: String) -> GroupV2? {
-        if let loc = items.firstIndex(where: { $0.name == name }) {
-            let removed = items.remove(at: loc)
-            items.sort(by: sortStrategy)
-            refilter()
-            return removed
-        }
-        return nil
-    }
-
-    func refilter() {
-        if let str = filterString {
-            filteredItemsInternal = items.filter { $0.name.localizedCaseInsensitiveContains(str) }
-        } else {
-            filteredItemsInternal = items
-        }
-    }
-
-}
-
 // MARK: - UIViewController
 class EditGroupsViewController: UIViewController {
 
@@ -71,12 +21,12 @@ class EditGroupsViewController: UIViewController {
     private var isCollapsed = true
     private var numRowsShownWhenCollapsed = 3
 
-    private var sections: [GroupsSection] = []
+    private var sections: [EditSection<GroupV2>] = []
     private let user: UserV2
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
-    private var moreSection: GroupsSection? {
+    private var moreSection: EditSection<GroupV2>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
                 return sections[loc]
@@ -91,7 +41,7 @@ class EditGroupsViewController: UIViewController {
 
     // yourSection refers to the categories the user has already selected or is saved in UserDefaults.
     // Deselecting a cell here would move it to moreSection.
-    private var yourSection: GroupsSection? {
+    private var yourSection: EditSection<GroupV2>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
                 return sections[loc]
@@ -164,8 +114,8 @@ class EditGroupsViewController: UIViewController {
     private func setupSections() {
         setupSectionsFromGroups()
         sections = [
-            GroupsSection(type: .yours, items: []),
-            GroupsSection(type: .more, items: [])
+            EditSection<GroupV2>(type: .yours, items: []),
+            EditSection<GroupV2>(type: .more, items: [])
         ]
         fadeTableView.view.reloadData()
     }
@@ -180,8 +130,8 @@ class EditGroupsViewController: UIViewController {
                     }
                 }
                 self.sections = [
-                    GroupsSection(type: .yours, items: self.user.groups),
-                    GroupsSection(type: .more, items: nonselectedGroups)
+                    EditSection<GroupV2>(type: .yours, items: self.user.groups),
+                    EditSection<GroupV2>(type: .more, items: nonselectedGroups)
                 ]
                 self.fadeTableView.view.reloadData()
             }
@@ -239,7 +189,7 @@ class EditGroupsViewController: UIViewController {
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
-    private func moveData(named name: String, from source: GroupsSection, to target: GroupsSection) {
+    private func moveData(named name: String, from source: EditSection<GroupV2>, to target: EditSection<GroupV2>) {
         let removed = source.removeItem(named: name)
         if let removed = removed { target.addItem(removed) }
     }
@@ -354,7 +304,7 @@ extension EditGroupsViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        GroupsSectionType.allCases.count
+        EditSectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
