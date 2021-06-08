@@ -31,8 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             signIn.restorePreviousSignIn()
             Networking2.validateAccessToken() { success in
                 if success {
-                    //            let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-                                let didCompleteOnboarding = false
+                                let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
                                 let rootVC = didCompleteOnboarding ?
                                     HomeViewController() :
                                     OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)

@@ -16,7 +16,7 @@ class EditDemographicsViewController: UIViewController {
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
-    private var user: User
+    private var user: UserV2
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
 
     // MARK: - Private View Vars
@@ -39,14 +39,14 @@ class EditDemographicsViewController: UIViewController {
     private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
     private var didUpdatePhoto = false
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         demographics.name = "\(user.firstName) \(user.lastName)"
         demographics.graduationYear = user.graduationYear
-        demographics.major = user.major
+//        demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
-        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
         super.init(nibName: nil, bundle: nil)
@@ -137,7 +137,7 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: user.graduationYear)
+        classDropdownView.setSelectValue(value: user.graduationYear ?? "")
         editScrollView.addSubview(classDropdownView)
 
         majorDropdownView = OnboardingSearchDropdownView(
@@ -147,7 +147,7 @@ class EditDemographicsViewController: UIViewController {
             searchType: .local
         )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
-        majorDropdownView.setSelectValue(value: user.major)
+//        majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(
@@ -157,14 +157,14 @@ class EditDemographicsViewController: UIViewController {
             searchType: .places
         )
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
-        hometownDropdownView.setSelectValue(value: user.hometown)
+        hometownDropdownView.setSelectValue(value: user.hometown ?? "")
         editScrollView.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                             placeholder: "Pronouns",
                                                             tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
-        pronounsDropdownView.setSelectValue(value: user.pronouns)
+        pronounsDropdownView.setSelectValue(value: user.pronouns ?? "")
         editScrollView.addSubview(pronounsDropdownView)
 
         setupConstraints()
@@ -309,7 +309,7 @@ class EditDemographicsViewController: UIViewController {
                 }
             }
         } else {
-            saveProfile(profilePictureURL: user.profilePictureURL ?? "")
+            saveProfile(profilePictureURL: user.profilePicUrl)
         }
 
     }

@@ -24,9 +24,9 @@ class ProfileMenuViewController: UIViewController {
         MenuOption(image: "settings", text: "Settings")
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
-    private var user: User
+    private var user: UserV2
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,12 +40,14 @@ class ProfileMenuViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
+        guard let year = user.graduationYear,
+              let hometown = user.hometown else {
+            return
+        }
+
         let firstName = user.firstName
         let lastName = user.lastName
-        let major = user.major
-
-        let year = user.graduationYear
-        let hometown = user.hometown
+//        let major = user.major
 
         editButton.backgroundColor = .backgroundWhite
         editButton.setTitle("Edit Info", for: .normal)
@@ -77,7 +79,7 @@ class ProfileMenuViewController: UIViewController {
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.isUserInteractionEnabled = true
-        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
         profileImageView.addGestureRecognizer(profileTapGesture)
@@ -85,7 +87,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
-        profileInfoLabel.text = "\(major) \(year)\nFrom \(hometown)"
+        profileInfoLabel.text = "Major \(year)\nFrom \(hometown)"
         profileInfoLabel.textColor = .greenGray
         profileInfoLabel.font = ._16CircularStdBook
         profileInfoLabel.numberOfLines = 0

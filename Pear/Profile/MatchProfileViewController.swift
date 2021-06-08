@@ -15,18 +15,18 @@ class MatchProfileViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private var chatStatus: ChatStatus?
-    private let match: Match?
+    private let match: MatchV2?
     private var meetupStatusView: MeetupStatusView?
-    private var pair: User?
+    private var pair: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var reachOutButton = UIButton()
-    private let user: User?
+    private let user: UserV2?
 
     // MARK: - Private Data Vars
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
-    init(match: Match?, user: User?) {
+    init(match: MatchV2?, user: UserV2?) {
         self.match = match
         self.user = user
         super.init(nibName: nil, bundle: nil)
@@ -48,11 +48,11 @@ class MatchProfileViewController: UIViewController {
         getPairThen { [weak self] pair in
             guard let self = self else { return }
 
-            self.pair = pair
-
-            if let match = self.match {
-                self.chatStatus = ChatStatus.forMatch(match: match, pair: pair)
-            }
+//            self.pair = pair
+//
+//            if let match = self.match {
+//                self.chatStatus = ChatStatus.forMatch(match: match, pair: pair)
+//            }
 
             self.setupViews(pair: pair)
             self.setupConstraints()
@@ -69,25 +69,26 @@ class MatchProfileViewController: UIViewController {
     }
 
     private func getPairThen(_ completion: @escaping (User) -> Void) {
-        guard let match = match, let pairNetId = match.pair else {
-            print("Unable to get the pair's netid from the match.")
-            return
-        }
-
-        NetworkManager.shared.getUser(netId: pairNetId).observe { response in
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's pair.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get user's pair.")
-                }
-            }
-        }
+        return
+//        guard let match = match, let pairNetId = match.pair else {
+//            print("Unable to get the pair's netid from the match.")
+//            return
+//        }
+//
+//        NetworkManager.shared.getUser(netId: pairNetId).observe { response in
+//            DispatchQueue.main.async {
+//                switch response {
+//                case .value(let result):
+//                    guard result.success else {
+//                        print("Network error: could not get user's pair.")
+//                        return
+//                    }
+//                    completion(result.data)
+//                case .error:
+//                    print("Network error: could not get user's pair.")
+//                }
+//            }
+//        }
     }
 
     private func setupViews(pair: User) {
@@ -162,19 +163,19 @@ class MatchProfileViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        guard let pair = pair, let match = match, let user = user else { return }
-        switch chatStatus {
-        case .planning, .noResponses:
-            navigationController?.pushViewController(SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match), animated: true)
-        case .responding:
-            navigationController?.pushViewController(SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match), animated: true)
-        default:
-            let emailAlertController = UIAlertController.getEmailAlertController(
-                email: "\(pair.netID)@cornell.edu",
-                subject: "Hello from Pear!"
-            )
-            present(emailAlertController, animated: true)
-        }
+//        guard let pair = pair, let match = match, let user = user else { return }
+//        switch chatStatus {
+//        case .planning, .noResponses:
+//            navigationController?.pushViewController(SchedulingTimeViewController(for: .confirming, user: user, pair: pair, match: match), animated: true)
+//        case .responding:
+//            navigationController?.pushViewController(SchedulingTimeViewController(for: .choosing, user: user, pair: pair, match: match), animated: true)
+//        default:
+//            let emailAlertController = UIAlertController.getEmailAlertController(
+//                email: "\(pair.netID)@cornell.edu",
+//                subject: "Hello from Pear!"
+//            )
+//            present(emailAlertController, animated: true)
+//        }
     }
 
     @objc func backPressed() {
@@ -193,23 +194,24 @@ extension MatchProfileViewController: UITableViewDataSource {
         guard let pair = pair else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
+        return UITableViewCell()
 
-        switch section {
-        case .summary:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair)
-            return cell
-        case .basics:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
-            return cell
-        case .interests, .groups:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
-            return cell
-        case .matches:
-            return UITableViewCell()
-        }
+//        switch section {
+//        case .summary:
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
+//            cell.configure(for: pair)
+//            return cell
+//        case .basics:
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
+//            cell.configure(for: pair, type: section)
+//            return cell
+//        case .interests, .groups:
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
+//            cell.configure(for: pair, type: section)
+//            return cell
+//        case .matches:
+//            return UITableViewCell()
+//        }
     }
 
 }

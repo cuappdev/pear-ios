@@ -84,7 +84,6 @@ class Networking2 {
     }
 
     static func getMe(completion: @escaping (UserV2) -> Void) {
-        print("here are my headers", headers)
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .get,
@@ -93,12 +92,16 @@ class Networking2 {
         ).validate().responseData { response in
             switch response.result {
             case .success(let data):
+                print("success in getting me but cant decode")
+                debugPrint(data)
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
+                do {
+                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
                     let user = userData.data
-                    print("Successful user response: ", user)
                     completion(user)
+                } catch {
+                    print("Decoding error: \(error)")
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -204,12 +207,14 @@ class Networking2 {
     static func updateSocialMedia(
         facebookUrl: String?,
         instagramUsername: String?,
+        hasOnboarded: Bool,
         completion: @escaping (Bool) -> Void
     ) {
 
         let parameters: [String: Any] = [
             "facebook_url": facebookUrl as Any,
-            "instagram_username": instagramUsername as Any
+            "instagram_username": instagramUsername as Any,
+            "has_onboarded": hasOnboarded
         ]
 
         AF.request(

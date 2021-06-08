@@ -188,7 +188,8 @@ class SocialMediaViewController: UIViewController {
     @objc func completeOnboarding() {
         Networking2.updateSocialMedia(
             facebookUrl: facebookTextField.text,
-            instagramUsername: instagramTextField.text
+            instagramUsername: instagramTextField.text,
+            hasOnboarded: true
         ) { [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {

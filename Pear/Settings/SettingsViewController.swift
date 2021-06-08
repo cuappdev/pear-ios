@@ -23,7 +23,7 @@ class SettingsViewController: UIViewController {
     private var pauseBlurEffect: UIBlurEffect!
     private var pauseVisualEffectView: UIVisualEffectView!
     private var pausePearView: PausePearView!
-    private let user: User
+    private let user: UserV2
 
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
@@ -54,7 +54,7 @@ class SettingsViewController: UIViewController {
         setupConstraints()
     }
     
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }

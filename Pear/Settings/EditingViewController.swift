@@ -88,7 +88,7 @@ class EditingViewController: UIViewController {
     private var numRowsShownWhenCollapsed = 3
 
     private var sections: [Section] = []
-    private let user: User
+    private let user: UserV2
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
@@ -122,7 +122,7 @@ class EditingViewController: UIViewController {
     }
 
     // MARK: - Initialization
-    init(user: User, isShowingGroups: Bool) {
+    init(user: UserV2, isShowingGroups: Bool) {
         self.user = user
         self.isShowingGroups = isShowingGroups
         super.init(nibName: nil, bundle: nil)
@@ -179,75 +179,75 @@ class EditingViewController: UIViewController {
     }
 
     private func setupSections() {
-        if isShowingGroups {
-            setupSectionsFromGroups()
-        } else {
-            setupSectionsFromInterests()
-        }
-        sections = [
-            Section(type: .yours, items: []),
-            Section(type: .more, items: [])
-        ]
-        fadeTableView.view.reloadData()
+//        if isShowingGroups {
+//            setupSectionsFromGroups()
+//        } else {
+//            setupSectionsFromInterests()
+//        }
+//        sections = [
+//            Section(type: .yours, items: []),
+//            Section(type: .more, items: [])
+//        ]
+//        fadeTableView.view.reloadData()
     }
 
-    private func setupSectionsFromGroups() {
-        NetworkManager.shared.getAllGroups().observe { [weak self] response in
-            guard let self = self else { return }
-            switch response {
-            case .value(let result):
-                guard result.success else {
-                    print("Response not successful when getting groups for user")
-                    return
-                }
-                let stringToGroup = {
-                    ItemType.group(
-                        Constants.Options.organizationsMap[$0] ??
-                        Group(name: $0, imageName: "groupsPlaceholder")
-                    )
-                }
-                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
-                self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
-                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
-                ]
-                DispatchQueue.main.async {
-                    self.fadeTableView.view.reloadData()
-                }
-            case .error(let error):
-                print("Error when getting groups for user: \(error)")
-            }
-        }
-    }
+//    private func setupSectionsFromGroups() {
+//        NetworkManager.shared.getAllGroups().observe { [weak self] response in
+//            guard let self = self else { return }
+//            switch response {
+//            case .value(let result):
+//                guard result.success else {
+//                    print("Response not successful when getting groups for user")
+//                    return
+//                }
+//                let stringToGroup = {
+//                    ItemType.group(
+//                        Constants.Options.organizationsMap[$0] ??
+//                        Group(name: $0, imageName: "groupsPlaceholder")
+//                    )
+//                }
+//                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.groups, moreStrings: result.data)
+//                self.sections = [
+//                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToGroup)),
+//                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToGroup))
+//                ]
+//                DispatchQueue.main.async {
+//                    self.fadeTableView.view.reloadData()
+//                }
+//            case .error(let error):
+//                print("Error when getting groups for user: \(error)")
+//            }
+//        }
+//    }
 
-    private func setupSectionsFromInterests() {
-        NetworkManager.shared.getAllInterests().observe { [weak self] response in
-            guard let self = self else { return }
-            switch response {
-            case .value(let result):
-                guard result.success else {
-                    print("Network error: could not get interests.")
-                    return
-                }
-                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
-                let stringToInterest = {
-                    ItemType.interest(
-                        Constants.Options.interestsMap[$0] ??
-                        Interest(name: $0, categories: nil, imageName: "")
-                    )
-                }
-                self.sections = [
-                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
-                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
-                ]
-                DispatchQueue.main.async {
-                    self.fadeTableView.view.reloadData()
-                }
-            case .error:
-                print("Network error: could not get interests.")
-            }
-        }
-    }
+//    private func setupSectionsFromInterests() {
+//        NetworkManager.shared.getAllInterests().observe { [weak self] response in
+//            guard let self = self else { return }
+//            switch response {
+//            case .value(let result):
+//                guard result.success else {
+//                    print("Network error: could not get interests.")
+//                    return
+//                }
+//                let yoursAndMore = self.removeDuplicates(yourStrings: self.user.interests, moreStrings: result.data)
+//                let stringToInterest = {
+//                    ItemType.interest(
+//                        Constants.Options.interestsMap[$0] ??
+//                        Interest(name: $0, categories: nil, imageName: "")
+//                    )
+//                }
+//                self.sections = [
+//                    Section(type: .yours, items: yoursAndMore.your.compactMap(stringToInterest)),
+//                    Section(type: .more, items: yoursAndMore.more.compactMap(stringToInterest))
+//                ]
+//                DispatchQueue.main.async {
+//                    self.fadeTableView.view.reloadData()
+//                }
+//            case .error:
+//                print("Network error: could not get interests.")
+//            }
+//        }
+//    }
 
     private func setupNavigationBar() {
         navigationController?.navigationBar.isHidden = false
