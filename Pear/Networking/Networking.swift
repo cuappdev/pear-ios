@@ -231,6 +231,35 @@ class Networking2 {
         }
     }
 
+    static func updateAvailability(
+        availabilities: [String],
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "availability": availabilities,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
     static func updateGoals(
         goals: [String],
         completion: @escaping (Bool) -> Void

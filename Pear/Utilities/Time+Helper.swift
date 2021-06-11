@@ -31,6 +31,18 @@ class Time {
     /// Day of the week matches are first assigned
     static let matchDay: Weekday = .sunday
 
+    static let daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
+
+    static let daysDict = [
+        "Su": "Sunday",
+        "M": "Monday",
+        "Tu": "Tuesday",
+        "W": "Wednesday",
+        "Th": "Thursday",
+        "F": "Friday",
+        "Sa": "Saturday"
+    ]
+
     /// Times available for meeting up
     static let amTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"]
     static let pmTimes = [
@@ -38,6 +50,11 @@ class Time {
         "3:00", "3:30", "4:00", "4:30", "5:00", "5:30",
         "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"
     ]
+
+    /// All possible times available for parts of a day
+    static let allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
+    static let allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
+    static let allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
 
     /// Returns the number of days its been since matches have been assigned
     static var daysSinceMatching: Int {

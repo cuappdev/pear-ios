@@ -19,73 +19,54 @@ class EditTimeAvailabilityViewController: UIViewController {
     private var timeCollectionView: UICollectionView!
     private let timezoneLabel = UILabel()
 
-    // MARK: - Time CollectionView Sections
-    private struct TimeSection {
-        let type: SectionType
-        var items: [ItemType]
-    }
-
-    private enum SectionType: String {
-        case afternoon = "Afternoon"
-        case evening = "Evening"
-        case morning = "Morning"
-    }
-
-    private enum ItemType {
-        case header(String)
-        case time(String)
-
-        func getTime() -> String? {
-            switch self {
-            case .time(let time):
-                return time
-            default:
-                return nil
-            }
-        }
-    }
-
+    // MARK: - Time Data Vars
+    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+    private let timeInteritemSpacing: CGFloat = 4
+    // The times to display in timeCollectionView
     private var timeSections: [TimeSection] = []
 
-    // MARK: - Time Data Vars
-    private let timeInteritemSpacing: CGFloat = 4
-    private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-
-    // All possible times available for parts of a day
-    private var allAfternoonTimes = ["1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30"]
-    private var allEveningTimes = ["5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30"]
-    private var allMorningTimes = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"]
-
     // For times presented to user for parts of a day
-    private var afternoonTimes: [String] = []
-    private var eveningTimes: [String] = []
-    private var morningTimes: [String] = []
+    private let afternoonTimes = Time.allAfternoonTimes
+    private let eveningTimes = Time.allEveningTimes
+    private let morningTimes = Time.allMorningTimes
 
     // For section items with a header and times
     private var afternoonItems: [ItemType] = []
     private var eveningItems: [ItemType] = []
     private var morningItems: [ItemType] = []
 
-    private var availabilities: [String: [String]] = [:]
-    private var daysAbbrev = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-    private let daysDict = ["Su": "Sunday", "M": "Monday", "Tu": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "Sa": "Saturday"]
+    private var availabilities: [[String]] = []
     private var selectedDay: String = "Su"
 
-    private var savedAvailabilities: [String: [String]] = [:]
+    init(availabilities: [String]) {
+        for availability in availabilities {
+            let availabilityTimes = availability.split(separator: ",").map {
+                Time.floatToStringTime(time: Float($0)!)
+            }
+            self.availabilities.append(availabilityTimes)
+        }
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         title = "Edit Availability"
-        afternoonTimes = allAfternoonTimes
-        eveningTimes = allEveningTimes
-        morningTimes = allMorningTimes
         setupNavigationBar()
-        getTimeAvailabilities()
 
-        if let firstDay = daysDict[selectedDay] {
-            setupTimes(for: firstDay, isFirstTime: true)
-        }
+        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
+        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
+        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
+
+        timeSections = [
+            TimeSection(type: .morning, items: morningItems),
+            TimeSection(type: .afternoon, items: afternoonItems),
+            TimeSection(type: .morning, items: eveningItems)
+        ]
 
         scheduleTimeLabel.font = ._20CircularStdBook
         scheduleTimeLabel.text = "When are you free?"
@@ -105,7 +86,7 @@ class EditTimeAvailabilityViewController: UIViewController {
         dayCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(dayCollectionView)
 
-        guard let day = daysDict[selectedDay] else { return }
+        guard let day = Time.daysDict[selectedDay] else { return }
         dayLabel.text = "Every \(day)"
         dayLabel.textColor = .black
         dayLabel.font = ._20CircularStdBook
@@ -129,7 +110,6 @@ class EditTimeAvailabilityViewController: UIViewController {
         timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
         view.addSubview(timeCollectionView)
 
-        setupTimeSections()
         setupConstraints()
     }
 
@@ -161,68 +141,24 @@ class EditTimeAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        var schedule: [DaySchedule] = []
-        for (day, times) in availabilities {
-            let floatTimes = times.map({Time.stringTimeToFloat(time: $0)})
-            let daySchedule = DaySchedule(day: day.lowercased(), times: floatTimes)
-            schedule.append(daySchedule)
+        var savedAvailabilities: [String] = []
+        for a in availabilities {
+            let s = a.map {
+                "\(Time.stringTimeToFloat(time: $0))"
+            }
+            savedAvailabilities.append(s.joined(separator: ","))
         }
-        NetworkManager.shared.updateTimeAvailabilities(savedAvailabilities: schedule).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    return
-                }
-                DispatchQueue.main.async {
+
+        Networking2.updateAvailability(availabilities: savedAvailabilities) { [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
                     self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
-            case .error:
-                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
             }
         }
-    }
-
-    private func getTimeAvailabilities() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserAvailabilities(netId: netId).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get time availabilities.")
-                    return
-                }
-                var userAvailabilities: [String: [String]] = [:]
-                for availability in value.data {
-                    userAvailabilities[availability.day.localizedCapitalized] = availability.times.map({Time.floatToStringTime(time: $0)})
-                }
-                self.savedAvailabilities = userAvailabilities
-                DispatchQueue.main.async {
-                    self.availabilities = self.savedAvailabilities
-                    self.dayCollectionView.reloadData()
-                    self.timeCollectionView.reloadData()
-                }
-            case .error:
-                print("Network error: could not get time availabilities.")
-            }
-        }
-    }
-
-    private func setupTimes(for day: String, isFirstTime: Bool) {
-        morningItems = [ItemType.header("Morning")] + morningTimes.map { ItemType.time($0) }
-        afternoonItems = [ItemType.header("Afternoon")] + afternoonTimes.map { ItemType.time($0) }
-        eveningItems = [ItemType.header("Evening")] + eveningTimes.map { ItemType.time($0) }
-        if !isFirstTime {
-            setupTimeSections()
-        }
-    }
-
-    private func setupTimeSections() {
-        let morningSection = TimeSection(type: .morning, items: morningItems)
-        let afternoonSection = TimeSection(type: .afternoon, items: afternoonItems)
-        let eveningSection = TimeSection(type: .morning, items: eveningItems)
-
-        timeSections = [morningSection, afternoonSection, eveningSection]
     }
 
     private func setupConstraints() {
@@ -235,7 +171,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             make.top.equalTo(scheduleTimeLabel.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
             make.height.equalTo(50)
-            make.width.equalTo(daysAbbrev.count * 45)
+            make.width.equalTo(Time.daysAbbrev.count * 45)
         }
 
         dayLabel.snp.makeConstraints { make in
@@ -249,11 +185,9 @@ class EditTimeAvailabilityViewController: UIViewController {
         }
 
         timeCollectionView.snp.makeConstraints { make in
-            let timeCollectionViewWidth = timeSections.count * 105
-            let timeCollectionViewHeight = 400
             make.top.equalTo(timezoneLabel.snp.bottom).offset(20)
-            make.height.equalTo(timeCollectionViewHeight)
-            make.width.equalTo(timeCollectionViewWidth)
+            make.height.equalTo(400)
+            make.width.equalTo(timeSections.count * 105)
             make.centerX.equalToSuperview()
         }
     }
@@ -263,30 +197,26 @@ class EditTimeAvailabilityViewController: UIViewController {
 extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if collectionView == dayCollectionView {
-            return 1
-        } else if collectionView == timeCollectionView {
-            return timeSections.count
-        }
-        return 2
+        return collectionView == dayCollectionView ? 1 : timeSections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == dayCollectionView {
-            return daysAbbrev.count
-        }
-        return timeSections[section].items.count
+        return collectionView == dayCollectionView ? Time.daysAbbrev.count : timeSections[section].items.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == dayCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingDayCollectionViewCell else { return UICollectionViewCell() }
-            let day = daysAbbrev[indexPath.item]
-            cell.configure(for: day)
-            if let day = daysDict[day] {
-                let isAvailable = availabilities[day] != nil
-                cell.updateBackgroundColor(isAvailable: isAvailable)
+            guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: SchedulingDayCollectionViewCell.reuseIdentifier,
+                    for: indexPath
+            ) as? SchedulingDayCollectionViewCell else {
+                return UICollectionViewCell()
             }
+            let day = Time.daysAbbrev[indexPath.item]
+            cell.configure(for: day)
+            let hasBeenSelected = availabilities[indexPath.item].count > 0
+            cell.updateBackgroundColor(isAvailable: hasBeenSelected)
+
             if day == selectedDay {
                 dayCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                 cell.isSelected = true
@@ -294,9 +224,14 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
             return cell
         }
 
+        guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier,
+                for: indexPath
+        ) as? SchedulingTimeCollectionViewCell else {
+            return  UICollectionViewCell()
+        }
         let section = timeSections[indexPath.section]
         let item = section.items[indexPath.row]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier, for: indexPath) as? SchedulingTimeCollectionViewCell else { return  UICollectionViewCell() }
         switch item {
         case .header(let header):
             cell.configure(for: header, isHeader: true)
@@ -304,10 +239,11 @@ extension EditTimeAvailabilityViewController: UICollectionViewDataSource {
         case .time(let time):
             cell.configure(for: time, isHeader: false)
             cell.isUserInteractionEnabled = true
-            if let day = daysDict[selectedDay], let dayAvailability = availabilities[day], dayAvailability.contains(time) {
+
+            if let dayIndex = Time.daysAbbrev.firstIndex(of: selectedDay),
+               availabilities[dayIndex].contains(time) {
                     timeCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
                     cell.isSelected = true
-
             }
         }
         return cell
@@ -319,20 +255,15 @@ extension EditTimeAvailabilityViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dayCollectionView {
-            selectedDay = daysAbbrev[indexPath.item]
-            guard let day = daysDict[selectedDay] else { return }
+            selectedDay = Time.daysAbbrev[indexPath.item]
+            guard let day = Time.daysDict[selectedDay] else { return }
             dayLabel.text = "Every \(day)"
-            setupTimes(for: day, isFirstTime: false)
             timeCollectionView.reloadData()
         } else if collectionView == timeCollectionView {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
-            if availabilities[day] == nil {
-                availabilities[day] = [time]
-            } else {
-                availabilities[day]?.append(time)
-            }
+            guard let time = item.getTime(), let dayIndex = Time.daysAbbrev.firstIndex(of: selectedDay) else { return }
+            availabilities[dayIndex].append(time)
             dayCollectionView.reloadData()
         }
     }
@@ -341,11 +272,12 @@ extension EditTimeAvailabilityViewController: UICollectionViewDelegate {
         if collectionView == timeCollectionView {
             let section = timeSections[indexPath.section]
             let item = section.items[indexPath.item]
-            guard let time = item.getTime(), let day = daysDict[selectedDay] else { return }
-            availabilities[day]?.removeAll { $0 == time }
-            if let dayAvailability = availabilities[day], dayAvailability.isEmpty {
-                availabilities.removeValue(forKey: day)
+
+            guard let time = item.getTime(),
+                  let dayIndex = Time.daysAbbrev.firstIndex(of: selectedDay) else {
+                return
             }
+            availabilities[dayIndex].removeAll { $0 == time }
             dayCollectionView.reloadData()
         }
     }
