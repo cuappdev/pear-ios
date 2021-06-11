@@ -66,10 +66,10 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: User) {
+    func configure(for user: UserV2) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
-        netIdLabel.text = "Reach me at \(user.netID)"
-        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+        netIdLabel.text = "Reach me at \(user.netId)"
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
     }

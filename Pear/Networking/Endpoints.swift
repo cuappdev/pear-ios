@@ -136,11 +136,6 @@ extension Endpoint {
     static func getUsers() -> Endpoint {
         Endpoint(path: "/user/all/", headers: standardHeaders)
     }
-
-    /// [GET] Get searched users.
-    static func searchUsers(query: String) -> Endpoint {
-        Endpoint(path: "/user/search/", queryItems: [URLQueryItem(name: "query", value: query)], headers: standardHeaders)
-    }
     
     // MARK: - Update user.
 

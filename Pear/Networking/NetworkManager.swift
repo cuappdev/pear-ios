@@ -100,16 +100,6 @@ class NetworkManager {
     
     // MARK: - Get users.
     
-    /// [GET] Get all users.
-    func getUsers() -> Future<Response<[CommunityUser]>> {
-        networking(Endpoint.getUsers()).decode()
-    }
-
-    /// [GET] Get searched users.
-    func searchUsers(query: String) -> Future<Response<[CommunityUser]>> {
-        networking(Endpoint.searchUsers(query: query)).decode()
-    }
-    
     // MARK: - Update users.
     
     /// [POST] Update demographics information about the user.

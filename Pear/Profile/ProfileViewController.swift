@@ -13,16 +13,16 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private var pair: User?
+    private var pair: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var reachOutButton = UIButton()
-    private var userId: String
+    private var userId: Int
 
     // MARK: - Private Data Vars
     private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
-    init(userId: String) {
+    init(userId: Int) {
         self.userId = userId
         super.init(nibName: nil, bundle: nil)
     }
@@ -70,22 +70,13 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    private func getUserThen(_ completion: @escaping (User) -> Void) {
-        NetworkManager.shared.getUser(netId: userId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        completion(response.data)
-                    }
-                case .error:
-                    print("Network error: could not get user.")
-                }
-            }
+    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
+        Networking2.getUser(id: userId) { user in
+            completion(user)
         }
     }
 
-    private func setupViews(pair: User) {
+    private func setupViews(pair: UserV2) {
 
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
@@ -129,7 +120,7 @@ class ProfileViewController: UIViewController {
     @objc private func reachOutPressed() {
         guard let pair = pair else { return }
         let emailAlertController = UIAlertController.getEmailAlertController(
-            email: "\(pair.netID)@cornell.edu",
+            email: "\(pair.netId)@cornell.edu",
             subject: "Hello from Pear!"
         )
         present(emailAlertController, animated: true)

@@ -54,19 +54,19 @@ class ProfilePromptTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: User, type: ProfileSectionType) {
+    func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
                 .thinFont("I study ")
-                .normalFont(user.major)
+//                .normalFont(user.major)
                 .thinFont(" in the class of ")
-                .normalFont(user.graduationYear)
+                .normalFont(user.graduationYear ?? "2020")
                 .thinFont(", and my home is in ")
-                .normalFont(user.hometown)
+                .normalFont(user.hometown ?? "")
                 .thinFont("! My pronouns are ")
-                .normalFont((user.pronouns).lowercased())
+//                .normalFont((user.pronouns).lowercased())
                 .thinFont(".")
         }
     }

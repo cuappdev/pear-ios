@@ -352,4 +352,55 @@ class Networking2 {
         }
     }
 
+    static func getAllUsers(completion: @escaping ([UserProfile]) -> Void) {
+
+        AF.request(
+            "\(hostEndpoint)/api/users/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                print(data, "dsdsds")
+                do {
+                    let usersData = try jsonDecoder.decode(Response<[UserProfile]>.self, from: data)
+                    let users = usersData.data
+                    completion(users)
+                } catch {
+                    print("Decoding error: \(error)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getUser(id: Int, completion: @escaping (UserV2) -> Void) {
+
+        AF.request(
+            "\(hostEndpoint)/api/users/\(id)/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
+                    let user = userData.data
+                    completion(user)
+                } catch {
+                    print("Decoding error: \(error)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
 }

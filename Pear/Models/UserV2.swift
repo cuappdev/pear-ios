@@ -45,6 +45,7 @@ struct MatchV2: Codable {
 protocol Topic {
     var name: String { get set }
     var id: Int { get set }
+    var imgUrl: String { get set}
 }
 
 struct MatchedUser: Codable {
@@ -70,13 +71,13 @@ struct InterestV2: Topic, Codable {
     var id: Int
     var name: String
     let subtitle: String
-    let imgUrl: String
+    var imgUrl: String
 }
 
 struct GroupV2: Topic, Codable {
     var id: Int
     var name: String
-    let imgUrl: String
+    var imgUrl: String
     let subtitle: String
 }
 
@@ -86,4 +87,14 @@ struct TalkingPointV2: Codable {
     let name: String
     let subtitle: String?
     let imgUrl: String
+}
+
+struct UserProfile: Codable {
+    let id: Int
+    let netId: String
+    let firstName: String
+    let lastName: String
+    let profilePicUrl: String
+    let interests: [InterestV2]
+    let groups: [GroupV2]
 }

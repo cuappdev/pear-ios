@@ -18,7 +18,7 @@ class CommunityViewController: UIViewController {
     private let spinner = UIActivityIndicatorView(style: .medium)
 
     // MARK: - Private Data Vars
-    private var users: [CommunityUser] = []
+    private var users: [UserProfile] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -64,20 +64,12 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        NetworkManager.shared.getUsers().observe { response in
+        Networking2.getAllUsers { [weak self] allUsers in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                switch response {
-                case .value(let value):
-                    guard value.success else {
-                        print("Network error: could not get users.")
-                        return
-                    }
-                    self.users = value.data
-                    self.spinner.stopAnimating()
-                    self.fadeCommunityTableView.view.reloadData()
-                case .error:
-                    print("Network error: could not get users.")
-                }
+                self.users = allUsers
+                self.spinner.stopAnimating()
+                self.fadeCommunityTableView.view.reloadData()
             }
         }
     }
@@ -127,7 +119,7 @@ extension CommunityViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        navigationController?.pushViewController(ProfileViewController(userId: user.netID), animated: true)
+        navigationController?.pushViewController(ProfileViewController(userId: user.id), animated: true)
     }
 }
 
@@ -135,21 +127,7 @@ extension CommunityViewController: UITableViewDataSource {
 extension CommunityViewController: UISearchBarDelegate {
 
     private func searchUsers(query: String) {
-        NetworkManager.shared.searchUsers(query: query).observe { response in
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let value):
-                        guard value.success else {
-                            print("Network error: could not search users")
-                            return
-                        }
-                        self.users = value.data
-                        self.fadeCommunityTableView.view.reloadData()
-                case .error:
-                    print("Network error: could not search users")
-                }
-            }
-        }
+        // TODO: Fill in with network call
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
