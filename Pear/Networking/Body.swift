@@ -23,12 +23,6 @@ struct UserSessionBody: Codable {
 
 }
 
-struct UpdateUserGroupsBody: Codable {
-
-    let groups: [String]
-
-}
-
 struct UpdateUserGoalsBody: Codable {
 
     let goals: [String]

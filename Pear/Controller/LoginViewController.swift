@@ -114,28 +114,6 @@ class LoginViewController: UIViewController {
         }
     }
 
-    private func getUser() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getLoginUser(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let onboardingCompleted = response.data.didOnboard
-                        UserDefaults.standard.set(onboardingCompleted, forKey: Constants.UserDefaults.onboardingCompletion)
-                        let viewController = onboardingCompleted ?
-                            HomeViewController() :
-                            OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                        self.navigationController?.pushViewController(viewController, animated: false)
-                    }
-                case .error:
-                    print("Network error: could not get user.")
-                }
-            }
-        }
-    }
-
 }
 
 extension LoginViewController: GIDSignInDelegate {

@@ -36,7 +36,8 @@ class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Variables
     private let textFieldHeight: CGFloat = 49
-    private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
+    // Keep track of if view scrolled to fit content
+    private var isPageScrolled: Bool = false
     private var didUpdatePhoto = false
 
     init(user: UserV2) {
@@ -240,19 +241,11 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func getMajors() {
-        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+        Networking2.getAllMajors { [weak self] majors in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.majorDropdownView.setTableData(tableData: response.data)
-                    } else {
-                        print("Network error: could not get majors.")
-                    }
-                case .error:
-                    print("Network error: could not get majors.")
-                }
+                let majorsData = majors.map { $0.name }
+                self.majorDropdownView.setTableData(tableData: majorsData)
             }
         }
     }
@@ -266,30 +259,26 @@ class EditDemographicsViewController: UIViewController {
            let major = demographics.major,
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns {
-            NetworkManager.shared.updateUserDemographics(
+            Networking2.updateProfile(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: profilePictureURL).observe { [weak self] result in
+                profilePicUrl: profilePictureURL) { [weak self] success in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
-                        switch result {
-                        case .value(let response):
-                            if response.success {
-                                self.navigationController?.popViewController(animated: true)
-                            } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                            }
-                        case .error:
+                        if success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     }
-                }
             }
+        }
     }
 
     @objc private func savePressed() {
+        print("save pressed")
         if didUpdatePhoto {
             if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
                 NetworkManager.shared.uploadPhoto(base64: profileImageBase64).observe { [weak self] result in

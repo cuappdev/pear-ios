@@ -142,6 +142,43 @@ class Networking2 {
         }
     }
 
+    static func updateProfile(
+        graduationYear: String,
+        major: String,
+        hometown: String,
+        pronouns: String,
+        profilePicUrl: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "graduation_year": graduationYear,
+            "major": major,
+            "hometown": hometown,
+            "pronouns": pronouns,
+            "profile_pic_url": profilePicUrl
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
     static func updateInterests(
         interests: [Int],
         completion: @escaping (Bool) -> Void

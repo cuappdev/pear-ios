@@ -134,25 +134,11 @@ class EditSocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserSocialMedia(netId: netId).observe { [weak self] result in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        if let facebook = response.data.facebook {
-                            self.fbTextField.text = facebook
-                        }
-                        if let instagram = response.data.instagram {
-                            self.instaTextField.text = instagram
-                        }
-                    } else {
-                        print("Network error: could not get user.")
-                    }
-                case .error:
-                    print("Network error: could not get user.")
-                }
+                self.fbTextField.text = user.facebookUrl
+                self.instaTextField.text = user.instagramUsername
             }
         }
     }

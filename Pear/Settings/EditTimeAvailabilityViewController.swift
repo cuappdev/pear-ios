@@ -40,8 +40,9 @@ class EditTimeAvailabilityViewController: UIViewController {
 
     init(availabilities: [String]) {
         for availability in availabilities {
-            let availabilityTimes = availability.split(separator: ",").map {
-                Time.floatToStringTime(time: Float($0)!)
+            let availabilityTimes = availability.split(separator: ",").map { (e) -> String in
+                print(e, Time.floatToStringTime(time: Float(e)!))
+                return Time.floatToStringTime(time: Float(e)!)
             }
             self.availabilities.append(availabilityTimes)
         }
