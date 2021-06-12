@@ -91,35 +91,11 @@ extension Endpoint {
     }
     
     // MARK: - Update user.
-
-    /// [POST] Update demographics information about the user.
-    static func updateUserDemographics(
-        graduationYear: String,
-        hometown: String,
-        major: String,
-        pronouns: String,
-        profilePictureURL: String
-    ) -> Endpoint {
-        let body = UpdateUserDemographicsBody(
-            graduationYear: graduationYear,
-            hometown: hometown,
-            major: major,
-            pronouns: pronouns,
-            profilePictureURL: profilePictureURL
-        )
-        return Endpoint(path: "/user/demographics/", headers: standardHeaders, body: body)
-    }
     
     /// [POST] Update goals information about the user.
     static func updateUserGoals(goals: [String]) -> Endpoint {
         let body = UpdateUserGoalsBody(goals: goals)
         return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
-    }
-
-    /// [POST] Update social media information about the user.
-    static func updateUserSocialMedia(facebook: String, instagram: String, didOnboard: Bool) -> Endpoint {
-        let body = UpdateUserSocialMediaBody(didOnboard: didOnboard, facebook: facebook, instagram: instagram)
-        return Endpoint(path: "/user/socialMedia/", headers: standardHeaders, body: body)
     }
 
     /// [POST] Update talking points information about the user.

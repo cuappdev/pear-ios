@@ -109,19 +109,16 @@ class EditSocialMediaViewController: UIViewController {
     }
 
     @objc private func saveSocialMedia() {
-        let instagramHandle = instaTextField.text ?? ""
-        let facebookHandle = fbTextField.text ?? ""
-        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle, didOnboard: true).observe { [weak self] result in
+        Networking2.updateSocialMedia(
+            facebookUrl: fbTextField.text,
+            instagramUsername: instaTextField.text,
+            hasOnboarded: true
+        ) { [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                    }
-                case .error:
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                 }
             }

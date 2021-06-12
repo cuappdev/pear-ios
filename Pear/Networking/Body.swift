@@ -35,30 +35,6 @@ struct UpdateUserTalkingPointsBody: Codable {
 
 }
 
-struct UpdateUserSocialMediaBody: Codable {
-
-    let didOnboard: Bool
-    let facebook: String
-    let instagram: String
-
-}
-
-struct UpdateUserDemographicsBody: Codable {
-
-    let graduationYear: String
-    let hometown: String
-    let major: String
-    let pronouns: String
-    let profilePictureURL: String
-
-}
-
-struct UpdateUserInterestsBody: Codable {
-
-    let interests: [String]
-
-}
-
 struct MatchingBody: Codable {
 
     let netIDs: [String]
