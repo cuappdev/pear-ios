@@ -77,7 +77,6 @@ class InterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        print(selectedInterests)
         let selectedInterestsIds = selectedInterests.map { $0.id }
         Networking2.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
             guard let self = self else { return }

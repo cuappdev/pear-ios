@@ -41,9 +41,6 @@ class Networking2 {
             "id_token": idToken
         ]
 
-        print("\(hostEndpoint)/api/authenticate/")
-        print("id_token: ", idToken)
-
         AF.request(
             "\(hostEndpoint)/api/authenticate/",
             method: .post,
@@ -109,7 +106,7 @@ class Networking2 {
 
     static func updateDemographics(
         graduationYear: String,
-        major: String,
+        majors: [Int],
         hometown: String,
         pronouns: String,
         completion: @escaping (Bool) -> Void
@@ -117,7 +114,7 @@ class Networking2 {
 
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
-            "major": major,
+            "majors": majors,
             "hometown": hometown,
             "pronouns": pronouns
         ]
@@ -401,7 +398,6 @@ class Networking2 {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                print(data, "dsdsds")
                 do {
                     let usersData = try jsonDecoder.decode(Response<[UserProfile]>.self, from: data)
                     let users = usersData.data

@@ -150,6 +150,7 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
+        print("next button pressed on goals", selectedGoals)
         Networking2.updateGoals(goals: selectedGoals) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {

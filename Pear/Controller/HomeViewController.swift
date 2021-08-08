@@ -136,7 +136,7 @@ class HomeViewController: UIViewController {
         Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                let match = user.matches.first
+                let match = user.currentMatch
                 self.user = user
                 if let profilePictureURL = URL(string: user.profilePicUrl) {
                     self.profileImageView.kf.setImage(with: profilePictureURL)

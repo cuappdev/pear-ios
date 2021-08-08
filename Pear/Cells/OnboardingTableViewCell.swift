@@ -94,9 +94,11 @@ class OnboardingTableViewCell: UITableViewCell {
     }
 
     func configure(with interest: InterestV2) {
+        print(interest)
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
+            print("yes to image url", interest.imgUrl, interestImageUrl)
             interestImageView.kf.setImage(with: interestImageUrl)
         }
 

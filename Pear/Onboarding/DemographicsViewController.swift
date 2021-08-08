@@ -14,7 +14,7 @@ class DemographicsViewController: UIViewController {
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    private var majorSearchFields: [String] = []
+    private var majorSearchFields: [MajorV2] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
 
     // MARK: - Private View Vars
@@ -78,7 +78,7 @@ class DemographicsViewController: UIViewController {
         majorDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "Major",
-            tableData: majorSearchFields,
+            tableData: majorSearchFields.map { $0.name },
             searchType: .local
         )
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
@@ -120,11 +120,11 @@ class DemographicsViewController: UIViewController {
         if let graduationYear = fieldValues[fieldMap[0]],
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
-           let pronouns = fieldValues[fieldMap[3]] {
-
+           let pronouns = fieldValues[fieldMap[3]],
+           let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
             Networking2.updateDemographics(
                 graduationYear: graduationYear,
-                major: major,
+                majors: [matchingMajor.id],
                 hometown: hometown,
                 pronouns: pronouns
             ) { [weak self] (success) in
@@ -145,6 +145,7 @@ class DemographicsViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let majorsData = majors.map { $0.name }
+                self.majorSearchFields = majors
                 self.majorDropdownView.setTableData(tableData: majorsData)
             }
         }
@@ -159,7 +160,7 @@ class DemographicsViewController: UIViewController {
                 }
                 self.hometownDropdownView.setTitle(title: user.hometown ?? "")
                 self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
-//                self.majorDropdownView.setTitle(title: user.major ?? "")
+                self.majorDropdownView.setTitle(title: user.majors.count > 0 ? user.majors[0].name : "")
             }
         }
     }

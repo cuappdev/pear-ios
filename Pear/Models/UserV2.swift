@@ -12,12 +12,11 @@ struct UserV2: Codable {
     let netId: String
     let firstName: String
     let lastName: String
+    let majors: [MajorV2]
     let hometown: String?
     let profilePicUrl: String
     let facebookUrl: String?
     let instagramUsername: String?
-    // TODO: Remove this hard coded value once major gets added to the backend response
-//    var major: String? = "Computer Science"
     let graduationYear: String?
     let pronouns: String?
     let goals: [String]?
@@ -27,7 +26,9 @@ struct UserV2: Codable {
     let interests: [InterestV2]
     let groups: [GroupV2]
     let hasOnboarded: Bool?
-    let matches: [MatchV2]
+    let pendingFeedback: Bool
+    let currentMatch: MatchV2?
+    
 }
 
 struct MatchV2: Codable {
@@ -78,7 +79,6 @@ struct GroupV2: Topic, Codable {
     var id: Int
     var name: String
     var imgUrl: String
-    let subtitle: String
 }
 
 struct TalkingPointV2: Codable {
