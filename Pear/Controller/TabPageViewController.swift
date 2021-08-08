@@ -23,18 +23,11 @@ class TabPageViewController: UIPageViewController {
     private let user: UserV2
     weak var tabDelegate: TabDelegate?
 
-    init(match: MatchV2?, user: UserV2, tabDelegate: TabDelegate) {
+    init(user: UserV2, tabDelegate: TabDelegate) {
         self.user = user
         self.tabDelegate = tabDelegate
-
-        if let match = match {
-            print("indeed there is a match 1")
-//            matchViewController = MatchProfileViewController(match: match, user: user)
-            matchViewController = NoMatchViewController(user: user)
-        } else {
-            matchViewController = NoMatchViewController(user: user)
-        }
-
+        matchViewController = NoMatchViewController(user: user)
+        
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
 

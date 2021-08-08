@@ -136,19 +136,17 @@ class HomeViewController: UIViewController {
         Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                let match = user.currentMatch
-                print("this is my match", match)
                 self.user = user
                 if let profilePictureURL = URL(string: user.profilePicUrl) {
                     self.profileImageView.kf.setImage(with: profilePictureURL)
                 }
-                self.setupTabPageViewController(with: match, user: user)
+                self.setupTabPageViewController(user: user)
             }
         }
     }
 
-    private func setupTabPageViewController(with match: MatchV2? = nil, user: UserV2) {
-        tabPageViewController = TabPageViewController(match: match, user: user, tabDelegate: self)
+    private func setupTabPageViewController(user: UserV2) {
+        tabPageViewController = TabPageViewController(user: user, tabDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 

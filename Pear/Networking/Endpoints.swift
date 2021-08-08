@@ -67,11 +67,6 @@ extension Endpoint {
     static func getUserAvailabilities(netId: String) -> Endpoint {
         Endpoint(path: "/user/availabilities/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
-    
-    /// [GET] Gets another user's matches, given their netID. If none provided, gets current user's matches.
-    static func getUserMatches(netId: String) -> Endpoint {
-        Endpoint(path: "/match/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
-    }
 
     /// [GET] Get preferred locations of user by netID.
     static func getUserPreferredLocations(netId: String) -> Endpoint {

@@ -41,11 +41,6 @@ class NetworkManager {
     func getUserAvailabilities(netId: String) -> Future<Response<[DaySchedule]>> {
         networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
     }
-    
-    /// [GET] Gets another user's matches, given their netID. If none provided, gets current user's matches.
-    func getUserMatches(netId: String) -> Future<Response<[Match]>> {
-        networking(Endpoint.getUserMatches(netId: netId)).decode()
-    }
 
     /// [POST] Update goals information about the user.
     func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {

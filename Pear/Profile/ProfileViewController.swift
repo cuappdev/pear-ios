@@ -16,16 +16,10 @@ class ProfileViewController: UIViewController {
     private var user: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private var reachOutButton = UIButton()
     private var userId: Int
-
-    // MARK: - Private Data Vars
-    private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
     init(userId: Int) {
         self.userId = userId
-        print("getting user id")
-        print(userId)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -67,14 +61,6 @@ class ProfileViewController: UIViewController {
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
-        reachOutButton.setTitle("Send email", for: .normal)
-        reachOutButton.backgroundColor = .backgroundOrange
-        reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
-        reachOutButton.titleLabel?.font = ._20CircularStdBold
-        reachOutButton.setTitleColor(.white, for: .normal)
-        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-        view.addSubview(reachOutButton)
-
         setupConstraints()
 
         getUserThen { [weak self] user in
@@ -98,26 +84,9 @@ class ProfileViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let reachOutPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
-
         profileTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
-        reachOutButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
-            make.centerX.equalToSuperview()
-            make.size.equalTo(reachOutButtonSize)
-        }
-    }
-
-    @objc private func reachOutPressed() {
-        guard let user = user else { return }
-        let emailAlertController = UIAlertController.getEmailAlertController(
-            email: "\(user.netId)@cornell.edu",
-            subject: "Hello from Pear!"
-        )
-        present(emailAlertController, animated: true)
     }
 
     @objc func backPressed() {
@@ -133,11 +102,9 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        return UITableViewCell()
         guard let user = user else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
-        print(section, reuseIdentifier)
 
         switch section {
         case .summary:
