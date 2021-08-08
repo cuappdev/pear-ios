@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private var pair: UserV2?
+    private var user: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var reachOutButton = UIButton()
@@ -51,19 +51,19 @@ class ProfileViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
-        getUserThen { [weak self] pair in
+        getUserThen { [weak self] user in
             guard let self = self else { return }
 
-            self.pair = pair
+            self.user = user
 
-            self.setupViews(pair: pair)
+            self.setupViews(user: user)
             self.setupConstraints()
 
             self.profileSections = [.summary, .basics]
-            if pair.interests.count > 0 {
+            if user.interests.count > 0 {
                 self.profileSections.append(.interests)
             }
-            if pair.groups.count > 0 {
+            if user.groups.count > 0 {
                 self.profileSections.append(.groups)
             }
             self.profileTableView.reloadData()
@@ -76,7 +76,7 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    private func setupViews(pair: UserV2) {
+    private func setupViews(user: UserV2) {
 
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
@@ -118,9 +118,9 @@ class ProfileViewController: UIViewController {
     }
 
     @objc private func reachOutPressed() {
-        guard let pair = pair else { return }
+        guard let user = user else { return }
         let emailAlertController = UIAlertController.getEmailAlertController(
-            email: "\(pair.netId)@cornell.edu",
+            email: "\(user.netId)@cornell.edu",
             subject: "Hello from Pear!"
         )
         present(emailAlertController, animated: true)
@@ -139,22 +139,22 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let pair = pair else { return UITableViewCell() }
+        guard let user = user else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-//            cell.configure(for: nil, pair: pair)
+            cell.configure(for: nil, user: user)
             return UITableViewCell()
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
+            cell.configure(for: user, type: section)
             return cell
         case .interests, .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
+            cell.configure(for: user, type: section)
             return cell
         case .matches:
             return UITableViewCell()
@@ -171,5 +171,5 @@ extension ProfileViewController: UIGestureRecognizerDelegate {
          }
          return false
      }
-    
+
   }

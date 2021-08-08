@@ -137,6 +137,7 @@ class HomeViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let match = user.currentMatch
+                print("this is my match", match)
                 self.user = user
                 if let profilePictureURL = URL(string: user.profilePicUrl) {
                     self.profileImageView.kf.setImage(with: profilePictureURL)

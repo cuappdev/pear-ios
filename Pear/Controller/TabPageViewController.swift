@@ -28,7 +28,9 @@ class TabPageViewController: UIPageViewController {
         self.tabDelegate = tabDelegate
 
         if let match = match {
-            matchViewController = MatchProfileViewController(match: match, user: user)
+            print("indeed there is a match 1")
+//            matchViewController = MatchProfileViewController(match: match, user: user)
+            matchViewController = NoMatchViewController(user: user)
         } else {
             matchViewController = NoMatchViewController(user: user)
         }

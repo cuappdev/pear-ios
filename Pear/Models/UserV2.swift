@@ -35,10 +35,10 @@ struct MatchV2: Codable {
     let id: Int
     let status: String
     let matchedUser: MatchedUser
-    let proposerId: Int
-    let acceptedIds: [Int]
-    let proposedMeetingTimes: [String]
-    let proposedLocations: [LocationV2]
+    let proposerId: Int?
+    let acceptedIds: [Int]?
+    let proposedMeetingTimes: [String]?
+    let proposedLocations: [LocationV2]?
     let meetingLocation: LocationV2?
     let meetingTime: String?
 }
@@ -55,11 +55,24 @@ struct MatchedUser: Codable {
     let firstName: String
     let lastName: String
     let hometown: String
-    let profilePicUrl: String
+    let profilePicUrl: String?
     let facebookUrl: String
     let instagramUsername: String
     let pronouns: String
     let graduationYear: String
+}
+
+struct ShortenedUser: Codable {
+    let id: Int
+    let netId: String
+    let firstName: String
+    let lastName: String
+    let majors: [MajorV2]
+    let profilePicUrl: String?
+    let hometown: String
+    let graduationYear: String
+    let interests: [InterestV2]
+    let groups: [GroupV2]
 }
 
 struct LocationV2: Codable {
@@ -87,14 +100,4 @@ struct TalkingPointV2: Codable {
     let name: String
     let subtitle: String?
     let imgUrl: String
-}
-
-struct UserProfile: Codable {
-    let id: Int
-    let netId: String
-    let firstName: String
-    let lastName: String
-    let profilePicUrl: String
-    let interests: [InterestV2]
-    let groups: [GroupV2]
 }
