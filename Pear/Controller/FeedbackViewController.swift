@@ -25,9 +25,9 @@ class FeedbackViewController: UIViewController {
     // MARK: - Private View Vars
     private var answerCollectionView: UICollectionView!
     private let askDetailLabel = UILabel()
-    private let closeButton = UIButton()
+//    private let closeButton = UIButton()
     private let detailTextView = UITextView()
-    private let finishButton = UIButton()
+//    private let finishButton = UIButton()
     private let headerLabel = UILabel()
     private let highRatingLabel = UILabel()
     private let lowRatingLabel = UILabel()
@@ -73,9 +73,9 @@ class FeedbackViewController: UIViewController {
         headerLabel.font = ._24CircularStdMedium
         view.addSubview(headerLabel)
 
-        closeButton.setImage(UIImage(named: "cancelled"), for: .normal)
-        closeButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
-        view.addSubview(closeButton)
+//        closeButton.setImage(UIImage(named: "cancelled"), for: .normal)
+//        closeButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
+//        view.addSubview(closeButton)
 
         questionLabel.text = "Did you meet your last Pear?"
         questionLabel.textColor = .black
@@ -98,14 +98,14 @@ class FeedbackViewController: UIViewController {
         answerCollectionView.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.reuseIdentifier)
         view.addSubview(answerCollectionView)
 
-        finishButton.setTitle("Finish", for: .normal)
-        finishButton.setTitleColor(.white, for: .normal)
-        finishButton.titleLabel?.font = ._20CircularStdBold
-        finishButton.backgroundColor = .backgroundOrange
-        finishButton.layer.cornerRadius = 26
-        finishButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
-        finishButton.isHidden = true
-        view.addSubview(finishButton)
+//        finishButton.setTitle("Finish", for: .normal)
+//        finishButton.setTitleColor(.white, for: .normal)
+//        finishButton.titleLabel?.font = ._20CircularStdBold
+//        finishButton.backgroundColor = .backgroundOrange
+//        finishButton.layer.cornerRadius = 26
+//        finishButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
+//        finishButton.isHidden = true
+//        view.addSubview(finishButton)
 
         lowRatingLabel.text = "Not so fun"
         lowRatingLabel.font = ._12CircularStdBook
@@ -139,50 +139,50 @@ class FeedbackViewController: UIViewController {
         setupConstraints()
     }
     
-    @objc private func finishFeedback() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        responses.append(detailTextView.text)
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
-            switch response {
-            case .value(let value):
-                UserDefaults.standard.setValue(value.data.count, forKey: Constants.UserDefaults.previousMatchHistorySize)
-            case .error(let error):
-                print(error)
-            }
-        }
-        self.dismiss(animated: true, completion: nil)
-    }
+//    @objc private func finishFeedback() {
+//        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
+//        responses.append(detailTextView.text)
+//        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
+//            switch response {
+//            case .value(let value):
+//                UserDefaults.standard.setValue(value.data.count, forKey: Constants.UserDefaults.previousMatchHistorySize)
+//            case .error(let error):
+//                print(error)
+//            }
+//        }
+//        self.dismiss(animated: true, completion: nil)
+//    }
 
-    private func setupAdditionalResponse() {
-        finishButton.isHidden = false
-        if feedbackStatus == .didNotMeet {
-            questionLabel.text = "Aww, why didn't you meet?"
-            feedbackOptions = didNotMeetFeedbackOptions
-            answerCollectionView.allowsMultipleSelection = true
-        } else {
-            questionLabel.text = "Yay! How did your chat go?"
-            feedbackOptions = didMeetFeedbackOptions
-            lowRatingLabel.isHidden = false
-            highRatingLabel.isHidden = false
-            askDetailLabel.isHidden = false
-            detailTextView.isHidden = false
-            answerCollectionView.snp.remakeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.top.equalTo(questionLabel.snp.bottom).offset(10)
-                make.leading.trailing.equalToSuperview().inset(80)
-                make.height.equalTo(50)
-            }
-        }
-        DispatchQueue.main.async {
-            self.answerCollectionView.reloadData()
-        }
-    }
+//    private func setupAdditionalResponse() {
+//        finishButton.isHidden = false
+//        if feedbackStatus == .didNotMeet {
+//            questionLabel.text = "Aww, why didn't you meet?"
+//            feedbackOptions = didNotMeetFeedbackOptions
+//            answerCollectionView.allowsMultipleSelection = true
+//        } else {
+//            questionLabel.text = "Yay! How did your chat go?"
+//            feedbackOptions = didMeetFeedbackOptions
+//            lowRatingLabel.isHidden = false
+//            highRatingLabel.isHidden = false
+//            askDetailLabel.isHidden = false
+//            detailTextView.isHidden = false
+//            answerCollectionView.snp.remakeConstraints { make in
+//                make.centerX.equalToSuperview()
+//                make.top.equalTo(questionLabel.snp.bottom).offset(10)
+//                make.leading.trailing.equalToSuperview().inset(80)
+//                make.height.equalTo(50)
+//            }
+//        }
+//        DispatchQueue.main.async {
+//            self.answerCollectionView.reloadData()
+//        }
+//    }
 
     private func setupConstraints() {
-        closeButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(36)
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(25)
-        }
+//        closeButton.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().inset(36)
+//            make.top.equalTo(view.safeAreaLayoutGuide).inset(25)
+//        }
 
         headerLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(36)
@@ -200,11 +200,11 @@ class FeedbackViewController: UIViewController {
             make.height.equalTo(200)
         }
 
-        finishButton.snp.makeConstraints { make in
-            make.size.equalTo(Constants.Onboarding.mainButtonSize)
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
-        }
+//        finishButton.snp.makeConstraints { make in
+//            make.size.equalTo(Constants.Onboarding.mainButtonSize)
+//            make.centerX.equalToSuperview()
+//            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
+//        }
 
         lowRatingLabel.snp.makeConstraints { make in
             make.centerX.equalTo(answerCollectionView.snp.left).inset(12)
@@ -270,7 +270,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
             let selected = feedbackOptions[indexPath.section][indexPath.row].text
             feedbackStatus = selected == "Yes" ? .didMeet : .didNotMeet
             responses.append(selected)
-            setupAdditionalResponse()
+//            setupAdditionalResponse()
         case .didNotMeet, .didMeet:
             let selectedResponse = feedbackOptions[indexPath.section][indexPath.row].text
             if (!responses.contains(selectedResponse)) {

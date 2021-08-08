@@ -22,8 +22,8 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Data
     private weak var delegate: OnboardingPageDelegate?
-    private let interests = Constants.Options.interests
-    private var selectedInterests: [Interest] = []
+    private var interests: [InterestV2] = []
+    private var selectedInterests: [InterestV2] = []
 
     init(delegate: OnboardingPageDelegate) {
         self.delegate = delegate
@@ -67,6 +67,7 @@ class InterestsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
+        getAllInterests()
         getUserInterests()
         setupConstraints()
     }
@@ -76,19 +77,13 @@ class InterestsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        delegate?.nextPage(index: 2)
-        let userInterests = selectedInterests.map { $0.name }
-        NetworkManager.shared.updateUserInterests(interests: userInterests).observe { [weak self] result in
+        let selectedInterestsIds = selectedInterests.map { $0.id }
+        Networking2.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.delegate?.nextPage(index: 2)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
+                if success {
+                    self.delegate?.nextPage(index: 2)
+                } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
@@ -126,27 +121,29 @@ class InterestsViewController: UIViewController {
         }
     }
 
-    private func getUserInterests() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+    private func getAllInterests() {
+
+        Networking2.getAllInterests { [weak self] interests in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    guard response.success else {
-                        print("Network error: could not get user interests.")
-                        return
-                    }
-                    self.selectedInterests = response.data.interests.map {
-                        return Interest(name: $0, categories: [], imageName: "")
-                    }
-                    self.updateNext()
-                    self.fadeTableView.view.reloadData()
-                case .error:
-                    print("Network error: could not get user interests.")
-                }
+                self.interests = interests
+                self.fadeTableView.view.reloadData()
             }
         }
+
+    }
+
+    private func getUserInterests() {
+
+        Networking2.getMe { [weak self] user in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.selectedInterests = user.interests
+                self.fadeTableView.view.reloadData()
+                self.updateNext()
+            }
+        }
+
     }
 
     /// Updates the enabled state of next button based on the state of selectedInterests.
@@ -186,7 +183,7 @@ extension InterestsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedInterests.removeAll { $0.name == interests[indexPath.row].name }
+        selectedInterests.removeAll { $0.id == interests[indexPath.row].id }
         updateNext()
     }
 
@@ -196,12 +193,13 @@ extension InterestsViewController: UITableViewDelegate {
 extension InterestsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OnboardingTableViewCell.reuseIdentifier,
-                                                       for: indexPath) as?
-        OnboardingTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: OnboardingTableViewCell.reuseIdentifier,
+                for: indexPath
+        ) as? OnboardingTableViewCell else { return UITableViewCell() }
         let data = interests[indexPath.row]
         cell.configure(with: data)
-        if selectedInterests.contains(where: { $0.name == data.name }) {
+        if selectedInterests.contains(where: { $0.id == data.id }) {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
         return cell

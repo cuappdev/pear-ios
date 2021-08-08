@@ -25,7 +25,12 @@ class OnboardingSelectDropdownView: UIView {
     // MARK: - Private Constants
     private let fieldsCornerRadius: CGFloat = 8
 
-    init(delegate: OnboardingDropdownViewDelegate, placeholder: String, tableData: [String], textTemplate: String) {
+    init(
+        delegate: OnboardingDropdownViewDelegate,
+        placeholder: String,
+        tableData: [String],
+        textTemplate: String
+    ) {
         self.delegate = delegate
         self.placeholder = placeholder
         self.tableData = tableData

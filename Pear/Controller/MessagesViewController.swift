@@ -18,11 +18,12 @@ class MessagesViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private let databaseRef = Database.database().reference()
-    private var messageUsers: [MessageUser] = []
+    private var matchedUsers: [MatchedUser] = []
+    private var matches: [TempMatchV2] = []
     private var timer: Timer?
-    private var user: User
+    private var user: UserV2
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -87,70 +88,20 @@ class MessagesViewController: UIViewController {
     }
 
     private func getUserMessages() {
-        getMessageMatches(netId: user.netID) { matches in
-            for match in matches {
-                guard let pairNetId = match.pair  else {
-                    print("Unable to get the pair's netid from the match.")
-                    return
-                }
-                self.getMessageUserData(pairNetId: pairNetId) { pair in
-                    let messageUser = MessageUser(
-                        netID: pair.netID,
-                        firstName: pair.firstName,
-                        lastName: pair.lastName,
-                        status: match.status,
-                        meetingTime: match.meetingTime,
-                        profilePictureURL: pair.profilePictureURL ?? ""
-                    )
-                    self.messageUsers.append(messageUser)
-                    self.reloadMessagesTableView()
-                }
-            }
+        Networking2.getAllMatches { matches in
+            self.matches = matches
+            self.matchedUsers = matches.compactMap { $0.users.filter ({$0.id != self.user.id}).first }
+            self.reloadMessagesTableView()
         }
     }
 
     private func reloadMessagesTableView() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { timer in
-            // TODO - sort by time when timestamps added to backend
             DispatchQueue.main.async {
                 self.messagesTableView.reloadData()
             }
         })
-    }
-
-    private func getMessageMatches(netId: String, completion: @escaping ([Match]) -> Void) {
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    guard response.success else {
-                        print("Network error: could not get user match history")
-                        return
-                    }
-                    completion(response.data)
-                case .error:
-                    print("Network error: could not get user match history")
-                }
-            }
-        }
-    }
-
-    private func getMessageUserData(pairNetId: String, completion: @escaping (User) -> Void) {
-        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's pair.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get the pair")
-                }
-            }
-        }
     }
 
 }
@@ -158,13 +109,14 @@ class MessagesViewController: UIViewController {
 extension MessagesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        messageUsers.count
+        matchedUsers.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = messagesTableView.dequeueReusableCell(withIdentifier: MessagesTableViewCell.reuseId, for: indexPath) as? MessagesTableViewCell else { return UITableViewCell() }
-        let messageUser = messageUsers[indexPath.row]
-        cell.configure(for: messageUser)
+        let pair = matchedUsers[indexPath.row]
+        let status = matches[indexPath.row].status
+        cell.configure(for: pair, status: status, week: indexPath.row + 1)
         return cell
     }
 
@@ -177,8 +129,9 @@ extension MessagesViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let messageUser = messageUsers[indexPath.row]
-        navigationController?.pushViewController(ChatViewController(messageUser: messageUser, currentUser: user), animated: true)
+        let match = matchedUsers[indexPath.row]
+        print("here")
+        navigationController?.pushViewController(ChatViewController(messageUser: match, currentUser: user), animated: true)
     }
 
 }

@@ -17,7 +17,7 @@ class ProfileSectionTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = "ProfileSectionTableViewCell"
     private var sectionType: ProfileSectionType? = nil
-    private var items: [String] = []
+    private var items: [Topic] = []
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -56,7 +56,7 @@ class ProfileSectionTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: User, type: ProfileSectionType) {
+    func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         sectionType = type
         switch type {
@@ -104,7 +104,7 @@ extension ProfileSectionTableViewCell: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = calculateNecessaryWidth(text: items[indexPath.item]) + 52
+        let cellWidth = calculateNecessaryWidth(text: items[indexPath.item].name) + 52
         let maxWidth = UIScreen.main.bounds.width - 40
         if cellWidth < maxWidth {
             return CGSize(width: cellWidth, height: 32)

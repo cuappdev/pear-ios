@@ -101,41 +101,14 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(userEmail[..<addressSignIndex], forKey: Constants.UserDefaults.userNetId)
             UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            NetworkManager.shared.createUser(idToken: idToken).observe { [weak self] result in
+            Networking2.authenticateUser(idToken: idToken) { [weak self] userSession in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
-                    switch result {
-                    case .value(let response):
-                        let userSession = response.data
-                        UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
-                        UserDefaults.standard.set(userSession.refreshToken, forKey: Constants.UserDefaults.refreshToken)
-                        self.getUser()
-                    case .error:
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        self.navigationController?.pushViewController(LoginViewController(), animated: false)
-                    }
-                }
-            }
-        }
-    }
-
-    private func getUser() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getLoginUser(netId: netId).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let onboardingCompleted = response.data.didOnboard
-                        UserDefaults.standard.set(onboardingCompleted, forKey: Constants.UserDefaults.onboardingCompletion)
-                        let viewController = onboardingCompleted ?
-                            HomeViewController() :
-                            OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                        self.navigationController?.pushViewController(viewController, animated: false)
-                    }
-                case .error:
-                    print("Network error: could not get user.")
+                    UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
+                    self.navigationController?.pushViewController(
+                        OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal),
+                        animated: false
+                    )
                 }
             }
         }
@@ -155,8 +128,9 @@ extension LoginViewController: GIDSignInDelegate {
             return
         }
 
-        if let email = user.profile.email,
-           !(email.contains("@cornell.edu")) && email != "cornellpearapp@gmail.com" {
+        guard let email = user.profile.email,
+              // Only allow users with Cornell emails or internal users (Pear email) to log in
+              email.contains("@cornell.edu") || email == "cornellpearapp@gmail.com" else {
             GIDSignIn.sharedInstance().signOut()
             self.showErrorMessageAlertView()
             return

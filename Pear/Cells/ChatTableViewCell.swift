@@ -54,12 +54,12 @@ class ChatTableViewCell: UITableViewCell {
         }
     }
 
-    private func setupConstraints(message: PearMessage, currentUserNetID: String) {
+    private func setupConstraints(message: PearMessage, currentUserId: Int) {
         let messagePadding: CGFloat = 5
 
         chatBubble.snp.remakeConstraints { make in
             make.top.bottom.equalTo(contentView).inset(messagePadding)
-            if message.senderNetID == currentUserNetID {
+            if message.senderId == currentUserId {
                 make.trailing.equalTo(contentView.snp.trailing).offset(-15)
                 make.width.lessThanOrEqualTo(250)
             } else {
@@ -77,9 +77,9 @@ class ChatTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for message: PearMessage, user: User, pair: MessageUser) {
+    func configure(for message: PearMessage, user: UserV2, pair: MatchedUser) {
         chatMessage.text = message.message
-        if message.senderNetID == user.netID {
+        if message.senderId == user.id {
             chatBubble.backgroundColor = .pearGreen
             chatMessage.textColor = .white
             pairProfilePic.isHidden = true
@@ -87,9 +87,9 @@ class ChatTableViewCell: UITableViewCell {
             chatBubble.backgroundColor = .paleGreen
             chatMessage.textColor = .black
             pairProfilePic.isHidden = false
-            pairProfilePic.kf.setImage(with: URL(string: pair.profilePictureURL))
+            pairProfilePic.kf.setImage(with: URL(string: pair.profilePicUrl ?? ""))
         }
-        setupConstraints(message: message, currentUserNetID: user.netID)
+        setupConstraints(message: message, currentUserId: user.id)
     }
 
 }

@@ -11,20 +11,20 @@ import Foundation
 
 struct PearMessage {
 
-    let senderNetID: String
-    let recipientNetID: String
+    let senderId: Int
+    let recipientId: Int
     let message: String
     let time: String
 
     init(snapshot: [String: Any]) {
-        senderNetID = snapshot["senderNetID"] as? String ?? ""
-        recipientNetID = snapshot["recipientNetID"] as? String ?? ""
+        senderId = snapshot["senderId"] as? Int ?? 0
+        recipientId = snapshot["recipientId"] as? Int ?? 0
         message = snapshot["message"] as? String ?? ""
         time = snapshot["time"] as? String ?? ""
     }
 
-    func getMessageHeight(currentUserNetID: String) -> CGFloat {
-        if senderNetID == currentUserNetID {
+    func getMessageHeight(currentUserId: Int) -> CGFloat {
+        if senderId == currentUserId {
             return message.height(withConstrainedWidth: 230, font: UIFont.getFont(.book, size: 16))
         } else {
             return message.height(withConstrainedWidth: 210, font: UIFont.getFont(.book, size: 16))

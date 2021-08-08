@@ -33,8 +33,8 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func configure(with interest: String) {
-        interestTagLabel.text = interest
+    func configure(with interest: InterestV2) {
+        interestTagLabel.text = interest.name
     }
 
     required init?(coder: NSCoder) {
