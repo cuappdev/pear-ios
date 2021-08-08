@@ -94,11 +94,9 @@ class OnboardingTableViewCell: UITableViewCell {
     }
 
     func configure(with interest: InterestV2) {
-        print(interest)
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
-            print("yes to image url", interest.imgUrl, interestImageUrl)
             interestImageView.kf.setImage(with: interestImageUrl)
         }
 
@@ -115,20 +113,6 @@ class OnboardingTableViewCell: UITableViewCell {
             interestImageView.kf.setImage(with: groupImageUrl)
         }
 
-        if lastShownItem != .group {
-            lastShownItem = .group
-            setupConstraints()
-        }
-    }
-
-    func configure(with talkingPoint: TalkingPointV2) {
-        titleLabel.text = talkingPoint.name
-        categoriesLabel.text = talkingPoint.subtitle
-        if let talkingPointImageUrl = URL(string: talkingPoint.imgUrl) {
-            interestImageView.kf.setImage(with: talkingPointImageUrl)
-        }
-
-        // TODO: Lucy double check what this does...
         if lastShownItem != .group {
             lastShownItem = .group
             setupConstraints()

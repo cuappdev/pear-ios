@@ -31,12 +31,7 @@ class NetworkManager {
     func getUserInterests() -> Future<Response<[String]>> {
         networking(Endpoint.getUserInterests()).decode()
     }
-    
-    /// [GET] Get talking points of the user.
-    func getUserTalkingPoints(netId: String) -> Future<Response<[String]>> {
-        networking(Endpoint.getUserTalkingPoints(netId: netId)).decode()
-    }
-    
+
     /// [GET] Get preferred locations of user by netID.
     func getUserPreferredLocations(netId: String) -> Future<Response<[Location]>> {
         networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
@@ -55,11 +50,6 @@ class NetworkManager {
     /// [POST] Update goals information about the user.
     func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
         networking(Endpoint.updateUserGoals(goals: goals)).decode()
-    }
-
-    /// [POST] Update talking points information about the user.
-    func updateUserTalkingPoints(talkingPoints: [String]) -> Future<SuccessResponse> {
-        networking(Endpoint.updateUserTalkingPoints(talkingPoints: talkingPoints)).decode()
     }
     
     /// [POST] Update time availabilities of the user.

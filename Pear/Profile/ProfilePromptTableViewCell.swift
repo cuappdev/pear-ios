@@ -62,7 +62,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
                 .thinFont("I study ")
 //                .normalFont(user.major)
                 .thinFont(" in the class of ")
-                .normalFont(user.graduationYear ?? "2020")
+                .normalFont(user.graduationYear ?? "graudationYear not found")
                 .thinFont(", and my home is in ")
                 .normalFont(user.hometown ?? "")
                 .thinFont("! My pronouns are ")

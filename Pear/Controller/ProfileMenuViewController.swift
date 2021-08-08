@@ -43,13 +43,13 @@ class ProfileMenuViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
 
         guard let year = user.graduationYear,
-              let hometown = user.hometown else {
+              let hometown = user.hometown,
+              user.majors.count > 0 else {
             return
         }
 
         let firstName = user.firstName
         let lastName = user.lastName
-//        let major = user.major
 
         editButton.backgroundColor = .backgroundWhite
         editButton.setTitle("Edit Info", for: .normal)
@@ -89,7 +89,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
-        profileInfoLabel.text = "Computer Science \(year)\nFrom \(hometown)"
+        profileInfoLabel.text = "\(user.majors[0].name) \(year)\nFrom \(hometown)"
         profileInfoLabel.textColor = .greenGray
         profileInfoLabel.font = ._16CircularStdBook
         profileInfoLabel.numberOfLines = 0

@@ -29,12 +29,6 @@ struct UpdateUserGoalsBody: Codable {
 
 }
 
-struct UpdateUserTalkingPointsBody: Codable {
-
-    let talkingPoints: [String]
-
-}
-
 struct MatchingBody: Codable {
 
     let netIDs: [String]

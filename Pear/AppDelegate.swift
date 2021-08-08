@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Endpoint.setupEndpointConfig()
         
         return true
-
     }
 
     // MARK: UISceneSession Lifecycle

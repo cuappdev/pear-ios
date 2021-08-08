@@ -57,11 +57,6 @@ extension Endpoint {
     static func getUserMajor() -> Endpoint {
         Endpoint(path: "/user/majors/")
     }
-    
-    /// [GET] Get talking points of the user.
-    static func getUserTalkingPoints(netId: String) -> Endpoint {
-        Endpoint(path: "/user/talkingPoints/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
-    }
 
     /// [GET] Get interests of the user.
     static func getUserInterests() -> Endpoint {
@@ -96,12 +91,6 @@ extension Endpoint {
     static func updateUserGoals(goals: [String]) -> Endpoint {
         let body = UpdateUserGoalsBody(goals: goals)
         return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
-    }
-
-    /// [POST] Update talking points information about the user.
-    static func updateUserTalkingPoints(talkingPoints: [String]) -> Endpoint {
-        let body = UpdateUserTalkingPointsBody(talkingPoints: talkingPoints)
-        return Endpoint(path: "/user/talkingPoints/", headers: standardHeaders, body: body)
     }
 
     /// [POST] Update time availabilities of the user.
