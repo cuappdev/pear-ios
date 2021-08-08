@@ -23,45 +23,9 @@ struct UserSessionBody: Codable {
 
 }
 
-struct UpdateUserGroupsBody: Codable {
-
-    let groups: [String]
-
-}
-
 struct UpdateUserGoalsBody: Codable {
 
     let goals: [String]
-
-}
-
-struct UpdateUserTalkingPointsBody: Codable {
-
-    let talkingPoints: [String]
-
-}
-
-struct UpdateUserSocialMediaBody: Codable {
-
-    let didOnboard: Bool
-    let facebook: String
-    let instagram: String
-
-}
-
-struct UpdateUserDemographicsBody: Codable {
-
-    let graduationYear: String
-    let hometown: String
-    let major: String
-    let pronouns: String
-    let profilePictureURL: String
-
-}
-
-struct UpdateUserInterestsBody: Codable {
-
-    let interests: [String]
 
 }
 

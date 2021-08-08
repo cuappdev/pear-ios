@@ -186,20 +186,17 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func completeOnboarding() {
-        let instagramHandle = instagramTextField.text ?? ""
-        let facebookHandle = facebookTextField.text ?? ""
-        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle, didOnboard: true).observe { [weak self] result in
+        Networking2.updateSocialMedia(
+            facebookUrl: facebookTextField.text,
+            instagramUsername: instagramTextField.text,
+            hasOnboarded: true
+        ) { [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
+                if success {
+                    UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
@@ -207,26 +204,16 @@ class SocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserSocialMedia(netId: netId).observe { [weak self] result in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        if let facebook = response.data.facebook {
-                            self.facebookTextField.text = facebook
-                        }
-                        if let instagram = response.data.instagram {
-                            self.instagramTextField.text = instagram
-                        }
-                        self.updateNext()
-                    } else {
-                        print("Network error: could not get user social media.")
-                    }
-                case .error:
-                    print("Network error: could not get user social media.")
+                if let facebookUrl = user.facebookUrl {
+                    self.facebookTextField.text = facebookUrl
                 }
+                if let instagramUsername = user.instagramUsername {
+                    self.instagramTextField.text = instagramUsername
+                }
+                self.updateNext()
             }
         }
     }

@@ -20,10 +20,10 @@ class TabPageViewController: UIPageViewController {
     private var pages: [UIViewController] = [UIViewController]()
 
     // MARK: - Data Vars
-    private let user: User
+    private let user: UserV2
     weak var tabDelegate: TabDelegate?
 
-    init(match: Match?, user: User, tabDelegate: TabDelegate) {
+    init(match: MatchV2?, user: UserV2, tabDelegate: TabDelegate) {
         self.user = user
         self.tabDelegate = tabDelegate
 

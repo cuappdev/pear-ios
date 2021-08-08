@@ -45,7 +45,6 @@ class OnboardingPageViewController: UIPageViewController {
 
         let demographicsViewController = DemographicsViewController(delegate: self)
         let interestsViewController = InterestsViewController(delegate: self)
-        let talkingPointsViewController = TalkingPointsViewController(delegate: self)
         let groupsViewController = GroupsViewController(delegate: self)
         let goalsViewController = GoalsViewController(delegate: self)
         let socialMediaViewController = SocialMediaViewController(delegate: self)
@@ -54,7 +53,6 @@ class OnboardingPageViewController: UIPageViewController {
             interestsViewController,
             groupsViewController,
             goalsViewController,
-            talkingPointsViewController,
             socialMediaViewController
         ]
 

@@ -11,12 +11,14 @@ import UIKit
 
 class ProfileMenuViewController: UIViewController {
 
+    // MARK: - Private View Vars
     private let editButton = UIButton()
     private let optionsTableView = UITableView()
     private let profileImageView = UIImageView()
     private let profileInfoLabel = UILabel()
     private let profileNameLabel = UILabel()
 
+    // MARK: - Private Data Vars
     private let editButtonSize = CGSize(width: 70, height: 30)
     private let menuOptions: [MenuOption] = [
         MenuOption(image: "interests", text: "Your interests"),
@@ -25,9 +27,9 @@ class ProfileMenuViewController: UIViewController {
         MenuOption(image: "settings", text: "Settings")
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
-    private var user: User
+    private var user: UserV2
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -41,12 +43,14 @@ class ProfileMenuViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
 
+        guard let year = user.graduationYear,
+              let hometown = user.hometown,
+              user.majors.count > 0 else {
+            return
+        }
+
         let firstName = user.firstName
         let lastName = user.lastName
-        let major = user.major
-
-        let year = user.graduationYear
-        let hometown = user.hometown
 
         editButton.backgroundColor = .backgroundWhite
         editButton.setTitle("Edit Info", for: .normal)
@@ -78,7 +82,7 @@ class ProfileMenuViewController: UIViewController {
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.isUserInteractionEnabled = true
-        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
         profileImageView.addGestureRecognizer(profileTapGesture)
@@ -86,7 +90,7 @@ class ProfileMenuViewController: UIViewController {
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
 
-        profileInfoLabel.text = "\(major) \(year)\nFrom \(hometown)"
+        profileInfoLabel.text = "\(user.majors[0].name) \(year)\nFrom \(hometown)"
         profileInfoLabel.textColor = .greenGray
         profileInfoLabel.font = ._16CircularStdBook
         profileInfoLabel.numberOfLines = 0
@@ -139,20 +143,20 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: false), animated: true)
+        navigationController?.pushViewController(EditInterestsViewController(user: user), animated: true)
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditingViewController(user: user, isShowingGroups: true), animated: true)
+        navigationController?.pushViewController(EditGroupsViewController(user: user), animated: true)
     }
 
     func pushSettingsViewController() {
         navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
-    func pushMessagingViewController() {
-        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
-    }
+//    func pushMessagingViewController() {
+//        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
+//    }
 
 }
 
@@ -180,7 +184,7 @@ extension ProfileMenuViewController: UITableViewDataSource {
         } else if option.text == "Settings" {
             pushSettingsViewController()
         } else if option.text == "Messages" {
-            pushMessagingViewController()
+//            pushMessagingViewController()
         }
     }
 

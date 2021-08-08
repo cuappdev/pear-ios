@@ -23,7 +23,7 @@ class SettingsViewController: UIViewController {
     private var pauseBlurEffect: UIBlurEffect!
     private var pauseVisualEffectView: UIVisualEffectView!
     private var pausePearView: PausePearView!
-    private let user: User
+    private let user: UserV2
 
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
@@ -54,7 +54,7 @@ class SettingsViewController: UIViewController {
         setupConstraints()
     }
     
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -104,7 +104,10 @@ class SettingsViewController: UIViewController {
     }
     
     private func pushEditTimeAvailabilitiesViewController() {
-        navigationController?.pushViewController(EditTimeAvailabilityViewController(), animated: true)
+        navigationController?.pushViewController(
+            EditTimeAvailabilityViewController(availabilities: user.availability ?? []),
+            animated: true
+        )
     }
 
     private func pushEditLocationAvailabilitiesViewController() {
@@ -147,7 +150,6 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             [Constants.UserDefaults.accessToken,
-             Constants.UserDefaults.refreshToken,
              Constants.UserDefaults.onboardingCompletion,
              Constants.UserDefaults.userNetId,
              Constants.UserDefaults.userProfilePictureURL

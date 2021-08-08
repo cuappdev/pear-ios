@@ -27,7 +27,7 @@ enum ProfileSectionType {
         }
     }
 
-    func getTitle(for user: User) -> String {
+    func getTitle(for user: UserV2) -> String {
         switch self {
         case .summary:
             return "\(user.firstName) \(user.lastName)"

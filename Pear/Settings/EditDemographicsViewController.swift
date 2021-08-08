@@ -14,10 +14,9 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private let hometownSearchFields = Constants.Options.hometownSearchFields
     private var majorSearchFields: [String] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
-    private var user: User
+    private var user: UserV2
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
 
     // MARK: - Private View Vars
@@ -37,17 +36,18 @@ class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Variables
     private let textFieldHeight: CGFloat = 49
-    private var isPageScrolled: Bool = false // Keep track of if view scrolled to fit content
+    // Keep track of if view scrolled to fit content
+    private var isPageScrolled: Bool = false
     private var didUpdatePhoto = false
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         demographics.name = "\(user.firstName) \(user.lastName)"
         demographics.graduationYear = user.graduationYear
-        demographics.major = user.major
+//        demographics.major = user.major
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
-        if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
         super.init(nibName: nil, bundle: nil)
@@ -138,28 +138,34 @@ class EditDemographicsViewController: UIViewController {
                                                          tableData: classSearchFields,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
-        classDropdownView.setSelectValue(value: user.graduationYear)
+        classDropdownView.setSelectValue(value: user.graduationYear ?? "")
         editScrollView.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                         placeholder: "Major",
-                                                         tableData: majorSearchFields)
+        majorDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Major",
+            tableData: majorSearchFields,
+            searchType: .local
+        )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
-        majorDropdownView.setSelectValue(value: user.major)
+//        majorDropdownView.setSelectValue(value: user.major)
         editScrollView.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "Hometown",
-                                                            tableData: hometownSearchFields)
+        hometownDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "City, State, Country",
+            tableData: [],
+            searchType: .places
+        )
         hometownDropdownView.tag = 3 // Set tag to keep track of field selection status.
-        hometownDropdownView.setSelectValue(value: user.hometown)
+        hometownDropdownView.setSelectValue(value: user.hometown ?? "")
         editScrollView.addSubview(hometownDropdownView)
 
         pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                             placeholder: "Pronouns",
                                                             tableData: pronounSearchFields, textTemplate: "")
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
-        pronounsDropdownView.setSelectValue(value: user.pronouns)
+        pronounsDropdownView.setSelectValue(value: user.pronouns ?? "")
         editScrollView.addSubview(pronounsDropdownView)
 
         setupConstraints()
@@ -235,19 +241,11 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func getMajors() {
-        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+        Networking2.getAllMajors { [weak self] majors in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.majorDropdownView.setTableData(tableData: response.data)
-                    } else {
-                        print("Network error: could not get majors.")
-                    }
-                case .error:
-                    print("Network error: could not get majors.")
-                }
+                let majorsData = majors.map { $0.name }
+                self.majorDropdownView.setTableData(tableData: majorsData)
             }
         }
     }
@@ -261,30 +259,26 @@ class EditDemographicsViewController: UIViewController {
            let major = demographics.major,
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns {
-            NetworkManager.shared.updateUserDemographics(
+            Networking2.updateProfile(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
                 pronouns: pronouns,
-                profilePictureURL: profilePictureURL).observe { [weak self] result in
+                profilePicUrl: profilePictureURL) { [weak self] success in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
-                        switch result {
-                        case .value(let response):
-                            if response.success {
-                                self.navigationController?.popViewController(animated: true)
-                            } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                            }
-                        case .error:
+                        if success {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                         }
                     }
-                }
             }
+        }
     }
 
     @objc private func savePressed() {
+        print("save pressed")
         if didUpdatePhoto {
             if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
                 NetworkManager.shared.uploadPhoto(base64: profileImageBase64).observe { [weak self] result in
@@ -304,7 +298,7 @@ class EditDemographicsViewController: UIViewController {
                 }
             }
         } else {
-            saveProfile(profilePictureURL: user.profilePictureURL ?? "")
+            saveProfile(profilePictureURL: user.profilePicUrl)
         }
 
     }

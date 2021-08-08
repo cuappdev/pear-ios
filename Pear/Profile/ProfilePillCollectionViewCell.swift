@@ -43,14 +43,10 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func configure(with item: String, type: ProfileSectionType) {
-        label.text = item
-        if type == .interests {
-            let image = Constants.Options.interestsMap[item]?.imageName
-            imageView.image = UIImage(named: image ?? "")
-        } else if type == .groups {
-            let image = Constants.Options.organizationsMap[item]?.imageName
-            imageView.image = UIImage(named: image ?? "groupsPlaceholder")
+    func configure(with item: Topic, type: ProfileSectionType) {
+        label.text = item.name
+        if let topicPictureUrl = URL(string: item.imgUrl) {
+            self.imageView.kf.setImage(with: topicPictureUrl)
         }
     }
 

@@ -93,39 +93,39 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    private func getMessageUser(pairNetId: String, completion: @escaping (User) -> Void) {
-        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's pair.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get the pair")
-                }
-            }
-        }
-    }
-
-    private func getUser(netId: String, completion: @escaping (User) -> Void) {
-        NetworkManager.shared.getUser(netId: netId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's pair.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get the pair")
-                }
-            }
-        }
-    }
+//    private func getMessageUser(pairNetId: String, completion: @escaping (User) -> Void) {
+//        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let result):
+//                    guard result.success else {
+//                        print("Network error: could not get user's pair.")
+//                        return
+//                    }
+//                    completion(result.data)
+//                case .error:
+//                    print("Network error: could not get the pair")
+//                }
+//            }
+//        }
+//    }
+//
+//    private func getUser(netId: String, completion: @escaping (User) -> Void) {
+//        NetworkManager.shared.getUser(netId: netId).observe { result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let result):
+//                    guard result.success else {
+//                        print("Network error: could not get user's pair.")
+//                        return
+//                    }
+//                    completion(result.data)
+//                case .error:
+//                    print("Network error: could not get the pair")
+//                }
+//            }
+//        }
+//    }
 
     @objc func presentMessaging() {
         guard let currentUser = currentUser, let pair = pair else { return }
@@ -142,11 +142,10 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for currentUser: User?, pair: User) {
-        nameLabel.text = "\(pair.firstName) \(pair.lastName)"
-        self.currentUser = currentUser
-        self.pair = pair
-        if let profilePictureURL = URL(string: pair.profilePictureURL ?? "") {
+    func configure(for user: UserV2) {
+        nameLabel.text = "\(user.firstName) \(user.lastName)"
+//        netIdLabel.text = "Reach me at \(user.netId)"
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
     }

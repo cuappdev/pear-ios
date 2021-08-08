@@ -12,7 +12,7 @@ import UIKit
 
 class NoMatchViewController: UIViewController {
 
-    private let user: User
+    private let user: UserV2
 
     // MARK: - Private View Vars
     private let availabilityButton = UIButton()
@@ -20,7 +20,7 @@ class NoMatchViewController: UIViewController {
     private let noMatchTitleLabel = UILabel()
     private let surprisedPearImageView = UIImageView()
 
-    init(user: User) {
+    init(user: UserV2) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -104,8 +104,8 @@ class NoMatchViewController: UIViewController {
     }
 
     @objc private func availabilityButtonPressed() {
-        let timeVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
-        navigationController?.pushViewController(timeVC, animated: true)
+//        let timeVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
+//        navigationController?.pushViewController(timeVC, animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {

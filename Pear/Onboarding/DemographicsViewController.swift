@@ -11,13 +11,10 @@ import UIKit
 class DemographicsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private var classSearchFields: [String] = []
     private weak var delegate: OnboardingPageDelegate?
     private var fieldsEntered: [Bool] = [false, false, false, false] // Keep track of selection status of each field.
     private var fieldValues: [String: String] = [:] // Keep track of selected values
-    // TODO: Update with networking values from backend (use states for now)
-    private let hometownSearchFields = Constants.Options.hometownSearchFields
-    private var majorSearchFields: [String] = []
+    private var majorSearchFields: [MajorV2] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
 
     // MARK: - Private View Vars
@@ -32,7 +29,6 @@ class DemographicsViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Private Constants
-    private let fieldsCornerRadius: CGFloat = 8
     private let fieldMap = [
         Constants.UserDefaults.userGraduationYear,
         Constants.UserDefaults.userMajor,
@@ -51,6 +47,9 @@ class DemographicsViewController: UIViewController {
     }
 
     override func viewDidLoad() {
+
+        super.viewDidLoad()
+
         navigationController?.navigationBar.isHidden = true
         
         let userFirstName = UserDefaults.standard.string(forKey: "userFirstName") ?? "user"
@@ -69,30 +68,37 @@ class DemographicsViewController: UIViewController {
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
-        classSearchFields = (currentYear...gradYear).map { "\($0)" }
-
         classDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                          placeholder: "Class of...",
-                                                         tableData: classSearchFields,
+                                                         tableData: (currentYear...gradYear).map { "\($0)" },
                                                          textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
 
-        majorDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                         placeholder: "Major",
-                                                         tableData: majorSearchFields)
+        majorDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Major",
+            tableData: majorSearchFields.map { $0.name },
+            searchType: .local
+        )
         majorDropdownView.tag = 1 // Set tag to keep track of field selection status.
         view.addSubview(majorDropdownView)
 
-        hometownDropdownView = OnboardingSearchDropdownView(delegate: self,
-                                                            placeholder: "State",
-                                                            tableData: hometownSearchFields)
+        hometownDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "City, State, Country",
+            tableData: [],
+            searchType: .places
+        )
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
-                                                            placeholder: "Pronouns",
-                                                            tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView = OnboardingSelectDropdownView(
+            delegate: self,
+            placeholder: "Pronouns",
+            tableData: pronounSearchFields,
+            textTemplate: ""
+        )
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)
 
@@ -115,71 +121,46 @@ class DemographicsViewController: UIViewController {
            let major = fieldValues[fieldMap[1]],
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
-           let profilePictureURL = UserDefaults.standard.string(forKey: Constants.UserDefaults.userProfilePictureURL) {
-            NetworkManager.shared.updateUserDemographics(
+           let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
+            Networking2.updateDemographics(
                 graduationYear: graduationYear,
-                major: major,
+                majors: [matchingMajor.id],
                 hometown: hometown,
-                pronouns: pronouns,
-                profilePictureURL: profilePictureURL).observe { [weak self] result in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .value(let response):
-                            if response.success {
-                                self.delegate?.nextPage(index: 1)
-                            } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                            }
-                        case .error:
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                        }
+                pronouns: pronouns
+            ) { [weak self] (success) in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    if success {
+                        self.delegate?.nextPage(index: 1)
+                    } else {
+                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                     }
+                }
             }
         }
     }
 
     private func getAllMajors() {
-        NetworkManager.shared.getAllMajors().observe { [weak self] result in
+        Networking2.getAllMajors { [weak self] majors in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.majorDropdownView.setTableData(tableData: response.data)
-                    }
-                case .error:
-                    print("Network error: could not get all major fields.")
-                }
+                let majorsData = majors.map { $0.name }
+                self.majorSearchFields = majors
+                self.majorDropdownView.setTableData(tableData: majorsData)
             }
         }
     }
 
     private func getUser() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { [weak self] result in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        let user = response.data
-                        if user.major != "" && user.major != "Undeclared" {
-                            self.majorDropdownView.setTitle(title: user.major)
-                        }
-                        if user.graduationYear != "" {
-                            self.classDropdownView.setTitle(title: user.graduationYear)
-                        }
-                        if user.hometown != "" {
-                            self.hometownDropdownView.setTitle(title: user.hometown)
-                        }
-                        if user.pronouns != "" {
-                            self.pronounsDropdownView.setTitle(title: user.pronouns)
-                        }
-                    }
-                case .error:
-                    print("Network error: could not get user.")
+                if let graduationYear = user.graduationYear {
+                    self.classDropdownView.setTitle(title: graduationYear)
                 }
+                self.hometownDropdownView.setTitle(title: user.hometown ?? "")
+                self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
+                self.majorDropdownView.setTitle(title: user.majors.count > 0 ? user.majors[0].name : "")
             }
         }
     }

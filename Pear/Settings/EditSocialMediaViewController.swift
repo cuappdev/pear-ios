@@ -109,19 +109,16 @@ class EditSocialMediaViewController: UIViewController {
     }
 
     @objc private func saveSocialMedia() {
-        let instagramHandle = instaTextField.text ?? ""
-        let facebookHandle = fbTextField.text ?? ""
-        NetworkManager.shared.updateUserSocialMedia(facebook: facebookHandle, instagram: instagramHandle, didOnboard: true).observe { [weak self] result in
+        Networking2.updateSocialMedia(
+            facebookUrl: fbTextField.text,
+            instagramUsername: instaTextField.text,
+            hasOnboarded: true
+        ) { [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                    }
-                case .error:
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true)
                 }
             }
@@ -134,25 +131,11 @@ class EditSocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserSocialMedia(netId: netId).observe { [weak self] result in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        if let facebook = response.data.facebook {
-                            self.fbTextField.text = facebook
-                        }
-                        if let instagram = response.data.instagram {
-                            self.instaTextField.text = instagram
-                        }
-                    } else {
-                        print("Network error: could not get user.")
-                    }
-                case .error:
-                    print("Network error: could not get user.")
-                }
+                self.fbTextField.text = user.facebookUrl
+                self.instaTextField.text = user.instagramUsername
             }
         }
     }

@@ -137,20 +137,20 @@ class MessagesViewController: UIViewController {
     }
 
     private func getMessageUserData(pairNetId: String, completion: @escaping (User) -> Void) {
-        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's pair.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get the pair")
-                }
-            }
-        }
+//        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let result):
+//                    guard result.success else {
+//                        print("Network error: could not get user's pair.")
+//                        return
+//                    }
+//                    completion(result.data)
+//                case .error:
+//                    print("Network error: could not get the pair")
+//                }
+//            }
+//        }
     }
 
 }

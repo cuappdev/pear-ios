@@ -106,6 +106,32 @@ fileprivate class SelectedSchedules {
 
 }
 
+// MARK: - Section
+struct TimeSection {
+    let type: SectionType
+    var items: [ItemType]
+}
+
+enum SectionType: String {
+    case afternoon = "Afternoon"
+    case evening = "Evening"
+    case morning = "Morning"
+}
+
+enum ItemType {
+    case header(String)
+    case time(String)
+
+    func getTime() -> String? {
+        switch self {
+        case .time(let time):
+            return time
+        default:
+            return nil
+        }
+    }
+}
+
 class SchedulingTimeViewController: UIViewController {
 
     // MARK: - Views
@@ -137,30 +163,7 @@ class SchedulingTimeViewController: UIViewController {
     private let interitemSpacing: CGFloat = 4
     private let sectionInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
-    // MARK: - Section
-    private struct Section {
-        let type: SectionType
-        var items: [ItemType]
-    }
-    private enum SectionType: String {
-        case afternoon = "Afternoon"
-        case evening = "Evening"
-        case morning = "Morning"
-    }
-    private enum ItemType {
-        case header(String)
-        case time(String)
-
-        func getTime() -> String? {
-            switch self {
-            case .time(let time):
-                return time
-            default:
-                return nil
-            }
-        }
-    }
-    private var timeSections: [Section] = []
+    private var timeSections: [TimeSection] = []
 
     // MARK: Time Related
     // All possible times available for parts of a day
@@ -402,9 +405,9 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func setupTimeSections() {
-        let afternoonSection = Section(type: .afternoon, items: afternoonItems)
-        let eveningSection = Section(type: .evening, items: eveningItems)
-        let morningSection = Section(type: .morning, items: morningItems)
+        let afternoonSection = TimeSection(type: .afternoon, items: afternoonItems)
+        let eveningSection = TimeSection(type: .evening, items: eveningItems)
+        let morningSection = TimeSection(type: .morning, items: morningItems)
 
         timeSections = []
         if !morningTimes.isEmpty {

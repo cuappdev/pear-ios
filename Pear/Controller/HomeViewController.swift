@@ -5,12 +5,12 @@
 //  Created by Lucy Xu on 10/1/20.
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
+import AppDevAnnouncements
 import FutureNova
 import Kingfisher
 import SideMenu
 import UIKit
 import UserNotifications
-import AppDevAnnouncements
 
 class HomeViewController: UIViewController {
 
@@ -24,13 +24,13 @@ class HomeViewController: UIViewController {
     private var tabContainerView: UIView!
     /// View Controller whose contents are shown below
     private var tabPageViewController: TabPageViewController?
-    private let profileButtonSize = CGSize(width: 35, height: 35)
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
-    private let tabs = ["Weekly Pear", "People"]
-    private var user: User?
     private var displayMenu = true
+    private let profileButtonSize = CGSize(width: 35, height: 35)
+    private let tabs = ["Weekly Pear", "People"]
+    private var user: UserV2?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,6 +101,10 @@ class HomeViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
+    /*
+
+     TODO: Comment this back when feedback route is done
+    
     private func showInAppFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
         NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
@@ -126,64 +130,23 @@ class HomeViewController: UIViewController {
         }
     }
 
+     */
+
     private func updateUserAndTabPage() {
-        getUserThen { [weak self] newUser in
+        Networking2.getMe { [weak self] user in
             guard let self = self else { return }
-            self.getUserMatchThen(netId: newUser.netID) { [weak self] matches in
-                guard let self = self else { return }
-                if self.user == nil || self.user != newUser {
-                    let firstActiveMatch = matches.filter({ $0.status != "inactive" }).first
-                    self.setUserAndTabPage(newUser: newUser, match: firstActiveMatch)
-                }
-            }
-        }
-    }
-
-    private func setUserAndTabPage(newUser: User, match: Match? = nil) {
-        user = newUser
-        if let profilePictureURL = URL(string: newUser.profilePictureURL ?? "") {
-            profileImageView.kf.setImage(with: profilePictureURL)
-        }
-        setupTabPageViewController(with: match, user: newUser)
-    }
-
-    private func getUserThen(_ completion: @escaping (User) -> Void) {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUser(netId: netId).observe { result in
             DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    guard response.success else {
-                        print("Network error: could not get user.")
-                        return
-                    }
-                    completion(response.data)
-                case .error:
-                    print("Network error: could not get user.")
+                let match = user.currentMatch
+                self.user = user
+                if let profilePictureURL = URL(string: user.profilePicUrl) {
+                    self.profileImageView.kf.setImage(with: profilePictureURL)
                 }
+                self.setupTabPageViewController(with: match, user: user)
             }
         }
     }
 
-    private func getUserMatchThen(netId: String, completion: @escaping ([Match]) -> Void) {
-        NetworkManager.shared.getUserMatches(netId: netId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    guard response.success else {
-                        print("Network error: could not get user match.")
-                        return
-                    }
-                    completion(response.data)
-                case .error:
-                    print("Network error: could not get user match.")
-                }
-
-            }
-        }
-    }
-
-    private func setupTabPageViewController(with match: Match? = nil, user: User) {
+    private func setupTabPageViewController(with match: MatchV2? = nil, user: UserV2) {
         tabPageViewController = TabPageViewController(match: match, user: user, tabDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)

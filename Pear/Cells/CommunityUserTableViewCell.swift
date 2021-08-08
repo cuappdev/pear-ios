@@ -19,7 +19,7 @@ class CommunityUserTableViewCell: UITableViewCell {
     private let nameLabel = UILabel()
 
     // MARK: - Private Data Vars
-    private var interests: [String] = []
+    private var interests: [InterestV2] = []
     static let reuseIdentifier = "CommunityUserTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -98,18 +98,24 @@ class CommunityUserTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with user: CommunityUser) {
-        if let firstName = user.firstName, let lastName = user.lastName {
-            nameLabel.text = "\(firstName) \(lastName)"
-            if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
-                informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
-                interests = userInterests
-                interestsCollectionView.reloadData()
-            }
-            if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
-                profileImageView.kf.setImage(with: profilePictureURL)
-            }
+    func configure(with user: UserProfile) {
+        nameLabel.text = "\(user.firstName) \(user.lastName)"
+        if let profilePictureURL = URL(string: user.profilePicUrl) {
+            profileImageView.kf.setImage(with: profilePictureURL)
         }
+        interests = user.interests
+        interestsCollectionView.reloadData()
+//        if let firstName = user.firstName, let lastName = user.lastName {
+//            nameLabel.text = "\(firstName) \(lastName)"
+//            if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
+//                informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
+//                interests = userInterests
+//                interestsCollectionView.reloadData()
+//            }
+//            if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
+//                profileImageView.kf.setImage(with: profilePictureURL)
+//            }
+//        }
     }
 
     override func prepareForReuse() {
@@ -150,7 +156,7 @@ extension CommunityUserTableViewCell: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalHorizontalPadding: CGFloat = 16
-        return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item]) + totalHorizontalPadding, height: 19)
+        return CGSize(width: calculateNecessaryWidth(text: interests[indexPath.item].name) + totalHorizontalPadding, height: 19)
     }
 
 }
