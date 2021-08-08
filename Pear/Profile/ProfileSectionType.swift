@@ -23,8 +23,7 @@ enum ProfileSectionType {
         case .basics:
             return ProfilePromptTableViewCell.reuseIdentifier
         case .interests, .groups, .matches:
-//            return ProfileSectionTableViewCell.reuseIdentifier
-        return ""
+            return ProfileSectionTableViewCell.reuseIdentifier
         }
     }
 

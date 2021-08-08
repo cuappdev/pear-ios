@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AnnouncementNetworking.setupConfig(
             scheme: Keys.announcementsScheme,
             host: Keys.announcementsHost,
-            commonPath: Keys.announcemxentsCommonPath,
+            commonPath: Keys.announcementsCommonPath,
             announcementPath: Keys.announcementsPath
         )
 

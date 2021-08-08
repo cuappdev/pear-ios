@@ -168,10 +168,10 @@ extension MatchProfileViewController: UITableViewDataSource {
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
         switch section {
-        case .summary:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: match.matchedUser)
-            return cell
+//        case .summary:
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
+//            cell.configure(for: match.matchedUser)
+//            return cell
 //        case .basics:
 //            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
 //            cell.configure(for: match.matchedUser, type: section)

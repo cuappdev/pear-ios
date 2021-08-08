@@ -142,7 +142,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: MatchedUser) {
+    func configure(for user: UserV2) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
 //        netIdLabel.text = "Reach me at \(user.netId)"
         if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {

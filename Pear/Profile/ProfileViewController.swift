@@ -24,6 +24,8 @@ class ProfileViewController: UIViewController {
 
     init(userId: Int) {
         self.userId = userId
+        print("getting user id")
+        print(userId)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -51,33 +53,6 @@ class ProfileViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
-        getUserThen { [weak self] user in
-            guard let self = self else { return }
-
-            self.user = user
-
-            self.setupViews(user: user)
-            self.setupConstraints()
-
-            self.profileSections = [.summary, .basics]
-            if user.interests.count > 0 {
-                self.profileSections.append(.interests)
-            }
-            if user.groups.count > 0 {
-                self.profileSections.append(.groups)
-            }
-            self.profileTableView.reloadData()
-        }
-    }
-
-    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
-        Networking2.getUser(id: userId) { user in
-            completion(user)
-        }
-    }
-
-    private func setupViews(user: UserV2) {
-
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
@@ -98,9 +73,28 @@ class ProfileViewController: UIViewController {
         reachOutButton.titleLabel?.font = ._20CircularStdBold
         reachOutButton.setTitleColor(.white, for: .normal)
         reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
-
         view.addSubview(reachOutButton)
 
+        setupConstraints()
+
+        getUserThen { [weak self] user in
+            guard let self = self else { return }
+            self.user = user
+            self.profileSections = [.summary, .basics]
+            if user.interests.count > 0 {
+                self.profileSections.append(.interests)
+            }
+            if user.groups.count > 0 {
+                self.profileSections.append(.groups)
+            }
+            self.profileTableView.reloadData()
+        }
+    }
+
+    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
+        Networking2.getUser(id: userId) { user in
+            completion(user)
+        }
     }
 
     private func setupConstraints() {
@@ -139,15 +133,17 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        return UITableViewCell()
         guard let user = user else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
+        print(section, reuseIdentifier)
 
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: nil, user: user)
-            return UITableViewCell()
+            cell.configure(for: user)
+            return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
             cell.configure(for: user, type: section)
