@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import Firebase
 import GoogleSignIn
 import IQKeyboardManagerSwift
 import UIKit
@@ -20,6 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Set up keyboard management library, helps to shift up view when keyboard becomes active
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
+
+        FirebaseApp.configure()
         
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController(rootViewController: LoadingViewController())

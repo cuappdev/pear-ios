@@ -25,6 +25,10 @@ use_frameworks!
     pod 'SnapKit'
     pod 'SideMenu'
 
+    # Messaging
+    pod 'Firebase/Core'
+    pod 'Firebase/Database'
+
   target 'PearTests' do
     inherit! :search_paths
     # Pods for testing

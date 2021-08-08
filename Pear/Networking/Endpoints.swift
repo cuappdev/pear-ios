@@ -77,7 +77,7 @@ extension Endpoint {
     static func getUserPreferredLocations(netId: String) -> Endpoint {
         Endpoint(path: "/user/preferredLocations/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
-    
+
     // MARK: - Get users
     
     /// [GET] Get all users.

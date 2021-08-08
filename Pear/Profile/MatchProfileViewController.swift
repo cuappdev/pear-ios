@@ -195,7 +195,6 @@ extension MatchProfileViewController: UITableViewDataSource {
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
         return UITableViewCell()
-
 //        switch section {
 //        case .summary:
 //            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }

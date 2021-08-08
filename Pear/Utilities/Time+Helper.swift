@@ -257,4 +257,13 @@ extension Time {
         return "\(hours):\(mins)"
     }
 
+    /**
+     Extracts the year, month, and day from a date, removing the time.
+     */
+    static func stripTimeOff(from originalDate: Date) -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: originalDate)
+        let date = Calendar.current.date(from: components)
+        return date ?? originalDate
+    }
+
 }
