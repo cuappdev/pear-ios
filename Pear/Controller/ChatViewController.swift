@@ -17,6 +17,8 @@ class ChatViewController: UIViewController {
     private let chatInputContainerView = UIView()
     private let chatInputTextField = UITextField()
     private let chatTableView = UITableView()
+    private let emptyBackgroundView = UIView()
+    private let emptyChatImage = UIImageView()
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
 
@@ -62,6 +64,12 @@ class ChatViewController: UIViewController {
         chatTableView.dataSource = self
         chatTableView.delegate = self
         view.addSubview(chatTableView)
+
+        emptyChatImage.image = UIImage(named: "emptyChat")
+        emptyChatImage.contentMode = .scaleAspectFit
+
+        emptyBackgroundView.backgroundColor = .clear
+        emptyBackgroundView.addSubview(emptyChatImage)
 
         setupChatInput()
         getChatMessages()
@@ -241,6 +249,12 @@ class ChatViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(1)
         }
+
+        emptyChatImage.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(45)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-200)
+        }
     }
 
 }
@@ -248,6 +262,7 @@ class ChatViewController: UIViewController {
 extension ChatViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+        tableView.backgroundView = groupedMessagesByDate.count > 0 ? nil : emptyBackgroundView
         return groupedMessagesByDate.count
     }
 
@@ -280,6 +295,9 @@ extension ChatViewController: UITableViewDataSource {
         ) as? ChatTableViewCell else { return UITableViewCell() }
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
+        cell.viewProfile = {
+            self.navigationController?.pushViewController(ProfileViewController(userId: self.messageUser.netID), animated: true)
+        }
         cell.selectionStyle = .none
         return cell
     }

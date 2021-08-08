@@ -17,6 +17,7 @@ class ChatTableViewCell: UITableViewCell {
 
     // MARK: - Private Data Vars
     static let reuseId = "chatReuseIdentifier"
+    var viewProfile: (() -> ())?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,9 +33,14 @@ class ChatTableViewCell: UITableViewCell {
         chatMessage.textColor = .black
         chatBubble.addSubview(chatMessage)
 
+        let photoTap = UITapGestureRecognizer()
+        photoTap.addTarget(self, action: #selector(handleTapPhoto))
+
         pairProfilePic.contentMode = .scaleAspectFill
         pairProfilePic.layer.cornerRadius = 21
         pairProfilePic.clipsToBounds = true
+        pairProfilePic.addGestureRecognizer(photoTap)
+        pairProfilePic.isUserInteractionEnabled = true
         contentView.addSubview(pairProfilePic)
     }
 
@@ -42,10 +48,16 @@ class ChatTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @objc private func handleTapPhoto() {
+        if let viewProfile = viewProfile {
+            viewProfile()
+        }
+    }
+
     private func setupConstraints(message: PearMessage, currentUserNetID: String) {
         let messagePadding: CGFloat = 5
 
-        chatBubble.snp.makeConstraints { make in
+        chatBubble.snp.remakeConstraints { make in
             make.top.bottom.equalTo(contentView).inset(messagePadding)
             if message.senderNetID == currentUserNetID {
                 make.trailing.equalTo(contentView.snp.trailing).offset(-15)

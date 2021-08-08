@@ -40,11 +40,13 @@ class MessagesTableViewCell: UITableViewCell {
         contentView.addSubview(nameLabel)
 
         infoImage.clipsToBounds = true
-        infoImage.contentMode = .scaleAspectFill
+        infoImage.contentMode = .scaleAspectFit
+        infoImage.image = UIImage(named: "currentPear")
         contentView.addSubview(infoImage)
 
         infoLabel.textColor = .greenGray
         infoLabel.font = ._12CircularStdBook
+        infoLabel.text = "Past pear"
         contentView.addSubview(infoLabel)
 
         timeLabel.textColor = .inactiveGreen
@@ -90,13 +92,8 @@ class MessagesTableViewCell: UITableViewCell {
     func configure(for messageUser: MessageUser) {
         profileImage.kf.setImage(with: URL(string: messageUser.profilePictureURL))
         nameLabel.text = "\(messageUser.firstName) \(messageUser.lastName)"
-        if messageUser.status == "canceled" {
-            infoImage.image = UIImage(named: "finished")
-            infoLabel.text = "Past pear"
-        } else {
-            infoImage.image = UIImage(named: "currentPear")
-            infoLabel.text = "Current pear"
-        }
+        infoImage.isHidden = messageUser.status == "canceled" ? true : false
+        infoLabel.isHidden = messageUser.status == "canceled" ? true : false
         // TODO - add timestamp after new backend
         // timeLabel.text = "TODO"
     }

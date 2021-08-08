@@ -47,6 +47,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         messagingButton.setTitleColor(.greenGray, for: .normal)
         messagingButton.titleLabel?.font = ._14CircularStdBook
         messagingButton.addTarget(self, action: #selector(presentMessaging), for: .touchUpInside)
+        messagingButton.isHidden = true
         contentView.addSubview(messagingButton)
 
         setupConstraints()
@@ -145,6 +146,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     func configure(for currentUser: User?, pair: User) {
         nameLabel.text = "\(pair.firstName) \(pair.lastName)"
         self.currentUser = currentUser
+        self.messagingButton.isHidden = currentUser != nil ? false : true
         self.pair = pair
         if let profilePictureURL = URL(string: pair.profilePictureURL ?? "") {
             profileImageView.kf.setImage(with: profilePictureURL)
