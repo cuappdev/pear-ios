@@ -296,11 +296,13 @@ class Networking2 {
 
     static func updateGoals(
         goals: [String],
+        hasOnboarded: Bool,
         completion: @escaping (Bool) -> Void
     ) {
 
         let parameters: [String: Any] = [
             "goals": goals,
+            "has_onboarded": hasOnboarded
         ]
 
         AF.request(

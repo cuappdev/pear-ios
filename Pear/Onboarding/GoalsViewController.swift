@@ -73,7 +73,7 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -150,20 +150,25 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func nextButtonPressed() {
-        Networking2.updateGoals(goals: selectedGoals) { [weak self] (success) in
+        updateGoals()
+    }
+
+    @objc func skipButtonPressed() {
+        updateGoals()
+    }
+
+    private func updateGoals() {
+        Networking2.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
-                    self.delegate?.nextPage(index: 4)
+                    UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
-    }
-
-    @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 4)
     }
 
     private func getUserGoals() {

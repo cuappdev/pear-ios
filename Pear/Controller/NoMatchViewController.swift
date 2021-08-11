@@ -48,7 +48,7 @@ class NoMatchViewController: UIViewController {
         noMatchTitleLabel.font = ._24CircularStdMedium
         view.addSubview(noMatchTitleLabel)
 
-        noMatchLabel.text = "In the meantime, tell me when you're usually free to make meeting up easier!"
+        noMatchLabel.text = "In the meantime, browse the people page to see who else is on the app!"
         noMatchLabel.numberOfLines = 0
         noMatchLabel.textAlignment = .center
         noMatchLabel.textColor = .greenGray
@@ -57,19 +57,10 @@ class NoMatchViewController: UIViewController {
         noMatchLabel.sizeToFit()
         view.addSubview(noMatchLabel)
 
-        availabilityButton.setTitle("Enter availability", for: .normal)
-        availabilityButton.setTitleColor(.white, for: .normal)
-        availabilityButton.titleLabel?.font = ._20CircularStdBold
-        availabilityButton.backgroundColor = .backgroundOrange
-        availabilityButton.layer.cornerRadius = 26
-        availabilityButton.addTarget(self, action: #selector(availabilityButtonPressed), for: .touchUpInside)
-        view.addSubview(availabilityButton)
-
         setupConstraints()
     }
 
     private func setupConstraints() {
-        let buttonSize = CGSize(width: 225, height: 54)
         let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
         let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
         let imageWidth = (UIScreen.main.bounds.width / 375) * 176
@@ -85,7 +76,7 @@ class NoMatchViewController: UIViewController {
         noMatchLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(293)
-            make.bottom.equalTo(availabilityButton.snp.top).offset(-subtitleLabelPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding + subtitleLabelPadding)
             make.height.equalTo(50)
         }
 
@@ -95,17 +86,6 @@ class NoMatchViewController: UIViewController {
             make.bottom.equalTo(noMatchLabel.snp.top).offset(-imageBottomPadding)
             make.width.equalTo(imageWidth)
         }
-
-        availabilityButton.snp.makeConstraints { make in
-            make.size.equalTo(buttonSize)
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding)
-        }
-    }
-
-    @objc private func availabilityButtonPressed() {
-//        let timeVC = SchedulingTimeViewController(for: .pickingTypical, user: user)
-//        navigationController?.pushViewController(timeVC, animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
