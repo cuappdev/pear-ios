@@ -296,11 +296,13 @@ class Networking2 {
 
     static func updateGoals(
         goals: [String],
+        hasOnboarded: Bool,
         completion: @escaping (Bool) -> Void
     ) {
 
         let parameters: [String: Any] = [
             "goals": goals,
+            "has_onboarded": hasOnboarded
         ]
 
         AF.request(
@@ -386,7 +388,7 @@ class Networking2 {
         }
     }
 
-    static func getAllUsers(completion: @escaping ([UserProfile]) -> Void) {
+    static func getAllUsers(completion: @escaping ([CommunityUser]) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/",
             method: .get,
@@ -398,7 +400,7 @@ class Networking2 {
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
-                    let usersData = try jsonDecoder.decode(Response<[UserProfile]>.self, from: data)
+                    let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
                     let users = usersData.data
                     completion(users)
                 } catch {
@@ -421,13 +423,9 @@ class Networking2 {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                do {
-                    if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
-                        let user = userData.data
-                        completion(user)
-                    }
-                } catch {
-                    print("Decoding error: \(error)")
+                if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
+                    let user = userData.data
+                    completion(user)
                 }
             case .failure(let error):
                 print(error.localizedDescription)

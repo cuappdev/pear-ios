@@ -98,24 +98,16 @@ class CommunityUserTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with user: UserProfile) {
+    func configure(with user: CommunityUser) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
-        if let profilePictureURL = URL(string: user.profilePicUrl) {
+        if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
         interests = user.interests
         interestsCollectionView.reloadData()
-//        if let firstName = user.firstName, let lastName = user.lastName {
-//            nameLabel.text = "\(firstName) \(lastName)"
-//            if let major = user.major, let gradYear = user.graduationYear, let hometown = user.hometown, let pronouns = user.pronouns, let userInterests = user.interests {
-//                informationLabel.text = "\(major) · \(gradYear) · \(hometown) · \(pronouns)"
-//                interests = userInterests
-//                interestsCollectionView.reloadData()
-//            }
-//            if let profilePictureURL = URL(string: user.profilePictureURL ?? "") {
-//                profileImageView.kf.setImage(with: profilePictureURL)
-//            }
-//        }
+        if user.majors.count > 0 {
+            informationLabel.text = "\(user.majors[0].name) · \(user.graduationYear) · \(user.hometown)"
+        }
     }
 
     override func prepareForReuse() {

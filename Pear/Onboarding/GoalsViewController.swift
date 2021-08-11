@@ -73,20 +73,20 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = 26
         nextButton.isEnabled = false
-        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(updateGoals), for: .touchUpInside)
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
         skipButton.setTitle("Skip", for: .normal)
         skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
-        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(updateGoals), for: .touchUpInside)
         view.addSubview(skipButton)
 
         getUserGoals()
@@ -149,21 +149,18 @@ class GoalsViewController: UIViewController {
         delegate?.backPage(index: 2)
     }
 
-    @objc func nextButtonPressed() {
-        Networking2.updateGoals(goals: selectedGoals) { [weak self] (success) in
+    @objc func updateGoals() {
+        Networking2.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
-                    self.delegate?.nextPage(index: 4)
+                    UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
-    }
-
-    @objc func skipButtonPressed() {
-        delegate?.nextPage(index: 4)
     }
 
     private func getUserGoals() {

@@ -13,14 +13,10 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private var pair: UserV2?
+    private var user: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private var reachOutButton = UIButton()
     private var userId: Int
-
-    // MARK: - Private Data Vars
-    private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
     init(userId: Int) {
         self.userId = userId
@@ -51,33 +47,6 @@ class ProfileViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
-        getUserThen { [weak self] pair in
-            guard let self = self else { return }
-
-            self.pair = pair
-
-            self.setupViews(pair: pair)
-            self.setupConstraints()
-
-            self.profileSections = [.summary, .basics]
-            if pair.interests.count > 0 {
-                self.profileSections.append(.interests)
-            }
-            if pair.groups.count > 0 {
-                self.profileSections.append(.groups)
-            }
-            self.profileTableView.reloadData()
-        }
-    }
-
-    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
-        Networking2.getUser(id: userId) { user in
-            completion(user)
-        }
-    }
-
-    private func setupViews(pair: UserV2) {
-
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
@@ -92,38 +61,32 @@ class ProfileViewController: UIViewController {
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
-        reachOutButton.setTitle("Send email", for: .normal)
-        reachOutButton.backgroundColor = .backgroundOrange
-        reachOutButton.layer.cornerRadius = reachOutButtonSize.height / 2
-        reachOutButton.titleLabel?.font = ._20CircularStdBold
-        reachOutButton.setTitleColor(.white, for: .normal)
-        reachOutButton.addTarget(self, action: #selector(reachOutPressed), for: .touchUpInside)
+        setupConstraints()
 
-        view.addSubview(reachOutButton)
+        getUserThen { [weak self] user in
+            guard let self = self else { return }
+            self.user = user
+            self.profileSections = [.summary, .basics]
+            if user.interests.count > 0 {
+                self.profileSections.append(.interests)
+            }
+            if user.groups.count > 0 {
+                self.profileSections.append(.groups)
+            }
+            self.profileTableView.reloadData()
+        }
+    }
 
+    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
+        Networking2.getUser(id: userId) { user in
+            completion(user)
+        }
     }
 
     private func setupConstraints() {
-        let reachOutPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 70)
-
         profileTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
-        reachOutButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(reachOutPadding)
-            make.centerX.equalToSuperview()
-            make.size.equalTo(reachOutButtonSize)
-        }
-    }
-
-    @objc private func reachOutPressed() {
-        guard let pair = pair else { return }
-        let emailAlertController = UIAlertController.getEmailAlertController(
-            email: "\(pair.netId)@cornell.edu",
-            subject: "Hello from Pear!"
-        )
-        present(emailAlertController, animated: true)
     }
 
     @objc func backPressed() {
@@ -139,22 +102,22 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let pair = pair else { return UITableViewCell() }
+        guard let user = user else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-//            cell.configure(for: nil, pair: pair)
-            return UITableViewCell()
+            cell.configure(for: user)
+            return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
+            cell.configure(for: user, type: section)
             return cell
         case .interests, .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: pair, type: section)
+            cell.configure(for: user, type: section)
             return cell
         case .matches:
             return UITableViewCell()
@@ -171,5 +134,5 @@ extension ProfileViewController: UIGestureRecognizerDelegate {
          }
          return false
      }
-    
+
   }
