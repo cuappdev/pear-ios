@@ -98,7 +98,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with user: ShortenedUser) {
+    func configure(with user: CommunityUser) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
         if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {
             profileImageView.kf.setImage(with: profilePictureURL)

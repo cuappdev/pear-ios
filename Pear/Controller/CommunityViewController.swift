@@ -18,7 +18,7 @@ class CommunityViewController: UIViewController {
     private let spinner = UIActivityIndicatorView(style: .medium)
 
     // MARK: - Private Data Vars
-    private var users: [ShortenedUser] = []
+    private var users: [CommunityUser] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen

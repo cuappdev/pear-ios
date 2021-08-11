@@ -62,7 +62,7 @@ struct MatchedUser: Codable {
     let graduationYear: String
 }
 
-struct ShortenedUser: Codable {
+struct CommunityUser: Codable {
     let id: Int
     let netId: String
     let firstName: String

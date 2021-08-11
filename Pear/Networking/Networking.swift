@@ -388,7 +388,7 @@ class Networking2 {
         }
     }
 
-    static func getAllUsers(completion: @escaping ([ShortenedUser]) -> Void) {
+    static func getAllUsers(completion: @escaping ([CommunityUser]) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/",
             method: .get,
@@ -400,7 +400,7 @@ class Networking2 {
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
-                    let usersData = try jsonDecoder.decode(Response<[ShortenedUser]>.self, from: data)
+                    let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
                     let users = usersData.data
                     completion(users)
                 } catch {

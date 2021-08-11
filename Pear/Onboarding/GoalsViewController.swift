@@ -79,14 +79,14 @@ class GoalsViewController: UIViewController {
         nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = 26
         nextButton.isEnabled = false
-        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(updateGoals), for: .touchUpInside)
         view.addSubview(nextButton)
 
         skipButton.titleLabel?.font = ._16CircularStdMedium
         skipButton.setTitle("Skip", for: .normal)
         skipButton.setTitleColor(.greenGray, for: .normal)
         skipButton.backgroundColor = .none
-        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(updateGoals), for: .touchUpInside)
         view.addSubview(skipButton)
 
         getUserGoals()
@@ -149,15 +149,7 @@ class GoalsViewController: UIViewController {
         delegate?.backPage(index: 2)
     }
 
-    @objc func nextButtonPressed() {
-        updateGoals()
-    }
-
-    @objc func skipButtonPressed() {
-        updateGoals()
-    }
-
-    private func updateGoals() {
+    @objc func updateGoals() {
         Networking2.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
