@@ -79,10 +79,5 @@ class NetworkManager {
     func cancelMatch(matchID: String) -> Future<SuccessResponse> {
         networking(Endpoint.cancelMatch(matchID: matchID)).decode()
     }
-
-    /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
-    func getMatchHistory(netID: String) -> Future<Response<[Match]>> {
-        networking(Endpoint.getMatchHistory(netID: netID)).decode()
-    }
     
 }

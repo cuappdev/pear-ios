@@ -17,18 +17,20 @@ class ChatViewController: UIViewController {
     private let chatInputContainerView = UIView()
     private let chatInputTextField = UITextField()
     private let chatTableView = UITableView()
+    private let emptyBackgroundView = UIView()
+    private let emptyChatImage = UIImageView()
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
 
     // MARK: - Private Data Vars
-    private let currentUser: User
+    private let currentUser: UserV2
     private let databaseRef = Database.database().reference()
     private var dateKeys: [Date] = []
     private var groupedMessagesByDate: [[PearMessage]] = []
     private var messages: [PearMessage] = []
-    private let messageUser: MessageUser
+    private let messageUser: MatchedUser
 
-    init(messageUser: MessageUser, currentUser: User) {
+    init(messageUser: MatchedUser, currentUser: UserV2) {
         self.messageUser = messageUser
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
@@ -62,6 +64,12 @@ class ChatViewController: UIViewController {
         chatTableView.dataSource = self
         chatTableView.delegate = self
         view.addSubview(chatTableView)
+
+        emptyChatImage.image = UIImage(named: "emptyChat")
+        emptyChatImage.contentMode = .scaleAspectFit
+
+        emptyBackgroundView.backgroundColor = .clear
+        emptyBackgroundView.addSubview(emptyChatImage)
 
         setupChatInput()
         getChatMessages()
@@ -121,7 +129,7 @@ class ChatViewController: UIViewController {
     }
 
     private func getChatMessages() {
-        let messagesPath = "user-messages/\(currentUser.netID)/\(messageUser.netID)"
+        let messagesPath = "user-messages/\(currentUser.id)/\(messageUser.id)"
         databaseRef.child(messagesPath).observe(.childAdded) { snapshot in
             let messageId = snapshot.key
             let messageRef = self.databaseRef.child("messages").child(messageId)
@@ -176,9 +184,9 @@ class ChatViewController: UIViewController {
 
     @objc private func addMessageToFirebase(message: String) {
         let timeStamp = String(NSDate().timeIntervalSince1970)
-        let values: [String: String] = [
-            "senderNetID": currentUser.netID,
-            "recipientNetID": messageUser.netID,
+        let values: [String: Any] = [
+            "senderId": currentUser.id,
+            "recipientId": messageUser.id,
             "time": timeStamp,
             "message": message
         ]
@@ -189,9 +197,9 @@ class ChatViewController: UIViewController {
                 return
             }
             guard let messageId = messageDatabaseRef.key else { return }
-            let userMessagesPath = "user-messages/\(self.currentUser.netID)/\(self.messageUser.netID)"
+            let userMessagesPath = "user-messages/\(self.currentUser.id)/\(self.messageUser.id)"
             self.databaseRef.child(userMessagesPath).updateChildValues([messageId: 1])
-            let pairMessagesPath = "user-messages/\(self.messageUser.netID)/\(self.currentUser.netID)"
+            let pairMessagesPath = "user-messages/\(self.messageUser.id)/\(self.currentUser.id)"
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
         }
     }
@@ -241,6 +249,12 @@ class ChatViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(1)
         }
+
+        emptyChatImage.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(45)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-200)
+        }
     }
 
 }
@@ -248,6 +262,7 @@ class ChatViewController: UIViewController {
 extension ChatViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+        tableView.backgroundView = groupedMessagesByDate.count > 0 ? nil : emptyBackgroundView
         return groupedMessagesByDate.count
     }
 
@@ -280,6 +295,9 @@ extension ChatViewController: UITableViewDataSource {
         ) as? ChatTableViewCell else { return UITableViewCell() }
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
+        cell.viewProfile = {
+            self.navigationController?.pushViewController(ProfileViewController(userId: self.messageUser.id), animated: true)
+        }
         cell.selectionStyle = .none
         return cell
     }
@@ -289,7 +307,7 @@ extension ChatViewController: UITableViewDataSource {
 extension ChatViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        groupedMessagesByDate[indexPath.section][indexPath.row].getMessageHeight(currentUserNetID: currentUser.netID)
+        groupedMessagesByDate[indexPath.section][indexPath.row].getMessageHeight(currentUserId: currentUser.id)
     }
 
 }

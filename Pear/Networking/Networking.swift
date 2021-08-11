@@ -387,7 +387,6 @@ class Networking2 {
     }
 
     static func getAllUsers(completion: @escaping ([UserProfile]) -> Void) {
-
         AF.request(
             "\(hostEndpoint)/api/users/",
             method: .get,
@@ -412,7 +411,6 @@ class Networking2 {
     }
 
     static func getUser(id: Int, completion: @escaping (UserV2) -> Void) {
-
         AF.request(
             "\(hostEndpoint)/api/users/\(id)/",
             method: .get,
@@ -424,11 +422,35 @@ class Networking2 {
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
-                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
-                    let user = userData.data
-                    completion(user)
+                    if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
+                        let user = userData.data
+                        completion(user)
+                    }
                 } catch {
                     print("Decoding error: \(error)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllMatches(completion: @escaping ([TempMatchV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/matches/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let matchData = try? jsonDecoder.decode(Response<[TempMatchV2]>.self, from: data) {
+                        let matches = matchData.data
+                        completion(matches)
+                    }
                 }
             case .failure(let error):
                 print(error.localizedDescription)

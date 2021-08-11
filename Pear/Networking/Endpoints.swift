@@ -123,9 +123,4 @@ extension Endpoint {
         return Endpoint(path: "/match/cancel", queryItems: [URLQueryItem(name: "matchID", value: matchID)], headers: standardHeaders, method: .post)
     }
 
-    /// [GET] Gets match history for provided netID. If none provided, gets current user's history.
-    static func getMatchHistory(netID: String) -> Endpoint {
-        Endpoint(path: "/match/history/", queryItems: [URLQueryItem(name: "netID", value: netID)], headers: standardHeaders)
-    }
-
 }

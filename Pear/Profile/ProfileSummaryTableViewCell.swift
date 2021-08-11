@@ -20,7 +20,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageSize = CGSize(width: 150, height: 150)
     private var currentUser: User?
     private var pair: User?
-    var showMessages: ((MessageUser, User) -> Void)?
+    var showMessages: ((MatchedUser, User) -> Void)?
 
     static let reuseIdentifier = "ProfileSummaryTableViewCell"
 
@@ -47,6 +47,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         messagingButton.setTitleColor(.greenGray, for: .normal)
         messagingButton.titleLabel?.font = ._14CircularStdBook
         messagingButton.addTarget(self, action: #selector(presentMessaging), for: .touchUpInside)
+        messagingButton.isHidden = true
         contentView.addSubview(messagingButton)
 
         setupConstraints()
@@ -75,23 +76,23 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 
     }
 
-    private func getMessageMatch(netId: String, completion: @escaping (Match) -> Void) {
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    guard response.success else {
-                        print("Network error: could not get user match history")
-                        return
-                    }
-                    guard let match = response.data.filter{$0.status != "canceled" }.first else { return }
-                    completion(match)
-                case .error:
-                    print("Network error: could not get user match history")
-                }
-            }
-        }
-    }
+//    private func getMessageMatch(netId: String, completion: @escaping (Match) -> Void) {
+//        NetworkManager.shared.getMatchHistory(netID: netId).observe { result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .value(let response):
+//                    guard response.success else {
+//                        print("Network error: could not get user match history")
+//                        return
+//                    }
+//                    guard let match = response.data.filter{$0.status != "canceled" }.first else { return }
+//                    completion(match)
+//                case .error:
+//                    print("Network error: could not get user match history")
+//                }
+//            }
+//        }
+//    }
 
 //    private func getMessageUser(pairNetId: String, completion: @escaping (User) -> Void) {
 //        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
@@ -128,18 +129,18 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 //    }
 
     @objc func presentMessaging() {
-        guard let currentUser = currentUser, let pair = pair else { return }
-        let messageUser = MessageUser(
-            netID: pair.netID,
-            firstName: pair.firstName,
-            lastName: pair.lastName,
-            status: "created",
-            meetingTime: nil,
-            profilePictureURL: pair.profilePictureURL ?? ""
-        )
-        if let showMessages = self.showMessages {
-            showMessages(messageUser, currentUser)
-        }
+//        guard let currentUser = currentUser, let pair = pair else { return }
+//        let messageUser = MessageUser(
+//            netID: pair.netID,
+//            firstName: pair.firstName,
+//            lastName: pair.lastName,
+//            status: "created",
+//            meetingTime: nil,
+//            profilePictureURL: pair.profilePictureURL ?? ""
+//        )
+//        if let showMessages = self.showMessages {
+//            showMessages(messageUser, currentUser)
+//        }
     }
 
     func configure(for user: UserV2) {
