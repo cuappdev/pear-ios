@@ -7,6 +7,7 @@
 //
 
 import Firebase
+import FirebaseAuth
 import GoogleSignIn
 import IQKeyboardManagerSwift
 import UIKit
@@ -32,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
+
             Networking2.validateAccessToken() { success in
                 if success {
 //                    let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)

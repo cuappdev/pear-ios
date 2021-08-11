@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import FirebaseAuth
 import GoogleSignIn
 import UIKit
 
@@ -149,6 +150,11 @@ extension SettingsViewController: UITableViewDataSource {
             pushEditSocialMediaViewController()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
+            do {
+                try Auth.auth().signOut()
+            } catch let signOutError as NSError {
+              print("Error signing out: \(signOutError)")
+            }
             [Constants.UserDefaults.accessToken,
              Constants.UserDefaults.onboardingCompletion,
              Constants.UserDefaults.userNetId,
