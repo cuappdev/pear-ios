@@ -40,11 +40,13 @@ class MessagesTableViewCell: UITableViewCell {
         contentView.addSubview(nameLabel)
 
         infoImage.clipsToBounds = true
-        infoImage.contentMode = .scaleAspectFill
+        infoImage.contentMode = .scaleAspectFit
+        infoImage.image = UIImage(named: "currentPear")
         contentView.addSubview(infoImage)
 
         infoLabel.textColor = .greenGray
         infoLabel.font = ._12CircularStdBook
+        infoLabel.text = "Current pear"
         contentView.addSubview(infoLabel)
 
         timeLabel.textColor = .inactiveGreen
@@ -87,18 +89,12 @@ class MessagesTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for messageUser: MessageUser) {
-        profileImage.kf.setImage(with: URL(string: messageUser.profilePictureURL))
-        nameLabel.text = "\(messageUser.firstName) \(messageUser.lastName)"
-        if messageUser.status == "canceled" {
-            infoImage.image = UIImage(named: "finished")
-            infoLabel.text = "Past pear"
-        } else {
-            infoImage.image = UIImage(named: "currentPear")
-            infoLabel.text = "Current pear"
-        }
-        // TODO - add timestamp after new backend
-        // timeLabel.text = "TODO"
+    func configure(for pair: MatchedUser, status: String, week: Int) {
+        profileImage.kf.setImage(with: URL(string: pair.profilePicUrl ?? ""))
+        nameLabel.text = "\(pair.firstName) \(pair.lastName)"
+        infoImage.isHidden = (status == "canceled" || status == "inactive") ? true : false
+        infoLabel.isHidden = (status == "canceled" || status == "inactive") ? true : false
+        timeLabel.text = week == 1 ? "\(week) week ago" : "\(week) weeks ago"
     }
 
 }

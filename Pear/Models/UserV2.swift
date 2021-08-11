@@ -58,8 +58,8 @@ struct MatchedUser: Codable {
     let profilePicUrl: String?
     let facebookUrl: String
     let instagramUsername: String
-    let pronouns: String
     let graduationYear: String
+    let pronouns: String
 }
 
 struct CommunityUser: Codable {
@@ -100,4 +100,17 @@ struct TalkingPointV2: Codable {
     let name: String
     let subtitle: String?
     let imgUrl: String
+}
+
+// todo - fix naming
+struct TempMatchV2: Codable {
+    let id: Int
+    let status: String
+    let users: [MatchedUser]
+    let proposerId: Int?
+    let acceptedIds: [Int]?
+    let proposedMeetingTimes: [String]?
+    let proposedLocations: [LocationV2]?
+    let meetingLocation: LocationV2?
+    let meetingTime: String?
 }

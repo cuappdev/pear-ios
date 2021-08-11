@@ -154,9 +154,9 @@ class ProfileMenuViewController: UIViewController {
         navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
-//    func pushMessagingViewController() {
-//        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
-//    }
+    func pushMessagingViewController() {
+        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
+    }
 
 }
 
@@ -184,7 +184,7 @@ extension ProfileMenuViewController: UITableViewDataSource {
         } else if option.text == "Settings" {
             pushSettingsViewController()
         } else if option.text == "Messages" {
-//            pushMessagingViewController()
+            pushMessagingViewController()
         }
     }
 
