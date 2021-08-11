@@ -20,7 +20,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageSize = CGSize(width: 150, height: 150)
     private var currentUser: User?
     private var pair: User?
-    var showMessages: ((MessageUser, User) -> Void)?
+    var showMessages: ((MatchedUser, User) -> Void)?
 
     static let reuseIdentifier = "ProfileSummaryTableViewCell"
 
@@ -129,18 +129,18 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 //    }
 
     @objc func presentMessaging() {
-        guard let currentUser = currentUser, let pair = pair else { return }
-        let messageUser = MessageUser(
-            netID: pair.netID,
-            firstName: pair.firstName,
-            lastName: pair.lastName,
-            status: "created",
-            meetingTime: nil,
-            profilePictureURL: pair.profilePictureURL ?? ""
-        )
-        if let showMessages = self.showMessages {
-            showMessages(messageUser, currentUser)
-        }
+//        guard let currentUser = currentUser, let pair = pair else { return }
+//        let messageUser = MessageUser(
+//            netID: pair.netID,
+//            firstName: pair.firstName,
+//            lastName: pair.lastName,
+//            status: "created",
+//            meetingTime: nil,
+//            profilePictureURL: pair.profilePictureURL ?? ""
+//        )
+//        if let showMessages = self.showMessages {
+//            showMessages(messageUser, currentUser)
+//        }
     }
 
     func configure(for user: UserV2) {

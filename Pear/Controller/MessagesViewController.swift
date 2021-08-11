@@ -130,7 +130,6 @@ extension MessagesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let match = matchedUsers[indexPath.row]
-        print("here")
         navigationController?.pushViewController(ChatViewController(messageUser: match, currentUser: user), animated: true)
     }
 
