@@ -77,7 +77,6 @@ class ProfilePromptsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        updateNext()
         getUserPrompts()
         setPromptOptions()
         setupConstraints()
@@ -90,6 +89,7 @@ class ProfilePromptsViewController: UIViewController {
                 while self.prompts.count < 3 {
                     self.prompts.append(Prompt(questionId: nil, questionName: "", questionPlaceholder: "", answer: nil))
                 }
+                self.updateNext()
                 self.fadeTableView.view.reloadData()
             }
         }
@@ -99,7 +99,6 @@ class ProfilePromptsViewController: UIViewController {
         Networking2.getPromptOptions { prompts in
             DispatchQueue.main.async {
                 self.promptOptions = prompts
-                print(prompts)
             }
         }
     }
@@ -114,14 +113,11 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        print(prompts)
         Networking2.updatePrompts(prompts: prompts) { success in
             DispatchQueue.main.async {
                 if success {
-                    print("it was here")
                     self.delegate?.nextPage(index: 4)
                 } else {
-                    print("here it was")
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
