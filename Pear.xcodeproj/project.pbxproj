@@ -62,6 +62,10 @@
 		50C842C426CC74CB004242FF /* SelectPromptTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842C326CC74CB004242FF /* SelectPromptTableViewCell.swift */; };
 		50C842C626CC75CF004242FF /* ProfilePromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842C526CC75CF004242FF /* ProfilePromptsViewController.swift */; };
 		50C842C826CC75FA004242FF /* SelectPromptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842C726CC75FA004242FF /* SelectPromptViewController.swift */; };
+		50C842CE26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842CD26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift */; };
+		50C842D026CCBC0F004242FF /* ProfilePromptItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842CF26CCBC0F004242FF /* ProfilePromptItemTableViewCell.swift */; };
+		50C842D226CCC622004242FF /* SelfSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842D126CCC622004242FF /* SelfSizingTableView.swift */; };
+		50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842D326CCD76C004242FF /* PromptLabel.swift */; };
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
 		5B291E44598CA153010B5200 /* Pods_Pear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DE57D283F5A2F0836EEE5D /* Pods_Pear.framework */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
@@ -208,6 +212,10 @@
 		50C842C326CC74CB004242FF /* SelectPromptTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPromptTableViewCell.swift; sourceTree = "<group>"; };
 		50C842C526CC75CF004242FF /* ProfilePromptsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePromptsViewController.swift; sourceTree = "<group>"; };
 		50C842C726CC75FA004242FF /* SelectPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPromptViewController.swift; sourceTree = "<group>"; };
+		50C842CD26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePromptsSectionTableViewCell.swift; sourceTree = "<group>"; };
+		50C842CF26CCBC0F004242FF /* ProfilePromptItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePromptItemTableViewCell.swift; sourceTree = "<group>"; };
+		50C842D126CCC622004242FF /* SelfSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingTableView.swift; sourceTree = "<group>"; };
+		50C842D326CCD76C004242FF /* PromptLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptLabel.swift; sourceTree = "<group>"; };
 		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		5A2759DCBE7F764265EBF1D3 /* Pods_Pear_PearUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pear_PearUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E06B84F2543F15900D6B505 /* InterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
@@ -410,6 +418,8 @@
 				D440928925FDB10700A4690A /* ProfilePillCollectionViewCell.swift */,
 				D4645ABE25FE2EF30029F9A5 /* ChatStatus.swift */,
 				D4645AC625FE2F6C0029F9A5 /* ProfileSectionType.swift */,
+				50C842CF26CCBC0F004242FF /* ProfilePromptItemTableViewCell.swift */,
+				50C842CD26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift */,
 				D42873F4263A0A180033678A /* MatchProfileViewController.swift */,
 			);
 			path = Profile;
@@ -488,6 +498,8 @@
 				50AF1CBE256DF3F300D74A00 /* LocationHeaderLabelView.swift */,
 				502AA52C2648834500A790C8 /* ChatDateHeaderLabel.swift */,
 				5048B4B9263EE70500A382AD /* LocationFooterLabelView.swift */,
+				50C842D126CCC622004242FF /* SelfSizingTableView.swift */,
+				50C842D326CCD76C004242FF /* PromptLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -968,11 +980,13 @@
 				D400CEDD2671B41E0045C64A /* TimeSchedule.swift in Sources */,
 				D444EB3E23F5E86400406978 /* OnboardingSearchDropdownView.swift in Sources */,
 				D4A812722650529000E3EF81 /* GeoPlaceResponse.swift in Sources */,
+				50C842CE26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift in Sources */,
 				D480EBFF23E2429600513063 /* OnboardingDropdownTableViewCell.swift in Sources */,
 				5030DCFF2532CF9000374F7B /* AboutPearViewController.swift in Sources */,
 				5029873E253AB2B000E52EDA /* EditTimeAvailabilityViewController.swift in Sources */,
 				4FD8152F23F7817B0095EC17 /* Interest.swift in Sources */,
 				D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */,
+				50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */,
 				D474105B25C6EA350062E2B4 /* String.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
 				D42873F5263A0A180033678A /* MatchProfileViewController.swift in Sources */,
@@ -1002,6 +1016,7 @@
 				D41FE85C246463FC0048900F /* User.swift in Sources */,
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
 				D434997D253C151C0024A992 /* InterestTagCollectionViewCell.swift in Sources */,
+				50C842D226CCC622004242FF /* SelfSizingTableView.swift in Sources */,
 				D41FE862246464310048900F /* SubUser.swift in Sources */,
 				5012B55625F8414D00F5F713 /* FeedbackOption.swift in Sources */,
 				D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */,
@@ -1035,6 +1050,7 @@
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,
 				D48F6F40267003F400D844B7 /* EditGroupsViewController.swift in Sources */,
+				50C842D026CCBC0F004242FF /* ProfilePromptItemTableViewCell.swift in Sources */,
 				5048B4BE263F56FD00A382AD /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

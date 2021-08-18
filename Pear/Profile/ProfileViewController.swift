@@ -52,6 +52,7 @@ class ProfileViewController: UIViewController {
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
         profileTableView.register(ProfilePromptTableViewCell.self, forCellReuseIdentifier: ProfilePromptTableViewCell.reuseIdentifier)
+        profileTableView.register(ProfilePromptsSectionTableViewCell.self, forCellReuseIdentifier: ProfilePromptsSectionTableViewCell.reuseIdentifier)
         profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.bounces = true
         profileTableView.separatorStyle = .none
@@ -72,6 +73,9 @@ class ProfileViewController: UIViewController {
             }
             if user.groups.count > 0 {
                 self.profileSections.append(.groups)
+            }
+            if user.prompts.count > 0 {
+                self.profileSections.append(.prompts)
             }
             self.profileTableView.reloadData()
         }
@@ -121,6 +125,10 @@ extension ProfileViewController: UITableViewDataSource {
             return cell
         case .matches:
             return UITableViewCell()
+        case .prompts:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
+            cell.configure(for: user.prompts)
+            return cell
         }
     }
 

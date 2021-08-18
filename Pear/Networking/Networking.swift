@@ -491,7 +491,6 @@ class Networking2 {
                 return [:]
             })
         ]
-        print(parameters)
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .post,
