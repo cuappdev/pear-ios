@@ -58,7 +58,7 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 150, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 200, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
