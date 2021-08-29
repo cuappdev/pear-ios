@@ -89,20 +89,7 @@ class EditLocationAvailabilityViewController: UIViewController {
         let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
         let onlineLocations = selectedOnlineLocations.map { Location(area: "Online", name: $0) }
         let locations = ctownLocations + campusLocations + onlineLocations
-        NetworkManager.shared.updatePreferredLocations(locations: locations).observe { response in
-            switch response {
-            case .value(let value):
-                DispatchQueue.main.async {
-                    guard value.success else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                        return
-                    }
-                    self.navigationController?.popViewController(animated: true)
-                }
-            case .error:
-                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-            }
-        }
+        // TODO: Fill in network call to save availability
     }
 
     private func setupConstraints() {
@@ -130,31 +117,7 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
     
     private func getUserPreferredLocations() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getUserPreferredLocations(netId: netId).observe { response in
-            switch response {
-            case .value(let value):
-                guard value.success else {
-                    print("Network error: could not get user availabilities.")
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.savedLocations = value.data.map(\.name)
-                    for location in value.data {
-                        if location.area == "Campus" {
-                            self.selectedCampusLocations.append(location.name)
-                        } else if location.area == "Collegetown" {
-                            self.selectedCtownLocations.append(location.name)
-                        } else {
-                            self.selectedOnlineLocations.append(location.name)
-                        }
-                    }
-                    self.locationCollectionView.collectionView.reloadData()
-                }
-            case .error:
-                print("Network error: could not get user availabilities.")
-            }
-        }
+        // TODO: Fill in this network call
     }
 
 }

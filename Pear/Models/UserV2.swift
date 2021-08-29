@@ -23,8 +23,8 @@ struct UserV2: Codable {
     let talkingPoints: [String]?
     let availability: [String]?
     let locations: [LocationV2]?
-    let interests: [InterestV2]
-    let groups: [GroupV2]
+    let interests: [Interest]
+    let groups: [Group]
     let hasOnboarded: Bool?
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
@@ -55,13 +55,12 @@ struct MatchedUser: Codable {
     let firstName: String
     let lastName: String
     let hometown: String
+    let majors: [MajorV2]
     let profilePicUrl: String?
-    let facebookUrl: String
-    let instagramUsername: String
     let graduationYear: String
-    let pronouns: String
-//    let interests: [InterestV2]
-//    let groups: [GroupV2]
+    let pronouns: String?
+    let interests: [Interest]
+    let groups: [Group]
 }
 
 struct CommunityUser: Codable {
@@ -73,8 +72,8 @@ struct CommunityUser: Codable {
     let profilePicUrl: String?
     let hometown: String
     let graduationYear: String
-    let interests: [InterestV2]
-    let groups: [GroupV2]
+    let interests: [Interest]
+    let groups: [Group]
 }
 
 struct LocationV2: Codable {
@@ -83,14 +82,14 @@ struct LocationV2: Codable {
     let area: String
 }
 
-struct InterestV2: Topic, Codable {
+struct Interest: Topic, Codable {
     var id: Int
     var name: String
     let subtitle: String
     var imgUrl: String
 }
 
-struct GroupV2: Topic, Codable {
+struct Group: Topic, Codable {
     var id: Int
     var name: String
     var imgUrl: String

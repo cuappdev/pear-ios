@@ -88,7 +88,7 @@ class MessagesViewController: UIViewController {
     }
 
     private func getUserMessages() {
-        Networking2.getAllMatches { matches in
+        NetworkManager.getAllMatches { matches in
             self.matches = matches
             self.matchedUsers = matches.compactMap { $0.users.filter ({$0.id != self.user.id}).first }
             self.reloadMessagesTableView()

@@ -26,9 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             commonPath: Keys.announcementsCommonPath,
             announcementPath: Keys.announcementsPath
         )
-
-        // Setup networking
-        Endpoint.setupEndpointConfig()
         
         return true
     }

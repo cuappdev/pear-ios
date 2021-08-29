@@ -1,63 +1,509 @@
 //
 //  NetworkManager.swift
-//  CoffeeChat
+//  Pear
 //
-//  Created by Lucy Xu on 3/8/20.
-//  Copyright © 2020 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 5/9/21.
+//  Copyright © 2021 cuappdev. All rights reserved.
 //
 
+
 import Foundation
-import FutureNova
+import Alamofire
 
 class NetworkManager {
 
     static let shared: NetworkManager = NetworkManager()
 
-    private let networking: Networking = URLSession.shared.request
-
-    private init() {}
-
-    // MARK: - Photo Upload
-    func uploadPhoto(base64: String) -> Future<Response<String>> {
-        networking(Endpoint.uploadPhoto(base64: base64)).decode()
+    static var headers: HTTPHeaders {
+        let accessToken = UserDefaults.standard.string(forKey: Constants.UserDefaults.accessToken) ?? ""
+        let headers: HTTPHeaders = [
+            "Authorization": "Token \(accessToken)",
+            "Accept": "application/json"
+        ]
+        return headers
     }
 
-    /// [GET] Get preferred locations of user by netID.
-    func getUserPreferredLocations(netId: String) -> Future<Response<[Location]>> {
-        networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
-    }
-    
-    /// [GET] Get availabilities of user by netID.
-    func getUserAvailabilities(netId: String) -> Future<Response<[DaySchedule]>> {
-        networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
-    }
-    
-    /// [POST] Update time availabilities of the user.
-    func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Future<SuccessResponse> {
-        networking(Endpoint.updateTimeAvailabilities(savedAvailabilities: savedAvailabilities)).decode()
+    private static let hostEndpoint = "http://\(Keys.pearServerURLV2)"
+
+
+    static func uploadPhoto(base64: String, completion: @escaping (String) -> Void) {
+        let parameters: [String: Any] = [
+            "bucket": "pear",
+            "image": "data:image/png;base64,\(base64)"
+        ]
+
+        AF.request(
+            "https://\(Keys.appdevServerURL)/upload/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let imageData = try? jsonDecoder.decode(Response<String>.self, from: data) {
+                    let img = imageData.data
+                    completion(img)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 
-    /// [POST] Updates the preferred location of current user.
-    func updatePreferredLocations(locations: [Location]) -> Future<SuccessResponse> {
-        networking(Endpoint.updatePreferredLocations(locations: locations)).decode()
-    }
-    
-    
-    // MARK: - Matches
-    
-    /// [GET] Gets another user's matches, given their netID.
-    func getMatch(netId: String) -> Future<Response<Match>> {
-        networking(Endpoint.getMatch(netId: netId)).decode()
+    private static func getUrlWithQuery(baseUrl: String, items: [String: String]) -> String? {
+        guard let baseUrl = URL(string: baseUrl) else { return nil }
+        var urlComp = URLComponents(url: baseUrl, resolvingAgainstBaseURL: true)
+        var queryItems: [URLQueryItem] = []
+        items.forEach { (key, value) in
+            queryItems.append(URLQueryItem(name: key, value: value))
+        }
+        urlComp?.queryItems = queryItems
+        return urlComp?.url?.absoluteString
     }
 
-    /// [POST] Update the availabilities for the given match.
-    func updateMatchAvailabilities(match: Match) -> Future<SuccessResponse> {
-        networking(Endpoint.updateMatchAvailabilities(match: match)).decode()
+    static func authenticateUser(idToken: String, completion: @escaping (UserSession) -> Void) {
+        let parameters: [String: Any] = [
+            "id_token": idToken
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/authenticate/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let authorizationData = try? jsonDecoder.decode(Response<UserSession>.self, from: data) {
+                    let userSession = authorizationData.data
+                    completion(userSession)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 
-    /// [POST] Cancels match provided the matchID.
-    func cancelMatch(matchID: String) -> Future<SuccessResponse> {
-        networking(Endpoint.cancelMatch(matchID: matchID)).decode()
+    static func validateAccessToken(completion: @escaping (Bool) -> Void) {
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success:
+                completion(true)
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(false)
+            }
+        }
+
     }
-    
+
+    static func getMe(completion: @escaping (UserV2) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
+                    let user = userData.data
+                    completion(user)
+                } catch {
+                    print("Decoding error: \(error)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateDemographics(
+        graduationYear: String,
+        majors: [Int],
+        hometown: String,
+        pronouns: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "graduation_year": graduationYear,
+            "majors": majors,
+            "hometown": hometown,
+            "pronouns": pronouns
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateProfile(
+        graduationYear: String,
+        major: String,
+        hometown: String,
+        pronouns: String,
+        profilePicUrl: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "graduation_year": graduationYear,
+            "major": major,
+            "hometown": hometown,
+            "pronouns": pronouns,
+            "profile_pic_url": profilePicUrl
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateInterests(
+        interests: [Int],
+        completion: @escaping (Bool) -> Void
+    ) {
+        let parameters: [String: Any] = [
+            "interests": interests,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateGroups(
+        groups: [Int],
+        completion: @escaping (Bool) -> Void
+    ) {
+        let parameters: [String: Any] = [
+            "groups": groups,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateSocialMedia(
+        facebookUrl: String?,
+        instagramUsername: String?,
+        hasOnboarded: Bool,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "facebook_url": facebookUrl as Any,
+            "instagram_username": instagramUsername as Any,
+            "has_onboarded": hasOnboarded
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateAvailability(
+        availabilities: [String],
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "availability": availabilities,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateGoals(
+        goals: [String],
+        hasOnboarded: Bool,
+        completion: @escaping (Bool) -> Void
+    ) {
+
+        let parameters: [String: Any] = [
+            "goals": goals,
+            "has_onboarded": hasOnboarded
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllMajors(completion: @escaping ([MajorV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/majors/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let majorsData = try? jsonDecoder.decode(Response<[MajorV2]>.self, from: data) {
+                    let majors = majorsData.data
+                    completion(majors)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllInterests(completion: @escaping ([Interest]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/interests/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let interestData = try? jsonDecoder.decode(Response<[Interest]>.self, from: data) {
+                    let interests = interestData.data
+                    completion(interests)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllGroups(completion: @escaping ([Group]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/groups/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let groupsData = try? jsonDecoder.decode(Response<[Group]>.self, from: data) {
+                    let groups = groupsData.data
+                    completion(groups)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllUsers(completion: @escaping ([CommunityUser]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/users/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
+                    let users = usersData.data
+                    completion(users)
+                } catch {
+                    print("Decoding error: \(error)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getUser(id: Int, completion: @escaping (UserV2) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/users/\(id)/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
+                    let user = userData.data
+                    completion(user)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getAllMatches(completion: @escaping ([TempMatchV2]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/matches/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let matchData = try? jsonDecoder.decode(Response<[TempMatchV2]>.self, from: data) {
+                        let matches = matchData.data
+                        completion(matches)
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func getCurrentMatch(completion: @escaping (MatchV2) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/matches/current/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let matchData = try? jsonDecoder.decode(Response<MatchV2>.self, from: data) {
+                        let match = matchData.data
+                        completion(match)
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
 }

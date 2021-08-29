@@ -23,12 +23,12 @@ class EditInterestsViewController: UIViewController {
     private var numRowsShownWhenCollapsed = 3
 
     // MARK: - Private Data Vars
-    private var sections: [EditSection<InterestV2>] = []
+    private var sections: [EditSection<Interest>] = []
     private let user: UserV2
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
-    private var moreSection: EditSection<InterestV2>? {
+    private var moreSection: EditSection<Interest>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
                 return sections[loc]
@@ -44,7 +44,7 @@ class EditInterestsViewController: UIViewController {
 
     // yourSection refers to the categories the user has already selected
     // Deselecting a cell here would move it to moreSection.
-    private var yourSection: EditSection<InterestV2>? {
+    private var yourSection: EditSection<Interest>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
                 return sections[loc]
@@ -121,14 +121,14 @@ class EditInterestsViewController: UIViewController {
 
         setupSectionsFromInterests()
         sections = [
-            EditSection<InterestV2>(type: .yours, items: []),
-            EditSection<InterestV2>(type: .more, items: [])
+            EditSection<Interest>(type: .yours, items: []),
+            EditSection<Interest>(type: .more, items: [])
         ]
         fadeTableView.view.reloadData()
     }
 
     private func setupSectionsFromInterests() {
-        Networking2.getAllInterests { [weak self] interests in
+        NetworkManager.getAllInterests { [weak self] interests in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let nonselectedInterests = interests.filter { interest in
@@ -137,8 +137,8 @@ class EditInterestsViewController: UIViewController {
                     }
                 }
                 self.sections = [
-                    EditSection<InterestV2>(type: .yours, items: self.user.interests),
-                    EditSection<InterestV2>(type: .more, items: nonselectedInterests)
+                    EditSection<Interest>(type: .yours, items: self.user.interests),
+                    EditSection<Interest>(type: .more, items: nonselectedInterests)
                 ]
                 self.fadeTableView.view.reloadData()
             }
@@ -184,7 +184,7 @@ class EditInterestsViewController: UIViewController {
         }
         let selectedInterests = yourSection.items.map { $0.id }
 
-        Networking2.updateInterests(interests: selectedInterests) { [weak self] success in
+        NetworkManager.updateInterests(interests: selectedInterests) { [weak self] success in
             guard let self = self else { return }
             if success {
                 self.navigationController?.popViewController(animated: true)
@@ -195,7 +195,7 @@ class EditInterestsViewController: UIViewController {
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
-    private func moveData(named name: String, from source: EditSection<InterestV2>, to target: EditSection<InterestV2>) {
+    private func moveData(named name: String, from source: EditSection<Interest>, to target: EditSection<Interest>) {
         let removed = source.removeItem(named: name)
         if let removed = removed { target.addItem(removed) }
     }

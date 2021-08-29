@@ -78,59 +78,7 @@ struct Constants {
     }
     
     struct Options {
-
-        static let organizations = [
-            Group(name: "Cornell AppDev", imageName: "appdev"),
-            Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
-            Group(name: "Under Represented User Experience (URUX)", imageName: "urux"),
-            Group(name: "Women in Computing at Cornell (WICC)", imageName: "wicc")
-        ]
-        
-        static let organizationsMap: [String: Group] = [
-            "Cornell AppDev": Group(name: "Cornell AppDev", imageName: "appdev"),
-            "The Milstein Program in Technology in Humanity": Group(name: "The Milstein Program in Technology in Humanity", imageName: "milstein"),
-            "Under Represented User Experience (URUX)": Group(name: "Under Represented User Experience (URUX)", imageName: "urux"),
-            "Women in Computing at Cornell (WICC)": Group(name: "Women in Computing at Cornell (WICC)", imageName: "wicc")
-        ]
-        
-        static let interests: [Interest] = [
-            Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
-            Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
-            Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
-            Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
-            Interest(name: "Fashion", categories: nil, imageName: "fashion"),
-            Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
-            Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
-            Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
-            Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
-            Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
-            Interest(name: "Reading", categories: nil, imageName: "reading"),
-            Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
-            Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
-            Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
-            Interest(name: "TV & Film", categories: nil, imageName: "tv&film")
-        ]
-        
         static let pronounSearchFields = ["She/Her/Hers", "He/Him/His", "They/Them/Theirs"]
-        
-        static let interestsMap: [String: Interest] = [
-            "Art": Interest(name: "Art", categories: ["painting", "crafts", "embroidery"], imageName: "art"),
-            "Business": Interest(name: "Business", categories: ["entrepreneurship", "finance", "VC"], imageName: "business"),
-            "Dance": Interest(name: "Dance", categories: ["urban, hip hop", "ballet", "swing"], imageName: "dance"),
-            "Design": Interest(name: "Design", categories: ["UI/UX", "graphic", "print"], imageName: "design"),
-            "Fashion": Interest(name: "Fashion", categories: nil, imageName: "fashion"),
-            "Fitness": Interest(name: "Fitness", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
-            "Fitness & Sports": Interest(name: "Fitness & Sports", categories: ["working out", "outdoors", "basketball"], imageName: "fitness"),
-            "Food": Interest(name: "Food", categories: ["cooking", "eating", "baking"], imageName: "food"),
-            "Humanities": Interest(name: "Humanities", categories: ["history", "politics"], imageName: "humanities"),
-            "Music": Interest(name: "Music", categories: ["instruments", "producing", "acapella"], imageName: "music"),
-            "Photography": Interest(name: "Photography", categories: ["digital", "analog"], imageName: "photography"),
-            "Reading": Interest(name: "Reading", categories: nil, imageName: "reading"),
-            "Sustainability": Interest(name: "Sustainability", categories: nil, imageName: "sustainability"),
-            "Tech": Interest(name: "Tech", categories: ["programming", "web/app development"], imageName: "tech"),
-            "Travel": Interest(name: "Travel", categories: ["road", "trips", "backpacking"], imageName: "travel"),
-            "TV & Film": Interest(name: "TV & Film", categories: nil, imageName: "tv&film")
-        ]
     }
 
     struct Notifications {

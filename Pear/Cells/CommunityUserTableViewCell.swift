@@ -19,7 +19,7 @@ class CommunityUserTableViewCell: UITableViewCell {
     private let nameLabel = UILabel()
 
     // MARK: - Private Data Vars
-    private var interests: [InterestV2] = []
+    private var interests: [Interest] = []
     static let reuseIdentifier = "CommunityUserTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

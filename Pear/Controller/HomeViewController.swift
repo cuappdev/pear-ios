@@ -104,6 +104,7 @@ class HomeViewController: UIViewController {
     /*
 
      TODO: Comment this back when feedback route is done
+     - note: getMatchHistory will have to be updated to a new route w/ new backend
     
     private func showInAppFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
@@ -133,7 +134,7 @@ class HomeViewController: UIViewController {
      */
 
     private func updateUserAndTabPage() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.user = user

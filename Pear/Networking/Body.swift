@@ -16,44 +16,6 @@ struct PhotoUploadBody: Codable {
 
 }
 
-// MARK: - Request Bodies
-struct UserSessionBody: Codable {
-
-    let idToken: String
-
-}
-
-struct UpdateUserGoalsBody: Codable {
-
-    let goals: [String]
-
-}
-
-struct MatchingBody: Codable {
-
-    let netIDs: [String]
-    let schedule: [DaySchedule]
-
-}
-
-struct UpdateMatchBody: Codable {
-
-    let matchID: String
-    let schedule: [DaySchedule]
-}
-
-struct UpdateTimeAvailabilitiesBody: Codable {
-
-    let schedule: [DaySchedule]
-
-}
-
-struct UpdatePreferredLocationsBody: Codable {
-    
-    let preferences: [Location]
-    
-}
-
 class DaySchedule: Codable, Equatable {
 
     var day: String

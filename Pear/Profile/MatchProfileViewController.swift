@@ -23,8 +23,6 @@ class MatchProfileViewController: UIViewController {
 
     init(user: UserV2) {
         self.user = user
-        print("here in my user!")
-        print(user)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -110,7 +108,7 @@ class MatchProfileViewController: UIViewController {
     }
 
     func getCurrentMatch() {
-        Networking2.getCurrentMatch { [weak self] match in
+        NetworkManager.getCurrentMatch { [weak self] match in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.match = match.matchedUser
