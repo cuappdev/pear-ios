@@ -22,16 +22,6 @@ class NetworkManager {
         networking(Endpoint.uploadPhoto(base64: base64)).decode()
     }
 
-    /// [GET] Get major of the user.
-    func getUserMajor() -> Future<Response<String>> {
-        networking(Endpoint.getUserMajor()).decode()
-    }
-
-    /// [GET] Get interests of the user.
-    func getUserInterests() -> Future<Response<[String]>> {
-        networking(Endpoint.getUserInterests()).decode()
-    }
-
     /// [GET] Get preferred locations of user by netID.
     func getUserPreferredLocations(netId: String) -> Future<Response<[Location]>> {
         networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
@@ -40,11 +30,6 @@ class NetworkManager {
     /// [GET] Get availabilities of user by netID.
     func getUserAvailabilities(netId: String) -> Future<Response<[DaySchedule]>> {
         networking(Endpoint.getUserAvailabilities(netId: netId)).decode()
-    }
-
-    /// [POST] Update goals information about the user.
-    func updateUserGoals(goals: [String]) -> Future<SuccessResponse> {
-        networking(Endpoint.updateUserGoals(goals: goals)).decode()
     }
     
     /// [POST] Update time availabilities of the user.

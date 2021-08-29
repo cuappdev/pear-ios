@@ -60,6 +60,8 @@ struct MatchedUser: Codable {
     let instagramUsername: String
     let graduationYear: String
     let pronouns: String
+//    let interests: [InterestV2]
+//    let groups: [GroupV2]
 }
 
 struct CommunityUser: Codable {

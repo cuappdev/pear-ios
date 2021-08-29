@@ -456,4 +456,27 @@ class Networking2 {
         }
     }
 
+    static func getCurrentMatch(completion: @escaping (MatchV2) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/matches/current/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let matchData = try? jsonDecoder.decode(Response<MatchV2>.self, from: data) {
+                        let match = matchData.data
+                        completion(match)
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
 }

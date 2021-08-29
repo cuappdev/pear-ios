@@ -53,16 +53,6 @@ extension Endpoint {
         )
     }
 
-    /// [GET] Get major of the user
-    static func getUserMajor() -> Endpoint {
-        Endpoint(path: "/user/majors/")
-    }
-
-    /// [GET] Get interests of the user.
-    static func getUserInterests() -> Endpoint {
-        Endpoint(path: "/user/interests/")
-    }
-
     /// [GET] Get availabilities of user by netID.
     static func getUserAvailabilities(netId: String) -> Endpoint {
         Endpoint(path: "/user/availabilities/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
@@ -73,20 +63,7 @@ extension Endpoint {
         Endpoint(path: "/user/preferredLocations/", queryItems: [URLQueryItem(name: "netID", value: netId)], headers: standardHeaders)
     }
 
-    // MARK: - Get users
-    
-    /// [GET] Get all users.
-    static func getUsers() -> Endpoint {
-        Endpoint(path: "/user/all/", headers: standardHeaders)
-    }
-    
     // MARK: - Update user.
-    
-    /// [POST] Update goals information about the user.
-    static func updateUserGoals(goals: [String]) -> Endpoint {
-        let body = UpdateUserGoalsBody(goals: goals)
-        return Endpoint(path: "/user/goals/", headers: standardHeaders, body: body)
-    }
 
     /// [POST] Update time availabilities of the user.
     static func updateTimeAvailabilities(savedAvailabilities: [DaySchedule]) -> Endpoint {

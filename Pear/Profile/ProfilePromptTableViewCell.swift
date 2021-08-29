@@ -72,6 +72,26 @@ class ProfilePromptTableViewCell: UITableViewCell {
         }
     }
 
+    func configure(for user: MatchedUser, type: ProfileSectionType) {
+        titleLabel.text = type.getTitle(for: user)
+//        let major = user.majors.count > 0 ? user.majors[0].name : ""
+        // TODO: Fix this in API response
+        let major = "Computer Science"
+        if type == .basics {
+            descriptionTextView.attributedText =
+                NSMutableAttributedString()
+                .thinFont("I study ")
+                .normalFont(major)
+                .thinFont(" in the class of ")
+                .normalFont(user.graduationYear ?? "graudationYear not found")
+                .thinFont(", and my home is in ")
+                .normalFont(user.hometown ?? "")
+                .thinFont("! My pronouns are ")
+                .normalFont((user.pronouns ?? "").lowercased())
+                .thinFont(".")
+        }
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

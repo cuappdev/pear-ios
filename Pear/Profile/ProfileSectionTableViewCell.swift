@@ -71,6 +71,21 @@ class ProfileSectionTableViewCell: UITableViewCell {
         itemsCollectionView.sizeToFit()
     }
 
+    func configure(for user: MatchedUser, type: ProfileSectionType) {
+        titleLabel.text = type.getTitle(for: user)
+        sectionType = type
+        switch type {
+//        case .groups:
+//            items = user.groups
+//        case .interests:
+//            items = user.interests
+        default:
+            break
+        }
+        itemsCollectionView.reloadData()
+        itemsCollectionView.sizeToFit()
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
