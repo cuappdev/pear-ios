@@ -19,11 +19,7 @@ class MatchProfileViewController: UIViewController {
     private var meetupStatusView: MeetupStatusView?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-//    private var reachOutButton = UIButton()
     private let user: UserV2
-
-    // MARK: - Private Data Vars
-//    private let reachOutButtonSize = CGSize(width: 200, height: 50)
 
     init(user: UserV2) {
         self.user = user
@@ -72,8 +68,6 @@ class MatchProfileViewController: UIViewController {
         profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 150, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
-
-//        view.addSubview(reachOutButton)
 
         profileSections = [.summary, .basics]
 //        if match.matchedUser.interests.count > 0 {
