@@ -68,12 +68,12 @@ class MatchProfileViewController: UIViewController {
         view.addSubview(profileTableView)
 
         profileSections = [.summary, .basics]
-//        if match.matchedUser.interests.count > 0 {
-//            profileSections.append(.interests)
-//        }
-//        if match.matchedUser.groups.count > 0 {
-//            profileSections.append(.groups)
-//        }
+        if match.matchedUser.interests.count > 0 {
+            profileSections.append(.interests)
+        }
+        if match.matchedUser.groups.count > 0 {
+            profileSections.append(.groups)
+        }
 
         profileTableView.reloadData()
 
