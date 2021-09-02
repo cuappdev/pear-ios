@@ -55,13 +55,12 @@ struct MatchedUser: Codable {
     let firstName: String
     let lastName: String
     let hometown: String
+    let majors: [MajorV2]
     let profilePicUrl: String?
-    let facebookUrl: String
-    let instagramUsername: String
     let graduationYear: String
     let pronouns: String
-//    let interests: [InterestV2]
-//    let groups: [GroupV2]
+    let interests: [InterestV2]
+    let groups: [GroupV2]
 }
 
 struct CommunityUser: Codable {

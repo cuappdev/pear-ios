@@ -75,10 +75,10 @@ class ProfileSectionTableViewCell: UITableViewCell {
         titleLabel.text = type.getTitle(for: user)
         sectionType = type
         switch type {
-//        case .groups:
-//            items = user.groups
-//        case .interests:
-//            items = user.interests
+        case .groups:
+            items = user.groups
+        case .interests:
+            items = user.interests
         default:
             break
         }
