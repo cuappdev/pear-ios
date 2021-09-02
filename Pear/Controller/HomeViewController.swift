@@ -6,7 +6,6 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import AppDevAnnouncements
-import FutureNova
 import Kingfisher
 import SideMenu
 import UIKit

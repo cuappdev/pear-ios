@@ -43,12 +43,7 @@ struct MatchV2: Codable {
     let meetingTime: String?
 }
 
-protocol Topic {
-    var name: String { get set }
-    var id: Int { get set }
-    var imgUrl: String { get set}
-}
-
+// TODO: MatchedUser and CommunityUser can be combined
 struct MatchedUser: Codable {
     let id: Int
     let netId: String
@@ -68,9 +63,9 @@ struct CommunityUser: Codable {
     let netId: String
     let firstName: String
     let lastName: String
+    let hometown: String
     let majors: [MajorV2]
     let profilePicUrl: String?
-    let hometown: String
     let graduationYear: String
     let interests: [Interest]
     let groups: [Group]
@@ -80,27 +75,6 @@ struct LocationV2: Codable {
     let id: String
     let name: String
     let area: String
-}
-
-struct Interest: Topic, Codable {
-    var id: Int
-    var name: String
-    let subtitle: String
-    var imgUrl: String
-}
-
-struct Group: Topic, Codable {
-    var id: Int
-    var name: String
-    var imgUrl: String
-}
-
-struct TalkingPointV2: Codable {
-    let type: String
-    let id: String
-    let name: String
-    let subtitle: String?
-    let imgUrl: String
 }
 
 // todo - fix naming

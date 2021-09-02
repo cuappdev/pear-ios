@@ -7,7 +7,6 @@
 //
 
 import AppDevAnnouncements
-import FutureNova
 import GoogleSignIn
 import UIKit
 

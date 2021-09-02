@@ -85,9 +85,9 @@ class EditLocationAvailabilityViewController: UIViewController {
     }
 
     @objc private func saveAvailability() {
-        let ctownLocations = selectedCtownLocations.map { Location(area: "Collegetown", name: $0) }
-        let campusLocations = selectedCampusLocations.map { Location(area: "Campus", name: $0) }
-        let onlineLocations = selectedOnlineLocations.map { Location(area: "Online", name: $0) }
+        let ctownLocations = selectedCtownLocations.map { LocationV1(area: "Collegetown", name: $0) }
+        let campusLocations = selectedCampusLocations.map { LocationV1(area: "Campus", name: $0) }
+        let onlineLocations = selectedOnlineLocations.map { LocationV1(area: "Online", name: $0) }
         let locations = ctownLocations + campusLocations + onlineLocations
         // TODO: Fill in network call to save availability
     }

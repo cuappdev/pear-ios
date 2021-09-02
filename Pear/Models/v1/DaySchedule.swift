@@ -1,20 +1,12 @@
 //
-//  Body.swift
-//  CoffeeChat
+//  DaySchedule.swift
+//  Pear
 //
-//  Created by Lucy Xu on 4/29/20.
-//  Copyright © 2020 cuappdev. All rights reserved.
+//  Created by Lucy Xu on 9/1/21.
+//  Copyright © 2021 cuappdev. All rights reserved.
 //
+
 import Foundation
-
-// MARK: - Photo Upload
-
-struct PhotoUploadBody: Codable {
-
-    let bucket: String
-    let image: String
-
-}
 
 class DaySchedule: Codable, Equatable {
 
@@ -30,11 +22,4 @@ class DaySchedule: Codable, Equatable {
         return lhs.day == rhs.day && lhs.times == rhs.times
     }
 
-}
-
-struct Location: Codable {
-    
-    let area: String
-    let name: String
-    
 }

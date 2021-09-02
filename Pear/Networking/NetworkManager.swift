@@ -25,7 +25,6 @@ class NetworkManager {
 
     private static let hostEndpoint = "http://\(Keys.pearServerURLV2)"
 
-
     static func uploadPhoto(base64: String, completion: @escaping (String) -> Void) {
         let parameters: [String: Any] = [
             "bucket": "pear",
