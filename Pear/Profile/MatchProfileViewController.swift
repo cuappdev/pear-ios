@@ -68,10 +68,10 @@ class MatchProfileViewController: UIViewController {
         view.addSubview(profileTableView)
 
         profileSections = [.summary, .basics]
-        if match.matchedUser.interests.count > 0 {
+        if !match.matchedUser.interests.isEmpty {
             profileSections.append(.interests)
         }
-        if match.matchedUser.groups.count > 0 {
+        if !match.matchedUser.interests.isEmpty {
             profileSections.append(.groups)
         }
 

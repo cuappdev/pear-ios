@@ -9,8 +9,8 @@
 import Foundation
 
 protocol Topic {
-    var name: String { get set }
     var id: Int { get set }
+    var name: String { get set }
     var imgUrl: String { get set}
 }
 
