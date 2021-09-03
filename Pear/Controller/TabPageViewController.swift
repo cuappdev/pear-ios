@@ -27,7 +27,7 @@ class TabPageViewController: UIPageViewController {
         self.user = user
         self.tabDelegate = tabDelegate
 
-        if let currentMatch = user.currentMatch {
+        if let _ = user.currentMatch {
             matchViewController = MatchProfileViewController(user: user)
         } else {
             matchViewController = NoMatchViewController(user: user)
