@@ -297,20 +297,7 @@ class SchedulingTimeViewController: UIViewController {
     }
 
     private func getUserAvailabilitiesThen(_ completion: @escaping ([DaySchedule]) -> Void) {
-        NetworkManager.shared.getUserAvailabilities(netId: user.netID).observe { response in
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let result):
-                    guard result.success else {
-                        print("Network error: could not get user's availabilities.")
-                        return
-                    }
-                    completion(result.data)
-                case .error:
-                    print("Network error: could not get user's availabilities.")
-                }
-            }
-        }
+        // TODO: Fill in getUserAvailabilities network call
     }
 
     private func setupForStatus() {
@@ -642,22 +629,7 @@ class SchedulingTimeViewController: UIViewController {
     private func updateMatchAvailabilities() {
         match?.availabilities = selectedTimes?.schedules ?? []
         guard let match = match else { return }
-        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let value):
-                    if value.success {
-                        UserDefaults.standard.set(match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                            self.navigationController?.pushViewController(HomeViewController(), animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                }
-            }
-        }
+        // TODO: Update with new updateMatchAvailabilities call
     }
 
     // MARK: - Button Related
@@ -699,23 +671,7 @@ class SchedulingTimeViewController: UIViewController {
     // MARK: - Navigation
     private func updateUserAvailabilitiesAndPop() {
         guard let selectedTimes = selectedTimes else { return }
-        NetworkManager.shared.updateTimeAvailabilities(
-            savedAvailabilities: selectedTimes.schedules
-        ).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let response):
-                    if response.success {
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                }
-            }
-        }
+        // TODO: Update user availablities network call
     }
 
     /* Places scheduling not currently supported on backend.
@@ -924,23 +880,7 @@ extension SchedulingTimeViewController {
 
     private func cancelMatchAndPopViewController() {
         guard let match = match else { return }
-
-        NetworkManager.shared.cancelMatch(matchID: match.matchID).observe { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .value(let value):
-                    if value.success {
-                        print("Succesfully cancelled matches")
-                        self.navigationController?.pushViewController(HomeViewController(), animated: true)
-                    } else {
-                        print("Network error: could not cancel match.")
-                    }
-                case .error:
-                    print("Network error: could not cancel match.")
-                }
-            }
-        }
+        // TODO: Update with new cancelMatch call
     }
 
 }

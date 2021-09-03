@@ -138,7 +138,9 @@ class FeedbackViewController: UIViewController {
 
         setupConstraints()
     }
-    
+
+//    TODO: Comment this back when feedback route is done
+//    - note: getMatchHistory will have to be updated to a new route w/ new backend
 //    @objc private func finishFeedback() {
 //        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
 //        responses.append(detailTextView.text)

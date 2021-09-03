@@ -21,12 +21,12 @@ class EditGroupsViewController: UIViewController {
     private var isCollapsed = true
     private var numRowsShownWhenCollapsed = 3
 
-    private var sections: [EditSection<GroupV2>] = []
+    private var sections: [EditSection<Group>] = []
     private let user: UserV2
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
-    private var moreSection: EditSection<GroupV2>? {
+    private var moreSection: EditSection<Group>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .more }) {
                 return sections[loc]
@@ -41,7 +41,7 @@ class EditGroupsViewController: UIViewController {
 
     // yourSection refers to the categories the user has already selected or is saved in UserDefaults.
     // Deselecting a cell here would move it to moreSection.
-    private var yourSection: EditSection<GroupV2>? {
+    private var yourSection: EditSection<Group>? {
         get {
             if let loc = sections.firstIndex(where: { $0.type == .yours }) {
                 return sections[loc]
@@ -114,14 +114,14 @@ class EditGroupsViewController: UIViewController {
     private func setupSections() {
         setupSectionsFromGroups()
         sections = [
-            EditSection<GroupV2>(type: .yours, items: []),
-            EditSection<GroupV2>(type: .more, items: [])
+            EditSection<Group>(type: .yours, items: []),
+            EditSection<Group>(type: .more, items: [])
         ]
         fadeTableView.view.reloadData()
     }
 
     private func setupSectionsFromGroups() {
-        Networking2.getAllGroups { [weak self] groups in
+        NetworkManager.getAllGroups { [weak self] groups in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let nonselectedGroups = groups.filter { group in
@@ -130,8 +130,8 @@ class EditGroupsViewController: UIViewController {
                     }
                 }
                 self.sections = [
-                    EditSection<GroupV2>(type: .yours, items: self.user.groups),
-                    EditSection<GroupV2>(type: .more, items: nonselectedGroups)
+                    EditSection<Group>(type: .yours, items: self.user.groups),
+                    EditSection<Group>(type: .more, items: nonselectedGroups)
                 ]
                 self.fadeTableView.view.reloadData()
             }
@@ -178,7 +178,7 @@ class EditGroupsViewController: UIViewController {
 
         let selectedGroups = yourSection.items.map { $0.id }
 
-        Networking2.updateGroups(groups: selectedGroups) { [weak self] success in
+        NetworkManager.updateGroups(groups: selectedGroups) { [weak self] success in
             guard let self = self else { return }
             if success {
                 self.navigationController?.popViewController(animated: true)
@@ -189,7 +189,7 @@ class EditGroupsViewController: UIViewController {
     }
 
     /// Moves an interest or group with name identifier from a source section to the target section
-    private func moveData(named name: String, from source: EditSection<GroupV2>, to target: EditSection<GroupV2>) {
+    private func moveData(named name: String, from source: EditSection<Group>, to target: EditSection<Group>) {
         let removed = source.removeItem(named: name)
         if let removed = removed { target.addItem(removed) }
     }

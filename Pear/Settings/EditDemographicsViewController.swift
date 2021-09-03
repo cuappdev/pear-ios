@@ -241,7 +241,7 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func getMajors() {
-        Networking2.getAllMajors { [weak self] majors in
+        NetworkManager.getAllMajors { [weak self] majors in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let majorsData = majors.map { $0.name }
@@ -259,7 +259,7 @@ class EditDemographicsViewController: UIViewController {
            let major = demographics.major,
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns {
-            Networking2.updateProfile(
+            NetworkManager.updateProfile(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
@@ -278,22 +278,12 @@ class EditDemographicsViewController: UIViewController {
     }
 
     @objc private func savePressed() {
-        print("save pressed")
         if didUpdatePhoto {
             if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
-                NetworkManager.shared.uploadPhoto(base64: profileImageBase64).observe { [weak self] result in
+                NetworkManager.uploadPhoto(base64: profileImageBase64) { [weak self] base64Img in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
-                        switch result {
-                        case .value(let response):
-                            if response.success {
-                                self.saveProfile(profilePictureURL: response.data)
-                            } else {
-                                self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                            }
-                        case .error:
-                            self.present(UIAlertController.getStandardErrortAlert(), animated: true)
-                        }
+                        self.saveProfile(profilePictureURL: base64Img)
                     }
                 }
             }

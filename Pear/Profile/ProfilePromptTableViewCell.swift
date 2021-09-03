@@ -56,7 +56,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
 
     func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
-        let major = user.majors.count > 0 ? user.majors[0].name : ""
+        let major = user.majors.first?.name ?? ""
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
@@ -66,6 +66,24 @@ class ProfilePromptTableViewCell: UITableViewCell {
                 .normalFont(user.graduationYear ?? "graudationYear not found")
                 .thinFont(", and my home is in ")
                 .normalFont(user.hometown ?? "")
+                .thinFont("! My pronouns are ")
+                .normalFont((user.pronouns ?? "").lowercased())
+                .thinFont(".")
+        }
+    }
+
+    func configure(for user: MatchedUser, type: ProfileSectionType) {
+        titleLabel.text = type.getTitle(for: user)
+        let major = user.majors.first?.name ?? ""
+        if type == .basics {
+            descriptionTextView.attributedText =
+                NSMutableAttributedString()
+                .thinFont("I study ")
+                .normalFont(major)
+                .thinFont(" in the class of ")
+                .normalFont(user.graduationYear)
+                .thinFont(", and my home is in ")
+                .normalFont(user.hometown)
                 .thinFont("! My pronouns are ")
                 .normalFont((user.pronouns ?? "").lowercased())
                 .thinFont(".")

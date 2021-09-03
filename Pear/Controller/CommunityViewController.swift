@@ -64,7 +64,7 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        Networking2.getAllUsers { [weak self] allUsers in
+        NetworkManager.getAllUsers { [weak self] allUsers in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.users = allUsers

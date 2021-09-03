@@ -176,22 +176,7 @@ class SchedulingPlacesViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        NetworkManager.shared.updateMatchAvailabilities(match: match).observe { [weak self] response in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch response {
-                case .value(let value):
-                    if value.success {
-                        UserDefaults.standard.set(self.match.matchID, forKey: Constants.UserDefaults.matchIDLastReachedOut)
-                            self.navigationController?.pushViewController(HomeViewController(), animated: true)
-                    } else {
-                        self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                    }
-                case .error:
-                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
-                }
-            }
-        }
+        // TODO: Update with new updateMatchAvailabilities call
     }
 
     @objc private func backButtonPressed() {

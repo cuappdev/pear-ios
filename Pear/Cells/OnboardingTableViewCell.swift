@@ -93,7 +93,7 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with interest: InterestV2) {
+    func configure(with interest: Interest) {
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
@@ -106,7 +106,7 @@ class OnboardingTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(with group: GroupV2) {
+    func configure(with group: Group) {
         titleLabel.text = group.name
         categoriesLabel.text = nil
         if let groupImageUrl = URL(string: group.imgUrl) {
