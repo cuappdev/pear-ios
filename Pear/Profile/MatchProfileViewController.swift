@@ -68,10 +68,10 @@ class MatchProfileViewController: UIViewController {
         view.addSubview(profileTableView)
 
         profileSections = [.summary, .basics]
-        if match.matchedUser.interests.count > 0 {
+        if !match.matchedUser.interests.isEmpty {
             profileSections.append(.interests)
         }
-        if match.matchedUser.groups.count > 0 {
+        if !match.matchedUser.interests.isEmpty {
             profileSections.append(.groups)
         }
 
@@ -108,7 +108,7 @@ class MatchProfileViewController: UIViewController {
     }
 
     func getCurrentMatch() {
-        Networking2.getCurrentMatch { [weak self] match in
+        NetworkManager.getCurrentMatch { [weak self] match in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.match = match.matchedUser

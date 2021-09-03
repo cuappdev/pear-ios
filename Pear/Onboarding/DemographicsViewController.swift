@@ -122,7 +122,7 @@ class DemographicsViewController: UIViewController {
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
            let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
-            Networking2.updateDemographics(
+            NetworkManager.updateDemographics(
                 graduationYear: graduationYear,
                 majors: [matchingMajor.id],
                 hometown: hometown,
@@ -141,7 +141,7 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getAllMajors() {
-        Networking2.getAllMajors { [weak self] majors in
+        NetworkManager.getAllMajors { [weak self] majors in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 let majorsData = majors.map { $0.name }
@@ -152,7 +152,7 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getUser() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] user in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let graduationYear = user.graduationYear {

@@ -56,7 +56,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
 
     func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
-        let major = user.majors.count > 0 ? user.majors[0].name : ""
+        let major = user.majors.first?.name ?? ""
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
@@ -74,7 +74,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
 
     func configure(for user: MatchedUser, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
-        let major = user.majors.count > 0 ? user.majors[0].name : ""
+        let major = user.majors.first?.name ?? ""
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()

@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(userEmail[..<addressSignIndex], forKey: Constants.UserDefaults.userNetId)
             UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
-            Networking2.authenticateUser(idToken: idToken) { [weak self] userSession in
+            NetworkManager.authenticateUser(idToken: idToken) { [weak self] userSession in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
                     UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)

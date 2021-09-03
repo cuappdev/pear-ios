@@ -78,7 +78,7 @@ class ProfileViewController: UIViewController {
     }
 
     private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
-        Networking2.getUser(id: userId) { user in
+        NetworkManager.getUser(id: userId) { user in
             completion(user)
         }
     }
