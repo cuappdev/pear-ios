@@ -32,15 +32,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            NetworkManager.validateAccessToken() { success in
-                if success {
+            NetworkManager.validateAccessToken() { result in
+                switch result {
+                case .success:
                     let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
                     let rootVC = didCompleteOnboarding ?
                         HomeViewController() :
                         OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                     navigationController.pushViewController(rootVC, animated: false)
                     window.rootViewController = navigationController
-                } else {
+                case .failure(let error):
+                    print(error.localizedDescription)
                     navigationController.pushViewController(LoginViewController(), animated: false)
                     window.rootViewController = navigationController
                 }

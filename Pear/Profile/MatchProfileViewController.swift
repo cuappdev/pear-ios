@@ -108,11 +108,16 @@ class MatchProfileViewController: UIViewController {
     }
 
     func getCurrentMatch() {
-        NetworkManager.getCurrentMatch { [weak self] match in
+        NetworkManager.getCurrentMatch { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.match = match.matchedUser
-                self.setupViews(match: match)
+            switch result {
+            case .success(let match):
+                DispatchQueue.main.async {
+                    self.match = match.matchedUser
+                    self.setupViews(match: match)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

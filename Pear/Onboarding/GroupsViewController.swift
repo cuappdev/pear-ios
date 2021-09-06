@@ -204,23 +204,33 @@ class GroupsViewController: UIViewController {
     }
     
     private func getAllGroups() {
-        NetworkManager.getAllGroups { [weak self] groups in
+        NetworkManager.getAllGroups { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.groups = groups
-                self.displayedGroups = groups
-                self.fadeTableView.view.reloadData()
+            switch result {
+            case .success(let groups):
+                DispatchQueue.main.async {
+                    self.groups = groups
+                    self.displayedGroups = groups
+                    self.fadeTableView.view.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
 
     private func getUserGroups() {
-        NetworkManager.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.selectedGroups = user.groups
-                self.fadeTableView.view.reloadData()
-                self.updateNext()
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.selectedGroups = user.groups
+                    self.fadeTableView.view.reloadData()
+                    self.updateNext()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

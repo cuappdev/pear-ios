@@ -164,12 +164,18 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        NetworkManager.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.selectedGoals = user.goals ?? []
-                self.fadeTableView.view.reloadData()
-                self.updateNext()
+            
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.selectedGoals = user.goals ?? []
+                    self.fadeTableView.view.reloadData()
+                    self.updateNext()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

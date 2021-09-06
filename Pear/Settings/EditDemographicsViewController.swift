@@ -241,11 +241,17 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func getMajors() {
-        NetworkManager.getAllMajors { [weak self] majors in
+        NetworkManager.getAllMajors { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                let majorsData = majors.map { $0.name }
-                self.majorDropdownView.setTableData(tableData: majorsData)
+            
+            switch result {
+            case .success(let majors):
+                DispatchQueue.main.async {
+                    let majorsData = majors.map { $0.name }
+                    self.majorDropdownView.setTableData(tableData: majorsData)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -278,17 +284,24 @@ class EditDemographicsViewController: UIViewController {
     }
 
     @objc private func savePressed() {
-        if didUpdatePhoto {
-            if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
-                NetworkManager.uploadPhoto(base64: profileImageBase64) { [weak self] base64Img in
-                    guard let self = self else { return }
+        guard didUpdatePhoto else {
+            saveProfile(profilePictureURL: user.profilePicUrl)
+            return
+        }
+        
+        if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
+            NetworkManager.uploadPhoto(base64: profileImageBase64) { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let base64Img):
                     DispatchQueue.main.async {
                         self.saveProfile(profilePictureURL: base64Img)
                     }
+                case .failure(let error):
+                    print(error)
                 }
             }
-        } else {
-            saveProfile(profilePictureURL: user.profilePicUrl)
         }
 
     }

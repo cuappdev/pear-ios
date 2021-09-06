@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TabDelegate: class {
+protocol TabDelegate: AnyObject {
     func setActiveTabIndex(to index: Int)
 }
 

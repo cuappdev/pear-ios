@@ -204,16 +204,22 @@ class SocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        NetworkManager.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let facebookUrl = user.facebookUrl {
-                    self.facebookTextField.text = facebookUrl
+            
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    if let facebookUrl = user.facebookUrl {
+                        self.facebookTextField.text = facebookUrl
+                    }
+                    if let instagramUsername = user.instagramUsername {
+                        self.instagramTextField.text = instagramUsername
+                    }
+                    self.updateNext()
                 }
-                if let instagramUsername = user.instagramUsername {
-                    self.instagramTextField.text = instagramUsername
-                }
-                self.updateNext()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

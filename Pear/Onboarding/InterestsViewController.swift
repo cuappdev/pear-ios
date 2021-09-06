@@ -123,11 +123,16 @@ class InterestsViewController: UIViewController {
 
     private func getAllInterests() {
 
-        NetworkManager.getAllInterests { [weak self] interests in
+        NetworkManager.getAllInterests { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.interests = interests
-                self.fadeTableView.view.reloadData()
+            switch result {
+            case .success(let interests):
+                DispatchQueue.main.async {
+                    self.interests = interests
+                    self.fadeTableView.view.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
 
@@ -135,12 +140,17 @@ class InterestsViewController: UIViewController {
 
     private func getUserInterests() {
 
-        NetworkManager.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.selectedInterests = user.interests
-                self.fadeTableView.view.reloadData()
-                self.updateNext()
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.selectedInterests = user.interests
+                    self.fadeTableView.view.reloadData()
+                    self.updateNext()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
 
