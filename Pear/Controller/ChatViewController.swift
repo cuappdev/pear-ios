@@ -194,8 +194,6 @@ class ChatViewController: UIViewController {
         messageDatabaseRef.updateChildValues(values) { error, reference in
             if let error = error {
                 print(error.localizedDescription)
-                print(error)
-            
                 return
             }
             guard let messageId = messageDatabaseRef.key else { return }

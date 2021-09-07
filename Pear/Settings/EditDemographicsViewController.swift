@@ -44,7 +44,7 @@ class EditDemographicsViewController: UIViewController {
         self.user = user
         demographics.name = "\(user.firstName) \(user.lastName)"
         demographics.graduationYear = user.graduationYear
-//        demographics.major = user.major
+        demographics.major = user.majors.first?.name
         demographics.hometown = user.hometown
         demographics.pronouns = user.pronouns
         if let profilePictureURL = URL(string: user.profilePicUrl) {
@@ -148,7 +148,7 @@ class EditDemographicsViewController: UIViewController {
             searchType: .local
         )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
-//        majorDropdownView.setSelectValue(value: user.major)
+        majorDropdownView.setSelectValue(value: user.majors.first?.name ?? "")
         editScrollView.addSubview(majorDropdownView)
 
         hometownDropdownView = OnboardingSearchDropdownView(

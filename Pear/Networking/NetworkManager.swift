@@ -51,7 +51,6 @@ class NetworkManager {
                 }
             case .failure(let error):
                 completion(.failure(error))
-                print(error.localizedDescription)
             }
         }
     }
@@ -92,7 +91,6 @@ class NetworkManager {
                 }
             case .failure(let error):
                 completion(.failure(error))
-                print(error.localizedDescription)
             }
         }
     }
