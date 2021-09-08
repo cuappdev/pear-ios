@@ -131,11 +131,16 @@ class EditSocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        NetworkManager.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.fbTextField.text = user.facebookUrl
-                self.instaTextField.text = user.instagramUsername
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.fbTextField.text = user.facebookUrl
+                    self.instaTextField.text = user.instagramUsername
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

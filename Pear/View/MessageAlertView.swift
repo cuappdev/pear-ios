@@ -23,13 +23,13 @@ class MessageAlertView: UIView {
     private var mainMessage: String = ""
     private var alertImageName: String = ""
     
-    private var removeFunction: (Bool) -> ()
+    private var removeFunction: (Bool) -> Void
 
     init(mainMessage: String,
          actionMessage: String,
          dismissMessage: String,
          alertImageName: String,
-         removeFunction: @escaping (Bool) -> ()) {
+         removeFunction: @escaping (Bool) -> Void) {
         self.mainMessage = mainMessage
         self.actionMessage = actionMessage
         self.dismissMessage = dismissMessage

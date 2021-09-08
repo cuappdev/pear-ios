@@ -88,10 +88,18 @@ class MessagesViewController: UIViewController {
     }
 
     private func getUserMessages() {
-        NetworkManager.getAllMatches { matches in
-            self.matches = matches
-            self.matchedUsers = matches.compactMap { $0.users.filter ({$0.id != self.user.id}).first }
-            self.reloadMessagesTableView()
+        NetworkManager.getAllMatches { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let matches):
+                DispatchQueue.main.async {
+                    self.matches = matches
+                    self.matchedUsers = matches.compactMap { $0.users.first(where: { $0.id != self.user.id }) }
+                    self.reloadMessagesTableView()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
     }
 

@@ -25,7 +25,7 @@ class NetworkManager {
 
     private static let hostEndpoint = "http://\(Keys.pearServerURLV2)"
 
-    static func uploadPhoto(base64: String, completion: @escaping (String) -> Void) {
+    static func uploadPhoto(base64: String, completion: @escaping (Result<String, Error>) -> Void) {
         let parameters: [String: Any] = [
             "bucket": "pear",
             "image": "data:image/png;base64,\(base64)"
@@ -41,12 +41,16 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let imageData = try? jsonDecoder.decode(Response<String>.self, from: data) {
+                
+                do {
+                    let imageData = try jsonDecoder.decode(Response<String>.self, from: data)
                     let img = imageData.data
-                    completion(img)
+                    completion(.success(img))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
@@ -62,7 +66,7 @@ class NetworkManager {
         return urlComp?.url?.absoluteString
     }
 
-    static func authenticateUser(idToken: String, completion: @escaping (UserSession) -> Void) {
+    static func authenticateUser(idToken: String, completion: @escaping (Result<UserSession, Error>) -> Void) {
         let parameters: [String: Any] = [
             "id_token": idToken
         ]
@@ -77,17 +81,21 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let authorizationData = try? jsonDecoder.decode(Response<UserSession>.self, from: data) {
+                
+                do {
+                    let authorizationData = try jsonDecoder.decode(Response<UserSession>.self, from: data)
                     let userSession = authorizationData.data
-                    completion(userSession)
+                    completion(.success(userSession))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func validateAccessToken(completion: @escaping (Bool) -> Void) {
+    static func validateAccessToken(completion: @escaping (Result<Data, AFError>) -> Void) {
 
         AF.request(
             "\(hostEndpoint)/api/me/",
@@ -95,18 +103,12 @@ class NetworkManager {
             encoding: JSONEncoding.default,
             headers: headers
         ).validate().responseData { response in
-            switch response.result {
-            case .success:
-                completion(true)
-            case .failure(let error):
-                print(error.localizedDescription)
-                completion(false)
-            }
+            completion(response.result)
         }
 
     }
 
-    static func getMe(completion: @escaping (UserV2) -> Void) {
+    static func getMe(completion: @escaping (Result<UserV2, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .get,
@@ -120,12 +122,12 @@ class NetworkManager {
                 do {
                     let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
                     let user = userData.data
-                    completion(user)
+                    completion(.success(user))
                 } catch {
-                    print("Decoding error: \(error)")
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
@@ -137,14 +139,14 @@ class NetworkManager {
         pronouns: String,
         completion: @escaping (Bool) -> Void
     ) {
-
+        
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
             "majors": majors,
             "hometown": hometown,
             "pronouns": pronouns
         ]
-
+        
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .post,
@@ -351,7 +353,7 @@ class NetworkManager {
         }
     }
 
-    static func getAllMajors(completion: @escaping ([MajorV2]) -> Void) {
+    static func getAllMajors(completion: @escaping (Result<[MajorV2], Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/majors/",
             method: .get,
@@ -362,17 +364,20 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let majorsData = try? jsonDecoder.decode(Response<[MajorV2]>.self, from: data) {
+                do {
+                    let majorsData = try jsonDecoder.decode(Response<[MajorV2]>.self, from: data)
                     let majors = majorsData.data
-                    completion(majors)
+                    completion(.success(majors))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getAllInterests(completion: @escaping ([Interest]) -> Void) {
+    static func getAllInterests(completion: @escaping (Result<[Interest], Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/interests/",
             method: .get,
@@ -383,17 +388,20 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let interestData = try? jsonDecoder.decode(Response<[Interest]>.self, from: data) {
+                do {
+                    let interestData = try jsonDecoder.decode(Response<[Interest]>.self, from: data)
                     let interests = interestData.data
-                    completion(interests)
+                    completion(.success(interests))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getAllGroups(completion: @escaping ([Group]) -> Void) {
+    static func getAllGroups(completion: @escaping (Result<[Group], Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/groups/",
             method: .get,
@@ -404,17 +412,20 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let groupsData = try? jsonDecoder.decode(Response<[Group]>.self, from: data) {
+                do {
+                    let groupsData = try jsonDecoder.decode(Response<[Group]>.self, from: data)
                     let groups = groupsData.data
-                    completion(groups)
+                    completion(.success(groups))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getAllUsers(completion: @escaping ([CommunityUser]) -> Void) {
+    static func getAllUsers(completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/",
             method: .get,
@@ -428,17 +439,17 @@ class NetworkManager {
                 do {
                     let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
                     let users = usersData.data
-                    completion(users)
+                    completion(.success(users))
                 } catch {
-                    print("Decoding error: \(error)")
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getUser(id: Int, completion: @escaping (UserV2) -> Void) {
+    static func getUser(id: Int, completion: @escaping (Result<UserV2, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/\(id)/",
             method: .get,
@@ -449,17 +460,21 @@ class NetworkManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let userData = try? jsonDecoder.decode(Response<UserV2>.self, from: data) {
+                
+                do {
+                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
                     let user = userData.data
-                    completion(user)
+                    completion(.success(user))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getAllMatches(completion: @escaping ([TempMatchV2]) -> Void) {
+    static func getAllMatches(completion: @escaping (Result<[TempMatchV2], Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/matches/",
             method: .get,
@@ -471,18 +486,19 @@ class NetworkManager {
                 do {
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let matchData = try? jsonDecoder.decode(Response<[TempMatchV2]>.self, from: data) {
-                        let matches = matchData.data
-                        completion(matches)
-                    }
+                    let matchData = try jsonDecoder.decode(Response<[TempMatchV2]>.self, from: data)
+                    let matches = matchData.data
+                    completion(.success(matches))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 
-    static func getCurrentMatch(completion: @escaping (MatchV2) -> Void) {
+    static func getCurrentMatch(completion: @escaping (Result<MatchV2, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/matches/current/",
             method: .get,
@@ -494,13 +510,14 @@ class NetworkManager {
                 do {
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let matchData = try? jsonDecoder.decode(Response<MatchV2>.self, from: data) {
-                        let match = matchData.data
-                        completion(match)
-                    }
+                    let matchData = try jsonDecoder.decode(Response<MatchV2>.self, from: data)
+                    let match = matchData.data
+                    completion(.success(match))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }

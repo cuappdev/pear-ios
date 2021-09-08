@@ -17,7 +17,7 @@ class ChatTableViewCell: UITableViewCell {
 
     // MARK: - Private Data Vars
     static let reuseId = "chatReuseIdentifier"
-    var viewProfile: (() -> ())?
+    var viewProfile: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

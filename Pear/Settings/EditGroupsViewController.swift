@@ -121,19 +121,24 @@ class EditGroupsViewController: UIViewController {
     }
 
     private func setupSectionsFromGroups() {
-        NetworkManager.getAllGroups { [weak self] groups in
+        NetworkManager.getAllGroups { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                let nonselectedGroups = groups.filter { group in
-                    !self.user.groups.contains { userGroup in
-                        userGroup.id == group.id
+            switch result {
+            case .success(let groups):
+                DispatchQueue.main.async {
+                    let nonselectedGroups = groups.filter { group in
+                        !self.user.groups.contains { userGroup in
+                            userGroup.id == group.id
+                        }
                     }
+                    self.sections = [
+                        EditSection<Group>(type: .yours, items: self.user.groups),
+                        EditSection<Group>(type: .more, items: nonselectedGroups)
+                    ]
+                    self.fadeTableView.view.reloadData()
                 }
-                self.sections = [
-                    EditSection<Group>(type: .yours, items: self.user.groups),
-                    EditSection<Group>(type: .more, items: nonselectedGroups)
-                ]
-                self.fadeTableView.view.reloadData()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -430,6 +435,10 @@ private class EditHeaderView: UIView, UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchDelegate?(searchText == "" ? nil : searchText)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 
 }

@@ -128,19 +128,25 @@ class EditInterestsViewController: UIViewController {
     }
 
     private func setupSectionsFromInterests() {
-        NetworkManager.getAllInterests { [weak self] interests in
+        NetworkManager.getAllInterests { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                let nonselectedInterests = interests.filter { interest in
-                    !self.user.interests.contains { userInterest in
-                        userInterest.id == interest.id
+            
+            switch result {
+            case .success(let interests):
+                DispatchQueue.main.async {
+                    let nonselectedInterests = interests.filter { interest in
+                        !self.user.interests.contains { userInterest in
+                            userInterest.id == interest.id
+                        }
                     }
+                    self.sections = [
+                        EditSection<Interest>(type: .yours, items: self.user.interests),
+                        EditSection<Interest>(type: .more, items: nonselectedInterests)
+                    ]
+                    self.fadeTableView.view.reloadData()
                 }
-                self.sections = [
-                    EditSection<Interest>(type: .yours, items: self.user.interests),
-                    EditSection<Interest>(type: .more, items: nonselectedInterests)
-                ]
-                self.fadeTableView.view.reloadData()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

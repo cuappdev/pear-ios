@@ -27,12 +27,12 @@ class CommunityViewController: UIViewController {
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
         searchBar.placeholder = "Search"
+        searchBar.showsCancelButton = false
         searchBar.searchTextField.backgroundColor = .backgroundWhite
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.font = ._16CircularStdBook
         searchBar.searchTextField.clearButtonMode = .whileEditing
         searchBar.layer.cornerRadius = 8
-        searchBar.showsCancelButton = false
         searchBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
         searchBar.layer.shadowOpacity = 1
         searchBar.layer.shadowRadius = 4
@@ -64,12 +64,18 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        NetworkManager.getAllUsers { [weak self] allUsers in
+        NetworkManager.getAllUsers { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.users = allUsers
-                self.spinner.stopAnimating()
-                self.fadeCommunityTableView.view.reloadData()
+            
+            switch result {
+            case .success(let allUsers):
+                DispatchQueue.main.async {
+                    self.users = allUsers
+                    self.spinner.stopAnimating()
+                    self.fadeCommunityTableView.view.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
