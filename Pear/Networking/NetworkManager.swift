@@ -25,7 +25,7 @@ class NetworkManager {
 
     private static let hostEndpoint = "http://\(Keys.pearServerURLV2)"
 
-    static func uploadPhoto(base64: String, completion: @escaping (Result<String, Error>) -> ()) {
+    static func uploadPhoto(base64: String, completion: @escaping (Result<String, Error>) -> Void) {
         let parameters: [String: Any] = [
             "bucket": "pear",
             "image": "data:image/png;base64,\(base64)"
@@ -66,7 +66,7 @@ class NetworkManager {
         return urlComp?.url?.absoluteString
     }
 
-    static func authenticateUser(idToken: String, completion: @escaping (Result<UserSession, Error>) -> ()) {
+    static func authenticateUser(idToken: String, completion: @escaping (Result<UserSession, Error>) -> Void) {
         let parameters: [String: Any] = [
             "id_token": idToken
         ]
@@ -95,7 +95,7 @@ class NetworkManager {
         }
     }
 
-    static func validateAccessToken(completion: @escaping (Result<Data, AFError>) -> ()) {
+    static func validateAccessToken(completion: @escaping (Result<Data, AFError>) -> Void) {
 
         AF.request(
             "\(hostEndpoint)/api/me/",
@@ -108,7 +108,7 @@ class NetworkManager {
 
     }
 
-    static func getMe(completion: @escaping (Result<UserV2, Error>) -> ()) {
+    static func getMe(completion: @escaping (Result<UserV2, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .get,

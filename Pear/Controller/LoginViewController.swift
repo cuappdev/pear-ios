@@ -111,7 +111,7 @@ class LoginViewController: UIViewController {
                         
                         let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                         
-                        self.navigationController?.pushViewController(onboardingVC, animated: false)
+                        self.navigationController?.pushViewController(onboardingVC, animated: true)
                     }
                 case .failure(let error):
                     print(error.localizedDescription)

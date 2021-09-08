@@ -247,7 +247,7 @@ class EditDemographicsViewController: UIViewController {
             switch result {
             case .success(let majors):
                 DispatchQueue.main.async {
-                    let majorsData = majors.map { $0.name }
+                    let majorsData = majors.map(\.name)
                     self.majorDropdownView.setTableData(tableData: majorsData)
                 }
             case .failure(let error):

@@ -94,7 +94,7 @@ class MessagesViewController: UIViewController {
             case .success(let matches):
                 DispatchQueue.main.async {
                     self.matches = matches
-                    self.matchedUsers = matches.compactMap { $0.users.filter ({$0.id != self.user.id}).first }
+                    self.matchedUsers = matches.compactMap { $0.users.first(where: { $0.id != self.user.id }) }
                     self.reloadMessagesTableView()
                 }
             case .failure(let error):

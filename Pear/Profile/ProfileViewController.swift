@@ -72,15 +72,17 @@ class ProfileViewController: UIViewController {
             
             switch result {
             case .success(let user):
-                self.user = user
-                self.profileSections = [.summary, .basics]
-                if !user.interests.isEmpty {
-                    self.profileSections.append(.interests)
+                DispatchQueue.main.async {
+                    self.user = user
+                    self.profileSections = [.summary, .basics]
+                    if !user.interests.isEmpty {
+                        self.profileSections.append(.interests)
+                    }
+                    if !user.groups.isEmpty {
+                        self.profileSections.append(.groups)
+                    }
+                    self.profileTableView.reloadData()
                 }
-                if !user.groups.isEmpty {
-                    self.profileSections.append(.groups)
-                }
-                self.profileTableView.reloadData()
             case .failure(let error):
                 print(error.localizedDescription)
             }

@@ -146,7 +146,7 @@ class DemographicsViewController: UIViewController {
             switch result {
             case .success(let majors):
                 DispatchQueue.main.async {
-                    let majorsData = majors.map { $0.name }
+                    let majorsData = majors.map(\.name)
                     self.majorSearchFields = majors
                     self.majorDropdownView.setTableData(tableData: majorsData)
                 }
