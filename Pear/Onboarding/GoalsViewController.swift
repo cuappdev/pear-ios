@@ -146,7 +146,7 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func backButtonPressed() {
-        delegate?.backPage(index: 2)
+        delegate?.backPage(index: 3)
     }
 
     @objc func updateGoals() {
@@ -155,7 +155,8 @@ class GoalsViewController: UIViewController {
             DispatchQueue.main.async {
                 if success {
                     UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    self.delegate?.nextPage(index: 5)
+//                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }

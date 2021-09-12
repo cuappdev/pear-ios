@@ -52,12 +52,13 @@ class ProfileViewController: UIViewController {
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
         profileTableView.register(ProfilePromptTableViewCell.self, forCellReuseIdentifier: ProfilePromptTableViewCell.reuseIdentifier)
+        profileTableView.register(ProfilePromptsSectionTableViewCell.self, forCellReuseIdentifier: ProfilePromptsSectionTableViewCell.reuseIdentifier)
         profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.bounces = true
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 150, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 200, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
@@ -86,6 +87,11 @@ class ProfileViewController: UIViewController {
             case .failure(let error):
                 print(error.localizedDescription)
             }
+
+            if let user = self.user, user.prompts.count > 0 {
+                self.profileSections.append(.prompts)
+            }
+            self.profileTableView.reloadData()
         }
     }
 
@@ -127,6 +133,10 @@ extension ProfileViewController: UITableViewDataSource {
             return cell
         case .matches:
             return UITableViewCell()
+        case .prompts:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
+            cell.configure(for: user.prompts)
+            return cell
         }
     }
 

@@ -28,6 +28,7 @@ struct UserV2: Codable {
     let hasOnboarded: Bool?
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
+    let prompts: [Prompt]
     
 }
 

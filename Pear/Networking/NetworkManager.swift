@@ -521,5 +521,62 @@ class NetworkManager {
             }
         }
     }
+    
+    static func getPromptOptions(completion: @escaping([Prompt]) -> Void) {
+        AF.request(
+            "\(hostEndpoint)/api/prompts/",
+            method: .get,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let promptOptions = try? jsonDecoder.decode(Response<[Prompt]>.self, from: data) {
+                        let prompts = promptOptions.data
+                        completion(prompts)
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    // TODO - change question_id to id after backend spelling update
+    static func updatePrompts(prompts: [Prompt], completion: @escaping (Bool) -> Void) {
+        let parameters: [String: Any] = [
+            "prompts": prompts.map({ prompt -> [String: Any] in
+                if let id = prompt.id, let answer = prompt.answer {
+                    return [
+                        "question_id": id as Any,
+                        "answer": answer as Any
+                    ]
+                }
+                return [:]
+            })
+        ]
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(false)
+            }
+        }
+    }
 
 }
