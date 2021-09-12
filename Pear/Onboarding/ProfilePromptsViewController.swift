@@ -88,7 +88,7 @@ class ProfilePromptsViewController: UIViewController {
             case .success(let user):
                 self.prompts = user.prompts
                 while self.prompts.count < 3 {
-                    self.prompts.append(Prompt(questionId: nil, questionName: "", questionPlaceholder: "", answer: nil))
+                    self.prompts.append(Prompt(id: nil, questionName: "", questionPlaceholder: "", answer: nil))
                 }
                 self.updateNext()
                 self.fadeTableView.view.reloadData()
@@ -185,7 +185,7 @@ extension ProfilePromptsViewController: UITableViewDataSource {
         cell.removePrompt = { [weak self] selectedCell in
             guard let self = self else { return }
             guard let indexPath = self.fadeTableView.view.indexPath(for: cell) else { return }
-            self.prompts[indexPath.row] = Prompt(questionId: nil, questionName: "", questionPlaceholder: "", answer: nil)
+            self.prompts[indexPath.row] = Prompt(id: nil, questionName: "", questionPlaceholder: "", answer: nil)
             NetworkManager.getPromptOptions { prompts in
                 DispatchQueue.main.async {
                     self.promptOptions = prompts.filter { !self.prompts.contains($0) }
@@ -219,7 +219,7 @@ extension ProfilePromptsViewController: UITableViewDelegate {
 
     private func updateProfilePrompt(prompt: Prompt, index: Int) {
         self.prompts[index] = prompt
-        self.promptOptions = self.promptOptions.filter{ $0.questionId != prompt.questionId }
+        self.promptOptions = self.promptOptions.filter{ $0.id != prompt.id }
         self.updateNext()
         self.fadeTableView.view.reloadData()
     }

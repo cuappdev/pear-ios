@@ -107,7 +107,7 @@ class AnswerPromptViewController: UIViewController {
 
     @objc private func saveButtonPressed() {
         if let answer = responseTextView.text {
-            let newPrompt = Prompt(questionId: prompt.questionId, questionName: prompt.questionName, questionPlaceholder: prompt.questionPlaceholder, answer: answer)
+            let newPrompt = Prompt(id: prompt.id, questionName: prompt.questionName, questionPlaceholder: prompt.questionPlaceholder, answer: answer)
             addPrompt(newPrompt, index)
             navigationController?.popViewController(animated: true)
         }

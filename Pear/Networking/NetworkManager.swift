@@ -545,10 +545,11 @@ class NetworkManager {
         }
     }
 
+    // TODO - change question_id to id after backend spelling update
     static func updatePrompts(prompts: [Prompt], completion: @escaping (Bool) -> Void) {
         let parameters: [String: Any] = [
             "prompts": prompts.map({ prompt -> [String: Any] in
-                if let id = prompt.questionId, let answer = prompt.answer {
+                if let id = prompt.id, let answer = prompt.answer {
                     return [
                         "question_id": id as Any,
                         "answer": answer as Any
