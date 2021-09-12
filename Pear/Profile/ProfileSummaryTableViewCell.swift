@@ -151,6 +151,14 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
+    func configure(for user: MatchedUser) {
+        nameLabel.text = "\(user.firstName) \(user.lastName)"
+//        netIdLabel.text = "Reach me at \(user.netId)"
+        if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {
+            profileImageView.kf.setImage(with: profilePictureURL)
+        }
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

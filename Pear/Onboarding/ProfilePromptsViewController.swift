@@ -83,20 +83,23 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     private func getUserPrompts() {
-        Networking2.getMe { user in
-            DispatchQueue.main.async {
+        NetworkManager.getMe { result in
+            switch result {
+            case .success(let user):
                 self.prompts = user.prompts
                 while self.prompts.count < 3 {
                     self.prompts.append(Prompt(questionId: nil, questionName: "", questionPlaceholder: "", answer: nil))
                 }
                 self.updateNext()
                 self.fadeTableView.view.reloadData()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
 
     private func setPromptOptions() {
-        Networking2.getPromptOptions { prompts in
+        NetworkManager.getPromptOptions { prompts in
             DispatchQueue.main.async {
                 self.promptOptions = prompts
             }
@@ -113,7 +116,7 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     @objc private func nextButtonPressed() {
-        Networking2.updatePrompts(prompts: prompts) { success in
+        NetworkManager.updatePrompts(prompts: prompts) { success in
             DispatchQueue.main.async {
                 if success {
                     self.delegate?.nextPage(index: 4)
@@ -183,7 +186,7 @@ extension ProfilePromptsViewController: UITableViewDataSource {
             guard let self = self else { return }
             guard let indexPath = self.fadeTableView.view.indexPath(for: cell) else { return }
             self.prompts[indexPath.row] = Prompt(questionId: nil, questionName: "", questionPlaceholder: "", answer: nil)
-            Networking2.getPromptOptions { prompts in
+            NetworkManager.getPromptOptions { prompts in
                 DispatchQueue.main.async {
                     self.promptOptions = prompts.filter { !self.prompts.contains($0) }
                     self.updateNext()

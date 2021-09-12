@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
         // Set up keyboard management library, helps to shift up view when keyboard becomes active
         IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 200
 
         FirebaseApp.configure()
@@ -32,16 +33,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            Networking2.validateAccessToken() { success in
-                if success {
-//                    let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
-                    let didCompleteOnboarding = false
+            NetworkManager.validateAccessToken() { result in
+                switch result {
+                case .success:
+                    let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
                     let rootVC = didCompleteOnboarding ?
                         HomeViewController() :
                         OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                     navigationController.pushViewController(rootVC, animated: false)
                     window.rootViewController = navigationController
-                } else {
+                case .failure(let error):
+                    print(error.localizedDescription)
                     navigationController.pushViewController(LoginViewController(), animated: false)
                     window.rootViewController = navigationController
                 }

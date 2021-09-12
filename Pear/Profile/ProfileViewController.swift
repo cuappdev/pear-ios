@@ -63,27 +63,35 @@ class ProfileViewController: UIViewController {
         view.addSubview(profileTableView)
 
         setupConstraints()
+        
+        getUser()
+    }
 
-        getUserThen { [weak self] user in
+    private func getUser() {
+        NetworkManager.getUser(id: userId) { [weak self] result in
             guard let self = self else { return }
-            self.user = user
-            self.profileSections = [.summary, .basics]
-            if user.interests.count > 0 {
-                self.profileSections.append(.interests)
+            
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.user = user
+                    self.profileSections = [.summary, .basics]
+                    if !user.interests.isEmpty {
+                        self.profileSections.append(.interests)
+                    }
+                    if !user.groups.isEmpty {
+                        self.profileSections.append(.groups)
+                    }
+                    self.profileTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
-            if user.groups.count > 0 {
-                self.profileSections.append(.groups)
-            }
-            if user.prompts.count > 0 {
+
+            if let user = self.user, user.prompts.count > 0 {
                 self.profileSections.append(.prompts)
             }
             self.profileTableView.reloadData()
-        }
-    }
-
-    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
-        Networking2.getUser(id: userId) { user in
-            completion(user)
         }
     }
 

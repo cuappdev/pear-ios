@@ -26,7 +26,7 @@ class ApiManager {
         return urlComp?.url?.absoluteString
     }
 
-    static func getHometown(hometown: String, completion: @escaping ([GeoPlace]) -> Void) {
+    static func getHometown(hometown: String, completion: @escaping (Result<[GeoPlace], Error>) -> Void) {
         guard let queryEndpoint = getUrlWithQuery(
             baseUrl: "\(geoPlacesEndpoint)/v1/geo/cities",
             items: [
@@ -44,12 +44,15 @@ class ApiManager {
             case .success(let data):
                 let jsonDecoder = JSONDecoder()
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let geoPlacesResponse = try? jsonDecoder.decode(GeoPlacesResponse.self, from: data) {
+                do {
+                    let geoPlacesResponse = try jsonDecoder.decode(GeoPlacesResponse.self, from: data)
                     let places = geoPlacesResponse.data
-                    completion(places)
+                    completion(.success(places))
+                } catch {
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }

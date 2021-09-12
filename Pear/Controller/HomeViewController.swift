@@ -6,7 +6,6 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import AppDevAnnouncements
-import FutureNova
 import Kingfisher
 import SideMenu
 import UIKit
@@ -88,22 +87,23 @@ class HomeViewController: UIViewController {
 //        showInAppFeedback()
         setupLocalNotifications()
         setupConstraints()
+        updateUserAndTabPage()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
-        updateUserAndTabPage()
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     /*
 
      TODO: Comment this back when feedback route is done
+     - note: getMatchHistory will have to be updated to a new route w/ new backend
     
     private func showInAppFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
@@ -133,14 +133,19 @@ class HomeViewController: UIViewController {
      */
 
     private func updateUserAndTabPage() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.user = user
-                if let profilePictureURL = URL(string: user.profilePicUrl) {
-                    self.profileImageView.kf.setImage(with: profilePictureURL)
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.user = user
+                    if let profilePictureURL = URL(string: user.profilePicUrl) {
+                        self.profileImageView.kf.setImage(with: profilePictureURL)
+                    }
+                    self.setupTabPageViewController(user: user)
                 }
-                self.setupTabPageViewController(user: user)
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -238,9 +243,7 @@ extension HomeViewController: UIGestureRecognizerDelegate {
 extension HomeViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        activeTabIndex = indexPath.item
-        tabPageViewController?.setViewController(to: indexPath.item)
-        tabCollectionView.reloadData()
+        setActiveTabIndex(to: indexPath.item)
     }
 
 }

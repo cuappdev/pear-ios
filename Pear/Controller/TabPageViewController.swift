@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TabDelegate: class {
+protocol TabDelegate: AnyObject {
     func setActiveTabIndex(to index: Int)
 }
 
@@ -26,7 +26,12 @@ class TabPageViewController: UIPageViewController {
     init(user: UserV2, tabDelegate: TabDelegate) {
         self.user = user
         self.tabDelegate = tabDelegate
-        matchViewController = NoMatchViewController(user: user)
+
+        if let _ = user.currentMatch {
+            matchViewController = MatchProfileViewController(user: user)
+        } else {
+            matchViewController = NoMatchViewController(user: user)
+        }
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }

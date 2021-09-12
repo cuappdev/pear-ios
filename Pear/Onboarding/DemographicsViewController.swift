@@ -122,7 +122,7 @@ class DemographicsViewController: UIViewController {
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
            let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
-            Networking2.updateDemographics(
+            NetworkManager.updateDemographics(
                 graduationYear: graduationYear,
                 majors: [matchingMajor.id],
                 hometown: hometown,
@@ -141,26 +141,36 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getAllMajors() {
-        Networking2.getAllMajors { [weak self] majors in
+        NetworkManager.getAllMajors { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                let majorsData = majors.map { $0.name }
-                self.majorSearchFields = majors
-                self.majorDropdownView.setTableData(tableData: majorsData)
+            switch result {
+            case .success(let majors):
+                DispatchQueue.main.async {
+                    let majorsData = majors.map(\.name)
+                    self.majorSearchFields = majors
+                    self.majorDropdownView.setTableData(tableData: majorsData)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
 
     private func getUser() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let graduationYear = user.graduationYear {
-                    self.classDropdownView.setTitle(title: graduationYear)
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    if let graduationYear = user.graduationYear {
+                        self.classDropdownView.setTitle(title: graduationYear)
+                    }
+                    self.hometownDropdownView.setTitle(title: user.hometown ?? "")
+                    self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
+                    self.majorDropdownView.setTitle(title: user.majors.first?.name ?? "")
                 }
-                self.hometownDropdownView.setTitle(title: user.hometown ?? "")
-                self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
-                self.majorDropdownView.setTitle(title: user.majors.count > 0 ? user.majors[0].name : "")
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
