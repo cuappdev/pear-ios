@@ -142,8 +142,8 @@ extension LoginViewController: GIDSignInDelegate {
             GIDSignIn.sharedInstance().signOut()
             do {
                 try Auth.auth().signOut()
-            } catch let signOutError as NSError {
-              print("Error signing out: \(signOutError)")
+            } catch {
+              print("Error signing out: ", error)
             }
             self.showErrorMessageAlertView()
             return

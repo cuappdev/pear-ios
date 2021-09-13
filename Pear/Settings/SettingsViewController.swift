@@ -152,8 +152,8 @@ extension SettingsViewController: UITableViewDataSource {
             GIDSignIn.sharedInstance()?.signOut()
             do {
                 try Auth.auth().signOut()
-            } catch let signOutError as NSError {
-              print("Error signing out: \(signOutError)")
+            } catch {
+              print("Error signing out:", error)
             }
             [Constants.UserDefaults.accessToken,
              Constants.UserDefaults.onboardingCompletion,
