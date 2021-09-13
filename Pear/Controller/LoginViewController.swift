@@ -6,6 +6,8 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import Firebase
+import FirebaseAuth
 import GoogleSignIn
 import SnapKit
 import UIKit
@@ -138,10 +140,21 @@ extension LoginViewController: GIDSignInDelegate {
               // Only allow users with Cornell emails or internal users (Pear email) to log in
               email.contains("@cornell.edu") || email == "cornellpearapp@gmail.com" else {
             GIDSignIn.sharedInstance().signOut()
+            do {
+                try Auth.auth().signOut()
+            } catch {
+              print("Error signing out: ", error)
+            }
             self.showErrorMessageAlertView()
             return
         }
-
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+        Auth.auth().signIn(with: credential) { (authResult, error) in
+            if let error = error {
+                 print("Firebase authentication error: \(error.localizedDescription)")
+            }
+        }
         loginUser(user: user)
     }
 

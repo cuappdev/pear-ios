@@ -27,6 +27,7 @@ use_frameworks!
     # Messaging
     pod 'Firebase/Core'
     pod 'Firebase/Database'
+    pod 'Firebase/Auth'
 
   target 'PearTests' do
     inherit! :search_paths
