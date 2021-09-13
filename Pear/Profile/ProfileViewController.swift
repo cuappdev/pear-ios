@@ -52,34 +52,46 @@ class ProfileViewController: UIViewController {
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
         profileTableView.register(ProfilePromptTableViewCell.self, forCellReuseIdentifier: ProfilePromptTableViewCell.reuseIdentifier)
+        profileTableView.register(ProfilePromptsSectionTableViewCell.self, forCellReuseIdentifier: ProfilePromptsSectionTableViewCell.reuseIdentifier)
         profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.bounces = true
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 150, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 200, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
         setupConstraints()
-
-        getUserThen { [weak self] user in
-            guard let self = self else { return }
-            self.user = user
-            self.profileSections = [.summary, .basics]
-            if user.interests.count > 0 {
-                self.profileSections.append(.interests)
-            }
-            if user.groups.count > 0 {
-                self.profileSections.append(.groups)
-            }
-            self.profileTableView.reloadData()
-        }
+        
+        getUser()
     }
 
-    private func getUserThen(_ completion: @escaping (UserV2) -> Void) {
-        Networking2.getUser(id: userId) { user in
-            completion(user)
+    private func getUser() {
+        NetworkManager.getUser(id: userId) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.user = user
+                    self.profileSections = [.summary, .basics]
+                    if !user.interests.isEmpty {
+                        self.profileSections.append(.interests)
+                    }
+                    if !user.groups.isEmpty {
+                        self.profileSections.append(.groups)
+                    }
+                    self.profileTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+
+            if let user = self.user, user.prompts.count > 0 {
+                self.profileSections.append(.prompts)
+            }
+            self.profileTableView.reloadData()
         }
     }
 
@@ -121,6 +133,10 @@ extension ProfileViewController: UITableViewDataSource {
             return cell
         case .matches:
             return UITableViewCell()
+        case .prompts:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
+            cell.configure(for: user.prompts)
+            return cell
         }
     }
 

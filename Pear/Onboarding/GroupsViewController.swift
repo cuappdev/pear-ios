@@ -13,9 +13,9 @@ class GroupsViewController: UIViewController {
 
     // MARK: - Private Data vars
     private weak var delegate: OnboardingPageDelegate?
-    private var displayedGroups: [GroupV2] = []
-    private var groups: [GroupV2] = []
-    private var selectedGroups: [GroupV2] = []
+    private var displayedGroups: [Group] = []
+    private var groups: [Group] = []
+    private var selectedGroups: [Group] = []
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
@@ -183,7 +183,7 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let selectedGroupsIds = selectedGroups.map { $0.id }
-        Networking2.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
+        NetworkManager.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
@@ -204,23 +204,33 @@ class GroupsViewController: UIViewController {
     }
     
     private func getAllGroups() {
-        Networking2.getAllGroups { [weak self] groups in
+        NetworkManager.getAllGroups { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.groups = groups
-                self.displayedGroups = groups
-                self.fadeTableView.view.reloadData()
+            switch result {
+            case .success(let groups):
+                DispatchQueue.main.async {
+                    self.groups = groups
+                    self.displayedGroups = groups
+                    self.fadeTableView.view.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
 
     private func getUserGroups() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.selectedGroups = user.groups
-                self.fadeTableView.view.reloadData()
-                self.updateNext()
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.selectedGroups = user.groups
+                    self.fadeTableView.view.reloadData()
+                    self.updateNext()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

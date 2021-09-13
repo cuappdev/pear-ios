@@ -80,12 +80,12 @@ class SchedulingLocationCollectionViewController: UICollectionViewController {
         "Video chat"
     ]
 
-    private var updateNext: ((Int) -> ())?
-    private var updatePickedLocation: ((String) -> ())?
-    private var updateSelections: ([String], [String], [String]) -> ()
+    private var updateNext: ((Int) -> Void)?
+    private var updatePickedLocation: ((String) -> Void)?
+    private var updateSelections: ([String], [String], [String]) -> Void
 
-    init(updateSelections: @escaping ([String], [String], [String]) -> (),
-         updateNext: ((Int) -> ())?, updatePickedLocation: ((String) -> ())?,
+    init(updateSelections: @escaping ([String], [String], [String]) -> Void,
+         updateNext: ((Int) -> Void)?, updatePickedLocation: ((String) -> Void)?,
          schedulingStatus: SchedulingStatus?, isChoosing: Bool?,
          collectionViewLayout: UICollectionViewLayout,
          interitemSpacing: CGFloat, lineSpacing: CGFloat) {

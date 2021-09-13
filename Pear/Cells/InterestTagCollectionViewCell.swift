@@ -33,7 +33,7 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func configure(with interest: InterestV2) {
+    func configure(with interest: Interest) {
         interestTagLabel.text = interest.name
     }
 

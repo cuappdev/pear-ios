@@ -146,16 +146,17 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func backButtonPressed() {
-        delegate?.backPage(index: 2)
+        delegate?.backPage(index: 3)
     }
 
     @objc func updateGoals() {
-        Networking2.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
+        NetworkManager.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
                     UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                    self.delegate?.nextPage(index: 5)
+//                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
@@ -164,12 +165,18 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        Networking2.getMe { [weak self] user in
+        NetworkManager.getMe { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.selectedGoals = user.goals ?? []
-                self.fadeTableView.view.reloadData()
-                self.updateNext()
+            
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.selectedGoals = user.goals ?? []
+                    self.fadeTableView.view.reloadData()
+                    self.updateNext()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }

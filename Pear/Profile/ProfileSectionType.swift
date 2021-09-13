@@ -15,6 +15,7 @@ enum ProfileSectionType {
     case interests
     case matches
     case summary
+    case prompts
 
     var reuseIdentifier: String {
         switch self {
@@ -24,6 +25,8 @@ enum ProfileSectionType {
             return ProfilePromptTableViewCell.reuseIdentifier
         case .interests, .groups, .matches:
             return ProfileSectionTableViewCell.reuseIdentifier
+        case .prompts:
+            return ProfilePromptsSectionTableViewCell.reuseIdentifier
         }
     }
 
@@ -39,6 +42,25 @@ enum ProfileSectionType {
             return "Groups I'm a part of"
         case .matches:
             return "Pears I last chatted with"
+        case .prompts:
+            return ""
+        }
+    }
+
+    func getTitle(for user: MatchedUser) -> String {
+        switch self {
+        case .summary:
+            return "\(user.firstName) \(user.lastName)"
+        case .basics:
+            return "The basics"
+        case .interests:
+            return "Things I love"
+        case .groups:
+            return "Groups I'm a part of"
+        case .matches:
+            return "Pears I last chatted with"
+        case .prompts:
+            return ""
         }
     }
 
