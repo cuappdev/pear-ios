@@ -78,7 +78,7 @@ class InterestsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let selectedInterestsIds = selectedInterests.map { $0.id }
-        NetworkManager.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
+         NetworkManager.shared.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
@@ -123,7 +123,7 @@ class InterestsViewController: UIViewController {
 
     private func getAllInterests() {
 
-        NetworkManager.getAllInterests { [weak self] result in
+         NetworkManager.shared.getAllInterests { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let interests):
@@ -140,7 +140,7 @@ class InterestsViewController: UIViewController {
 
     private func getUserInterests() {
 
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

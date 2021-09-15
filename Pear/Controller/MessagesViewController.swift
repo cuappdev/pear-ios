@@ -88,7 +88,7 @@ class MessagesViewController: UIViewController {
     }
 
     private func getUserMessages() {
-        NetworkManager.getAllMatches { [weak self] result in
+         NetworkManager.shared.getAllMatches { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let matches):

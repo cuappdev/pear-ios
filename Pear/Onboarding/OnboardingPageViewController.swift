@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-protocol OnboardingPageDelegate: class {
+protocol OnboardingPageDelegate: AnyObject {
     func nextPage(index: Int)
     func backPage(index: Int)
 }

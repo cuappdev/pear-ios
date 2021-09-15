@@ -150,7 +150,7 @@ class GoalsViewController: UIViewController {
     }
 
     @objc func updateGoals() {
-        NetworkManager.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
+         NetworkManager.shared.updateGoals(goals: selectedGoals, hasOnboarded: true) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
@@ -164,7 +164,7 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             
             switch result {

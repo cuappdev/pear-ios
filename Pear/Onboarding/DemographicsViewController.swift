@@ -122,7 +122,7 @@ class DemographicsViewController: UIViewController {
            let hometown = fieldValues[fieldMap[2]],
            let pronouns = fieldValues[fieldMap[3]],
            let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
-            NetworkManager.updateDemographics(
+             NetworkManager.shared.updateDemographics(
                 graduationYear: graduationYear,
                 majors: [matchingMajor.id],
                 hometown: hometown,
@@ -141,7 +141,7 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getAllMajors() {
-        NetworkManager.getAllMajors { [weak self] result in
+         NetworkManager.shared.getAllMajors { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let majors):
@@ -157,7 +157,7 @@ class DemographicsViewController: UIViewController {
     }
 
     private func getUser() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):
@@ -170,7 +170,8 @@ class DemographicsViewController: UIViewController {
                     self.majorDropdownView.setTitle(title: user.majors.first?.name ?? "")
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                
+                print(error)
             }
         }
     }

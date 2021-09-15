@@ -107,7 +107,7 @@ class HomeViewController: UIViewController {
     
     private func showInAppFeedback() {
         guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
+         NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
             switch response {
             case .value(let currentMatchHistory):
                 guard currentMatchHistory.success else {
@@ -133,7 +133,7 @@ class HomeViewController: UIViewController {
      */
 
     private func updateUserAndTabPage() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

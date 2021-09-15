@@ -183,7 +183,7 @@ class GroupsViewController: UIViewController {
 
     @objc func nextButtonPressed() {
         let selectedGroupsIds = selectedGroups.map { $0.id }
-        NetworkManager.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
+         NetworkManager.shared.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
@@ -204,7 +204,7 @@ class GroupsViewController: UIViewController {
     }
     
     private func getAllGroups() {
-        NetworkManager.getAllGroups { [weak self] result in
+         NetworkManager.shared.getAllGroups { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let groups):
@@ -220,7 +220,7 @@ class GroupsViewController: UIViewController {
     }
 
     private func getUserGroups() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

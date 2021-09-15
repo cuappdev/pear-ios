@@ -150,7 +150,7 @@ class EditTimeAvailabilityViewController: UIViewController {
             savedAvailabilities.append(s.joined(separator: ","))
         }
 
-        NetworkManager.updateAvailability(availabilities: savedAvailabilities) { [weak self] success in
+         NetworkManager.shared.updateAvailability(availabilities: savedAvailabilities) { [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {

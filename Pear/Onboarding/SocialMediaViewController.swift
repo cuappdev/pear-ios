@@ -186,7 +186,7 @@ class SocialMediaViewController: UIViewController {
     }
 
     @objc func completeOnboarding() {
-        NetworkManager.updateSocialMedia(
+         NetworkManager.shared.updateSocialMedia(
             facebookUrl: facebookTextField.text,
             instagramUsername: instagramTextField.text,
             hasOnboarded: true
@@ -204,7 +204,7 @@ class SocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             
             switch result {

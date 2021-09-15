@@ -128,7 +128,7 @@ class EditInterestsViewController: UIViewController {
     }
 
     private func setupSectionsFromInterests() {
-        NetworkManager.getAllInterests { [weak self] result in
+         NetworkManager.shared.getAllInterests { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -190,7 +190,7 @@ class EditInterestsViewController: UIViewController {
         }
         let selectedInterests = yourSection.items.map { $0.id }
 
-        NetworkManager.updateInterests(interests: selectedInterests) { [weak self] success in
+         NetworkManager.shared.updateInterests(interests: selectedInterests) { [weak self] success in
             guard let self = self else { return }
             if success {
                 self.navigationController?.popViewController(animated: true)

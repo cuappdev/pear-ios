@@ -64,7 +64,7 @@ class CommunityViewController: UIViewController {
     }
 
     private func getUsers() {
-        NetworkManager.getAllUsers { [weak self] result in
+         NetworkManager.shared.getAllUsers { [weak self] result in
             guard let self = self else { return }
             
             switch result {

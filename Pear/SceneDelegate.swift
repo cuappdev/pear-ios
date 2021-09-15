@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let signIn = GIDSignIn.sharedInstance(), signIn.hasPreviousSignIn() {
             signIn.restorePreviousSignIn()
-            NetworkManager.validateAccessToken() { result in
+             NetworkManager.shared.validateAccessToken() { result in
                 switch result {
                 case .success:
                     let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)

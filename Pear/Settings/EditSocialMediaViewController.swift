@@ -109,7 +109,7 @@ class EditSocialMediaViewController: UIViewController {
     }
 
     @objc private func saveSocialMedia() {
-        NetworkManager.updateSocialMedia(
+         NetworkManager.shared.updateSocialMedia(
             facebookUrl: fbTextField.text,
             instagramUsername: instaTextField.text,
             hasOnboarded: true
@@ -131,7 +131,7 @@ class EditSocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        NetworkManager.getMe { [weak self] result in
+         NetworkManager.shared.getMe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

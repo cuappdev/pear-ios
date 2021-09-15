@@ -241,7 +241,7 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func getMajors() {
-        NetworkManager.getAllMajors { [weak self] result in
+         NetworkManager.shared.getAllMajors { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -265,7 +265,7 @@ class EditDemographicsViewController: UIViewController {
            let major = demographics.major,
            let hometown = demographics.hometown,
            let pronouns = demographics.pronouns {
-            NetworkManager.updateProfile(
+             NetworkManager.shared.updateProfile(
                 graduationYear: graduationYear,
                 major: major,
                 hometown: hometown,
@@ -290,7 +290,7 @@ class EditDemographicsViewController: UIViewController {
         }
         
         if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
-            NetworkManager.uploadPhoto(base64: profileImageBase64) { [weak self] result in
+             NetworkManager.shared.uploadPhoto(base64: profileImageBase64) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {

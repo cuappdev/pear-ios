@@ -121,7 +121,7 @@ class EditGroupsViewController: UIViewController {
     }
 
     private func setupSectionsFromGroups() {
-        NetworkManager.getAllGroups { [weak self] result in
+         NetworkManager.shared.getAllGroups { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let groups):
@@ -183,7 +183,7 @@ class EditGroupsViewController: UIViewController {
 
         let selectedGroups = yourSection.items.map { $0.id }
 
-        NetworkManager.updateGroups(groups: selectedGroups) { [weak self] success in
+         NetworkManager.shared.updateGroups(groups: selectedGroups) { [weak self] success in
             guard let self = self else { return }
             if success {
                 self.navigationController?.popViewController(animated: true)

@@ -108,7 +108,7 @@ class MatchProfileViewController: UIViewController {
     }
 
     func getCurrentMatch() {
-        NetworkManager.getCurrentMatch { [weak self] result in
+         NetworkManager.shared.getCurrentMatch { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let match):

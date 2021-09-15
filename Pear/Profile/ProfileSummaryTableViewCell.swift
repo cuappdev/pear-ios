@@ -77,7 +77,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     }
 
 //    private func getMessageMatch(netId: String, completion: @escaping (Match) -> Void) {
-//        NetworkManager.shared.getMatchHistory(netID: netId).observe { result in
+//         NetworkManager.shared.getMatchHistory(netID: netId).observe { result in
 //            DispatchQueue.main.async {
 //                switch result {
 //                case .value(let response):
@@ -95,7 +95,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 //    }
 
 //    private func getMessageUser(pairNetId: String, completion: @escaping (User) -> Void) {
-//        NetworkManager.shared.getUser(netId: pairNetId).observe { result in
+//         NetworkManager.shared.getUser(netId: pairNetId).observe { result in
 //            DispatchQueue.main.async {
 //                switch result {
 //                case .value(let result):
@@ -112,7 +112,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 //    }
 //
 //    private func getUser(netId: String, completion: @escaping (User) -> Void) {
-//        NetworkManager.shared.getUser(netId: netId).observe { result in
+//         NetworkManager.shared.getUser(netId: netId).observe { result in
 //            DispatchQueue.main.async {
 //                switch result {
 //                case .value(let result):
