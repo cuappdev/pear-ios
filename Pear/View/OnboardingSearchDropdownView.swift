@@ -144,28 +144,6 @@ class OnboardingSearchDropdownView: UIView {
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
     }
 
-    func searchPlaces(place: String) {
-        debounceTimer?.invalidate()
-        debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-            guard let self = self else { return }
-            ApiManager.getHometown(hometown: place) { result in
-                switch result {
-                case .success(let places):
-                    DispatchQueue.main.async {
-                        self.resultsTableData = places.filter {
-                            $0.type == "CITY"
-                        }.map {
-                            "\($0.city), \($0.region), \($0.countryCode)"
-                        }
-                        self.tableView.reloadData()
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-
 }
 
 extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {

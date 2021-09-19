@@ -115,7 +115,6 @@
 		D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */; };
 		D498CFE225265FB200F2E2ED /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D498CFE125265FB200F2E2ED /* CommunityViewController.swift */; };
 		D4A812722650529000E3EF81 /* GeoPlaceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */; };
-		D4A8128D2650564A00E3EF81 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A8128C2650564A00E3EF81 /* ApiManager.swift */; };
 		D4A812A4265077F700E3EF81 /* OnboardingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A812A3265077F700E3EF81 /* OnboardingTableViewCell.swift */; };
 		D4BE7531253790A900E37406 /* CommunityUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */; };
 		D4C11125244384BA009C7E12 /* EditDemographicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */; };
@@ -267,7 +266,6 @@
 		D498CFD9252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabOptionCollectionViewCell.swift; sourceTree = "<group>"; };
 		D498CFE125265FB200F2E2ED /* CommunityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		D4A812712650529000E3EF81 /* GeoPlaceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPlaceResponse.swift; sourceTree = "<group>"; };
-		D4A8128C2650564A00E3EF81 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
 		D4A812A3265077F700E3EF81 /* OnboardingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTableViewCell.swift; sourceTree = "<group>"; };
 		D4BE7530253790A900E37406 /* CommunityUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUserTableViewCell.swift; sourceTree = "<group>"; };
 		D4C11124244384BA009C7E12 /* EditDemographicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDemographicsViewController.swift; sourceTree = "<group>"; };
@@ -529,7 +527,6 @@
 			isa = PBXGroup;
 			children = (
 				D4D667482648CB1000D5E902 /* NetworkManager.swift */,
-				D4A8128C2650564A00E3EF81 /* ApiManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -953,7 +950,6 @@
 				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
 				D4A812A4265077F700E3EF81 /* OnboardingTableViewCell.swift in Sources */,
 				D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */,
-				D46A363025F3CA4F00EADA9F /* UserSocialMedia.swift in Sources */,
 				50C842C426CC74CB004242FF /* SelectPromptTableViewCell.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
@@ -1011,7 +1007,6 @@
 				D48BB00D23DE099200E88129 /* SceneDelegate.swift in Sources */,
 				D434997D253C151C0024A992 /* InterestTagCollectionViewCell.swift in Sources */,
 				50C842D226CCC622004242FF /* SelfSizingTableView.swift in Sources */,
-				D41FE862246464310048900F /* SubUser.swift in Sources */,
 				5012B55625F8414D00F5F713 /* FeedbackOption.swift in Sources */,
 				D471EDA8244DBE260079665D /* MessageAlertView.swift in Sources */,
 				4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */,
@@ -1023,7 +1018,6 @@
 				5048B4C0263F5F4600A382AD /* MessagesTableViewCell.swift in Sources */,
 				50C842BE26CC73D7004242FF /* Prompt.swift in Sources */,
 				5029873825389E4700E52EDA /* PausePearView.swift in Sources */,
-				D4A8128D2650564A00E3EF81 /* ApiManager.swift in Sources */,
 				D4C8F58123EFC975007722F6 /* DemographicsViewController.swift in Sources */,
 				D434997B253C14C60024A992 /* SelfSizingCollectionView.swift in Sources */,
 				30304E0923E78228006DC6C3 /* Constants.swift in Sources */,
