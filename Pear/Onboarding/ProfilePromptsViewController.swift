@@ -107,7 +107,7 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     private func updateNext() {
-        nextButton.isEnabled = prompts.filter{ $0.answer != nil }.count == 3
+        nextButton.isEnabled = prompts.filter{ $0.answer != nil }.count > 0
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 

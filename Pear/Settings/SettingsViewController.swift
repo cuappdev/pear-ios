@@ -10,7 +10,7 @@ import FirebaseAuth
 import GoogleSignIn
 import UIKit
 
-protocol PausePearDelegate: class {
+protocol PausePearDelegate: AnyObject {
     func pausePearAction(state: String)
     func presentPausePear()
     func removePausePear()

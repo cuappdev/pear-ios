@@ -111,9 +111,7 @@ class LoginViewController: UIViewController {
                     DispatchQueue.main.async {
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         
-                        let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                        
-                        self.navigationController?.pushViewController(onboardingVC, animated: true)
+                        self.getUser()
                     }
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -121,6 +119,25 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    
+    private func getUser() {
+        NetworkManager.getMe { [weak self] result in
+            guard let self = self else { return }
+            
+            // If the user already exists and has onboarding, we push them directly to the HomeViewController.
+            
+            guard let user = try? result.get(), let hasOnboarded = user.hasOnboarded, hasOnboarded else {
+                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                self.navigationController?.pushViewController(onboardingVC, animated: true)
+                return
+            }
+            
+            let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+            self.navigationController?.pushViewController(onboardingVC, animated: true)
+//            self.navigationController?.pushViewController(HomeViewController(), animated: true)
+        }
+    }
+
 
 }
 

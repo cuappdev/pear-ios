@@ -109,15 +109,14 @@ class OnboardingSelectDropdownView: UIView {
 
     /// Set text of field if value already exists
     func setSelectValue(value: String) {
-        dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
+        if value == "Grad Student" {
+            dropdownButton.setTitle("\(value)", for: .normal)
+        } else {
+            dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)
+        }
         dropdownButton.setTitleColor(.black, for: .normal)
     }
     
-    func setTitle(title: String) {
-        dropdownButton.setTitle("\(textTemplate) \(title)", for: .normal)
-        dropdownButton.setTitleColor(.black, for: .normal)
-        delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: title)
-    }
 }
 
 extension OnboardingSelectDropdownView: UITableViewDelegate {
@@ -129,7 +128,11 @@ extension OnboardingSelectDropdownView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Updates dropdown text when a cell is selected in the table view and hides the table view.
         let selectedText = tableData[indexPath.row]
-        dropdownButton.setTitle("\(textTemplate) \(selectedText)", for: .normal)
+        if selectedText == "Grad Student" {
+            dropdownButton.setTitle("\(selectedText)", for: .normal)
+        } else {
+            dropdownButton.setTitle("\(textTemplate) \(selectedText)", for: .normal)
+        }
         dropdownButton.setTitleColor(.black, for: .normal)
         hideTableView()
         delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: selectedText)

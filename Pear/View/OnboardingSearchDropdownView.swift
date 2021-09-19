@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol OnboardingDropdownViewDelegate: class {
+protocol OnboardingDropdownViewDelegate: AnyObject {
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool)
     func sendDropdownViewToBack(dropdownView: UIView)
     func updateDropdownViewHeight(dropdownView: UIView, height: CGFloat)
@@ -88,6 +88,8 @@ class OnboardingSearchDropdownView: UIView {
         searchBar.searchTextField.font = ._20CircularStdBook
         searchBar.searchTextField.clearButtonMode = .whileEditing
         searchBar.searchTextField.returnKeyType = .done
+        searchBar.searchTextField.autocorrectionType = .yes
+        searchBar.searchTextField.autocapitalizationType = .words
         searchBar.layer.cornerRadius = fieldsCornerRadius
         searchBar.layer.shadowColor = UIColor.black.cgColor
         searchBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
@@ -201,19 +203,36 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         tableView.isHidden = false
         switch searchType {
         case .places:
-            searchPlaces(place: searchText)
+            // Reset fieldSelected depending if the user has typed anything.
+            delegate?.updateSelectedFields(tag: tag, isSelected: !searchText.isEmpty, valueSelected: searchText)
         case .local:
             resultsTableData =
                 searchText.isEmpty
                 ? []
                 : tableData.filter { $0.localizedCaseInsensitiveContains(searchText) }
+            
+            // Reset fieldSelected to false.
+            delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "")
         }
-        // Reset fieldSelected to false.
-        delegate?.updateSelectedFields(tag: tag, isSelected: false, valueSelected: "")
         tableView.reloadData()
         // Recalculate height of table view and update view height in parent view.
         let newHeight = tableView.contentSize.height
         delegate?.updateDropdownViewHeight(dropdownView: self, height: newHeight)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.searchTextField.resignFirstResponder()
+        tableView.isHidden = true
+        delegate?.sendDropdownViewToBack(dropdownView: self)
+        
+        guard searchType == .places else {
+            return
+        }
+        
+        if let location = searchBar.text {
+            delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: location)
+        }
+        delegate?.sendDropdownViewToBack(dropdownView: self)
     }
 
 }
