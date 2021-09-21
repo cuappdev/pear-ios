@@ -108,7 +108,7 @@ class NetworkManager {
 
     }
 
-    static func getMe(completion: @escaping (Result<UserV2, Error>) -> Void) {
+    static func getCurrentUser(completion: @escaping (Result<UserV2, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .get,

@@ -68,9 +68,11 @@ class DemographicsViewController: UIViewController {
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
+        var tableData = (currentYear...gradYear).map { "\($0)" }
+        tableData.append("Grad Student")
         classDropdownView = OnboardingSelectDropdownView(delegate: self,
                                                          placeholder: "Class of...",
-                                                         tableData: (currentYear...gradYear).map { "\($0)" },
+                                                         tableData: tableData,
                                                          textTemplate: "Class of")
         classDropdownView.tag = 0 // Set tag to keep track of field selection status.
         view.addSubview(classDropdownView)
@@ -111,7 +113,6 @@ class DemographicsViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
-        getUser()
         getAllMajors()
         setUpConstraints()
     }
@@ -149,25 +150,6 @@ class DemographicsViewController: UIViewController {
                     let majorsData = majors.map(\.name)
                     self.majorSearchFields = majors
                     self.majorDropdownView.setTableData(tableData: majorsData)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-
-    private func getUser() {
-        NetworkManager.getMe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let user):
-                DispatchQueue.main.async {
-                    if let graduationYear = user.graduationYear {
-                        self.classDropdownView.setTitle(title: graduationYear)
-                    }
-                    self.hometownDropdownView.setTitle(title: user.hometown ?? "")
-                    self.pronounsDropdownView.setTitle(title: user.pronouns ?? "")
-                    self.majorDropdownView.setTitle(title: user.majors.first?.name ?? "")
                 }
             case .failure(let error):
                 print(error.localizedDescription)

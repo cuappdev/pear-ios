@@ -7,7 +7,7 @@
 //
 import UIKit
 
-protocol FeedbackDelegate: class {
+protocol FeedbackDelegate: AnyObject {
     func presentActionSheet(alert: UIAlertController)
 }
 

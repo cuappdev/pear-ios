@@ -94,11 +94,12 @@ class SocialMediaViewController: UIViewController {
     }
 
     private func setSocialMediaTextField(socialMediaTextField: UITextField) {
+        socialMediaTextField.delegate = self
         socialMediaTextField.backgroundColor = .backgroundWhite
         socialMediaTextField.textColor = .black
         socialMediaTextField.font = ._20CircularStdBook
+        socialMediaTextField.returnKeyType = .done
         socialMediaTextField.clearButtonMode = .whileEditing
-        socialMediaTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         socialMediaTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 49))
         socialMediaTextField.leftViewMode = .always
         socialMediaTextField.layer.cornerRadius = 8
@@ -177,10 +178,6 @@ class SocialMediaViewController: UIViewController {
         }
     }
 
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        updateNext()
-    }
-
     @objc func backButtonPressed() {
         delegate?.backPage(index: 5)
     }
@@ -204,7 +201,7 @@ class SocialMediaViewController: UIViewController {
     }
     
     private func getUserSocialMedia() {
-        NetworkManager.getMe { [weak self] result in
+        NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -224,4 +221,18 @@ class SocialMediaViewController: UIViewController {
         }
     }
 
+}
+
+// MARK: - UITextFieldDelegate
+extension SocialMediaViewController: UITextFieldDelegate {
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        updateNext()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
 }

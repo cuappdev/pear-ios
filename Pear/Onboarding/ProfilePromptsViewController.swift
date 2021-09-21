@@ -83,7 +83,7 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     private func getUserPrompts() {
-        NetworkManager.getMe { result in
+        NetworkManager.getCurrentUser { result in
             switch result {
             case .success(let user):
                 self.prompts = user.prompts
@@ -107,7 +107,7 @@ class ProfilePromptsViewController: UIViewController {
     }
 
     private func updateNext() {
-        nextButton.isEnabled = prompts.filter{ $0.answer != nil }.count == 3
+        nextButton.isEnabled = !prompts.compactMap(\.answer).isEmpty
         nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
