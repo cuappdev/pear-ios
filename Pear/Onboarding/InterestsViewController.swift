@@ -140,7 +140,7 @@ class InterestsViewController: UIViewController {
 
     private func getUserInterests() {
 
-        NetworkManager.getMe { [weak self] result in
+        NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

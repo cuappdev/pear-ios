@@ -203,9 +203,7 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         tableView.isHidden = true
         delegate?.sendDropdownViewToBack(dropdownView: self)
         
-        guard searchType == .places else {
-            return
-        }
+        guard searchType == .places else { return }
         
         if let location = searchBar.text {
             delegate?.updateSelectedFields(tag: tag, isSelected: true, valueSelected: location)

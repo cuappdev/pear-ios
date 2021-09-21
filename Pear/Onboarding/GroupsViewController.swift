@@ -220,7 +220,7 @@ class GroupsViewController: UIViewController {
     }
 
     private func getUserGroups() {
-        NetworkManager.getMe { [weak self] result in
+        NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

@@ -165,7 +165,7 @@ class GoalsViewController: UIViewController {
     }
 
     private func getUserGoals() {
-        NetworkManager.getMe { [weak self] result in
+        NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
             
             switch result {

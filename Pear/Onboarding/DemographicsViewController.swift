@@ -65,8 +65,6 @@ class DemographicsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        // TODO: Add Grad student option
-        
         // Renders the valid graduation years based on current year.
         let currentYear = Calendar.current.component(.year, from: Date())
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years

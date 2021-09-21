@@ -121,21 +121,21 @@ class LoginViewController: UIViewController {
     }
     
     private func getUser() {
-        NetworkManager.getMe { [weak self] result in
+        NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
             
-            // If the user already exists and has onboarding, we push them directly to the HomeViewController.
-            
-            guard let user = try? result.get(), let hasOnboarded = user.hasOnboarded, hasOnboarded else {
-                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                self.navigationController?.pushViewController(onboardingVC, animated: true)
-                return
+            DispatchQueue.main.async {
+                // If the user already exists and has onboarded, we push them directly to the HomeViewController.
+                guard let user = try? result.get(), let hasOnboarded = user.hasOnboarded, hasOnboarded else {
+                    let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                    self.navigationController?.pushViewController(onboardingVC, animated: true)
+                    return
+                }
+                
+                self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
-            
-            self.navigationController?.pushViewController(HomeViewController(), animated: true)
         }
     }
-
 
 }
 
