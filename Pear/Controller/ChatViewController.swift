@@ -46,14 +46,15 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
 
         hideKeyboardWhenViewTapped()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        // Hide navigation bar bottom shadow
-        navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.getFont(.medium, size: 24)
         ]
+        
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -70,10 +71,10 @@ class ChatViewController: UIViewController {
 
         emptyBackgroundView.backgroundColor = .clear
         emptyBackgroundView.addSubview(emptyChatImage)
-
+        
         setupChatInput()
         getChatMessages()
-        setupConstraints(keyboardHeight: 0)
+        setupConstraints()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -160,19 +161,23 @@ class ChatViewController: UIViewController {
             let values = groupedMessages[key]
             groupedMessagesByDate.append(values ?? [])
         }
-        guard let recentDateMessagesCount = self.groupedMessagesByDate.last?.count else { return }
-        let bottomRow = recentDateMessagesCount - 1
-        self.chatTableView.reloadData()
-        let bottomSection = self.groupedMessagesByDate.count - 1
-        self.scrollToRow(row: bottomRow, section: bottomSection)
+        
+        chatTableView.reloadData()
+        scrollToBottom()
     }
-
-    private func scrollToRow(row: Int, section: Int) {
-        self.chatTableView.reloadData()
-        let indexPath = IndexPath(row: row, section: section)
-        if self.chatTableView.isValid(indexPath: indexPath) {
-            self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    
+    private func scrollToBottom() {
+        let lastSection = chatTableView.numberOfSections - 1
+        let lastRow = chatTableView.numberOfRows(inSection: lastSection) - 1
+        let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
+        
+        guard chatTableView.isValid(indexPath: lastIndexPath) else {
+            return
         }
+        
+        chatTableView.layoutIfNeeded()
+        
+        chatTableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: false)
     }
 
     @objc private func sendMessage() {
@@ -203,32 +208,34 @@ class ChatViewController: UIViewController {
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
         }
     }
-
-    @objc func hideKeyboard(notification: Notification) {
-        setupConstraints(keyboardHeight: 0)
-        guard let keyBoardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
-        UIView.animate(withDuration: keyBoardDuration, animations: {
-            self.view.layoutIfNeeded()
-        })
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
     }
 
-    private func setupConstraints(keyboardHeight: CGFloat) {
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
+    }
+
+    private func setupConstraints() {
         let chatInputContainerHeight: CGFloat = 76
         let chatInputButtonSize: CGFloat = 25
 
         chatInputContainerView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(chatInputContainerHeight)
-            if keyboardHeight == 0 {
-                make.bottom.equalTo(view.snp.bottom).offset(-10)
-            } else {
-                make.bottom.equalTo(view.snp.bottom).offset(keyboardHeight - 5)
-            }
+            make.bottom.equalToSuperview().inset(40)
         }
 
         chatTableView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.top.equalToSuperview()
             make.bottom.equalTo(chatInputContainerView.snp.top)
         }
 
@@ -252,8 +259,8 @@ class ChatViewController: UIViewController {
 
         emptyChatImage.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(45)
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-200)
+            make.center.equalToSuperview()
+            make.height.equalTo(200)
         }
     }
 

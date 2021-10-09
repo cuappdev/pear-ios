@@ -84,7 +84,7 @@ class AnswerPromptViewController: UIViewController {
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.titleLabel?.font = ._20CircularStdBold
         saveButton.backgroundColor = .inactiveGreen
-        saveButton.layer.cornerRadius = 26
+        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         saveButton.isEnabled = false
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         view.addSubview(saveButton)

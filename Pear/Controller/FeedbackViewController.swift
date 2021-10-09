@@ -102,7 +102,7 @@ class FeedbackViewController: UIViewController {
 //        finishButton.setTitleColor(.white, for: .normal)
 //        finishButton.titleLabel?.font = ._20CircularStdBold
 //        finishButton.backgroundColor = .backgroundOrange
-//        finishButton.layer.cornerRadius = 26
+//        finishButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
 //        finishButton.addTarget(self, action: #selector(finishFeedback), for: .touchUpInside)
 //        finishButton.isHidden = true
 //        view.addSubview(finishButton)

@@ -1,32 +1,34 @@
 //
-//  ProfilePromptItemTableViewCell.swift
+//  PromptResponseView.swift
 //  Pear
 //
-//  Created by Amy Chin Siu Huang on 8/17/21.
+//  Created by Reade Plunkett on 9/23/21.
 //  Copyright © 2021 cuappdev. All rights reserved.
 //
 
 import UIKit
 
-class ProfilePromptItemTableViewCell: UITableViewCell {
-
+class PromptResponseView: UIView {
+    
     // MARK: - Private View Vars
     private let questionLabel = UILabel()
     private let responseLabel = PromptLabel()
 
-    // MARK: - Private Data Vars
-    static let reuseIdentifier = "ProfilePromptItemTableViewCell"
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        selectionStyle = .none
-        backgroundColor = .clear
-
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupLabels()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupLabels() {
         questionLabel.font = ._12CircularStdMedium
         questionLabel.textColor = .greenGray
         questionLabel.numberOfLines = 0
-        contentView.addSubview(questionLabel)
+        addSubview(questionLabel)
 
         responseLabel.textAlignment = .left
         responseLabel.font = ._16CircularStdBook
@@ -35,16 +37,10 @@ class ProfilePromptItemTableViewCell: UITableViewCell {
         responseLabel.textColor = .black
         responseLabel.layer.cornerRadius = 16
         responseLabel.clipsToBounds = true
-        responseLabel.adjustsFontSizeToFitWidth = true
-        contentView.addSubview(responseLabel)
-
-        setupConstraints()
+        responseLabel.adjustsFontSizeToFitWidth = false
+        addSubview(responseLabel)
     }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
+    
     private func setupConstraints() {
         questionLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -54,7 +50,7 @@ class ProfilePromptItemTableViewCell: UITableViewCell {
         responseLabel.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(8)
             make.bottom.equalToSuperview().inset(10)
-            make.leading.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
     }
 

@@ -40,12 +40,20 @@ class NoMatchViewController: UIViewController {
         surprisedPearImageView.contentMode = .scaleAspectFit
         view.addSubview(surprisedPearImageView)
 
-        noMatchTitleLabel.text = "Meet your new Pear\nnext Monday"
+        noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
         noMatchTitleLabel.numberOfLines = 0
         noMatchTitleLabel.sizeToFit()
         noMatchTitleLabel.textAlignment = .center
-        noMatchTitleLabel.textColor = .black
-        noMatchTitleLabel.font = ._24CircularStdMedium
+        
+        let attributedTitle = NSMutableAttributedString()
+        
+        attributedTitle.append(NSAttributedString(string: "Meet your new ", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
+        
+        attributedTitle.append(NSAttributedString(string: "Pear", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.darkGreen]))
+        
+        attributedTitle.append(NSAttributedString(string: "\nnext Sunday", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
+        
+        noMatchTitleLabel.attributedText = attributedTitle
         view.addSubview(noMatchTitleLabel)
 
         noMatchLabel.text = "In the meantime, browse the people page to see who else is on the app!"

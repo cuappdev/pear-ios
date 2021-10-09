@@ -132,7 +132,10 @@ class LoginViewController: UIViewController {
                     return
                 }
                 
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                self.navigationController?.pushViewController(onboardingVC, animated: true)
+                return
+//                self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
     }

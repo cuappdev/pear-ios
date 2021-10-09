@@ -57,12 +57,13 @@ class ProfilePromptTableViewCell: UITableViewCell {
     func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         let major = user.majors.first?.name ?? ""
+        let graduationText = user.graduationYear == "Grad Student" ? " as a " : " in the class of "
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
                 .thinFont("I study ")
                 .normalFont(major)
-                .thinFont(" in the class of ")
+                .thinFont(graduationText)
                 .normalFont(user.graduationYear ?? "graudationYear not found")
                 .thinFont(", and my home is in ")
                 .normalFont(user.hometown ?? "")
@@ -75,12 +76,13 @@ class ProfilePromptTableViewCell: UITableViewCell {
     func configure(for user: MatchedUser, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         let major = user.majors.first?.name ?? ""
+        let graduationText = user.graduationYear == "Grad Student" ? " as a " : " in the class of "
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
                 .thinFont("I study ")
                 .normalFont(major)
-                .thinFont(" in the class of ")
+                .thinFont(graduationText)
                 .normalFont(user.graduationYear)
                 .thinFont(", and my home is in ")
                 .normalFont(user.hometown)

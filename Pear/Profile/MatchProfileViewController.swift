@@ -48,7 +48,7 @@ class MatchProfileViewController: UIViewController {
 //        if let chatStatus = chatStatus {
 //            meetupStatusView = MeetupStatusView(for: chatStatus)
 //        }
-
+//
 //        if let meetupStatusView = meetupStatusView {
 //            view.addSubview(meetupStatusView)
 //        }
@@ -58,6 +58,7 @@ class MatchProfileViewController: UIViewController {
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
         profileTableView.register(ProfilePromptTableViewCell.self, forCellReuseIdentifier: ProfilePromptTableViewCell.reuseIdentifier)
+        profileTableView.register(ProfilePromptsSectionTableViewCell.self, forCellReuseIdentifier: ProfilePromptsSectionTableViewCell.reuseIdentifier)
         profileTableView.rowHeight = UITableView.automaticDimension
         profileTableView.bounces = true
         profileTableView.separatorStyle = .none
@@ -71,8 +72,13 @@ class MatchProfileViewController: UIViewController {
         if !match.matchedUser.interests.isEmpty {
             profileSections.append(.interests)
         }
-        if !match.matchedUser.interests.isEmpty {
+        
+        if !match.matchedUser.groups.isEmpty {
             profileSections.append(.groups)
+        }
+        
+        if !match.matchedUser.prompts.isEmpty {
+            profileSections.append(.prompts)
         }
 
         profileTableView.reloadData()
@@ -146,6 +152,10 @@ extension MatchProfileViewController: UITableViewDataSource {
         case .interests, .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
             cell.configure(for: match, type: section)
+            return cell
+        case .prompts:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
+            cell.configure(for: user.prompts)
             return cell
         default:
             return UITableViewCell()

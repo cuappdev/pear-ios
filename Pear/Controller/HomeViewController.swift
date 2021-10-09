@@ -170,7 +170,9 @@ class HomeViewController: UIViewController {
 
     private func presentMenu(animated: Bool) {
         guard let user = user else { return }
-        let menu = SideMenuNavigationController(rootViewController: ProfileMenuViewController(user: user))
+        let profileMenuVC = ProfileMenuViewController(user: user)
+        profileMenuVC.delegate = self
+        let menu = SideMenuNavigationController(rootViewController: profileMenuVC)
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
         menu.presentationStyle = .viewSlideOutMenuPartialIn
@@ -258,8 +260,7 @@ extension HomeViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeTabOptionCollectionViewCell.reuseIdentifier,
                                                             for: indexPath) as?
                 HomeTabOptionCollectionViewCell else { return UICollectionViewCell() }
-        cell.isSelected = indexPath.item == activeTabIndex
-        cell.configure(with: tabs[indexPath.item])
+        cell.configure(with: tabs[indexPath.item], isSelected: indexPath.item == activeTabIndex)
         return cell
     }
 
@@ -320,6 +321,15 @@ extension HomeViewController: TabDelegate {
         activeTabIndex = index
         tabPageViewController?.setViewController(to: index)
         tabCollectionView.reloadData()
+    }
+    
+}
+
+extension HomeViewController: ProfileMenuDelegate {
+    
+    func didUpdateProfilePicture(image: UIImage?, url: String) {
+        profileImageView.image = image
+        user?.profilePicUrl = url
     }
     
 }

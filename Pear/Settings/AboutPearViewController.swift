@@ -86,6 +86,8 @@ class AboutPearViewController: UIViewController {
     }
 
     private func setButtonAppearance(button: UIButton) {
+        button.clipsToBounds = true
+        button.layer.masksToBounds = false
         button.layer.cornerRadius = 8
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = ._16CircularStdBook

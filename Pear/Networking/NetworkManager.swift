@@ -30,6 +30,8 @@ class NetworkManager {
             "bucket": "pear",
             "image": "data:image/png;base64,\(base64)"
         ]
+        
+        
 
         AF.request(
             "https://\(Keys.appdevServerURL)/upload/",
@@ -46,6 +48,7 @@ class NetworkManager {
                     let imageData = try jsonDecoder.decode(Response<String>.self, from: data)
                     let img = imageData.data
                     completion(.success(img))
+                    
                 } catch {
                     completion(.failure(error))
                 }
@@ -175,6 +178,7 @@ class NetworkManager {
         profilePicUrl: String,
         completion: @escaping (Bool) -> Void
     ) {
+        print(profilePicUrl)
 
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
@@ -545,19 +549,24 @@ class NetworkManager {
         }
     }
 
-    // TODO - change question_id to id after backend spelling update
     static func updatePrompts(prompts: [Prompt], completion: @escaping (Bool) -> Void) {
+        let prompts = prompts.filter( { $0.id != nil && $0.answer != nil })
+        
         let parameters: [String: Any] = [
             "prompts": prompts.map({ prompt -> [String: Any] in
                 if let id = prompt.id, let answer = prompt.answer {
                     return [
-                        "question_id": id as Any,
-                        "answer": answer as Any
+                        "id": id,
+                        "answer": answer
                     ]
                 }
+                
                 return [:]
             })
         ]
+        
+        print(parameters)
+        
         AF.request(
             "\(hostEndpoint)/api/me/",
             method: .post,

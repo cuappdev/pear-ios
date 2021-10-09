@@ -9,6 +9,10 @@
 import Kingfisher
 import UIKit
 
+protocol EditDemographicsViewControllerDelegate {
+    func didUpdateProfilePicture(image: UIImage?, url: String)
+}
+
 class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Vars
@@ -39,6 +43,8 @@ class EditDemographicsViewController: UIViewController {
     // Keep track of if view scrolled to fit content
     private var isPageScrolled: Bool = false
     private var didUpdatePhoto = false
+    
+    var delegate: EditDemographicsViewControllerDelegate?
 
     init(user: UserV2) {
         self.user = user
@@ -90,8 +96,6 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.layer.masksToBounds = true
         profileImageView.clipsToBounds = true
-        profileImageView.layer.cornerRadius = 62.5
-        
         editScrollView.addSubview(profileImageView)
 
         uploadPhotoButton.setTitle("Upload New Picture", for: .normal)
@@ -99,7 +103,6 @@ class EditDemographicsViewController: UIViewController {
         uploadPhotoButton.titleLabel?.font = ._12CircularStdMedium
         uploadPhotoButton.addTarget(self, action: #selector(uploadPhotoPressed), for: .touchUpInside)
         uploadPhotoButton.backgroundColor = .white
-        uploadPhotoButton.layer.cornerRadius = 16
         uploadPhotoButton.layer.shadowColor = UIColor.black.cgColor
         uploadPhotoButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         uploadPhotoButton.layer.shadowOpacity = 0.15
@@ -175,6 +178,12 @@ class EditDemographicsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
+        uploadPhotoButton.layer.cornerRadius = uploadPhotoButton.frame.height / 2
     }
 
     private func setupConstraints() {
@@ -274,6 +283,7 @@ class EditDemographicsViewController: UIViewController {
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         if success {
+                            self.delegate?.didUpdateProfilePicture(image: self.profileImageView.image, url: profilePictureURL)
                             self.navigationController?.popViewController(animated: true)
                         } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true)

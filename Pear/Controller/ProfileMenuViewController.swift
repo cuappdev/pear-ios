@@ -9,6 +9,12 @@
 import Kingfisher
 import UIKit
 
+protocol ProfileMenuDelegate {
+    
+    func didUpdateProfilePicture(image: UIImage?, url: String)
+    
+}
+
 class ProfileMenuViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -28,6 +34,8 @@ class ProfileMenuViewController: UIViewController {
     ]
     private let profileImageSize = CGSize(width: 120, height: 120)
     private var user: UserV2
+    
+    var delegate: ProfileMenuDelegate?
 
     init(user: UserV2) {
         self.user = user
@@ -139,6 +147,7 @@ class ProfileMenuViewController: UIViewController {
 
     @objc func editPressed() {
         let editDemographicsVC = EditDemographicsViewController(user: user)
+        editDemographicsVC.delegate = self
         navigationController?.pushViewController(editDemographicsVC, animated: true)
     }
 
@@ -196,4 +205,12 @@ extension ProfileMenuViewController: UITableViewDelegate {
         60
     }
 
+}
+
+extension ProfileMenuViewController: EditDemographicsViewControllerDelegate {
+    
+    func didUpdateProfilePicture(image: UIImage?, url: String) {
+        delegate?.didUpdateProfilePicture(image: image, url: url)
+    }
+    
 }

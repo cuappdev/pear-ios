@@ -18,7 +18,7 @@ class InterestTagCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = false
-        layer.cornerRadius = 11
+        layer.cornerRadius = frame.height / 2
         backgroundColor = .paleGreen
 
         interestTagLabel.textAlignment = .center

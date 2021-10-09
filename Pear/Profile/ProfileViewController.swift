@@ -58,7 +58,7 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 200, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
 
@@ -76,22 +76,24 @@ class ProfileViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.user = user
                     self.profileSections = [.summary, .basics]
+                    
                     if !user.interests.isEmpty {
                         self.profileSections.append(.interests)
                     }
+                    
                     if !user.groups.isEmpty {
                         self.profileSections.append(.groups)
                     }
+                    
+                    if !user.prompts.isEmpty {
+                        self.profileSections.append(.prompts)
+                    }
+                    
                     self.profileTableView.reloadData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
-
-            if let user = self.user, user.prompts.count > 0 {
-                self.profileSections.append(.prompts)
-            }
-            self.profileTableView.reloadData()
         }
     }
 

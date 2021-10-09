@@ -45,7 +45,7 @@ class ProfileSectionTableViewCell: UITableViewCell {
 
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview().offset(20)
+            make.top.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(15)
         }
 

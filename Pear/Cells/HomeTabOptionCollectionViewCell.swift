@@ -36,7 +36,8 @@ class HomeTabOptionCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with tabText: String) {
+    func configure(with tabText: String, isSelected: Bool) {
         tabLabel.text = tabText
+        tabLabel.textColor = isSelected ? .darkGreen : .inactiveGreen
     }
 }
