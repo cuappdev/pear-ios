@@ -22,7 +22,6 @@ class ProfileViewController: UIViewController {
     init(user: UserV2, otherUserId: Int) {
         self.currentUser = user
         self.otherUserId = otherUserId
-        print(otherUserId)
         super.init(nibName: nil, bundle: nil)
     }
 

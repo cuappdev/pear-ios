@@ -19,7 +19,7 @@ class CommunityViewController: UIViewController {
     
     // MARK: - Private Data Vars
     private var users: [CommunityUser] = []
-    private var currentUser : UserV2
+    private var currentUser: UserV2
     
     init(user: UserV2) {
         self.currentUser = user

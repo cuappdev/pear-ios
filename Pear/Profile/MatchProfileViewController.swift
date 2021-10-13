@@ -131,8 +131,8 @@ class MatchProfileViewController: UIViewController {
     
     @objc func reachOutButtonPressed() {
         if let matchedUser = match {
-        navigationController?.pushViewController(ChatViewController(messageUser: matchedUser, currentUser: user), animated: true)
-        }
+            navigationController?.pushViewController(ChatViewController(messageUser: matchedUser, currentUser: user), animated: true)
+            }
     }
 
     func getCurrentMatch() {
