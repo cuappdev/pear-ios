@@ -15,7 +15,7 @@ protocol TabDelegate: AnyObject {
 class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
-    private let communityViewController = CommunityViewController()
+    private let communityViewController : UIViewController
     private let matchViewController: UIViewController
     private var pages: [UIViewController] = [UIViewController]()
 
@@ -32,6 +32,8 @@ class TabPageViewController: UIPageViewController {
         } else {
             matchViewController = NoMatchViewController(user: user)
         }
+        
+        communityViewController = CommunityViewController(user: user)
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }

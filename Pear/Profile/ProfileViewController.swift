@@ -13,13 +13,16 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private var user: UserV2?
+    private var currentUser: UserV2
+    private var otherUser: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private var userId: Int
+    private var otherUserId: Int
 
-    init(userId: Int) {
-        self.userId = userId
+    init(user: UserV2, otherUserId: Int) {
+        self.currentUser = user
+        self.otherUserId = otherUserId
+        print(otherUserId)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,20 +64,20 @@ class ProfileViewController: UIViewController {
         profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
-
+        
         setupConstraints()
         
         getUser()
     }
 
     private func getUser() {
-        NetworkManager.getUser(id: userId) { [weak self] result in
+        NetworkManager.getUser(id: otherUserId) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
-                    self.user = user
+                    self.otherUser = user
                     self.profileSections = [.summary, .basics]
                     
                     if !user.interests.isEmpty {
@@ -116,7 +119,7 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let user = user else { return UITableViewCell() }
+        guard let user = otherUser else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 

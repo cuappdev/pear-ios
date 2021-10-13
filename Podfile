@@ -7,7 +7,7 @@ use_frameworks!
 
 # Pods for Pear
     # User Data
-    pod 'GoogleSignIn'
+    pod 'GoogleSignIn', '5.0.2'
     pod 'GooglePlaces', '4.2.0'
 
     # Networking

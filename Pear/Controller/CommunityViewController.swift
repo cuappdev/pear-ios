@@ -16,9 +16,20 @@ class CommunityViewController: UIViewController {
         fadeColor: .backgroundLightGreen)
     private let searchBar = UISearchBar()
     private let spinner = UIActivityIndicatorView(style: .medium)
-
+    
     // MARK: - Private Data Vars
     private var users: [CommunityUser] = []
+    private var currentUser : UserV2
+    
+    init(user: UserV2) {
+        self.currentUser = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
@@ -124,8 +135,8 @@ extension CommunityViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.row]
-        navigationController?.pushViewController(ProfileViewController(userId: user.id), animated: true)
+        let otherUser = users[indexPath.row]
+        navigationController?.pushViewController(ProfileViewController(user: currentUser, otherUserId: otherUser.id), animated: true)
     }
 }
 
