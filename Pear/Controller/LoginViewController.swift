@@ -131,7 +131,6 @@ class LoginViewController: UIViewController {
                     self.navigationController?.pushViewController(onboardingVC, animated: true)
                     return
                 }
-
                 self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
