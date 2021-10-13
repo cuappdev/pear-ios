@@ -14,7 +14,7 @@ struct UserV2: Codable {
     let lastName: String
     let majors: [MajorV2]
     let hometown: String?
-    let profilePicUrl: String
+    var profilePicUrl: String
     let facebookUrl: String?
     let instagramUsername: String?
     let graduationYear: String?
@@ -52,11 +52,12 @@ struct MatchedUser: Codable {
     let lastName: String
     let hometown: String
     let majors: [MajorV2]
-    let profilePicUrl: String?
+    var profilePicUrl: String?
     let graduationYear: String
     let pronouns: String?
     let interests: [Interest]
     let groups: [Group]
+    let prompts: [Prompt]
 }
 
 struct CommunityUser: Codable {
@@ -70,6 +71,7 @@ struct CommunityUser: Codable {
     let graduationYear: String
     let interests: [Interest]
     let groups: [Group]
+    let prompts: [Prompt]
 }
 
 struct LocationV2: Codable {

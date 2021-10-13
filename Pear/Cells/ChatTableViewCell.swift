@@ -80,7 +80,7 @@ class ChatTableViewCell: UITableViewCell {
     func configure(for message: PearMessage, user: UserV2, pair: MatchedUser) {
         chatMessage.text = message.message
         if message.senderId == user.id {
-            chatBubble.backgroundColor = .pearGreen
+            chatBubble.backgroundColor = .darkGreen
             chatMessage.textColor = .white
             pairProfilePic.isHidden = true
         } else {

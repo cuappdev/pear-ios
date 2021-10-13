@@ -52,7 +52,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         interestsCollectionView.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
         interestsCollectionView.dataSource = self
         interestsCollectionView.delegate = self
-        interestsCollectionView.backgroundColor = .clear
+        interestsCollectionView.isScrollEnabled = false
         interestsCollectionView.register(
             InterestTagCollectionViewCell.self,
             forCellWithReuseIdentifier: InterestTagCollectionViewCell.reuseIdentifier
@@ -75,7 +75,7 @@ class CommunityUserTableViewCell: UITableViewCell {
 
         profileImageView.snp.makeConstraints { make in
             make.leading.top.equalTo(containerView).offset(topPadding)
-            make.size.equalTo(CGSize(width: 36, height: 36))
+            make.size.equalTo(36)
         }
 
         nameLabel.snp.makeConstraints { make in
@@ -113,6 +113,11 @@ class CommunityUserTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         profileImageView.image = nil
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        interestsCollectionView.layoutSubviews()
     }
 
     required init?(coder: NSCoder) {

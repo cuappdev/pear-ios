@@ -73,7 +73,7 @@ class ProfilePromptsViewController: UIViewController {
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
-        nextButton.layer.cornerRadius = 26
+        nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 

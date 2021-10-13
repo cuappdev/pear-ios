@@ -18,7 +18,7 @@ class ProfilePillCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.cornerRadius = 18
+        layer.cornerRadius = frame.height / 2
         backgroundColor = .paleGreen
 
         label.textAlignment = .left

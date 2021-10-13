@@ -109,7 +109,7 @@ class DemographicsViewController: UIViewController {
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
         nextButton.isEnabled = false
-        nextButton.layer.cornerRadius = 26
+        nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
