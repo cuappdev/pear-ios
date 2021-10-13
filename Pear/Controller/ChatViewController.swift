@@ -71,7 +71,7 @@ class ChatViewController: UIViewController {
 
         emptyBackgroundView.backgroundColor = .clear
         emptyBackgroundView.addSubview(emptyChatImage)
-        
+
         setupChatInput()
         getChatMessages()
         setupConstraints()
@@ -171,9 +171,7 @@ class ChatViewController: UIViewController {
         let lastRow = chatTableView.numberOfRows(inSection: lastSection) - 1
         let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
         
-        guard chatTableView.isValid(indexPath: lastIndexPath) else {
-            return
-        }
+        guard chatTableView.isValid(indexPath: lastIndexPath) else { return }
         
         chatTableView.layoutIfNeeded()
         
@@ -211,15 +209,15 @@ class ChatViewController: UIViewController {
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
+            if view.frame.origin.y == 0 {
+                view.frame.origin.y -= keyboardSize.height
             }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
         }
     }
 

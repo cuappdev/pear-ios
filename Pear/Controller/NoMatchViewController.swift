@@ -48,9 +48,7 @@ class NoMatchViewController: UIViewController {
         let attributedTitle = NSMutableAttributedString()
         
         attributedTitle.append(NSAttributedString(string: "Meet your new ", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
-        
         attributedTitle.append(NSAttributedString(string: "Pear", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.darkGreen]))
-        
         attributedTitle.append(NSAttributedString(string: "\nnext Sunday", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
         
         noMatchTitleLabel.attributedText = attributedTitle

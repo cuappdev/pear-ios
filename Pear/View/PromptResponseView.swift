@@ -40,7 +40,7 @@ class PromptResponseView: UIView {
         responseLabel.adjustsFontSizeToFitWidth = false
         addSubview(responseLabel)
     }
-    
+
     private func setupConstraints() {
         questionLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)

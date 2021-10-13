@@ -20,6 +20,7 @@ class OnboardingSelectDropdownView: UIView {
     private var tableData: [String]
     private var textTemplate: String = ""
     private var shouldShowFields: Bool = true
+    private let gradStudent = "Grad Student"
     var isFilled: Bool = false
 
     // MARK: - Private Constants
@@ -109,7 +110,7 @@ class OnboardingSelectDropdownView: UIView {
 
     /// Set text of field if value already exists
     func setSelectValue(value: String) {
-        if value == "Grad Student" {
+        if value == gradStudent {
             dropdownButton.setTitle(value, for: .normal)
         } else {
             dropdownButton.setTitle("\(textTemplate) \(value)", for: .normal)

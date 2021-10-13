@@ -15,6 +15,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
     private let descriptionTextView = UITextView()
     private let titleLabel = UILabel()
 
+    private let gradStudent = "Grad Student"
     static let reuseIdentifier = "ProfilePromptTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -57,7 +58,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
     func configure(for user: UserV2, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         let major = user.majors.first?.name ?? ""
-        let graduationText = user.graduationYear == "Grad Student" ? " as a " : " in the class of "
+        let graduationText = user.graduationYear == gradStudent ? " as a " : " in the class of "
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()
@@ -76,7 +77,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
     func configure(for user: MatchedUser, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         let major = user.majors.first?.name ?? ""
-        let graduationText = user.graduationYear == "Grad Student" ? " as a " : " in the class of "
+        let graduationText = user.graduationYear == gradStudent ? " as a " : " in the class of "
         if type == .basics {
             descriptionTextView.attributedText =
                 NSMutableAttributedString()

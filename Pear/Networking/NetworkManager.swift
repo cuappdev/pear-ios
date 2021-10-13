@@ -30,8 +30,6 @@ class NetworkManager {
             "bucket": "pear",
             "image": "data:image/png;base64,\(base64)"
         ]
-        
-        
 
         AF.request(
             "https://\(Keys.appdevServerURL)/upload/",
