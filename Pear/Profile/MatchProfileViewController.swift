@@ -120,9 +120,9 @@ class MatchProfileViewController: UIViewController {
         reachOutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.size.equalTo(Constants.Onboarding.largeButtonSize)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+                .inset(Constants.Onboarding.nextBottomPadding)
         }
-
     }
 
     @objc func backPressed() {
@@ -131,8 +131,14 @@ class MatchProfileViewController: UIViewController {
     
     @objc func reachOutButtonPressed() {
         if let matchedUser = match {
-            navigationController?.pushViewController(ChatViewController(messageUser: matchedUser, currentUser: user), animated: true)
-            }
+            navigationController?.pushViewController(
+                ChatViewController(
+                    messageUser: matchedUser,
+                    currentUser: user
+                ),
+                animated: true
+            )
+        }
     }
 
     func getCurrentMatch() {

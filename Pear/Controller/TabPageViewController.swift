@@ -15,7 +15,7 @@ protocol TabDelegate: AnyObject {
 class TabPageViewController: UIPageViewController {
 
     // MARK: - Private View Vars
-    private let communityViewController : UIViewController
+    private let communityViewController: UIViewController
     private let matchViewController: UIViewController
     private var pages: [UIViewController] = [UIViewController]()
 

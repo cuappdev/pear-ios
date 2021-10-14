@@ -16,10 +16,9 @@ class CommunityViewController: UIViewController {
         fadeColor: .backgroundLightGreen)
     private let searchBar = UISearchBar()
     private let spinner = UIActivityIndicatorView(style: .medium)
-    
     // MARK: - Private Data Vars
     private var users: [CommunityUser] = []
-    private var currentUser: UserV2
+    private let currentUser: UserV2
     
     init(user: UserV2) {
         self.currentUser = user
