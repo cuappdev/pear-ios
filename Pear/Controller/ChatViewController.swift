@@ -29,10 +29,12 @@ class ChatViewController: UIViewController {
     private var groupedMessagesByDate: [[PearMessage]] = []
     private var messages: [PearMessage] = []
     private let messageUser: MatchedUser
+    private let status: String
 
-    init(messageUser: MatchedUser, currentUser: UserV2) {
+    init(messageUser: MatchedUser, currentUser: UserV2, status: String) {
         self.messageUser = messageUser
         self.currentUser = currentUser
+        self.status = status
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -179,9 +181,19 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func sendMessage() {
-        if let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !message.isEmpty {
-            addMessageToFirebase(message: message)
-            chatInputTextField.text = ""
+        guard let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !message.isEmpty else {
+            return
+        }
+        
+        addMessageToFirebase(message: message)
+        chatInputTextField.text = ""
+        
+        let isPastPear = (status == "canceled" || status == "inactive") ? true : false
+        
+        if isPastPear {
+            Analytics.logEvent(Constants.Analytics.sentMessagePrevious, parameters: nil)
+        } else {
+            Analytics.logEvent(Constants.Analytics.sentMessageCurrent, parameters: nil)
         }
     }
 

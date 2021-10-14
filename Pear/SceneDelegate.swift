@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     let didCompleteOnboarding = UserDefaults.standard.bool(forKey: Constants.UserDefaults.onboardingCompletion)
                     let rootVC = didCompleteOnboarding ?
                         HomeViewController() :
-                        OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                        LoginViewController()
                     navigationController.pushViewController(rootVC, animated: false)
                     window.rootViewController = navigationController
                 case .failure(let error):

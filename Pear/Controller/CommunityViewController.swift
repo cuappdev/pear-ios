@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import FirebaseAnalytics
 import UIKit
 
 class CommunityViewController: UIViewController {
@@ -105,6 +106,7 @@ class CommunityViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getUsers()
+        Analytics.logEvent(Constants.Analytics.openedViewController, parameters: ["name" : Constants.Analytics.TrackedVCs.community])
     }
 }
 

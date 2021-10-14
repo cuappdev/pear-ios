@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     // MARK: - Private View Vars
     private let backgroundImage = UIImageView()
     private let loginButton = GIDSignInButton()
+    private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
     // MARK: - Error Alert Vars
     private var errorMessageAlertView: MessageAlertView!
@@ -37,6 +38,9 @@ class LoginViewController: UIViewController {
         loginButton.style = .wide
         view.addSubview(loginButton)
         
+        loadingIndicator.color = .white
+        view.addSubview(loadingIndicator)
+        
         setupConstraints()
     }
 
@@ -50,6 +54,11 @@ class LoginViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(96)
             make.size.equalTo(CGSize(width: 202, height: 50))
+        }
+        
+        loadingIndicator.snp.makeConstraints { make in
+            make.center.equalTo(loginButton)
+            make.size.equalTo(70)
         }
     }
 
@@ -104,17 +113,29 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(userFirstName, forKey: Constants.UserDefaults.userFirstName)
             UserDefaults.standard.set(userFullName, forKey: Constants.UserDefaults.userFullName)
             
+            loadingIndicator.startAnimating()
+            loginButton.isHidden = true
+            
             NetworkManager.authenticateUser(idToken: idToken) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let userSession):
                     DispatchQueue.main.async {
+                        self.loadingIndicator.stopAnimating()
+                        
                         UserDefaults.standard.set(userSession.accessToken, forKey: Constants.UserDefaults.accessToken)
                         
                         self.getUser()
                     }
                 case .failure(let error):
                     print(error.localizedDescription)
+                    
+                    self.loadingIndicator.stopAnimating()
+                    self.loginButton.isHidden = false
+                    
+                    let errorAlert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(errorAlert, animated: true)
                 }
             }
         }
@@ -131,6 +152,8 @@ class LoginViewController: UIViewController {
                     self.navigationController?.pushViewController(onboardingVC, animated: true)
                     return
                 }
+                
+                UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
                 self.navigationController?.pushViewController(HomeViewController(), animated: true)
             }
         }
