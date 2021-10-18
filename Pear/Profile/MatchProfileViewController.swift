@@ -14,6 +14,7 @@ class MatchProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
+    private let reachOutButton = UIButton()
     private var chatStatus: ChatStatus?
     private var match: MatchedUser?
     private var meetupStatusView: MeetupStatusView?
@@ -82,6 +83,14 @@ class MatchProfileViewController: UIViewController {
         }
 
         profileTableView.reloadData()
+        
+        reachOutButton.setTitle("Reach Out", for: .normal)
+        reachOutButton.setTitleColor(.white, for: .normal)
+        reachOutButton.titleLabel?.font = ._20CircularStdBold
+        reachOutButton.backgroundColor = .backgroundOrange
+        reachOutButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        reachOutButton.addTarget(self, action: #selector(reachOutButtonPressed), for: .touchUpInside)
+        view.addSubview(reachOutButton)
 
         setupConstraints()
     }
@@ -107,10 +116,29 @@ class MatchProfileViewController: UIViewController {
                 make.edges.equalToSuperview()
             }
         }
+        
+        reachOutButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.size.equalTo(Constants.Onboarding.largeButtonSize)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+                .inset(Constants.Onboarding.nextBottomPadding)
+        }
     }
 
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func reachOutButtonPressed() {
+        if let matchedUser = match {
+            navigationController?.pushViewController(
+                ChatViewController(
+                    messageUser: matchedUser,
+                    currentUser: user
+                ),
+                animated: true
+            )
+        }
     }
 
     func getCurrentMatch() {

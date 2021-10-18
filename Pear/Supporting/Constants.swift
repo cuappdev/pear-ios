@@ -75,6 +75,7 @@ struct Constants {
         static let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
         static let backButtonSize = CGSize(width: 25, height: 25)
         static let mainButtonSize = CGSize(width: 225, height: 54)
+        static let largeButtonSize = CGSize(width: 273, height: 54)
     }
     
     struct Options {
