@@ -183,7 +183,7 @@ extension MatchProfileViewController: UITableViewDataSource {
             return cell
         case .prompts:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user.prompts)
+            cell.configure(for: match.prompts)
             return cell
         default:
             return UITableViewCell()

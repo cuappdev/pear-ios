@@ -46,7 +46,7 @@ enum ChatStatus {
         case Constants.Match.proposed:
             return userAlreadyReachedOut(to: match) ? .waiting(on: pair) : .responding(to: pair)
 
-        case Constants.Match.cancelled:
+        case Constants.Match.canceled:
             return .cancelled(pair)
 
         case Constants.Match.active:

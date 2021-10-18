@@ -70,6 +70,7 @@ class MessagesViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+        Analytics.logEvent(Constants.Analytics.openedViewController, parameters: ["name" : Constants.Analytics.TrackedVCs.messages])
     }
 
     @objc private func backPressed() {
@@ -138,7 +139,9 @@ extension MessagesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let match = matchedUsers[indexPath.row]
-        navigationController?.pushViewController(ChatViewController(messageUser: match, currentUser: user), animated: true)
+        let status = matches[indexPath.row].status
+        let chatVC = ChatViewController(messageUser: match, currentUser: user, status: status)
+        navigationController?.pushViewController(chatVC, animated: true)
     }
 
 }

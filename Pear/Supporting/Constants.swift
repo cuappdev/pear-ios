@@ -55,7 +55,7 @@ struct Constants {
         // Match status
         static let created = "created"
         static let proposed = "proposed"
-        static let cancelled = "cancelled"
+        static let canceled = "canceled"
         static let active = "active"
         static let inactive = "inactive"
 
@@ -85,6 +85,20 @@ struct Constants {
     struct Notifications {
         /// Stores the time interval for check build notification scheduling. 1209600 is the time interval corresponding to two weeks
         static let checkBuildNotifInterval: Double = 1209600
+    }
+    
+    struct Analytics {
+        static let openedApp = "opened_app"
+        static let completedOnboarding = "completed_onboarding"
+        static let openedViewController = "opened_view_controller"
+        static let sentMessagePrevious = "sent_message_previous"
+        static let sentMessageCurrent = "sent_message_current"
+        
+        enum TrackedVCs: String {
+            case community = "community"
+            case editProfile = "edit_profile"
+            case messages = "messages"
+        }
     }
 
 }

@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import FirebaseAnalytics
 import Kingfisher
 import UIKit
 
@@ -178,6 +179,7 @@ class EditDemographicsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+        Analytics.logEvent(Constants.Analytics.openedViewController, parameters: ["name" : Constants.Analytics.TrackedVCs.editProfile])
     }
     
     override func viewDidLayoutSubviews() {

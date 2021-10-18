@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 
+import FirebaseAnalytics
 import UIKit
 
 class SocialMediaViewController: UIViewController {
@@ -192,6 +193,7 @@ class SocialMediaViewController: UIViewController {
             DispatchQueue.main.async {
                 if success {
                     UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+                    Analytics.logEvent(Constants.Analytics.completedOnboarding, parameters: nil)
                     self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
