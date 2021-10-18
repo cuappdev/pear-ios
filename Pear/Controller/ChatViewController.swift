@@ -181,14 +181,18 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func sendMessage() {
-        guard let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !message.isEmpty else {
+        guard let message = chatInputTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+            return
+        }
+        
+        guard !message.isEmpty else {
             return
         }
         
         addMessageToFirebase(message: message)
         chatInputTextField.text = ""
         
-        let isPastPear = (status == "canceled" || status == "inactive") ? true : false
+        let isPastPear = (status == Constants.Match.canceled || status == Constants.Match.inactive) ? true : false
         
         if isPastPear {
             Analytics.logEvent(Constants.Analytics.sentMessagePrevious, parameters: nil)

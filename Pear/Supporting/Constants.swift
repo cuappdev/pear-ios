@@ -55,7 +55,7 @@ struct Constants {
         // Match status
         static let created = "created"
         static let proposed = "proposed"
-        static let cancelled = "cancelled"
+        static let canceled = "canceled"
         static let active = "active"
         static let inactive = "inactive"
 

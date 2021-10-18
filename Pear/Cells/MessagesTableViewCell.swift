@@ -92,8 +92,8 @@ class MessagesTableViewCell: UITableViewCell {
     func configure(for pair: MatchedUser, status: String, week: Int) {
         profileImage.kf.setImage(with: URL(string: pair.profilePicUrl ?? ""))
         nameLabel.text = "\(pair.firstName) \(pair.lastName)"
-        infoImage.isHidden = (status == "canceled" || status == "inactive") ? true : false
-        infoLabel.isHidden = (status == "canceled" || status == "inactive") ? true : false
+        infoImage.isHidden = (status == Constants.Match.canceled || status == Constants.Match.inactive) ? true : false
+        infoLabel.isHidden = (status == Constants.Match.canceled || status == Constants.Match.inactive) ? true : false
         timeLabel.text = week == 1 ? "\(week) week ago" : "\(week) weeks ago"
     }
 
