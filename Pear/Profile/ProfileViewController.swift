@@ -21,7 +21,7 @@ class ProfileViewController: UIViewController {
     init(user: UserV2, otherUserId: Int) {
         self.currentUser = user
         super.init(nibName: nil, bundle: nil)
-        setOtherUser(otherUserId: otherUserId)
+        getOtherUser(otherUserId: otherUserId)
     }
 
     required init?(coder: NSCoder) {
@@ -65,7 +65,7 @@ class ProfileViewController: UIViewController {
         setupConstraints()
     }
 
-    private func setOtherUser(otherUserId: Int) {
+    private func getOtherUser(otherUserId: Int) {
         NetworkManager.getUser(id: otherUserId) { [weak self] result in
             guard let self = self else { return }
             switch result {
