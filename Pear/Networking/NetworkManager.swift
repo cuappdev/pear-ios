@@ -586,4 +586,33 @@ class NetworkManager {
         }
     }
 
+    static func getSearchedUsers(searchText: String, completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
+        
+        let parameters: [String: Any] = [
+            "query": searchText
+        ]
+        
+        AF.request(
+            "\(hostEndpoint)/api/users/",
+            method: .get,
+            parameters: parameters,
+            encoding: URLEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
+                    let users = usersData.data
+                    completion(.success(users))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

@@ -50,6 +50,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         containerView.addSubview(informationLabel)
 
         interestsCollectionView.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
+        interestsCollectionView.backgroundColor = .clear
         interestsCollectionView.dataSource = self
         interestsCollectionView.delegate = self
         interestsCollectionView.isScrollEnabled = false

@@ -134,7 +134,7 @@ class MatchProfileViewController: UIViewController {
             navigationController?.pushViewController(
                 ChatViewController(
                     messageUser: matchedUser,
-                    currentUser: user
+                    currentUser: user, status: ""
                 ),
                 animated: true
             )

@@ -12,6 +12,7 @@ import UIKit
 protocol ProfileMenuDelegate {
     
     func didUpdateProfilePicture(image: UIImage?, url: String)
+    func didUpdateProfileInterests()
     
 }
 
@@ -152,11 +153,15 @@ class ProfileMenuViewController: UIViewController {
     }
 
     func pushEditingInterestsViewController() {
-        navigationController?.pushViewController(EditInterestsViewController(user: user), animated: true)
+        let editInterestsVC = EditInterestsViewController(user: user)
+        editInterestsVC.profileDelegate = delegate
+        navigationController?.pushViewController(editInterestsVC, animated: true)
     }
 
     func pushEditingGroupsViewController() {
-        navigationController?.pushViewController(EditGroupsViewController(user: user), animated: true)
+        let editGroupsVC = EditGroupsViewController(user: user)
+        editGroupsVC.profileDelegate = delegate
+        navigationController?.pushViewController(editGroupsVC, animated: true)
     }
 
     func pushSettingsViewController() {

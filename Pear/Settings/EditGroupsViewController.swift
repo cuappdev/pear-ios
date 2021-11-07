@@ -23,6 +23,8 @@ class EditGroupsViewController: UIViewController {
 
     private var sections: [EditSection<Group>] = []
     private let user: UserV2
+    
+    var profileDelegate: ProfileMenuDelegate?
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
@@ -186,6 +188,7 @@ class EditGroupsViewController: UIViewController {
         NetworkManager.updateGroups(groups: selectedGroups) { [weak self] success in
             guard let self = self else { return }
             if success {
+                self.profileDelegate?.didUpdateProfileInterests()
                 self.navigationController?.popViewController(animated: true)
             } else {
                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)

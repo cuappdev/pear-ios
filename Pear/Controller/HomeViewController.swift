@@ -331,5 +331,8 @@ extension HomeViewController: ProfileMenuDelegate {
         profileImageView.image = image
         user?.profilePicUrl = url
     }
+    func didUpdateProfileInterests() {
+        updateUserAndTabPage()
+    }
     
 }
