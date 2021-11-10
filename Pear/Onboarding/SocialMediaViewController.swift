@@ -183,7 +183,7 @@ class SocialMediaViewController: UIViewController {
         delegate?.backPage(index: 5)
     }
 
-    @objc func completeOnboarding() {        
+    @objc func completeOnboarding() {    
         NetworkManager.updateSocialMedia(
             facebookUrl: facebookTextField.text,
             instagramUsername: instagramTextField.text,

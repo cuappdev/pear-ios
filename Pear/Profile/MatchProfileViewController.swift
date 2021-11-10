@@ -131,13 +131,9 @@ class MatchProfileViewController: UIViewController {
     }
     
     @objc func reachOutButtonPressed() {
-        guard let match = match else {
-            return
-        }
+        guard let match = match else { return }
 
-        guard let matchedUser = matchedUser else {
-            return
-        }
+        guard let matchedUser = matchedUser else { return }
         
         navigationController?.pushViewController(
             ChatViewController(
