@@ -7,6 +7,7 @@
 //
 
 import AppDevAnnouncements
+import Firebase
 import FirebaseAnalytics
 import GoogleSignIn
 import UIKit
@@ -26,8 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             commonPath: Keys.announcementsCommonPath,
             announcementPath: Keys.announcementsPath
         )
-        
-        Analytics.logEvent(Constants.Analytics.openedApp, parameters: nil)
         
         return true
     }

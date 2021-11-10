@@ -54,6 +54,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             navigationController.pushViewController(LoginViewController(), animated: false)
             window.rootViewController = navigationController
         }
+        
+        Analytics.logEvent(Constants.Analytics.openedApp, parameters: nil)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

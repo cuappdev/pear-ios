@@ -153,8 +153,11 @@ class LoginViewController: UIViewController {
                     return
                 }
                 
-                UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
-                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+//                UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
+//                self.navigationController?.pushViewController(HomeViewController(), animated: true)
+                
+                let onboardingVC = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                self.navigationController?.pushViewController(onboardingVC, animated: true)
             }
         }
     }

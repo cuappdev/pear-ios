@@ -157,7 +157,7 @@ class EditDemographicsViewController: UIViewController {
 
         hometownDropdownView = OnboardingSearchDropdownView(
             delegate: self,
-            placeholder: "City, State, Country",
+            placeholder: "Hometown",
             tableData: [],
             searchType: .places
         )
