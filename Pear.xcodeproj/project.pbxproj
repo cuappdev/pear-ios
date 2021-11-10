@@ -1214,7 +1214,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.4;
+				CURRENT_PROJECT_VERSION = 1.5.0;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1225,7 +1225,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cornellappdev.pear;
 				PRODUCT_NAME = Pear;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1235,7 +1235,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3.4;
+				CURRENT_PROJECT_VERSION = 1.5.0;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1246,7 +1246,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cornellappdev.pear;
 				PRODUCT_NAME = Pear;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
