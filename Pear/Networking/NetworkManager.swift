@@ -170,7 +170,7 @@ class NetworkManager {
 
     static func updateProfile(
         graduationYear: String,
-        major: String,
+        majors: [Int],
         hometown: String,
         pronouns: String,
         profilePicUrl: String,
@@ -180,7 +180,7 @@ class NetworkManager {
 
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
-            "major": major,
+            "majors": majors,
             "hometown": hometown,
             "pronouns": pronouns,
             "profile_pic_url": profilePicUrl
@@ -586,4 +586,30 @@ class NetworkManager {
         }
     }
 
+    static func getSearchedUsers(searchText: String, completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
+        let parameters: [String: Any] = [
+            "query": searchText
+        ]
+        
+        AF.request(
+            "\(hostEndpoint)/api/users/",
+            method: .get,
+            parameters: parameters,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
+                    completion(.success(usersData.data))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

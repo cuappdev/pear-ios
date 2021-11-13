@@ -24,7 +24,7 @@ class DemographicsViewController: UIViewController {
     private var hometownDropdownView: OnboardingSearchDropdownView!
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nextButton = UIButton()
-    private var pronounsDropdownView: OnboardingSelectDropdownView!
+    private var pronounsDropdownView: OnboardingSearchDropdownView!
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
 
@@ -95,11 +95,11 @@ class DemographicsViewController: UIViewController {
         hometownDropdownView.tag = 2 // Set tag to keep track of field selection status.
         view.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(
+        pronounsDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "Pronouns",
             tableData: pronounSearchFields,
-            textTemplate: ""
+            searchType: .pronouns
         )
         pronounsDropdownView.tag = 3 // Set tag to keep track of field selection status.
         view.addSubview(pronounsDropdownView)

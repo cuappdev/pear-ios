@@ -37,6 +37,8 @@ enum OnboardingSearchDropdownType {
     case places
     /// Search locally
     case local
+    /// Search pronouns
+    case pronouns
 
 }
 
@@ -182,6 +184,8 @@ extension OnboardingSearchDropdownView: UISearchBarDelegate, UITableViewDelegate
         switch searchType {
         case .places:
             // Reset fieldSelected depending if the user has typed anything.
+            delegate?.updateSelectedFields(tag: tag, isSelected: !searchText.isEmpty, valueSelected: searchText)
+        case .pronouns:
             delegate?.updateSelectedFields(tag: tag, isSelected: !searchText.isEmpty, valueSelected: searchText)
         case .local:
             resultsTableData =

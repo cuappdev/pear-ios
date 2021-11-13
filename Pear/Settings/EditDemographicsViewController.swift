@@ -19,7 +19,7 @@ class EditDemographicsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
     private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
-    private var majorSearchFields: [String] = []
+    private var majorSearchFields: [MajorV2] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: UserV2
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
@@ -35,7 +35,7 @@ class EditDemographicsViewController: UIViewController {
     private var majorDropdownView: OnboardingSearchDropdownView!
     private let nameTextField = UITextField()
     private let profileImageView = UIImageView()
-    private var pronounsDropdownView: OnboardingSelectDropdownView!
+    private var pronounsDropdownView: OnboardingSearchDropdownView!
     private let saveBarButtonItem = UIBarButtonItem()
     private let uploadPhotoButton = UIButton()
 
@@ -46,6 +46,7 @@ class EditDemographicsViewController: UIViewController {
     private var didUpdatePhoto = false
     
     var delegate: EditDemographicsViewControllerDelegate?
+    weak var profileDelegate: ProfileMenuDelegate?
 
     init(user: UserV2) {
         self.user = user
@@ -114,22 +115,8 @@ class EditDemographicsViewController: UIViewController {
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.allowsEditing = true
 
-        nameTextField.delegate = self
-        nameTextField.tag = 0
-        nameTextField.backgroundColor = .backgroundWhite
-        nameTextField.textColor = .black
-        nameTextField.font = ._20CircularStdBook
-        nameTextField.text = "\(user.firstName) \(user.lastName)"
-        nameTextField.clearButtonMode = .never
-        nameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
-        nameTextField.leftViewMode = .always
-        nameTextField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
-        nameTextField.rightViewMode = .always
-        nameTextField.layer.cornerRadius = 8
-        nameTextField.layer.shadowColor = UIColor.black.cgColor
-        nameTextField.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        nameTextField.layer.shadowOpacity = 0.15
-        nameTextField.layer.shadowRadius = 2
+        setupDemographicsTextField(textField: nameTextField, text: "\(user.firstName) \(user.lastName)")
+        nameTextField.isEnabled = false
         editScrollView.addSubview(nameTextField)
 
         // Renders the valid graduation years based on current year.
@@ -148,7 +135,7 @@ class EditDemographicsViewController: UIViewController {
         majorDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "Major",
-            tableData: majorSearchFields,
+            tableData: majorSearchFields.map { $0.name },
             searchType: .local
         )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
@@ -165,9 +152,12 @@ class EditDemographicsViewController: UIViewController {
         hometownDropdownView.setSelectValue(value: user.hometown ?? "")
         editScrollView.addSubview(hometownDropdownView)
 
-        pronounsDropdownView = OnboardingSelectDropdownView(delegate: self,
-                                                            placeholder: "Pronouns",
-                                                            tableData: pronounSearchFields, textTemplate: "")
+        pronounsDropdownView = OnboardingSearchDropdownView(
+            delegate: self,
+            placeholder: "Pronouns",
+            tableData: [],
+            searchType: .pronouns
+        )
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
         pronounsDropdownView.setSelectValue(value: user.pronouns ?? "")
         editScrollView.addSubview(pronounsDropdownView)
@@ -186,6 +176,23 @@ class EditDemographicsViewController: UIViewController {
         super.viewDidLayoutSubviews()
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         uploadPhotoButton.layer.cornerRadius = uploadPhotoButton.frame.height / 2
+    }
+    private func setupDemographicsTextField(textField: UITextField, text: String) {
+        textField.delegate = self
+        textField.backgroundColor = .backgroundWhite
+        textField.textColor = .black
+        textField.font = ._20CircularStdBook
+        textField.text = text
+        textField.clearButtonMode = .never
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        textField.leftViewMode = .always
+        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        textField.rightViewMode = .always
+        textField.layer.cornerRadius = 8
+        textField.layer.shadowColor = UIColor.black.cgColor
+        textField.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        textField.layer.shadowOpacity = 0.15
+        textField.layer.shadowRadius = 2
     }
 
     private func setupConstraints() {
@@ -259,6 +266,7 @@ class EditDemographicsViewController: UIViewController {
             case .success(let majors):
                 DispatchQueue.main.async {
                     let majorsData = majors.map(\.name)
+                    self.majorSearchFields = majors
                     self.majorDropdownView.setTableData(tableData: majorsData)
                 }
             case .failure(let error):
@@ -275,10 +283,11 @@ class EditDemographicsViewController: UIViewController {
         if let graduationYear = demographics.graduationYear,
            let major = demographics.major,
            let hometown = demographics.hometown,
-           let pronouns = demographics.pronouns {
+           let pronouns = demographics.pronouns,
+           let matchingMajor = majorSearchFields.first(where: { $0.name == major }) {
             NetworkManager.updateProfile(
                 graduationYear: graduationYear,
-                major: major,
+                majors: [matchingMajor.id],
                 hometown: hometown,
                 pronouns: pronouns,
                 profilePicUrl: profilePictureURL) { [weak self] success in
@@ -286,6 +295,7 @@ class EditDemographicsViewController: UIViewController {
                     DispatchQueue.main.async {
                         if success {
                             self.delegate?.didUpdateProfilePicture(image: self.profileImageView.image, url: profilePictureURL)
+                            self.profileDelegate?.didUpdateProfileDemographics()
                             self.navigationController?.popViewController(animated: true)
                         } else {
                             self.present(UIAlertController.getStandardErrortAlert(), animated: true)
@@ -294,7 +304,7 @@ class EditDemographicsViewController: UIViewController {
             }
         }
     }
-
+    
     @objc private func savePressed() {
         guard didUpdatePhoto else {
             saveProfile(profilePictureURL: user.profilePicUrl)

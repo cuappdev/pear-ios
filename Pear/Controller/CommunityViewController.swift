@@ -15,6 +15,7 @@ class CommunityViewController: UIViewController {
     private let fadeCommunityTableView = FadeWrapperView(
         UITableView(frame: .zero, style: .plain),
         fadeColor: .backgroundLightGreen)
+    private let searchRefreshControl = UIRefreshControl()
     private let searchBar = UISearchBar()
     private let spinner = UIActivityIndicatorView(style: .medium)
     // MARK: - Private Data Vars
@@ -49,7 +50,10 @@ class CommunityViewController: UIViewController {
         searchBar.layer.shadowRadius = 4
         searchBar.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.addSubview(searchBar)
-
+        
+        searchRefreshControl.addTarget(self, action: #selector(refreshSearches), for: .valueChanged)
+        
+        fadeCommunityTableView.view.backgroundView = searchRefreshControl
         fadeCommunityTableView.view.delegate = self
         fadeCommunityTableView.view.dataSource = self
         fadeCommunityTableView.view.isScrollEnabled = true
@@ -74,7 +78,7 @@ class CommunityViewController: UIViewController {
         setupConstraints()
     }
 
-    private func getUsers() {
+    private func getAllUsers() {
         NetworkManager.getAllUsers { [weak self] result in
             guard let self = self else { return }
             
@@ -83,6 +87,7 @@ class CommunityViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.users = allUsers
                     self.spinner.stopAnimating()
+                    self.searchRefreshControl.endRefreshing()
                     self.fadeCommunityTableView.view.reloadData()
                 }
             case .failure(let error):
@@ -109,8 +114,12 @@ class CommunityViewController: UIViewController {
         }
     }
     
-    @objc func dismissKeyboard() {
+    @objc private func dismissKeyboard() {
         searchBar.resignFirstResponder()
+    }
+    
+    @objc private func refreshSearches() {
+        getUsers()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -143,17 +152,34 @@ extension CommunityViewController: UITableViewDataSource {
 
 // MARK: - SearchBarDelegate
 extension CommunityViewController: UISearchBarDelegate {
-
-    private func searchUsers(query: String) {
-        // TODO: Fill in with network call
-    }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            getUsers()
-        } else {
+    
+    private func getUsers() {
+        if let searchText = searchBar.text {
             searchUsers(query: searchText)
+        } else {
+            getAllUsers()
         }
     }
 
+    private func searchUsers(query: String) {
+        NetworkManager.getSearchedUsers(searchText: query) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let searchedUsers):
+                DispatchQueue.main.async {
+                    self.users = searchedUsers
+                    self.spinner.stopAnimating()
+                    self.searchRefreshControl.endRefreshing()
+                    self.fadeCommunityTableView.view.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        getUsers()
+    }
 }

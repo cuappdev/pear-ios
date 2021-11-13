@@ -25,6 +25,8 @@ class EditInterestsViewController: UIViewController {
     // MARK: - Private Data Vars
     private var sections: [EditSection<Interest>] = []
     private let user: UserV2
+    
+    weak var profileDelegate: ProfileMenuDelegate?
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.
@@ -193,6 +195,7 @@ class EditInterestsViewController: UIViewController {
         NetworkManager.updateInterests(interests: selectedInterests) { [weak self] success in
             guard let self = self else { return }
             if success {
+                self.profileDelegate?.didUpdateProfileDemographics()
                 self.navigationController?.popViewController(animated: true)
             } else {
                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)
