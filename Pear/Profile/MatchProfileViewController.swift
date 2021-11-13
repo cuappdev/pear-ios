@@ -16,7 +16,8 @@ class MatchProfileViewController: UIViewController {
     private let backButton = UIButton()
     private let reachOutButton = UIButton()
     private var chatStatus: ChatStatus?
-    private var match: MatchedUser?
+    private var match: MatchV2?
+    private var matchedUser: MatchedUser?
     private var meetupStatusView: MeetupStatusView?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
@@ -130,15 +131,15 @@ class MatchProfileViewController: UIViewController {
     }
     
     @objc func reachOutButtonPressed() {
-        if let matchedUser = match {
-            navigationController?.pushViewController(
-                ChatViewController(
-                    messageUser: matchedUser,
-                    currentUser: user
-                ),
-                animated: true
-            )
-        }
+        guard let match = match, let matchedUser = matchedUser else { return }
+        
+        navigationController?.pushViewController(
+            ChatViewController(
+                messageUser: matchedUser,
+                currentUser: user, status: match.status
+            ),
+            animated: true
+        )
     }
 
     func getCurrentMatch() {
@@ -147,7 +148,8 @@ class MatchProfileViewController: UIViewController {
             switch result {
             case .success(let match):
                 DispatchQueue.main.async {
-                    self.match = match.matchedUser
+                    self.match = match
+                    self.matchedUser = match.matchedUser
                     self.setupViews(match: match)
                 }
             case .failure(let error):
@@ -165,25 +167,25 @@ extension MatchProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let match = match else { return UITableViewCell() }
+        guard let matchedUser = matchedUser else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
         switch section {
         case .summary:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: match)
+            cell.configure(for: matchedUser)
             return cell
         case .basics:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: match, type: section)
+            cell.configure(for: matchedUser, type: section)
             return cell
         case .interests, .groups:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: match, type: section)
+            cell.configure(for: matchedUser, type: section)
             return cell
         case .prompts:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: match.prompts)
+            cell.configure(for: matchedUser.prompts)
             return cell
         default:
             return UITableViewCell()

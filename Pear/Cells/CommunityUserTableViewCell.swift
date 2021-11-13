@@ -53,6 +53,7 @@ class CommunityUserTableViewCell: UITableViewCell {
         interestsCollectionView.dataSource = self
         interestsCollectionView.delegate = self
         interestsCollectionView.isScrollEnabled = false
+        interestsCollectionView.isUserInteractionEnabled = false
         interestsCollectionView.register(
             InterestTagCollectionViewCell.self,
             forCellWithReuseIdentifier: InterestTagCollectionViewCell.reuseIdentifier

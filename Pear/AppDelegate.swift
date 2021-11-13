@@ -27,8 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             announcementPath: Keys.announcementsPath
         )
         
-        Analytics.logEvent(Constants.Analytics.openedApp, parameters: nil)
-        
         return true
     }
 

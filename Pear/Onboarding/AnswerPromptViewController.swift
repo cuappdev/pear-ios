@@ -59,10 +59,10 @@ class AnswerPromptViewController: UIViewController {
         responseTextView.text = prompt.questionPlaceholder
         responseTextView.textColor = .inactiveGreen
         responseTextView.font = ._16CircularStdBook
-        responseTextView.returnKeyType = .done
+        responseTextView.returnKeyType = .default
         responseTextView.layer.cornerRadius = 8
         responseTextView.layer.masksToBounds = true
-        responseTextView.clipsToBounds = false
+        responseTextView.clipsToBounds = true
         responseTextView.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
         responseTextView.layer.shadowOpacity = 1
         responseTextView.layer.shadowRadius = 4
@@ -180,7 +180,6 @@ extension AnswerPromptViewController: UITextViewDelegate {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" { textView.resignFirstResponder() }
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         let numberOfChars = newText.count
         return numberOfChars <= maxCharacters
