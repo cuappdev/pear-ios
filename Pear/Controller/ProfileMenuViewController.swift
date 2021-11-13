@@ -9,11 +9,9 @@
 import Kingfisher
 import UIKit
 
-protocol ProfileMenuDelegate {
-    
+protocol ProfileMenuDelegate: AnyObject {
     func didUpdateProfilePicture(image: UIImage?, url: String)
     func didUpdateProfileInterests()
-    
 }
 
 class ProfileMenuViewController: UIViewController {
@@ -146,29 +144,29 @@ class ProfileMenuViewController: UIViewController {
         }
     }
 
-    @objc func editPressed() {
+    @objc private func editPressed() {
         let editDemographicsVC = EditDemographicsViewController(user: user)
         editDemographicsVC.delegate = self
         navigationController?.pushViewController(editDemographicsVC, animated: true)
     }
 
-    func pushEditingInterestsViewController() {
+    private func pushEditingInterestsViewController() {
         let editInterestsVC = EditInterestsViewController(user: user)
         editInterestsVC.profileDelegate = delegate
         navigationController?.pushViewController(editInterestsVC, animated: true)
     }
 
-    func pushEditingGroupsViewController() {
+    private func pushEditingGroupsViewController() {
         let editGroupsVC = EditGroupsViewController(user: user)
         editGroupsVC.profileDelegate = delegate
         navigationController?.pushViewController(editGroupsVC, animated: true)
     }
 
-    func pushSettingsViewController() {
+    private func pushSettingsViewController() {
         navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
     }
 
-    func pushMessagingViewController() {
+    private func pushMessagingViewController() {
         navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
     }
 

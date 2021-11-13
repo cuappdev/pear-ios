@@ -26,7 +26,7 @@ class EditInterestsViewController: UIViewController {
     private var sections: [EditSection<Interest>] = []
     private let user: UserV2
     
-    var profileDelegate: ProfileMenuDelegate?
+    weak var profileDelegate: ProfileMenuDelegate?
 
     // moreSection refers to the categories the user has not selected.
     // Selecting something in this section would add it to `yourSection`.

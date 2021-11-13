@@ -53,7 +53,7 @@ class CommunityViewController: UIViewController {
         
         searchRefreshControl.addTarget(self, action: #selector(refreshSearches), for: .valueChanged)
         
-        fadeCommunityTableView.view.refreshControl = searchRefreshControl
+        fadeCommunityTableView.view.backgroundView = searchRefreshControl
         fadeCommunityTableView.view.delegate = self
         fadeCommunityTableView.view.dataSource = self
         fadeCommunityTableView.view.isScrollEnabled = true
@@ -87,6 +87,7 @@ class CommunityViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.users = allUsers
                     self.spinner.stopAnimating()
+                    self.searchRefreshControl.endRefreshing()
                     self.fadeCommunityTableView.view.reloadData()
                 }
             case .failure(let error):
@@ -113,13 +114,12 @@ class CommunityViewController: UIViewController {
         }
     }
     
-    @objc func dismissKeyboard() {
+    @objc private func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
     
-    @objc func refreshSearches() {
+    @objc private func refreshSearches() {
         getUsers()
-        searchRefreshControl.endRefreshing()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -153,7 +153,7 @@ extension CommunityViewController: UITableViewDataSource {
 // MARK: - SearchBarDelegate
 extension CommunityViewController: UISearchBarDelegate {
     
-    func getUsers() {
+    private func getUsers() {
         if let searchText = searchBar.text {
             searchUsers(query: searchText)
         } else {
@@ -161,8 +161,8 @@ extension CommunityViewController: UISearchBarDelegate {
         }
     }
 
-    func searchUsers(query: String) {
-        NetworkManager.getSearchedUsers(searchText: query, completion: { [weak self] result in
+    private func searchUsers(query: String) {
+        NetworkManager.getSearchedUsers(searchText: query) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -170,12 +170,13 @@ extension CommunityViewController: UISearchBarDelegate {
                 DispatchQueue.main.async {
                     self.users = searchedUsers
                     self.spinner.stopAnimating()
+                    self.searchRefreshControl.endRefreshing()
                     self.fadeCommunityTableView.view.reloadData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
-        })
+        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

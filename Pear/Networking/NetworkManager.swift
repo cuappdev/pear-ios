@@ -587,7 +587,6 @@ class NetworkManager {
     }
 
     static func getSearchedUsers(searchText: String, completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
-        
         let parameters: [String: Any] = [
             "query": searchText
         ]
@@ -596,7 +595,6 @@ class NetworkManager {
             "\(hostEndpoint)/api/users/",
             method: .get,
             parameters: parameters,
-            encoding: URLEncoding.default,
             headers: headers
         ).validate().responseData { response in
             switch response.result {
@@ -605,8 +603,7 @@ class NetworkManager {
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
                     let usersData = try jsonDecoder.decode(Response<[CommunityUser]>.self, from: data)
-                    let users = usersData.data
-                    completion(.success(users))
+                    completion(.success(usersData.data))
                 } catch {
                     completion(.failure(error))
                 }
