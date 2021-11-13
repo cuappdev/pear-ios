@@ -195,7 +195,7 @@ class EditInterestsViewController: UIViewController {
         NetworkManager.updateInterests(interests: selectedInterests) { [weak self] success in
             guard let self = self else { return }
             if success {
-                self.profileDelegate?.didUpdateProfileInterests()
+                self.profileDelegate?.didUpdateProfileDemographics()
                 self.navigationController?.popViewController(animated: true)
             } else {
                 self.present(UIAlertController.getStandardErrortAlert(), animated: true)

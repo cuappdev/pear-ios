@@ -170,7 +170,7 @@ class NetworkManager {
 
     static func updateProfile(
         graduationYear: String,
-        major: String,
+        majors: [Int],
         hometown: String,
         pronouns: String,
         profilePicUrl: String,
@@ -180,7 +180,7 @@ class NetworkManager {
 
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
-            "major": major,
+            "majors": majors,
             "hometown": hometown,
             "pronouns": pronouns,
             "profile_pic_url": profilePicUrl

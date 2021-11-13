@@ -11,7 +11,7 @@ import UIKit
 
 protocol ProfileMenuDelegate: AnyObject {
     func didUpdateProfilePicture(image: UIImage?, url: String)
-    func didUpdateProfileInterests()
+    func didUpdateProfileDemographics()
 }
 
 class ProfileMenuViewController: UIViewController {
@@ -147,6 +147,7 @@ class ProfileMenuViewController: UIViewController {
     @objc private func editPressed() {
         let editDemographicsVC = EditDemographicsViewController(user: user)
         editDemographicsVC.delegate = self
+        editDemographicsVC.profileDelegate = delegate
         navigationController?.pushViewController(editDemographicsVC, animated: true)
     }
 
