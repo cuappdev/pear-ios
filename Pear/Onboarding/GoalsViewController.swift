@@ -155,7 +155,6 @@ class GoalsViewController: UIViewController {
             DispatchQueue.main.async {
                 if success {
                     self.delegate?.nextPage(index: 5)
-//                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
