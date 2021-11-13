@@ -286,10 +286,10 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
                 // get rid of previously scheduled notifications
                 center.removeAllDeliveredNotifications()
                 center.removeAllPendingNotificationRequests()
-                self.scheduleNotifications(center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊", aboutPear: true)
-                self.scheduleNotifications(center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!", aboutPear: true)
-                self.scheduleNotifications(center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️", aboutPear: true)
-                self.scheduleNotifications(center, day: 0, hour: 0, title: "Are you running the latest version of Pear?", body: "Open TestFlight to check for new updates", aboutPear: false)
+//                self.scheduleNotifications(center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊", aboutPear: true)
+//                self.scheduleNotifications(center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!", aboutPear: true)
+//                self.scheduleNotifications(center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️", aboutPear: true)
+//                self.scheduleNotifications(center, day: 0, hour: 0, title: "Are you running the latest version of Pear?", body: "Open TestFlight to check for new updates", aboutPear: false)
             }
         }
     }

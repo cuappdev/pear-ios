@@ -73,7 +73,7 @@ class GoalsViewController: UIViewController {
         subtitleLabel.font = ._12CircularStdBook
         view.addSubview(subtitleLabel)
 
-        nextButton.setTitle("Ready for Pear", for: .normal)
+        nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
         nextButton.backgroundColor = .inactiveGreen
@@ -154,9 +154,7 @@ class GoalsViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
-                    UserDefaults.standard.set(true, forKey: Constants.UserDefaults.onboardingCompletion)
                     self.delegate?.nextPage(index: 5)
-//                    self.navigationController?.pushViewController(HomeViewController(), animated: true)
                 } else {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
