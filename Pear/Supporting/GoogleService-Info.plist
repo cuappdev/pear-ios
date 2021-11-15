@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>34745122713-2n183415s1htpg9hi16skq14e8rvrqtc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.34745122713-2n183415s1htpg9hi16skq14e8rvrqtc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>34745122713-4icmd96mk8m3842rtjaft6martshthjg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB8Ki-nk2wES275GfZ-6VU8c3JqPydQXDA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>34745122713</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cornellappdev.CoffeeChat</string>
+	<key>PROJECT_ID</key>
+	<string>coffee-chats-266921</string>
+	<key>STORAGE_BUCKET</key>
+	<string>coffee-chats-266921.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:34745122713:ios:24547705d3056333919d08</string>
+	<key>DATABASE_URL</key>
+	<string>https://coffee-chats-266921.firebaseio.com</string>
+</dict>
+</plist>

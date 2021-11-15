@@ -46,6 +46,8 @@ class ChatViewController: UIViewController {
         super.viewDidLoad()
         title = "Chat with \(messageUser.firstName)"
         view.backgroundColor = .backgroundLightGreen
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
 
         hideKeyboardWhenViewTapped()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -220,6 +222,10 @@ class ChatViewController: UIViewController {
             self.databaseRef.child(userMessagesPath).updateChildValues([messageId: 1])
             let pairMessagesPath = "user-messages/\(self.messageUser.id)/\(self.currentUser.id)"
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
+        }
+        
+        NetworkManager.deliverNotification(receivingId: messageUser.id, message: message) { result in
+            
         }
     }
     

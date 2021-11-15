@@ -6,6 +6,7 @@
 //  Copyright © 2020 cuappdev. All rights reserved.
 //
 import AppDevAnnouncements
+import FirebaseMessaging
 import Kingfisher
 import SideMenu
 import UIKit
@@ -33,6 +34,8 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        getToken()
 
         view.backgroundColor = .backgroundLightGreen
         presentAnnouncement(completion: nil)
@@ -280,18 +283,20 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 extension HomeViewController: UNUserNotificationCenterDelegate {
     private func setupLocalNotifications() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             if granted {
                 center.delegate = self
                 // get rid of previously scheduled notifications
-                center.removeAllDeliveredNotifications()
-                center.removeAllPendingNotificationRequests()
 //                self.scheduleNotifications(center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊", aboutPear: true)
 //                self.scheduleNotifications(center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!", aboutPear: true)
 //                self.scheduleNotifications(center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️", aboutPear: true)
 //                self.scheduleNotifications(center, day: 0, hour: 0, title: "Are you running the latest version of Pear?", body: "Open TestFlight to check for new updates", aboutPear: false)
             }
         }
+        
+        UIApplication.shared.registerForRemoteNotifications()
+        
+        
     }
 
     private func scheduleNotifications(_ center: UNUserNotificationCenter, day: Int, hour: Int, title: String, body: String, aboutPear: Bool) {
@@ -306,6 +311,22 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
         let uuid = UUID().uuidString
         let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
         center.add(request)
+    }
+    
+    private func getToken() {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            guard let token = token else {
+                return
+            }
+            
+            NetworkManager.updateFCMToken(token: "token") { result in
+                
+            }
+        }
     }
 }
 
