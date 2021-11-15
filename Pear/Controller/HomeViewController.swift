@@ -323,9 +323,7 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
                 return
             }
             
-            NetworkManager.updateFCMToken(token: "token") { result in
-                
-            }
+            NetworkManager.updateFCMToken(token: token)
         }
     }
 }

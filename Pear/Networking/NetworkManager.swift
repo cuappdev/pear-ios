@@ -324,10 +324,7 @@ class NetworkManager {
         }
     }
     
-    static func updateFCMToken(
-        token: String,
-        completion: @escaping (Bool) -> Void
-    ) {
+    static func updateFCMToken(token: String) {
 
         let parameters: [String: Any] = [
             "fcm_registration_token": token,
@@ -341,23 +338,15 @@ class NetworkManager {
             headers: headers
         ).validate().responseData { response in
             switch response.result {
-            case .success(let data):
-                let jsonDecoder = JSONDecoder()
-                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
-                    completion(successResponse.success)
-                }
+            case .success:
+                break
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
     }
     
-    static func deliverNotification(
-        receivingId: Int,
-        message: String,
-        completion: @escaping (Bool) -> Void
-    ) {
+    static func deliverNotification(receivingId: Int, message: String) {
 
         let parameters: [String: Any] = [
             "message": message,
@@ -371,12 +360,8 @@ class NetworkManager {
             headers: headers
         ).validate().responseData { response in
             switch response.result {
-            case .success(let data):
-                let jsonDecoder = JSONDecoder()
-                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
-                    completion(successResponse.success)
-                }
+            case .success:
+                break
             case .failure(let error):
                 print(error.localizedDescription)
             }

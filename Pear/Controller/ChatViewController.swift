@@ -224,9 +224,7 @@ class ChatViewController: UIViewController {
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
         }
         
-        NetworkManager.deliverNotification(receivingId: messageUser.id, message: message) { result in
-            
-        }
+        NetworkManager.deliverNotification(receivingId: messageUser.id, message: message)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
