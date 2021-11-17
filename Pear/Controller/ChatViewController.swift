@@ -222,9 +222,9 @@ class ChatViewController: UIViewController {
             self.databaseRef.child(userMessagesPath).updateChildValues([messageId: 1])
             let pairMessagesPath = "user-messages/\(self.messageUser.id)/\(self.currentUser.id)"
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
+            
+            NetworkManager.deliverNotification(receivingId: messageUser.id, message: message)
         }
-        
-        NetworkManager.deliverNotification(receivingId: messageUser.id, message: message)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
