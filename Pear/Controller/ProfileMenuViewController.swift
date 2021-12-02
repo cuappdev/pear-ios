@@ -17,7 +17,6 @@ protocol ProfileMenuDelegate: AnyObject {
 class ProfileMenuViewController: UIViewController {
 
     // MARK: - Private View Vars
-    private let editButton = UIButton()
     private let optionsTableView = UITableView()
     private let profileImageView = UIImageView()
     private let profileInfoLabel = UILabel()
@@ -26,8 +25,7 @@ class ProfileMenuViewController: UIViewController {
     // MARK: - Private Data Vars
     private let editButtonSize = CGSize(width: 70, height: 30)
     private let menuOptions: [MenuOption] = [
-        MenuOption(image: "interests", text: "Your interests"),
-        MenuOption(image: "groups", text: "Your groups"),
+        MenuOption(image: "profile", text: "Your profile"),
         MenuOption(image: "messageIcon", text: "Messages"),
         MenuOption(image: "settings", text: "Settings")
     ]
@@ -59,19 +57,6 @@ class ProfileMenuViewController: UIViewController {
         let firstName = user.firstName
         let lastName = user.lastName
 
-        editButton.backgroundColor = .backgroundWhite
-        editButton.setTitle("Edit Info", for: .normal)
-        editButton.setTitleColor(.backgroundOrange, for: .normal)
-        editButton.titleLabel?.font = ._12CircularStdMedium
-        editButton.layer.cornerRadius = editButtonSize.height/2
-        editButton.layer.shadowColor = UIColor.black.cgColor
-        editButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        editButton.layer.shadowOpacity = 0.15
-        editButton.layer.shadowRadius = 2
-        editButton.addTarget(self, action: #selector(editPressed), for: .touchUpInside)
-        view.addSubview(editButton)
-        view.bringSubviewToFront(editButton)
-
         optionsTableView.backgroundColor = .backgroundLightGreen
         optionsTableView.separatorStyle = .none
         optionsTableView.showsVerticalScrollIndicator = false
@@ -82,7 +67,6 @@ class ProfileMenuViewController: UIViewController {
         optionsTableView.register(MenuOptionTableViewCell.self, forCellReuseIdentifier: MenuOptionTableViewCell.reuseIdentifier)
         view.addSubview(optionsTableView)
 
-        let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(editPressed))
         profileImageView.backgroundColor = .inactiveGreen
         profileImageView.layer.cornerRadius = profileImageSize.width/2
         profileImageView.clipsToBounds = true
@@ -92,7 +76,6 @@ class ProfileMenuViewController: UIViewController {
         if let profilePictureURL = URL(string: user.profilePicUrl) {
             profileImageView.kf.setImage(with: profilePictureURL)
         }
-        profileImageView.addGestureRecognizer(profileTapGesture)
    
         view.addSubview(profileImageView)
         view.sendSubviewToBack(profileImageView)
@@ -116,12 +99,6 @@ class ProfileMenuViewController: UIViewController {
     private func setupConstraints() {
         let leftPadding = 25
 
-        editButton.snp.makeConstraints { make in
-            make.centerX.equalTo(profileImageView.snp.trailing)
-            make.bottom.equalTo(profileImageView.snp.bottom)
-            make.size.equalTo(editButtonSize)
-        }
-
         optionsTableView.snp.makeConstraints { make in
             make.top.equalTo(profileInfoLabel.snp.bottom).offset(30)
             make.leading.trailing.bottom.equalToSuperview()
@@ -143,18 +120,10 @@ class ProfileMenuViewController: UIViewController {
             make.top.equalTo(profileImageView.snp.bottom).offset(15)
         }
     }
-
-    @objc private func editPressed() {
-        let editDemographicsVC = EditDemographicsViewController(user: user)
-        editDemographicsVC.delegate = self
-        editDemographicsVC.profileDelegate = delegate
-        navigationController?.pushViewController(editDemographicsVC, animated: true)
-    }
-
-    private func pushEditingInterestsViewController() {
-        let editInterestsVC = EditInterestsViewController(user: user)
-        editInterestsVC.profileDelegate = delegate
-        navigationController?.pushViewController(editInterestsVC, animated: true)
+    
+    private func pushProfileViewController() {
+        let profileVC = ProfileViewController(user: user)
+        navigationController?.pushViewController(profileVC, animated: true)
     }
 
     private func pushEditingGroupsViewController() {
@@ -190,10 +159,8 @@ extension ProfileMenuViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let option = menuOptions[indexPath.row]
-        if option.text == "Your interests" {
-            pushEditingInterestsViewController()
-        } else if option.text == "Your groups" {
-            pushEditingGroupsViewController()
+        if option.text == "Your profile" {
+            pushProfileViewController()
         } else if option.text == "Settings" {
             pushSettingsViewController()
         } else if option.text == "Messages" {

@@ -17,6 +17,19 @@ class ProfileViewController: UIViewController {
     private var otherUser: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
+    
+    init(user: UserV2) {
+        self.currentUser = user
+        super.init(nibName: nil, bundle: nil)
+        setupView(for: self.currentUser)
+        navigationItem.title = "Preview"
+        let editButton = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editButtonPressed))
+        editButton.setTitleTextAttributes([
+            .font: UIFont.getFont(.medium, size: 20)
+        ], for: .normal)
+        editButton.tintColor = .darkGreen
+        navigationItem.rightBarButtonItem = editButton
+    }
 
     init(user: UserV2, otherUserId: Int) {
         self.currentUser = user
@@ -72,26 +85,30 @@ class ProfileViewController: UIViewController {
             case .success(let user):
                 DispatchQueue.main.async {
                     self.otherUser = user
-                    self.profileSections = [.summary, .basics]
-                    
-                    if !user.interests.isEmpty {
-                        self.profileSections.append(.interests)
-                    }
-                    
-                    if !user.groups.isEmpty {
-                        self.profileSections.append(.groups)
-                    }
-                    
-                    if !user.prompts.isEmpty {
-                        self.profileSections.append(.prompts)
-                    }
-                    
-                    self.profileTableView.reloadData()
+                    self.setupView(for: user)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    private func setupView(for user: UserV2) {
+        self.profileSections = [.summary, .basics]
+        
+        if !user.interests.isEmpty {
+            self.profileSections.append(.interests)
+        }
+        
+        if !user.groups.isEmpty {
+            self.profileSections.append(.groups)
+        }
+        
+        if !user.prompts.isEmpty {
+            self.profileSections.append(.prompts)
+        }
+        
+        self.profileTableView.reloadData()
     }
 
     private func setupConstraints() {
@@ -103,6 +120,11 @@ class ProfileViewController: UIViewController {
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
     }
+    
+    @objc private func editButtonPressed() {
+        let editProfileVC = EditDemographicsViewController(user: currentUser)
+        navigationController?.pushViewController(editProfileVC, animated: true)
+    }
 
 }
 
@@ -113,7 +135,7 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let user = otherUser else { return UITableViewCell() }
+        let user = otherUser ?? currentUser
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 
@@ -142,12 +164,12 @@ extension ProfileViewController: UITableViewDataSource {
 }
 
 extension ProfileViewController: UIGestureRecognizerDelegate {
-
-      func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
-             navigationController?.popViewController(animated: true)
-         }
-         return false
-     }
-
-  }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            navigationController?.popViewController(animated: true)
+        }
+        return false
+    }
+    
+}

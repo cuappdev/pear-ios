@@ -23,6 +23,9 @@ class EditDemographicsViewController: UIViewController {
     private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: UserV2
     private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
+    private let interestsStackView = UIStackView()
+    private let groupsStackView = UIStackView()
+    private let promptsStackView = UIStackView()
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
@@ -89,9 +92,8 @@ class EditDemographicsViewController: UIViewController {
         saveBarButtonItem.action = #selector(savePressed)
         navigationItem.rightBarButtonItem = saveBarButtonItem
 
-        editScrollView.isScrollEnabled = false
-        editScrollView.showsVerticalScrollIndicator = false
-        editScrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        editScrollView.isScrollEnabled = true
+        editScrollView.showsVerticalScrollIndicator = true
         view.addSubview(editScrollView)
 
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
@@ -161,6 +163,75 @@ class EditDemographicsViewController: UIViewController {
         pronounsDropdownView.tag = 4 // Set tag to keep track of field selection status.
         pronounsDropdownView.setSelectValue(value: user.pronouns ?? "")
         editScrollView.addSubview(pronounsDropdownView)
+        
+        interestsStackView.distribution = .fill
+        interestsStackView.spacing = 10
+        interestsStackView.axis = .vertical
+        editScrollView.addSubview(interestsStackView)
+        
+        let interestsLabel = UILabel()
+        interestsLabel.font = ._20CircularStdBook
+        interestsLabel.textColor = .black
+        interestsLabel.textAlignment = .center
+        interestsLabel.text = "Your interests"
+        interestsStackView.addArrangedSubview(interestsLabel)
+        interestsStackView.setCustomSpacing(20, after: interestsLabel)
+        
+        user.interests.forEach { interest in
+            let interestView = OnboardingView()
+            interestView.configure(with: interest)
+            interestView.backgroundColor = .white
+            interestView.layer.cornerRadius = 8
+            interestsStackView.addArrangedSubview(interestView)
+            
+            interestView.snp.makeConstraints { make in
+                make.height.equalTo(68)
+            }
+        }
+        
+        groupsStackView.distribution = .fill
+        groupsStackView.spacing = 10
+        groupsStackView.axis = .vertical
+        editScrollView.addSubview(groupsStackView)
+        
+        let groupsLabel = UILabel()
+        groupsLabel.font = ._20CircularStdBook
+        groupsLabel.textColor = .black
+        groupsLabel.textAlignment = .center
+        groupsLabel.text = "Your groups"
+        groupsStackView.addArrangedSubview(groupsLabel)
+        groupsStackView.setCustomSpacing(20, after: groupsLabel)
+        
+        user.groups.forEach { group in
+            let groupView = OnboardingView()
+            groupView.configure(with: group)
+            groupView.backgroundColor = .white
+            groupView.layer.cornerRadius = 8
+            groupsStackView.addArrangedSubview(groupView)
+            
+            groupView.snp.makeConstraints { make in
+                make.height.equalTo(68)
+            }
+        }
+        
+        promptsStackView.distribution = .fill
+        promptsStackView.spacing = 10
+        promptsStackView.axis = .vertical
+        editScrollView.addSubview(promptsStackView)
+        
+        let promptsLabel = UILabel()
+        promptsLabel.font = ._20CircularStdBook
+        promptsLabel.textColor = .black
+        promptsLabel.textAlignment = .center
+        promptsLabel.text = "Your prompts"
+        promptsStackView.addArrangedSubview(promptsLabel)
+        promptsStackView.setCustomSpacing(20, after: promptsLabel)
+        
+        user.prompts.forEach { prompt in
+            let promptView = PromptResponseView()
+            promptView.configure(for: prompt)
+            promptsStackView.addArrangedSubview(promptView)
+        }
 
         setupConstraints()
         getMajors()
@@ -177,6 +248,7 @@ class EditDemographicsViewController: UIViewController {
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         uploadPhotoButton.layer.cornerRadius = uploadPhotoButton.frame.height / 2
     }
+    
     private func setupDemographicsTextField(textField: UITextField, text: String) {
         textField.delegate = self
         textField.backgroundColor = .backgroundWhite
@@ -255,6 +327,22 @@ class EditDemographicsViewController: UIViewController {
             make.top.equalTo(hometownDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
             make.height.equalTo(textFieldHeight)
+        }
+        
+        interestsStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view).inset(textFieldSidePadding)
+            make.top.equalTo(pronounsDropdownView.snp.bottom).offset(40)
+        }
+        
+        groupsStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view).inset(textFieldSidePadding)
+            make.top.equalTo(interestsStackView.snp.bottom).offset(40)
+        }
+        
+        promptsStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view).inset(textFieldSidePadding)
+            make.top.equalTo(groupsStackView.snp.bottom).offset(40)
+            make.bottom.lessThanOrEqualTo(editScrollView)
         }
     }
 
