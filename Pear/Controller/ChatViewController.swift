@@ -223,7 +223,7 @@ class ChatViewController: UIViewController {
             let pairMessagesPath = "user-messages/\(self.messageUser.id)/\(self.currentUser.id)"
             self.databaseRef.child(pairMessagesPath).updateChildValues([messageId: 1])
             
-            NetworkManager.deliverNotification(receivingId: messageUser.id, message: message)
+            NetworkManager.deliverNotification(receivingId: self.messageUser.id, message: message)
         }
     }
     

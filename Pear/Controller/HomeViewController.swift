@@ -34,9 +34,6 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        getToken()
-
         view.backgroundColor = .backgroundLightGreen
         presentAnnouncement(completion: nil)
 
@@ -91,6 +88,7 @@ class HomeViewController: UIViewController {
         setupLocalNotifications()
         setupConstraints()
         updateUserAndTabPage()
+        getToken()
     }
 
     override func viewWillAppear(_ animated: Bool) {
