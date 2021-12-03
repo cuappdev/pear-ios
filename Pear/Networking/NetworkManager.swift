@@ -325,7 +325,6 @@ class NetworkManager {
     }
     
     static func updateFCMToken(token: String) {
-
         let parameters: [String: Any] = [
             "fcm_registration_token": token,
         ]
@@ -347,7 +346,6 @@ class NetworkManager {
     }
     
     static func deliverNotification(receivingId: Int, message: String) {
-
         let parameters: [String: Any] = [
             "message": message,
         ]

@@ -281,10 +281,10 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 extension HomeViewController: UNUserNotificationCenterDelegate {
     private func setupLocalNotifications() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
                 center.delegate = self
-                // get rid of previously scheduled notifications
+                // TODO: get rid of previously scheduled notifications
 //                self.scheduleNotifications(center, day: 2, hour: 8, title: "Meet your new pear!", body: "Set up this week's chat today 😊", aboutPear: true)
 //                self.scheduleNotifications(center, day: 4, hour: 14, title: "Did you reach out yet?", body: "Choose a meeting time with your Pear before it's too late!", aboutPear: true)
 //                self.scheduleNotifications(center, day: 6, hour: 12, title: "How's it going?", body: "New pairings will come out next week! ⌚️", aboutPear: true)
@@ -293,8 +293,6 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
         }
         
         UIApplication.shared.registerForRemoteNotifications()
-        
-        
     }
 
     private func scheduleNotifications(_ center: UNUserNotificationCenter, day: Int, hour: Int, title: String, body: String, aboutPear: Bool) {
@@ -317,9 +315,7 @@ extension HomeViewController: UNUserNotificationCenterDelegate {
                 print(error.localizedDescription)
             }
             
-            guard let token = token else {
-                return
-            }
+            guard let token = token else { return }
             
             NetworkManager.updateFCMToken(token: token)
         }
