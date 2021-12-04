@@ -25,6 +25,7 @@ use_frameworks!
     pod 'SideMenu'
 
     # Messaging
+    pod 'Firebase/Messaging'
     pod 'Firebase/Core'
     pod 'Firebase/Database'
     pod 'Firebase/Auth'

@@ -323,6 +323,48 @@ class NetworkManager {
             }
         }
     }
+    
+    static func updateFCMToken(token: String) {
+        let parameters: [String: Any] = [
+            "fcm_registration_token": token,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success:
+                break
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    static func deliverNotification(receivingId: Int, message: String) {
+        let parameters: [String: Any] = [
+            "message": message,
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/users/\(receivingId)/message/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success:
+                break
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 
     static func updateGoals(
         goals: [String],

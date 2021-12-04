@@ -7,6 +7,8 @@
 //
 
 import AppDevAnnouncements
+import Firebase
+import FirebaseMessaging
 import FirebaseAnalytics
 import GoogleSignIn
 import UIKit

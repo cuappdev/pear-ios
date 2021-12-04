@@ -27,7 +27,6 @@
 		4F753C15240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */; };
 		4F811F42253A4F1300F5A15C /* FadeWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F811F41253A4F1300F5A15C /* FadeWrapperView.swift */; };
 		4FCD1A3524072A03000A290B /* SchedulingPlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */; };
-		4FCE3AD3252006D5004E2E33 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FCE3AD2252006D5004E2E33 /* GoogleService-Info.plist */; };
 		4FCE3AEA25200DF0004E2E33 /* MeetupStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE3AE925200DF0004E2E33 /* MeetupStatusView.swift */; };
 		4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8152C23F781790095EC17 /* MatchSummary.swift */; };
 		4FFF3B2123E9088E00C89C29 /* UIColor+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */; };
@@ -65,6 +64,7 @@
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
 		C7181E7773F61729712B6986 /* Pods_Pear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C91051C5390EC1176825021 /* Pods_Pear.framework */; };
+		C8584A3B274305730065509F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C8584A3A274305720065509F /* GoogleService-Info.plist */; };
 		C883A56426E58378009A4E1A /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = C883A56326E58378009A4E1A /* Keys.plist */; };
 		C8AC096D26FD492300BCC3BE /* PromptResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC096C26FD492300BCC3BE /* PromptResponseView.swift */; };
 		D400CEDD2671B41E0045C64A /* TimeSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D400CEDC2671B41E0045C64A /* TimeSchedule.swift */; };
@@ -170,7 +170,6 @@
 		4F753C14240F6F4100DEE686 /* SchedulingPlaceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlaceCollectionViewCell.swift; sourceTree = "<group>"; };
 		4F811F41253A4F1300F5A15C /* FadeWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeWrapperView.swift; sourceTree = "<group>"; };
 		4FCD1A3424072A03000A290B /* SchedulingPlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPlacesViewController.swift; sourceTree = "<group>"; };
-		4FCE3AD2252006D5004E2E33 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4FCE3AE925200DF0004E2E33 /* MeetupStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetupStatusView.swift; sourceTree = "<group>"; };
 		4FD8152C23F781790095EC17 /* MatchSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummary.swift; sourceTree = "<group>"; };
 		4FFF3B2023E9088E00C89C29 /* UIColor+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Shared.swift"; sourceTree = "<group>"; };
@@ -209,6 +208,8 @@
 		7E06B84F2543F15900D6B505 /* InterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
 		A279E91A9AB122C9CB91A791 /* Pods-PearTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.release.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.release.xcconfig"; sourceTree = "<group>"; };
 		A62AA1E06DE9C7AEEC89B49D /* Pods-PearTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.debug.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C8584A312742F6B10065509F /* Pear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pear.entitlements; sourceTree = "<group>"; };
+		C8584A3A274305720065509F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C883A56326E58378009A4E1A /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		C8AC096C26FD492300BCC3BE /* PromptResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptResponseView.swift; sourceTree = "<group>"; };
 		D400CEDC2671B41E0045C64A /* TimeSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSchedule.swift; sourceTree = "<group>"; };
@@ -512,8 +513,8 @@
 			isa = PBXGroup;
 			children = (
 				30304E0A23F4B6AC006DC6C3 /* Fonts */,
-				4FCE3AD2252006D5004E2E33 /* GoogleService-Info.plist */,
 				C883A56326E58378009A4E1A /* Keys.plist */,
+				C8584A3A274305720065509F /* GoogleService-Info.plist */,
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
 				30304E0823E78228006DC6C3 /* Constants.swift */,
 			);
@@ -554,6 +555,7 @@
 		D48BB00923DE099200E88129 /* Pear */ = {
 			isa = PBXGroup;
 			children = (
+				C8584A312742F6B10065509F /* Pear.entitlements */,
 				D400CEDB2671B3FB0045C64A /* Shared */,
 				D440924F25FB143900A4690A /* Profile */,
 				D48E320E25D9CFF7009AB253 /* Settings */,
@@ -745,7 +747,7 @@
 			files = (
 				30304E1223F4B6E4006DC6C3 /* CircularStd-Bold.otf in Resources */,
 				30304E1023F4B6E4006DC6C3 /* CircularStd-Book.otf in Resources */,
-				4FCE3AD3252006D5004E2E33 /* GoogleService-Info.plist in Resources */,
+				C8584A3B274305730065509F /* GoogleService-Info.plist in Resources */,
 				D48BB01723DE099800E88129 /* LaunchScreen.storyboard in Resources */,
 				C883A56426E58378009A4E1A /* Keys.plist in Resources */,
 				D48BB01423DE099800E88129 /* Assets.xcassets in Resources */,
@@ -1213,8 +1215,9 @@
 			baseConfigurationReference = 434DB3B845B5D1D2CB70B160 /* Pods-Pear.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Pear/Pear.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.5.0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1222,6 +1225,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cornellappdev.pear;
 				PRODUCT_NAME = Pear;
 				SWIFT_VERSION = 5.0;
@@ -1234,8 +1238,9 @@
 			baseConfigurationReference = 38F1298195BB938CA075BD29 /* Pods-Pear.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Pear/Pear.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.5.0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZGMCXU7X3U;
 				INFOPLIST_FILE = Pear/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -1243,6 +1248,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cornellappdev.pear;
 				PRODUCT_NAME = Pear;
 				SWIFT_VERSION = 5.0;
