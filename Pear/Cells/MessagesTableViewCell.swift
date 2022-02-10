@@ -90,11 +90,18 @@ class MessagesTableViewCell: UITableViewCell {
     }
 
     func configure(for pair: MatchedUser, status: String, week: Int) {
+        let shouldNotDisplayCurrentPear = status == Constants.Match.canceled || status == Constants.Match.inactive
         profileImage.kf.setImage(with: URL(string: pair.profilePicUrl ?? ""))
         nameLabel.text = "\(pair.firstName) \(pair.lastName)"
-        infoImage.isHidden = (status == Constants.Match.canceled || status == Constants.Match.inactive) ? true : false
-        infoLabel.isHidden = (status == Constants.Match.canceled || status == Constants.Match.inactive) ? true : false
+        infoImage.isHidden = shouldNotDisplayCurrentPear
+        infoLabel.isHidden = shouldNotDisplayCurrentPear
         timeLabel.text = week == 1 ? "\(week) week ago" : "\(week) weeks ago"
+        if shouldNotDisplayCurrentPear {
+            nameLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(profileImage.snp.trailing).offset(12)
+                make.centerY.equalTo(profileImage)
+            }
+        }
     }
 
 }
