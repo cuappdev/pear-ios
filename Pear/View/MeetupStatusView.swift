@@ -252,6 +252,11 @@ fileprivate extension NSAttributedString {
 // MARK: - NSMutableAttributedString Extension
 
 extension NSMutableAttributedString {
+    
+    func setColor(color: UIColor, forText stringValue: String) {
+       let range: NSRange = self.mutableString.range(of: stringValue, options: .caseInsensitive)
+        self.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+    }
 
     func thinFont(_ string: String) -> NSMutableAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
