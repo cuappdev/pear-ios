@@ -184,7 +184,7 @@ extension SettingsViewController: PausePearDelegate {
 
         pausePearView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(305)
+            make.height.equalTo(422)
             make.width.equalTo(295)
         }
 
