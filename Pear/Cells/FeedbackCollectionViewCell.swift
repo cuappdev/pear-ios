@@ -49,7 +49,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         optionImage.snp.remakeConstraints { make in
             make.leading.equalToSuperview().inset(15)
-            make.size.equalTo(CGSize(width: 10, height: 10))
+            make.size.equalTo(10)
             make.centerY.equalToSuperview()
         }
 
@@ -67,7 +67,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
 
     func configure(for feedback: FeedbackOption) {
         if feedback.hasImage {
-            optionImage.image = UIImage(named: feedback.image)
+            optionImage.image = UIImage(named: feedback.image ?? "")
             setupConstraints()
         } else {
             optionImage.image = UIImage()

@@ -629,7 +629,6 @@ class NetworkManager {
     }
     
     static func sendFeedback(matchId: Int, didMeet: Bool, rating: Int?, didMeetReason: String, didNotMeetReasons: [String]?, completion: @escaping (Bool) -> Void) {
-        
         var parameters: [String: Any] = [
             "did_meet" : didMeet
         ]
@@ -666,7 +665,6 @@ class NetworkManager {
     }
     
     static func quitFeedback(completion: @escaping (Bool) -> Void) {
-        
         let parameters: [String: Any] = [
             "pending_feedback" : false
         ]

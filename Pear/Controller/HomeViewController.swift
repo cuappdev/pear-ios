@@ -100,7 +100,7 @@ class HomeViewController: UIViewController {
     }
 
     private func showInAppFeedback() {
-        guard let user = user, let matchId = user.currentMatch?.id else {return}
+        guard let user = user, let matchId = user.currentMatch?.id else { return }
         if user.pendingFeedback {
             let navController = UINavigationController(rootViewController: FeedbackViewController(matchId: matchId))
             navController.modalPresentationStyle = .overFullScreen
