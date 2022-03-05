@@ -84,7 +84,6 @@ class GroupsViewController: UIViewController {
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
@@ -169,7 +168,6 @@ class GroupsViewController: UIViewController {
     /// Updates the enabled state of next button based on the state of selectedGroups.
     private func updateNext() {
         nextButton.isEnabled = selectedGroups.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = selectedGroups.count == 0
         skipButton.setTitleColor(
             skipButton.isEnabled ? .greenGray : .inactiveGreen,

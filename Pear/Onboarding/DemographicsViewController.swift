@@ -23,7 +23,7 @@ class DemographicsViewController: UIViewController {
     private let greetingLabel = UILabel()
     private var hometownDropdownView: OnboardingSearchDropdownView!
     private var majorDropdownView: OnboardingSearchDropdownView!
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private var pronounsDropdownView: OnboardingSearchDropdownView!
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
@@ -107,7 +107,6 @@ class DemographicsViewController: UIViewController {
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.isEnabled = false
         nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
@@ -225,19 +224,6 @@ extension DemographicsViewController: OnboardingDropdownViewDelegate {
         }
         let allFieldsEntered = !fieldsEntered.contains(false)
         nextButton.isEnabled = allFieldsEntered
-        if nextButton.isEnabled {
-            nextButton.backgroundColor = .backgroundOrange
-            nextButton.layer.shadowColor = UIColor.black.cgColor
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            nextButton.layer.shadowOpacity = 0.15
-            nextButton.layer.shadowRadius = 2
-        } else {
-            nextButton.backgroundColor = .inactiveGreen
-            nextButton.layer.shadowColor = .none
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            nextButton.layer.shadowOpacity = 0
-            nextButton.layer.shadowRadius = 0
-        }
     }
 
     /// Resizes search view based on input to search field

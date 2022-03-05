@@ -14,7 +14,7 @@ class SchedulingPlacesViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let infoLabel = UILabel()
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let titleLabel = UILabel()
     private var locationCollectionView: SchedulingLocationCollectionViewController!
 
@@ -106,7 +106,6 @@ class SchedulingPlacesViewController: UIViewController {
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -158,21 +157,7 @@ class SchedulingPlacesViewController: UIViewController {
     // MARK: Button Action
     private func updateNext(totalSelectedLocations: Int) {
         let enable = isChoosing ? pickedLocation != nil : totalSelectedLocations > 2
-
         nextButton.isEnabled = enable
-        if enable {
-            nextButton.backgroundColor = .backgroundOrange
-            nextButton.layer.shadowColor = UIColor.black.cgColor
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            nextButton.layer.shadowOpacity = 0.15
-            nextButton.layer.shadowRadius = 2
-        } else {
-            nextButton.backgroundColor = .inactiveGreen
-            nextButton.layer.shadowColor = .none
-            nextButton.layer.shadowOffset = .zero
-            nextButton.layer.shadowOpacity = 0
-            nextButton.layer.shadowRadius = 0
-        }
     }
 
     @objc private func nextButtonPressed() {

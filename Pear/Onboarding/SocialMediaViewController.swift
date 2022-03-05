@@ -19,7 +19,7 @@ class SocialMediaViewController: UIViewController {
     private let disclaimerLabel = UILabel()
     private var facebookTextField = UITextField()
     private var instagramTextField = UITextField()
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
@@ -76,7 +76,6 @@ class SocialMediaViewController: UIViewController {
         nextButton.setTitle("Ready for Pear", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(completeOnboarding), for: .touchUpInside)
@@ -168,14 +167,12 @@ class SocialMediaViewController: UIViewController {
             !facebookHandle.trimmingCharacters(in: .whitespaces).isEmpty)
            {
             nextButton.isEnabled = true
-            nextButton.backgroundColor = .backgroundOrange
             skipButton.isEnabled = false
             skipButton.setTitleColor(.inactiveGreen, for: .normal)
         } else {
             skipButton.isEnabled = true
             skipButton.setTitleColor(.greenGray, for: .normal)
             nextButton.isEnabled = false
-            nextButton.backgroundColor = .inactiveGreen
         }
     }
 
