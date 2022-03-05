@@ -27,7 +27,6 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         contentView.backgroundColor = .backgroundWhite
-        contentView.layer.cornerRadius = 16
         contentView.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowRadius = 4
@@ -48,13 +47,13 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        optionImage.snp.makeConstraints { make in
+        optionImage.snp.remakeConstraints { make in
             make.leading.equalToSuperview().inset(15)
-            make.size.equalTo(CGSize(width: 10, height: 10))
+            make.size.equalTo(10)
             make.centerY.equalToSuperview()
         }
 
-        optionLabel.snp.makeConstraints { make in
+        optionLabel.snp.remakeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(optionImage.snp.trailing).offset(12)
         }
@@ -67,17 +66,16 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
 
     func configure(for feedback: FeedbackOption) {
-        optionImage.isHidden = !feedback.hasImage
-        optionLabel.text = feedback.text
         if feedback.hasImage {
-            optionImage.image = UIImage(named: feedback.image)
+            optionImage.image = UIImage(named: feedback.image ?? "")
+            setupConstraints()
         } else {
             optionImage.image = UIImage()
             resetConstraints()
-            if feedback.isRating {
-                contentView.layer.cornerRadius = 18
-            }
         }
+        optionImage.isHidden = !feedback.hasImage
+        optionLabel.text = feedback.text
+        contentView.layer.cornerRadius = feedback.isRating ? 18 : 16
     }
 
 }

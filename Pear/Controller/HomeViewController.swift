@@ -83,8 +83,6 @@ class HomeViewController: UIViewController {
         tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
 
-//        TODO: uncomment when feedback route is done
-//        showInAppFeedback()
         setupLocalNotifications()
         setupConstraints()
         updateUserAndTabPage()
@@ -101,38 +99,15 @@ class HomeViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
-    /*
-
-     TODO: Comment this back when feedback route is done
-     - note: getMatchHistory will have to be updated to a new route w/ new backend
-    
     private func showInAppFeedback() {
-        guard let netId = UserDefaults.standard.string(forKey: Constants.UserDefaults.userNetId) else { return }
-        NetworkManager.shared.getMatchHistory(netID: netId).observe { response in
-            switch response {
-            case .value(let currentMatchHistory):
-                guard currentMatchHistory.success else {
-                    print("Network error: could not get user match history")
-                    return
-                }
-                var previousMatchHistorySize = UserDefaults.standard.integer(forKey: Constants.UserDefaults.previousMatchHistorySize)
-                // the default value for previousMatchHistorySize is 0, but it should be 1 since the app feedback form should only be shown when the user has a match history of size 2 or more
-                previousMatchHistorySize = previousMatchHistorySize == 0 ? 1 : previousMatchHistorySize
-                if currentMatchHistory.data.count > previousMatchHistorySize {
-                    DispatchQueue.main.async {
-                        let navController = UINavigationController(rootViewController: FeedbackViewController())
-                        navController.modalPresentationStyle = .overFullScreen
-                        self.present(navController, animated: true)
-                    }
-                }
-            case .error(let error):
-                print("error: \(error)")
-            }
+        guard let user = user, let matchId = user.currentMatch?.id else { return }
+        if user.pendingFeedback {
+            let navController = UINavigationController(rootViewController: FeedbackViewController(matchId: matchId))
+            navController.modalPresentationStyle = .overFullScreen
+            self.present(navController, animated: true)
         }
     }
-
-     */
-
+    
     private func updateUserAndTabPage() {
         NetworkManager.getCurrentUser { [weak self] result in
             guard let self = self else { return }
@@ -144,6 +119,7 @@ class HomeViewController: UIViewController {
                         self.profileImageView.kf.setImage(with: profilePictureURL)
                     }
                     self.setupTabPageViewController(user: user)
+                    self.showInAppFeedback()
                 }
             case .failure(let error):
                 print(error.localizedDescription)

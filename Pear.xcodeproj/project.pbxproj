@@ -63,6 +63,7 @@
 		50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842D326CCD76C004242FF /* PromptLabel.swift */; };
 		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
+		B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A529F27D2E6F000BFA691 /* DynamicButton.swift */; };
 		C7181E7773F61729712B6986 /* Pods_Pear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C91051C5390EC1176825021 /* Pods_Pear.framework */; };
 		C8584A3B274305730065509F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C8584A3A274305720065509F /* GoogleService-Info.plist */; };
 		C883A56426E58378009A4E1A /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = C883A56326E58378009A4E1A /* Keys.plist */; };
@@ -208,6 +209,7 @@
 		7E06B84F2543F15900D6B505 /* InterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
 		A279E91A9AB122C9CB91A791 /* Pods-PearTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.release.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.release.xcconfig"; sourceTree = "<group>"; };
 		A62AA1E06DE9C7AEEC89B49D /* Pods-PearTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.debug.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B69A529F27D2E6F000BFA691 /* DynamicButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicButton.swift; sourceTree = "<group>"; };
 		C8584A312742F6B10065509F /* Pear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pear.entitlements; sourceTree = "<group>"; };
 		C8584A3A274305720065509F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C883A56326E58378009A4E1A /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 				C8584A3A274305720065509F /* GoogleService-Info.plist */,
 				30304E0423E53BEE006DC6C3 /* Keys.swift */,
 				30304E0823E78228006DC6C3 /* Constants.swift */,
+				B69A529F27D2E6F000BFA691 /* DynamicButton.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -943,6 +946,7 @@
 				D440928025FDA3CC00A4690A /* ProfileSectionTableViewCell.swift in Sources */,
 				4F811F42253A4F1300F5A15C /* FadeWrapperView.swift in Sources */,
 				D4645AC725FE2F6C0029F9A5 /* ProfileSectionType.swift in Sources */,
+				B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */,
 				D446C1C326E080E800E707F5 /* LocationV1.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				50298746253C043F00E52EDA /* EditSocialMediaViewController.swift in Sources */,

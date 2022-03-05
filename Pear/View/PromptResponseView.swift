@@ -37,6 +37,8 @@ class PromptResponseView: UIView {
         responseLabel.textColor = .black
         responseLabel.layer.cornerRadius = 16
         responseLabel.clipsToBounds = true
+        responseLabel.numberOfLines = 0
+        responseLabel.lineBreakMode = .byWordWrapping
         responseLabel.adjustsFontSizeToFitWidth = false
         addSubview(responseLabel)
     }

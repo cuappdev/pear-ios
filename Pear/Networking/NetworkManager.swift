@@ -627,6 +627,67 @@ class NetworkManager {
             }
         }
     }
+    
+    static func sendFeedback(matchId: Int, didMeet: Bool, rating: Int?, didMeetReason: String, didNotMeetReasons: [String]?, completion: @escaping (Bool) -> Void) {
+        var parameters: [String: Any] = [
+            "did_meet" : didMeet
+        ]
+        
+        if didMeet {
+            guard let ratingNum = rating else { return }
+            parameters["rating"] = ratingNum
+            if didMeetReason != "" {
+                parameters["did_meet_reason"] = didMeetReason
+            }
+        } else {
+            guard let reasons = didNotMeetReasons else { return }
+            parameters["did_not_meet_reasons"] = reasons
+        }
+
+        AF.request(
+            "\(hostEndpoint)/api/match/\(matchId)/feedback/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    static func quitFeedback(completion: @escaping (Bool) -> Void) {
+        let parameters: [String: Any] = [
+            "pending_feedback" : false
+        ]
+        
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 
     static func getSearchedUsers(searchText: String, completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
         let parameters: [String: Any] = [

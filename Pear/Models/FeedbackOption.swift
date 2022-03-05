@@ -11,7 +11,7 @@ import Foundation
 struct FeedbackOption {
 
     let hasImage: Bool
-    let image: String
+    let image: String?
     let isRating: Bool
     let text: String
     
