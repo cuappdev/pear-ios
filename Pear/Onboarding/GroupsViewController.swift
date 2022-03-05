@@ -24,7 +24,7 @@ class GroupsViewController: UIViewController {
         UITableView(),
         fadeColor: .backgroundLightGreen
     )
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let searchBar = UISearchBar()
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
