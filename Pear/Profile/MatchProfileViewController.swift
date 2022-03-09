@@ -85,11 +85,17 @@ class MatchProfileViewController: UIViewController {
 
         profileTableView.reloadData()
         
-        reachOutButton.setTitle("Reach Out", for: .normal)
+        reachOutButton.setTitle("Send a Message", for: .normal)
         reachOutButton.setTitleColor(.white, for: .normal)
         reachOutButton.titleLabel?.font = ._20CircularStdBold
+        reachOutButton.setImage(UIImage(named: "messageArrow"), for: .normal)
+        reachOutButton.imageEdgeInsets.left = -22
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        reachOutButton.layer.shadowColor = UIColor.black.cgColor
+        reachOutButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        reachOutButton.layer.shadowOpacity = 0.15
+        reachOutButton.layer.shadowRadius = 4
         reachOutButton.addTarget(self, action: #selector(reachOutButtonPressed), for: .touchUpInside)
         view.addSubview(reachOutButton)
 
@@ -120,7 +126,7 @@ class MatchProfileViewController: UIViewController {
         
         reachOutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.size.equalTo(Constants.Onboarding.largeButtonSize)
+            make.size.equalTo(Constants.Onboarding.secondaryButtonSize)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
                 .inset(Constants.Onboarding.nextBottomPadding)
         }
