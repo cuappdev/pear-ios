@@ -23,7 +23,7 @@ class NetworkManager {
         return headers
     }
 
-    private static let hostEndpoint = "http://\(Keys.pearServerURLV2)"
+    private static let hostEndpoint = "https://\(Keys.pearServerURLV2)"
 
     static func uploadPhoto(base64: String, completion: @escaping (Result<String, Error>) -> Void) {
         let parameters: [String: Any] = [
