@@ -13,7 +13,7 @@ class InterestsViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let fadeTableView = FadeWrapperView(
         UITableView(frame: .zero, style: .plain),
         fadeColor: .backgroundLightGreen
@@ -63,7 +63,6 @@ class InterestsViewController: UIViewController {
         nextButton.isEnabled = false
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
 
@@ -159,19 +158,6 @@ class InterestsViewController: UIViewController {
     /// Updates the enabled state of next button based on the state of selectedInterests.
     private func updateNext() {
         nextButton.isEnabled = selectedInterests.count > 0
-        if nextButton.isEnabled {
-            nextButton.backgroundColor = .backgroundOrange
-            nextButton.layer.shadowColor = UIColor.black.cgColor
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            nextButton.layer.shadowOpacity = 0.15
-            nextButton.layer.shadowRadius = 2
-        } else {
-            nextButton.backgroundColor = .inactiveGreen
-            nextButton.layer.shadowColor = .none
-            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            nextButton.layer.shadowOpacity = 0
-            nextButton.layer.shadowRadius = 0
-        }
     }
 
 }

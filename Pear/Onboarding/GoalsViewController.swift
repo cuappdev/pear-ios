@@ -30,7 +30,7 @@ class GoalsViewController: UIViewController {
         UITableView(frame: .zero, style: .plain),
         fadeColor: .backgroundLightGreen
     )
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let skipButton = UIButton()
     private let subtitleLabel = UILabel()
     private let titleLabel = UILabel()
@@ -76,7 +76,6 @@ class GoalsViewController: UIViewController {
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(updateGoals), for: .touchUpInside)
@@ -139,10 +138,11 @@ class GoalsViewController: UIViewController {
     // MARK: - Next and Previous Buttons
     private func updateNext() {
         nextButton.isEnabled = selectedGoals.count > 0
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
         skipButton.isEnabled = !nextButton.isEnabled
-        let skipButtonColor: UIColor = skipButton.isEnabled ? .greenGray : .inactiveGreen
-        skipButton.setTitleColor(skipButtonColor, for: .normal)
+        skipButton.setTitleColor(
+            skipButton.isEnabled ? .greenGray : .inactiveGreen,
+            for: .normal
+        )
     }
 
     @objc func backButtonPressed() {

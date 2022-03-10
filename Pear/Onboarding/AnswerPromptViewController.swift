@@ -15,7 +15,7 @@ class AnswerPromptViewController: UIViewController {
     private let characterCountLabel = UILabel()
     private let questionLabel = UILabel()
     private let responseTextView = UITextView()
-    private let saveButton = UIButton()
+    private let saveButton = DynamicButton()
     private let titleLabel = UILabel()
 
     // MARK: - Private Data Vars
@@ -83,7 +83,6 @@ class AnswerPromptViewController: UIViewController {
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.titleLabel?.font = ._20CircularStdBold
-        saveButton.backgroundColor = .inactiveGreen
         saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         saveButton.isEnabled = false
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
@@ -99,7 +98,6 @@ class AnswerPromptViewController: UIViewController {
 
     private func updateSave() {
         saveButton.isEnabled = responseTextView.text.count > 0 && responseTextView.text != prompt.questionPlaceholder
-        saveButton.backgroundColor = saveButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
     @objc private func backButtonPressed() {

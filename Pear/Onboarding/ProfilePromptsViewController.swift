@@ -14,7 +14,7 @@ class ProfilePromptsViewController: UIViewController {
     private let backButton = UIButton()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-    private let nextButton = UIButton()
+    private let nextButton = DynamicButton()
     private let fadeTableView = FadeWrapperView(
         UITableView(),
         fadeColor: .backgroundLightGreen
@@ -71,8 +71,8 @@ class ProfilePromptsViewController: UIViewController {
 
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
+        nextButton.isEnabled = false
         nextButton.titleLabel?.font = ._20CircularStdBold
-        nextButton.backgroundColor = .inactiveGreen
         nextButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         view.addSubview(nextButton)
@@ -108,7 +108,6 @@ class ProfilePromptsViewController: UIViewController {
 
     private func updateNext() {
         nextButton.isEnabled = !prompts.compactMap(\.answer).isEmpty
-        nextButton.backgroundColor = nextButton.isEnabled ? .backgroundOrange : .inactiveGreen
     }
 
     @objc private func backButtonPressed() {
