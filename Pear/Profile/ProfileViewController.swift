@@ -9,19 +9,34 @@ import GoogleSignIn
 import Kingfisher
 import UIKit
 
+enum ProfileViewing {
+    case currentUser
+    case otherUser
+}
+
 class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private var currentUser: UserV2
-    private var otherUser: UserV2?
+    private let editButton = UIButton()
+    private var loadedUser: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
+    private let viewType: ProfileViewing
 
-    init(user: UserV2, otherUserId: Int) {
+    init(user: UserV2, viewType: ProfileViewing, otherUserId: Int?) {
         self.currentUser = user
+        self.viewType = viewType
         super.init(nibName: nil, bundle: nil)
-        getOtherUser(otherUserId: otherUserId)
+        switch viewType {
+            case .currentUser:
+                loadCurrentUser()
+            case .otherUser:
+                if let otherUserId = otherUserId {
+                    getOtherUser(otherUserId: otherUserId)
+                }
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -42,11 +57,21 @@ class ProfileViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.getFont(.medium, size: 24)
+            .font: UIFont._20CircularStdMedium,
+            .foregroundColor: UIColor.primaryText
         ]
+        navigationItem.title = viewType == .currentUser ? "Preview" : ""
+        
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitleColor(.darkGreen, for: .normal)
+        editButton.titleLabel?.font = ._20CircularStdMedium
+        editButton.isHidden = viewType == .otherUser
+        editButton.addTarget(self, action: #selector(editPressed), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: editButton)
 
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
@@ -59,19 +84,39 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 40, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
         setupConstraints()
     }
 
+    private func loadCurrentUser() {
+        DispatchQueue.main.async {
+            self.profileSections = [.summary, .basics]
+            self.loadedUser = self.currentUser
+            
+            if !self.currentUser.interests.isEmpty {
+                self.profileSections.append(.interests)
+            }
+            
+            if !self.currentUser.groups.isEmpty {
+                self.profileSections.append(.groups)
+            }
+            
+            if !self.currentUser.prompts.isEmpty {
+                self.profileSections.append(.prompts)
+            }
+            
+            self.profileTableView.reloadData()
+        }
+    }
     private func getOtherUser(otherUserId: Int) {
         NetworkManager.getUser(id: otherUserId) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
-                    self.otherUser = user
+                    self.loadedUser = user
                     self.profileSections = [.summary, .basics]
                     
                     if !user.interests.isEmpty {
@@ -103,6 +148,11 @@ class ProfileViewController: UIViewController {
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
     }
+    
+    @objc func editPressed() {
+        //TODO: Push New Edit VC
+        print("edit!")
+    }
 
 }
 
@@ -113,7 +163,7 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let user = otherUser else { return UITableViewCell() }
+        guard let user = loadedUser else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 

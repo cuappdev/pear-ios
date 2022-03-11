@@ -152,7 +152,7 @@ class HomeViewController: UIViewController {
         let menu = SideMenuNavigationController(rootViewController: profileMenuVC)
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
-        menu.presentationStyle = .viewSlideOutMenuPartialIn
+        menu.presentationStyle = presentationStyle
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
