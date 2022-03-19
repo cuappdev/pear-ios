@@ -12,8 +12,8 @@ import UIKit
 
 protocol PausePearDelegate: AnyObject {
     func pausePearAction(state: String)
-    func presentPausePear()
-    func removePausePear()
+    func presentPauseView(_ pauseView: UIView)
+    func removePauseView(_ pauseView: UIView)
 }
 
 class SettingsViewController: UIViewController {
@@ -23,6 +23,7 @@ class SettingsViewController: UIViewController {
     private let settingsTableView = UITableView()
     private var pauseVisualEffectView = BlurEffectView()
     private var pausePearView: PausePearView!
+    private var pausePearFinishView: PausePearFinishView!
     private let user: UserV2
 
     // MARK: - Private Data Vars
@@ -84,7 +85,8 @@ class SettingsViewController: UIViewController {
     }
 
     private func setupPausePear() {
-        pausePearView = PausePearView(delegate: self)
+        //pausePearView = PausePearView(delegate: self)
+        pausePearFinishView = PausePearFinishView(delegate: self)
     }
 
     @objc private func backPressed() {
@@ -147,7 +149,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Connect Social Media" {
             pushEditSocialMediaViewController()
         } else if option.text == "Pause Pear" {
-            presentPausePear()
+            presentPauseView(pausePearFinishView)
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             do {
@@ -176,40 +178,53 @@ extension SettingsViewController: UITableViewDelegate {
 }
 
 extension SettingsViewController: PausePearDelegate {
-
-    func presentPausePear() {
-        pauseVisualEffectView.frame = self.view.frame
+    
+    func presentPauseView(_ pauseView: UIView) {
+        pauseVisualEffectView.frame = view.frame
         view.addSubview(pauseVisualEffectView)
-        view.addSubview(pausePearView)
+        view.addSubview(pauseView)
 
-        pausePearView.snp.makeConstraints { make in
+        pauseView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(422)
-            make.width.equalTo(295)
+            make.height.equalTo(pauseView.frame.height)
+            make.width.equalTo(pauseView.frame.width)
         }
-
+        
         UIView.animate(withDuration: 0.3, animations: {
-            self.pausePearView.transform = .init(scaleX: 1.5, y: 1.5)
+            pauseView.transform = .init(scaleX: 1.5, y: 1.5)
+            pauseView.alpha = 1
+            pauseView.transform = .identity
             self.pauseVisualEffectView.alpha = 1
-            self.pausePearView.alpha = 1
-            self.pausePearView.transform = .identity
         })
     }
+    
+    func removePauseView(_ pauseView: UIView) {
+        UIView.animate(withDuration: 0.15) {
+            pauseView.alpha = 0
+            pauseView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            self.pauseVisualEffectView.alpha = 0
+        } completion: { _ in
+            pauseView.removeFromSuperview()
+        }
+    }
+//    func presentPausePear() {
+//        pauseVisualEffectView.frame = self.view.frame
+//        view.addSubview(pauseVisualEffectView)
+//        view.addSubview(pausePearView)
+//
+//        pausePearView.snp.makeConstraints { make in
+//            make.centerX.centerY.equalToSuperview()
+//            make.height.equalTo(422)
+//            make.width.equalTo(295)
+//        }
+//
+//        // animatePresentView(view: pausePearView)
+//    }
 
     func pausePearAction(state: String) {
         // TODO: pause pear action after selecting a time
     }
-
-    func removePausePear() {
-        UIView.animate(withDuration: 0.15) {
-            self.pauseVisualEffectView.alpha = 0
-            self.pausePearView.alpha = 0
-            self.pausePearView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        } completion: { _ in
-            self.pausePearView.removeFromSuperview()
-        }
-    }
-
+    
 }
 
 extension SettingsViewController: UIGestureRecognizerDelegate {

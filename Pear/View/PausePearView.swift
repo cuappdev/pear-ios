@@ -17,7 +17,6 @@ enum PauseTime: String {
     func getTitle() -> String {
         return self.rawValue
     }
-    
 }
 
 class PausePearView: UIView {
@@ -46,8 +45,9 @@ class PausePearView: UIView {
     }
 
     private func setUpViews() {
-        self.backgroundColor = .backgroundLightGreen
-        self.layer.cornerRadius = 36
+        backgroundColor = .backgroundLightGreen
+        layer.cornerRadius = 36
+        frame.size = CGSize(width: 295, height: 422)
         
         let timeCollectionViewLayout = UICollectionViewFlowLayout()
         timeCollectionViewLayout.minimumInteritemSpacing = timeInteritemSpacing
@@ -82,6 +82,7 @@ class PausePearView: UIView {
         cancelButton.titleLabel?.font = ._16CircularStdBold
         cancelButton.addTarget(self, action: #selector(cancelPause), for: .touchUpInside)
         addSubview(cancelButton)
+        
     }
 
     private func setButtonAppearance(button: UIButton) {
@@ -139,11 +140,12 @@ class PausePearView: UIView {
     }
     
     @objc private func saveButtonPressed() {
-        
+        delegate?.removePauseView(self)
+        // delegate?.presentPauseView(PausePearFinishView())
     }
     
     @objc private func cancelPause() {
-        delegate?.removePausePear()
+        delegate?.removePauseView(self)
     }
 
 }
@@ -177,7 +179,6 @@ extension PausePearView: UICollectionViewDelegate {
         selectedState = ""
         updateSave()
     }
-    
 }
 
 extension PausePearView: UICollectionViewDelegateFlowLayout {
@@ -186,5 +187,4 @@ extension PausePearView: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 135, height: 36)
        
     }
-
 }

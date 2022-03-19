@@ -89,7 +89,7 @@ class ProfileViewController: UIViewController {
         }
 
         profileTableView.dataSource = self
-        profileTableView.backgroundColor = .clear
+        profileTableView.backgroundColor = .blue
         profileTableView.register(ProfileSummaryTableViewCell.self, forCellReuseIdentifier: ProfileSummaryTableViewCell.reuseIdentifier)
         profileTableView.register(ProfileSectionTableViewCell.self, forCellReuseIdentifier: ProfileSectionTableViewCell.reuseIdentifier)
         profileTableView.register(ProfilePromptTableViewCell.self, forCellReuseIdentifier: ProfilePromptTableViewCell.reuseIdentifier)
