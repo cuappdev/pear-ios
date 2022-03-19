@@ -22,7 +22,7 @@ class ProfilePromptsSectionTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        backgroundColor = .black
+        backgroundColor = .clear
         
         setupPromptsView()
         setupConstraints()
