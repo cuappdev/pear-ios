@@ -52,9 +52,12 @@ class PausePearFinishView: UIView {
         feedbackButton.setTitle("Sure", for: .normal)
         feedbackButton.setTitleColor(.white, for: .normal)
         feedbackButton.titleLabel?.font = ._16CircularStdMedium
-        feedbackButton.backgroundColor = .inactiveGreen
         feedbackButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
-        feedbackButton.isEnabled = false
+        feedbackButton.backgroundColor = .backgroundOrange
+        feedbackButton.layer.shadowColor = UIColor.black.cgColor
+        feedbackButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        feedbackButton.layer.shadowOpacity = 0.15
+        feedbackButton.layer.shadowRadius = 2
         feedbackButton.addTarget(self, action: #selector(feedbackButtonPressed), for: .touchUpInside)
         addSubview(feedbackButton)
 
@@ -67,6 +70,10 @@ class PausePearFinishView: UIView {
         
         pearImageView.image = UIImage(named: "happyPear")
         pearImageView.contentMode = .scaleAspectFill
+        pearImageView.layer.shadowColor = UIColor.black.cgColor
+        pearImageView.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
+        pearImageView.layer.shadowOpacity = 0.15
+        pearImageView.layer.shadowRadius = 7.25
         addSubview(pearImageView)
     }
 
@@ -116,11 +123,15 @@ class PausePearFinishView: UIView {
     }
     
     @objc private func feedbackButtonPressed() {
-        
+        delegate?.removePauseView(self)
+        guard let pauseDelegate = delegate else {return}
+        let pauseFeedBackView = PausePearFeedbackView(delegate: pauseDelegate)
+        delegate?.presentPauseView(pauseFeedBackView)
     }
     
     @objc private func cancelPause() {
-        
+        delegate?.removePauseView(self)
+        delegate?.removeBlurEffect()
     }
 
 }

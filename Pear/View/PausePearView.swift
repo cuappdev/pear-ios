@@ -141,11 +141,14 @@ class PausePearView: UIView {
     
     @objc private func saveButtonPressed() {
         delegate?.removePauseView(self)
-        // delegate?.presentPauseView(PausePearFinishView())
+        guard let pauseDelegate = delegate else {return}
+        let pauseFinishView = PausePearFinishView(delegate: pauseDelegate)
+        delegate?.presentPauseView(pauseFinishView)
     }
     
     @objc private func cancelPause() {
         delegate?.removePauseView(self)
+        delegate?.removeBlurEffect()
     }
 
 }

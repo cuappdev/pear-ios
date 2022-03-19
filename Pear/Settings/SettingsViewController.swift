@@ -14,6 +14,7 @@ protocol PausePearDelegate: AnyObject {
     func pausePearAction(state: String)
     func presentPauseView(_ pauseView: UIView)
     func removePauseView(_ pauseView: UIView)
+    func removeBlurEffect()
 }
 
 class SettingsViewController: UIViewController {
@@ -85,7 +86,7 @@ class SettingsViewController: UIViewController {
     }
 
     private func setupPausePear() {
-        //pausePearView = PausePearView(delegate: self)
+        pausePearView = PausePearView(delegate: self)
         pausePearFinishView = PausePearFinishView(delegate: self)
     }
 
@@ -149,7 +150,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Connect Social Media" {
             pushEditSocialMediaViewController()
         } else if option.text == "Pause Pear" {
-            presentPauseView(pausePearFinishView)
+            presentPauseView(pausePearView)
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             do {
@@ -201,25 +202,16 @@ extension SettingsViewController: PausePearDelegate {
     func removePauseView(_ pauseView: UIView) {
         UIView.animate(withDuration: 0.15) {
             pauseView.alpha = 0
-            pauseView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            self.pauseVisualEffectView.alpha = 0
         } completion: { _ in
             pauseView.removeFromSuperview()
         }
     }
-//    func presentPausePear() {
-//        pauseVisualEffectView.frame = self.view.frame
-//        view.addSubview(pauseVisualEffectView)
-//        view.addSubview(pausePearView)
-//
-//        pausePearView.snp.makeConstraints { make in
-//            make.centerX.centerY.equalToSuperview()
-//            make.height.equalTo(422)
-//            make.width.equalTo(295)
-//        }
-//
-//        // animatePresentView(view: pausePearView)
-//    }
+    
+    func removeBlurEffect() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.pauseVisualEffectView.alpha = 0
+        })
+    }
 
     func pausePearAction(state: String) {
         // TODO: pause pear action after selecting a time

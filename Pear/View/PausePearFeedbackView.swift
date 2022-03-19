@@ -36,6 +36,7 @@ class PausePearFeedbackView: UIView {
     private func setUpViews() {
         self.backgroundColor = .backgroundLightGreen
         self.layer.cornerRadius = 36
+        frame.size = CGSize(width: 295, height: 422)
         
         let pauseReasonCollectionViewLayout = UICollectionViewFlowLayout()
         pauseReasonCollectionViewLayout.minimumInteritemSpacing = reasonInteritemSpacing
@@ -82,18 +83,19 @@ class PausePearFeedbackView: UIView {
     private func setupConstraints() {
         let cancelButtonSize = CGSize(width: 52, height: 20)
         let finishButtonSize = CGSize(width: 195, height: 46)
+        let pauseLabelSize = CGSize(width: 200, height: 25)
+        let reasonCollectionViewSize = CGSize(width: 191, height: 177)
 
         pauseLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(36)
-            make.leading.trailing.equalToSuperview().inset(75)
+            make.size.equalTo(pauseLabelSize)
         }
 
         pauseReasonCollectionView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(pauseLabel.snp.bottom).offset(26)
-            make.height.equalTo(177)
-            make.width.equalTo(191)
+            make.size.equalTo(reasonCollectionViewSize)
         }
         
         finishButton.snp.makeConstraints { make in
@@ -127,11 +129,14 @@ class PausePearFeedbackView: UIView {
     }
     
     @objc private func finishButtonPressed() {
-        
+        delegate?.removePauseView(self)
+        delegate?.removeBlurEffect()
+        // TODO: send user feedback
     }
     
     @objc private func cancelPause() {
-        
+        delegate?.removePauseView(self)
+        delegate?.removeBlurEffect()
     }
 
 }
