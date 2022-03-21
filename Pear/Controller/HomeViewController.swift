@@ -24,6 +24,7 @@ class HomeViewController: UIViewController {
     private var tabContainerView: UIView!
     /// View Controller whose contents are shown below
     private var tabPageViewController: TabPageViewController?
+    private let blurEffectView = BlurEffectView()
 
     // MARK: - Private Data Vars
     private var activeTabIndex = 0
@@ -128,7 +129,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(user: UserV2) {
-        tabPageViewController = TabPageViewController(user: user, tabDelegate: self)
+        tabPageViewController = TabPageViewController(user: user, tabDelegate: self, feedbackDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -147,7 +148,7 @@ class HomeViewController: UIViewController {
 
     private func presentMenu(animated: Bool) {
         guard let user = user else { return }
-        let profileMenuVC = ProfileMenuViewController(user: user)
+        let profileMenuVC = ProfileMenuViewController(user: user, feedbackDelegate: self)
         profileMenuVC.delegate = self
         let menu = SideMenuNavigationController(rootViewController: profileMenuVC)
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
@@ -168,7 +169,13 @@ class HomeViewController: UIViewController {
 
     @objc private func toggleFeedbackMenu() {
         if displayMenu {
-            feedbackMenuView = FeedbackView(delegate: self)
+            guard let user = user, let matchId = user.currentMatch?.id else { return }
+            let feedbackOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+            feedbackMenuView = FeedbackView(
+                delegate: self,
+                matchId: matchId,
+                feedbackOptions: feedbackOptions
+            )
             guard let feedbackMenuView = feedbackMenuView else { return }
             feedbackMenuView.layer.cornerRadius = 20
             view.addSubview(feedbackMenuView)
@@ -176,7 +183,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 130))
+                make.size.equalTo(CGSize(width: 150, height: 170))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -302,6 +309,57 @@ extension HomeViewController: FeedbackDelegate {
     func presentActionSheet(alert: UIAlertController) {
         present(alert, animated: true)
     }
+    
+    func presentBlockUserView(blockUserView: BlockUserView) {
+        if let frame = self.navigationController?.view.frame {
+            blurEffectView.frame = frame
+        }
+        self.navigationController?.view.addSubview(blurEffectView)
+        self.navigationController?.view.addSubview(blockUserView)
+        
+        blockUserView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.equalTo(blockUserView.frame.height)
+            make.width.equalTo(blockUserView.frame.width)
+        }
+                
+        UIView.animate(withDuration: 0.3, animations: {
+            blockUserView.transform = .init(scaleX: 1.5, y: 1.5)
+            blockUserView.alpha = 1
+            blockUserView.transform = .identity
+            self.blurEffectView.alpha = 1
+        })
+    }
+    
+    func removeBlockUserView(blockUserView: BlockUserView) {
+        UIView.animate(withDuration: 0.15) {
+            blockUserView.alpha = 0
+            self.blurEffectView.alpha = 0
+        } completion: { _ in
+            blockUserView.removeFromSuperview()
+        }
+    }
+    func blockorUnblockUser(isBlocking: Bool, userId: Int) {
+        NetworkManager.blockorUnblockUser(isBlocking: isBlocking, userId: userId) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                }
+            }
+        }
+    }
+    
+    func blockUser(userId: Int) {
+        blockorUnblockUser(isBlocking: true, userId: userId)
+    }
+    
+    func unblockUser(userId: Int) {
+        blockorUnblockUser(isBlocking: false, userId: userId)
+    }
 }
 
 extension HomeViewController: TabDelegate {
@@ -325,3 +383,5 @@ extension HomeViewController: ProfileMenuDelegate {
     }
     
 }
+
+

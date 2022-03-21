@@ -22,9 +22,11 @@ class MessagesViewController: UIViewController {
     private var matches: [TempMatchV2] = []
     private var timer: Timer?
     private var user: UserV2
+    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(user: UserV2) {
+    init(user: UserV2, feedbackDelegate: FeedbackDelegate) {
         self.user = user
+        self.feedbackDelegate = feedbackDelegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -140,7 +142,13 @@ extension MessagesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let match = matchedUsers[indexPath.row]
         let status = matches[indexPath.row].status
-        let chatVC = ChatViewController(messageUser: match, currentUser: user, status: status)
+        guard let feedbackDelegate = feedbackDelegate else { return }
+        let chatVC = ChatViewController(
+            messageUser: match,
+            currentUser: user,
+            status: status,
+            feedbackDelegate: feedbackDelegate
+        )
         navigationController?.pushViewController(chatVC, animated: true)
     }
 

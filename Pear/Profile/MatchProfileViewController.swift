@@ -22,9 +22,13 @@ class MatchProfileViewController: UIViewController {
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private let user: UserV2
+    
+    // MARK: - Private Data Vars
+    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(user: UserV2) {
+    init(user: UserV2, feedbackDelegate: FeedbackDelegate) {
         self.user = user
+        self.feedbackDelegate = feedbackDelegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -137,12 +141,14 @@ class MatchProfileViewController: UIViewController {
     }
     
     @objc func reachOutButtonPressed() {
-        guard let match = match, let matchedUser = matchedUser else { return }
+        guard let match = match, let matchedUser = matchedUser, let feedbackDelegate = feedbackDelegate else { return }
         
         navigationController?.pushViewController(
             ChatViewController(
                 messageUser: matchedUser,
-                currentUser: user, status: match.status
+                currentUser: user,
+                status: match.status,
+                feedbackDelegate: feedbackDelegate
             ),
             animated: true
         )

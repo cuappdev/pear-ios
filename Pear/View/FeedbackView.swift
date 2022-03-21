@@ -9,6 +9,10 @@ import UIKit
 
 protocol FeedbackDelegate: AnyObject {
     func presentActionSheet(alert: UIAlertController)
+    func presentBlockUserView(blockUserView: BlockUserView)
+    func removeBlockUserView(blockUserView: BlockUserView)
+    func blockUser(userId: Int)
+    func unblockUser(userId: Int)
 }
 
 class FeedbackView: UIView {
@@ -18,15 +22,18 @@ class FeedbackView: UIView {
     private var arrowView = UIView()
     private let feedbackTableView = UITableView()
     private let feedbackBackgroundView = UIView()
-    weak var delegate: FeedbackDelegate?
+    private weak var delegate: FeedbackDelegate?
 
     // MARK: - Private Data Vars
-    private let feedbackOptions = ["Send feedback", "Contact us", "Report user"]
+    private var matchId: Int?
+    private var feedbackOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init(delegate: FeedbackDelegate) {
+    init(delegate: FeedbackDelegate, matchId: Int, feedbackOptions: [String]) {
         self.delegate = delegate
+        self.matchId = matchId
+        self.feedbackOptions = feedbackOptions
         super.init(frame: .zero)
         setUpViews()
         setupConstraints()
@@ -113,7 +120,13 @@ extension FeedbackView: UITableViewDelegate {
             if let url = URL(string: Keys.feedbackURL), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
-        } else {
+        }
+        else if optionSelected == "Block user" {
+            guard let delegate = delegate, let matchId = matchId else { return }
+            let blockUserView = BlockUserView(delegate: delegate, userId: matchId)
+            delegate.presentBlockUserView(blockUserView: blockUserView)
+        }
+        else {
             let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
             let emailAlertController = UIAlertController.getEmailAlertController(
                 email: Keys.feedbackEmail,

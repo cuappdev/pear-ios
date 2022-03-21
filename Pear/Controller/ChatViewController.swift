@@ -14,6 +14,7 @@ class ChatViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
+    private let menuButton = UIButton()
     private let chatInputContainerView = UIView()
     private let chatInputTextField = UITextField()
     private let chatTableView = UITableView()
@@ -21,6 +22,7 @@ class ChatViewController: UIViewController {
     private let emptyChatImage = UIImageView()
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
+    private var feedbackMenuView: FeedbackView?
 
     // MARK: - Private Data Vars
     private let currentUser: UserV2
@@ -30,11 +32,14 @@ class ChatViewController: UIViewController {
     private var messages: [PearMessage] = []
     private let messageUser: MatchedUser
     private let status: String
+    private var displayMenu = true
+    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(messageUser: MatchedUser, currentUser: UserV2, status: String) {
+    init(messageUser: MatchedUser, currentUser: UserV2, status: String, feedbackDelegate: FeedbackDelegate) {
         self.messageUser = messageUser
         self.currentUser = currentUser
         self.status = status
+        self.feedbackDelegate = feedbackDelegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -62,6 +67,10 @@ class ChatViewController: UIViewController {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+        menuButton.setImage(UIImage(named: "optionicon"), for: .normal)
+        menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
 
         chatTableView.separatorStyle = .none
         chatTableView.backgroundColor = .backgroundLightGreen
@@ -280,6 +289,31 @@ class ChatViewController: UIViewController {
             make.center.equalToSuperview()
             make.height.equalTo(200)
         }
+    }
+    
+    @objc private func toggleMenu() {
+        if displayMenu {
+            guard let delegate = feedbackDelegate else { return }
+            let feedbackOptions = ["Block user"]
+            feedbackMenuView = FeedbackView(
+                delegate: delegate,
+                matchId: messageUser.id,
+                feedbackOptions: feedbackOptions
+            )
+            
+            guard let feedbackMenuView = feedbackMenuView else { return }
+            feedbackMenuView.layer.cornerRadius = 20
+            view.addSubview(feedbackMenuView)
+
+            feedbackMenuView.snp.makeConstraints { make in
+                make.top.equalTo(menuButton.snp.bottom).offset(8)
+                make.trailing.equalTo(view.snp.trailing).offset(-25)
+                make.size.equalTo(CGSize(width: 150, height: 50))
+            }
+        } else {
+            feedbackMenuView?.removeFromSuperview()
+        }
+        displayMenu.toggle()
     }
 
 }

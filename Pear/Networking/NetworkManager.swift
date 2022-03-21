@@ -688,6 +688,31 @@ class NetworkManager {
             }
         }
     }
+    
+    static func blockorUnblockUser(isBlocking: Bool, userId: Int, completion: @escaping (Bool) -> Void) {
+        let requestType = isBlocking ? "block" : "unblock"
+        let endpoint = "\(hostEndpoint)/api/users/\(userId)/\(requestType)/"
+        
+        print(endpoint)
+        
+        AF.request(
+            endpoint,
+            method: .post,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 
     static func getSearchedUsers(searchText: String, completion: @escaping (Result<[CommunityUser], Error>) -> Void) {
         let parameters: [String: Any] = [

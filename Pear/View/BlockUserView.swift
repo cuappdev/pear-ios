@@ -16,14 +16,14 @@ class BlockUserView: UIView {
     private let cancelButton = UIButton()
     
     // MARK: - Private Data Vars
-    private weak var delegate: PausePearDelegate?
+    private weak var delegate: FeedbackDelegate?
     private var blockedUserId: Int?
     private var isBlocking = true
     
-    init(delegate: PausePearDelegate, blockedUserId: Int) {
+    init(delegate: FeedbackDelegate, userId: Int) {
         super.init(frame: .zero)
         self.delegate = delegate
-        self.blockedUserId = blockedUserId
+        self.blockedUserId = userId
         
         setUpViews()
         setupConstraints()
@@ -46,17 +46,17 @@ class BlockUserView: UIView {
         
         blockButton.setTitle("Block", for: .normal)
         blockButton.setTitleColor(.white, for: .normal)
-        blockButton.titleLabel?.font = ._16CircularStdMedium
+        blockButton.titleLabel?.font = ._16CircularStdBold
         blockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
         blockButton.backgroundColor = .backgroundOrange
-        
+        blockButton.isEnabled = true
         blockButton.addTarget(self, action: #selector(blockButtonPressed), for: .touchUpInside)
         addSubview(blockButton)
         
         cancelButton.setTitle("Cancel", for: .normal)
         cancelButton.setTitleColor(.darkGreen, for: .normal)
         cancelButton.backgroundColor = .clear
-        cancelButton.titleLabel?.font = ._16CircularStdBook
+        cancelButton.titleLabel?.font = ._16CircularStdBold
         cancelButton.addTarget(self, action: #selector(cancelBlock), for: .touchUpInside)
         addSubview(cancelButton)
         
@@ -87,11 +87,18 @@ class BlockUserView: UIView {
     }
     
     @objc private func blockButtonPressed() {
-        //TODO: block user
+        guard let userId = blockedUserId else { return }
+        if isBlocking {
+            delegate?.blockUser(userId: userId)
+        } else {
+            delegate?.unblockUser(userId: userId)
+        }
+        delegate?.removeBlockUserView(blockUserView: self)
     }
     
     @objc private func cancelBlock() {
-        //TODO: cancel block user
+        delegate?.removeBlockUserView(blockUserView: self)
+
     }
              
 }
