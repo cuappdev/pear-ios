@@ -46,6 +46,7 @@ class BlockUserView: UIView {
         
         blockButton.setTitle("Block", for: .normal)
         blockButton.setTitleColor(.white, for: .normal)
+
         blockButton.titleLabel?.font = ._16CircularStdBold
         blockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
         blockButton.backgroundColor = .backgroundOrange
@@ -98,7 +99,5 @@ class BlockUserView: UIView {
     
     @objc private func cancelBlock() {
         delegate?.removeBlockUserView(blockUserView: self)
-
     }
-             
 }
