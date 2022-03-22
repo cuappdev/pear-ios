@@ -9,10 +9,6 @@ import UIKit
 
 protocol FeedbackDelegate: AnyObject {
     func presentActionSheet(alert: UIAlertController)
-    func presentBlockUserView(blockUserView: BlockUserView)
-    func removeBlockUserView(blockUserView: BlockUserView)
-    func blockUser(userId: Int)
-    func unblockUser(userId: Int)
 }
 
 class FeedbackView: UIView {
@@ -22,6 +18,7 @@ class FeedbackView: UIView {
     private var arrowView = UIView()
     private let feedbackTableView = UITableView()
     private let feedbackBackgroundView = UIView()
+    private var superView = UIView()
     private weak var delegate: FeedbackDelegate?
 
     // MARK: - Private Data Vars
@@ -30,10 +27,12 @@ class FeedbackView: UIView {
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init(delegate: FeedbackDelegate, matchId: Int, feedbackOptions: [String]) {
+    init(delegate: FeedbackDelegate?, matchId: Int, feedbackOptions: [String], superView: UIView) {
         self.delegate = delegate
         self.matchId = matchId
         self.feedbackOptions = feedbackOptions
+        self.superView = superView
+        
         super.init(frame: .zero)
         setUpViews()
         setupConstraints()
@@ -44,6 +43,7 @@ class FeedbackView: UIView {
     }
 
     private func setUpViews() {
+        layer.cornerRadius = 20
         arrowBackgroundView.backgroundColor = .clear
         addSubview(arrowBackgroundView)
 
@@ -122,9 +122,10 @@ extension FeedbackView: UITableViewDelegate {
             }
         }
         else if optionSelected == "Block user" {
-            guard let delegate = delegate, let matchId = matchId else { return }
-            let blockUserView = BlockUserView(delegate: delegate, userId: matchId)
-            delegate.presentBlockUserView(blockUserView: blockUserView)
+            guard let matchId = matchId else { return }
+            let blockUserView = BlockUserView(userId: matchId)
+            Animations.presentPopUpView(superView: superView, popUpView: blockUserView)
+
         }
         else {
             let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"

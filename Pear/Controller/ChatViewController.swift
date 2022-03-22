@@ -84,6 +84,11 @@ class ChatViewController: UIViewController {
 
         emptyBackgroundView.backgroundColor = .clear
         emptyBackgroundView.addSubview(emptyChatImage)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
 
         setupChatInput()
         getChatMessages()
@@ -291,18 +296,25 @@ class ChatViewController: UIViewController {
         }
     }
     
+    @objc private func dismissMenu() {
+        if !displayMenu {
+            feedbackMenuView?.removeFromSuperview()
+            displayMenu.toggle()
+        }
+    }
+    
     @objc private func toggleMenu() {
         if displayMenu {
-            guard let delegate = feedbackDelegate else { return }
+            guard let superView = navigationController?.view else { return }
             let feedbackOptions = ["Block user"]
             feedbackMenuView = FeedbackView(
-                delegate: delegate,
+                delegate: nil,
                 matchId: messageUser.id,
-                feedbackOptions: feedbackOptions
+                feedbackOptions: feedbackOptions,
+                superView: superView
             )
             
             guard let feedbackMenuView = feedbackMenuView else { return }
-            feedbackMenuView.layer.cornerRadius = 20
             view.addSubview(feedbackMenuView)
 
             feedbackMenuView.snp.makeConstraints { make in

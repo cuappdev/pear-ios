@@ -29,6 +29,7 @@ struct UserV2: Codable {
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
     let prompts: [Prompt]
+    let blockedUsers: [Int]
     
 }
 

@@ -13,11 +13,16 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
+    private let menuButton = UIButton()
     private var currentUser: UserV2
     private var otherUser: UserV2?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-
+    private var feedbackMenuView: FeedbackView?
+    
+    // MARK: - Private Data Vars
+    private var displayMenu = true
+    
     init(user: UserV2, otherUserId: Int) {
         self.currentUser = user
         super.init(nibName: nil, bundle: nil)
@@ -47,6 +52,10 @@ class ProfileViewController: UIViewController {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+        menuButton.setImage(UIImage(named: "optionicon"), for: .normal)
+        menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
 
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
@@ -102,6 +111,31 @@ class ProfileViewController: UIViewController {
 
     @objc func backPressed() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func toggleMenu() {
+        if displayMenu {
+            guard let superView = navigationController?.view, let otherUserId = otherUser?.id else { return }
+            let feedbackOptions = ["Block user"]
+            feedbackMenuView = FeedbackView(
+                delegate: nil,
+                matchId: otherUserId,
+                feedbackOptions: feedbackOptions,
+                superView: superView
+            )
+            
+            guard let feedbackMenuView = feedbackMenuView else { return }
+            view.addSubview(feedbackMenuView)
+
+            feedbackMenuView.snp.makeConstraints { make in
+                make.top.equalTo(menuButton.snp.bottom).offset(8)
+                make.trailing.equalTo(view.snp.trailing).offset(-25)
+                make.size.equalTo(CGSize(width: 150, height: 50))
+            }
+        } else {
+            feedbackMenuView?.removeFromSuperview()
+        }
+        displayMenu.toggle()
     }
 
 }

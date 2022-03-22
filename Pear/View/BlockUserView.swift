@@ -16,13 +16,11 @@ class BlockUserView: UIView {
     private let cancelButton = UIButton()
     
     // MARK: - Private Data Vars
-    private weak var delegate: FeedbackDelegate?
     private var blockedUserId: Int?
     private var isBlocking = true
     
-    init(delegate: FeedbackDelegate, userId: Int) {
+    init(userId: Int) {
         super.init(frame: .zero)
-        self.delegate = delegate
         self.blockedUserId = userId
         
         setUpViews()
@@ -46,9 +44,8 @@ class BlockUserView: UIView {
         
         blockButton.setTitle("Block", for: .normal)
         blockButton.setTitleColor(.white, for: .normal)
-
         blockButton.titleLabel?.font = ._16CircularStdBold
-        blockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
+        blockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         blockButton.backgroundColor = .backgroundOrange
         blockButton.isEnabled = true
         blockButton.addTarget(self, action: #selector(blockButtonPressed), for: .touchUpInside)
@@ -89,15 +86,20 @@ class BlockUserView: UIView {
     
     @objc private func blockButtonPressed() {
         guard let userId = blockedUserId else { return }
-        if isBlocking {
-            delegate?.blockUser(userId: userId)
-        } else {
-            delegate?.unblockUser(userId: userId)
-        }
-        delegate?.removeBlockUserView(blockUserView: self)
+        blockorUnblockUser(isBlocking: isBlocking, userId: userId)
     }
     
     @objc private func cancelBlock() {
-        delegate?.removeBlockUserView(blockUserView: self)
+        Animations.removePopUpView(popUpView: self)
+    }
+    
+    private func blockorUnblockUser(isBlocking: Bool, userId: Int) {
+        NetworkManager.blockorUnblockUser(isBlocking: isBlocking, userId: userId) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                Animations.removePopUpView(popUpView: self)
+            }
+        }
     }
 }
