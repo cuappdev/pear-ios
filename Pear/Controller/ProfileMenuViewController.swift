@@ -121,7 +121,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     private func pushEditingProfileViewController() {
-        let editProfileVC = ProfileViewController(user: user, viewType: .currentUser, otherUserId: nil)
+        let editProfileVC = ProfileViewController(user: user, viewType: .currentUser)
         navigationController?.pushViewController(editProfileVC, animated: true)
     }
 

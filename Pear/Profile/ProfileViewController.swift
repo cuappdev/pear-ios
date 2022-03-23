@@ -9,9 +9,9 @@ import GoogleSignIn
 import Kingfisher
 import UIKit
 
-enum ProfileViewing {
+enum ProfileViewing: Equatable {
     case currentUser
-    case otherUser
+    case otherUser(Int)
 }
 
 class ProfileViewController: UIViewController {
@@ -25,17 +25,15 @@ class ProfileViewController: UIViewController {
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private let viewType: ProfileViewing
 
-    init(user: UserV2, viewType: ProfileViewing, otherUserId: Int?) {
+    init(user: UserV2, viewType: ProfileViewing) {
         self.currentUser = user
         self.viewType = viewType
         super.init(nibName: nil, bundle: nil)
         switch viewType {
             case .currentUser:
                 loadCurrentUser()
-            case .otherUser:
-                if let otherUserId = otherUserId {
-                    getOtherUser(otherUserId: otherUserId)
-                }
+            case .otherUser(let otherUserId):
+                getOtherUser(otherUserId: otherUserId)
         }
     }
 
@@ -69,7 +67,7 @@ class ProfileViewController: UIViewController {
         editButton.setTitle("Edit", for: .normal)
         editButton.setTitleColor(.darkGreen, for: .normal)
         editButton.titleLabel?.font = ._20CircularStdMedium
-        editButton.isHidden = viewType == .otherUser
+        editButton.isHidden = viewType != .currentUser
         editButton.addTarget(self, action: #selector(editPressed), for: .touchUpInside)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: editButton)
 
