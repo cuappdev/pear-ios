@@ -692,9 +692,7 @@ class NetworkManager {
     static func blockorUnblockUser(isBlocking: Bool, userId: Int, completion: @escaping (Bool) -> Void) {
         let requestType = isBlocking ? "block" : "unblock"
         let endpoint = "\(hostEndpoint)/api/users/\(userId)/\(requestType)/"
-        
-        print(endpoint)
-        
+    
         AF.request(
             endpoint,
             method: .post,

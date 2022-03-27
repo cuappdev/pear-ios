@@ -33,13 +33,11 @@ class ChatViewController: UIViewController {
     private let messageUser: CommunityUser
     private let status: String
     private var displayMenu = true
-    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(messageUser: CommunityUser, currentUser: UserV2, status: String, feedbackDelegate: FeedbackDelegate) {
+    init(messageUser: CommunityUser, currentUser: UserV2, status: String) {
         self.messageUser = messageUser
         self.currentUser = currentUser
         self.status = status
-        self.feedbackDelegate = feedbackDelegate
         super.init(nibName: nil, bundle: nil)
     }
 

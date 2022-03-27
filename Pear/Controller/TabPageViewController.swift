@@ -22,15 +22,13 @@ class TabPageViewController: UIPageViewController {
     // MARK: - Data Vars
     private let user: UserV2
     weak var tabDelegate: TabDelegate?
-    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(user: UserV2, tabDelegate: TabDelegate, feedbackDelegate: FeedbackDelegate) {
+    init(user: UserV2, tabDelegate: TabDelegate) {
         self.user = user
         self.tabDelegate = tabDelegate
-        self.feedbackDelegate = feedbackDelegate
         
         if let _ = user.currentMatch {
-            matchViewController = MatchProfileViewController(user: user, feedbackDelegate: feedbackDelegate)
+            matchViewController = MatchProfileViewController(user: user)
         } else {
             matchViewController = NoMatchViewController(user: user)
         }

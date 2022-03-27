@@ -35,11 +35,9 @@ class ProfileMenuViewController: UIViewController {
     private var user: UserV2
     
     var delegate: ProfileMenuDelegate?
-    private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(user: UserV2, feedbackDelegate: FeedbackDelegate) {
+    init(user: UserV2) {
         self.user = user
-        self.feedbackDelegate = feedbackDelegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -170,8 +168,7 @@ class ProfileMenuViewController: UIViewController {
     }
 
     private func pushMessagingViewController() {
-        guard let feedbackDelegate = feedbackDelegate else { return }
-        navigationController?.pushViewController(MessagesViewController(user: user, feedbackDelegate: feedbackDelegate), animated: true)
+        navigationController?.pushViewController(MessagesViewController(user: user), animated: true)
     }
 
 }

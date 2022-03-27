@@ -129,7 +129,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(user: UserV2) {
-        tabPageViewController = TabPageViewController(user: user, tabDelegate: self, feedbackDelegate: self)
+        tabPageViewController = TabPageViewController(user: user, tabDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
 
@@ -148,7 +148,7 @@ class HomeViewController: UIViewController {
 
     private func presentMenu(animated: Bool) {
         guard let user = user else { return }
-        let profileMenuVC = ProfileMenuViewController(user: user, feedbackDelegate: self)
+        let profileMenuVC = ProfileMenuViewController(user: user)
         profileMenuVC.delegate = self
         let menu = SideMenuNavigationController(rootViewController: profileMenuVC)
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
