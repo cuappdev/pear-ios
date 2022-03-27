@@ -1,5 +1,5 @@
 //
-//  FeedbackView.swift
+//  OptionsView.swift
 //  Pear
 //
 //  Created by Amy Chin Siu Huang on 3/21/21.
@@ -11,7 +11,7 @@ protocol FeedbackDelegate: AnyObject {
     func presentActionSheet(alert: UIAlertController)
 }
 
-class FeedbackView: UIView {
+class OptionsView: UIView {
 
     // MARK: - Private View Vars
     private var arrowBackgroundView = UIView()
@@ -93,7 +93,7 @@ class FeedbackView: UIView {
     
 }
 
-extension FeedbackView: UITableViewDataSource {
+extension OptionsView: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         feedbackOptions.count
@@ -112,7 +112,7 @@ extension FeedbackView: UITableViewDataSource {
 
 }
 
-extension FeedbackView: UITableViewDelegate {
+extension OptionsView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let optionSelected = feedbackOptions[indexPath.row]
