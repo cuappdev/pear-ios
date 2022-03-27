@@ -16,21 +16,21 @@ class OptionsView: UIView {
     // MARK: - Private View Vars
     private var arrowBackgroundView = UIView()
     private var arrowView = UIView()
-    private let feedbackTableView = UITableView()
-    private let feedbackBackgroundView = UIView()
+    private let optionsTableView = UITableView()
+    private let optionsBackgroundView = UIView()
     private var superView = UIView()
     private weak var delegate: FeedbackDelegate?
 
     // MARK: - Private Data Vars
     private var matchId: Int?
-    private var feedbackOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+    private var options = ["Send feedback", "Contact us", "Report user", "Block user"]
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init(delegate: FeedbackDelegate?, matchId: Int, feedbackOptions: [String], superView: UIView) {
-        self.delegate = delegate
+    init(feedbackDelegate: FeedbackDelegate?, matchId: Int, options: [String], superView: UIView) {
+        self.delegate = feedbackDelegate
         self.matchId = matchId
-        self.feedbackOptions = feedbackOptions
+        self.options = options
         self.superView = superView
         
         super.init(frame: .zero)
@@ -40,6 +40,11 @@ class OptionsView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func setOptions(options: [String]) {
+        self.options = options
+        optionsTableView.reloadData()
     }
 
     private func setUpViews() {
@@ -58,18 +63,18 @@ class OptionsView: UIView {
         arrowView.layer.insertSublayer(shape, at: 0)
         arrowBackgroundView.addSubview(arrowView)
 
-        feedbackBackgroundView.backgroundColor = .white
-        addSubview(feedbackBackgroundView)
+        optionsBackgroundView.backgroundColor = .white
+        addSubview(optionsBackgroundView)
 
-        feedbackTableView.backgroundColor = .backgroundWhite
-        feedbackTableView.separatorStyle = .none
-        feedbackTableView.showsVerticalScrollIndicator = false
-        feedbackTableView.rowHeight = 40
-        feedbackTableView.delegate = self
-        feedbackTableView.dataSource = self
-        feedbackTableView.isScrollEnabled = false
-        feedbackTableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        feedbackBackgroundView.addSubview(feedbackTableView)
+        optionsTableView.backgroundColor = .backgroundWhite
+        optionsTableView.separatorStyle = .none
+        optionsTableView.showsVerticalScrollIndicator = false
+        optionsTableView.rowHeight = 40
+        optionsTableView.delegate = self
+        optionsTableView.dataSource = self
+        optionsTableView.isScrollEnabled = false
+        optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        optionsBackgroundView.addSubview(optionsTableView)
     }
 
     private func setupConstraints() {
@@ -82,11 +87,11 @@ class OptionsView: UIView {
             make.width.equalTo(size)
             make.height.equalTo(size)
         }
-        feedbackBackgroundView.snp.makeConstraints { make in
+        optionsBackgroundView.snp.makeConstraints { make in
             make.top.equalTo(arrowBackgroundView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
-        feedbackTableView.snp.makeConstraints { make in
+        optionsTableView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
         }
     }
@@ -96,12 +101,12 @@ class OptionsView: UIView {
 extension OptionsView: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        feedbackOptions.count
+        options.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = feedbackTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        cell.textLabel?.text = feedbackOptions[indexPath.row]
+        let cell = optionsTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        cell.textLabel?.text = options[indexPath.row]
         cell.textLabel?.font = ._16CircularStdBook
         cell.selectionStyle = .none
         cell.textLabel?.snp.makeConstraints { make in
@@ -115,7 +120,7 @@ extension OptionsView: UITableViewDataSource {
 extension OptionsView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let optionSelected = feedbackOptions[indexPath.row]
+        let optionSelected = options[indexPath.row]
         if optionSelected == "Send feedback" {
             if let url = URL(string: Keys.feedbackURL), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -123,9 +128,8 @@ extension OptionsView: UITableViewDelegate {
         }
         else if optionSelected == "Block user" {
             guard let matchId = matchId else { return }
-            let blockUserView = BlockUserView(userId: matchId)
+            let blockUserView = BlockUserView(userId: matchId, isBlocking: true)
             Animations.presentPopUpView(superView: superView, popUpView: blockUserView)
-
         }
         else {
             let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"

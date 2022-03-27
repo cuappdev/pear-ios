@@ -15,18 +15,18 @@ class ProfileViewController: UIViewController {
     private let backButton = UIButton()
     private let menuButton = UIButton()
     private var currentUser: UserV2
-    private var otherUser: UserV2?
+    private var otherUser: CommunityUser?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
-    private var feedbackMenuView: FeedbackView?
+    private var optionsMenuView: OptionsView?
     
     // MARK: - Private Data Vars
     private var displayMenu = true
     
-    init(user: UserV2, otherUserId: Int) {
+    init(user: UserV2, otherUser: CommunityUser) {
         self.currentUser = user
+        self.otherUser = otherUser
         super.init(nibName: nil, bundle: nil)
-        getOtherUser(otherUserId: otherUserId)
     }
 
     required init?(coder: NSCoder) {
@@ -71,36 +71,75 @@ class ProfileViewController: UIViewController {
         profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
+        
+        let isBlocked = true
+        if !isBlocked {
+            setupProfile()
+        } else {
+            setupBlockedProfile()
+        }
         setupConstraints()
     }
-
-    private func getOtherUser(otherUserId: Int) {
-        NetworkManager.getUser(id: otherUserId) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let user):
-                DispatchQueue.main.async {
-                    self.otherUser = user
-                    self.profileSections = [.summary, .basics]
-                    
-                    if !user.interests.isEmpty {
-                        self.profileSections.append(.interests)
-                    }
-                    
-                    if !user.groups.isEmpty {
-                        self.profileSections.append(.groups)
-                    }
-                    
-                    if !user.prompts.isEmpty {
-                        self.profileSections.append(.prompts)
-                    }
-                    
-                    self.profileTableView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+    private func setupBlockedProfile() {
+        self.profileSections = [.summary]
+        menuButton.isHidden = true
+        
+        let unblockButton = DynamicButton()
+        unblockButton.setTitle("Unblock", for: .normal)
+        unblockButton.setTitleColor(.white, for: .normal)
+        unblockButton.titleLabel?.font = ._20CircularStdBold
+        unblockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        unblockButton.backgroundColor = .backgroundOrange
+        unblockButton.isEnabled = true
+        unblockButton.addTarget(self, action: #selector(unblockedButtonPressed), for: .touchUpInside)
+        view.addSubview(unblockButton)
+        
+        let unblockLabel = UILabel()
+        unblockLabel.text = "This user is currently blocked."
+        unblockLabel.font = ._18CircularStdBook
+        unblockLabel.textAlignment = .center
+        unblockLabel.numberOfLines = 0
+        unblockLabel.textColor = .darkGreen
+        view.addSubview(unblockLabel)
+        
+        let unblockLabelSize = CGSize(width: 280, height: 25)
+        let unblockButtonSize = CGSize(width: 196, height: 53)
+        
+        unblockLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(50)
+            make.size.equalTo(unblockLabelSize)
         }
+        
+        unblockButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(unblockLabel.snp.bottom).offset(12)
+            make.size.equalTo(unblockButtonSize)
+        }
+    }
+
+    private func setupProfile() {
+        guard let user = otherUser else { return }
+        self.profileSections = [.summary, .basics]
+        
+        if !user.interests.isEmpty {
+            self.profileSections.append(.interests)
+        }
+        
+        if !user.groups.isEmpty {
+            self.profileSections.append(.groups)
+        }
+        
+        if !user.prompts.isEmpty {
+            self.profileSections.append(.prompts)
+        }
+        
+        self.profileTableView.reloadData()
     }
 
     private func setupConstraints() {
@@ -113,27 +152,40 @@ class ProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @objc private func unblockedButtonPressed() {
+        guard let userId = otherUser?.id else { return }
+        let unblockUserView = BlockUserView(userId: userId, isBlocking: false)
+        Animations.presentPopUpView(superView: view, popUpView: unblockUserView)
+    }
+    
+    @objc private func dismissMenu() {
+        if !displayMenu {
+            optionsMenuView?.removeFromSuperview()
+            displayMenu.toggle()
+        }
+    }
+    
     @objc private func toggleMenu() {
         if displayMenu {
             guard let superView = navigationController?.view, let otherUserId = otherUser?.id else { return }
-            let feedbackOptions = ["Block user"]
-            feedbackMenuView = FeedbackView(
-                delegate: nil,
+            let options = ["Block user"]
+            optionsMenuView = OptionsView(
+                feedbackDelegate: nil,
                 matchId: otherUserId,
-                feedbackOptions: feedbackOptions,
+                options: options,
                 superView: superView
             )
             
-            guard let feedbackMenuView = feedbackMenuView else { return }
-            view.addSubview(feedbackMenuView)
+            guard let optionsMenuView = optionsMenuView else { return }
+            view.addSubview(optionsMenuView)
 
-            feedbackMenuView.snp.makeConstraints { make in
+            optionsMenuView.snp.makeConstraints { make in
                 make.top.equalTo(menuButton.snp.bottom).offset(8)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
                 make.size.equalTo(CGSize(width: 150, height: 50))
             }
         } else {
-            feedbackMenuView?.removeFromSuperview()
+            optionsMenuView?.removeFromSuperview()
         }
         displayMenu.toggle()
     }

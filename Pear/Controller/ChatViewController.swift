@@ -22,7 +22,7 @@ class ChatViewController: UIViewController {
     private let emptyChatImage = UIImageView()
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
-    private var feedbackMenuView: FeedbackView?
+    private var optionsMenuView: OptionsView?
 
     // MARK: - Private Data Vars
     private let currentUser: UserV2
@@ -30,12 +30,12 @@ class ChatViewController: UIViewController {
     private var dateKeys: [Date] = []
     private var groupedMessagesByDate: [[PearMessage]] = []
     private var messages: [PearMessage] = []
-    private let messageUser: MatchedUser
+    private let messageUser: CommunityUser
     private let status: String
     private var displayMenu = true
     private weak var feedbackDelegate: FeedbackDelegate?
 
-    init(messageUser: MatchedUser, currentUser: UserV2, status: String, feedbackDelegate: FeedbackDelegate) {
+    init(messageUser: CommunityUser, currentUser: UserV2, status: String, feedbackDelegate: FeedbackDelegate) {
         self.messageUser = messageUser
         self.currentUser = currentUser
         self.status = status
@@ -298,7 +298,7 @@ class ChatViewController: UIViewController {
     
     @objc private func dismissMenu() {
         if !displayMenu {
-            feedbackMenuView?.removeFromSuperview()
+            optionsMenuView?.removeFromSuperview()
             displayMenu.toggle()
         }
     }
@@ -306,24 +306,24 @@ class ChatViewController: UIViewController {
     @objc private func toggleMenu() {
         if displayMenu {
             guard let superView = navigationController?.view else { return }
-            let feedbackOptions = ["Block user"]
-            feedbackMenuView = FeedbackView(
-                delegate: nil,
+            let options = ["Block user"]
+            optionsMenuView = OptionsView(
+                feedbackDelegate: nil,
                 matchId: messageUser.id,
-                feedbackOptions: feedbackOptions,
+                options: options,
                 superView: superView
             )
             
-            guard let feedbackMenuView = feedbackMenuView else { return }
-            view.addSubview(feedbackMenuView)
+            guard let optionsMenuView = optionsMenuView else { return }
+            view.addSubview(optionsMenuView)
 
-            feedbackMenuView.snp.makeConstraints { make in
+            optionsMenuView.snp.makeConstraints { make in
                 make.top.equalTo(menuButton.snp.bottom).offset(8)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
                 make.size.equalTo(CGSize(width: 150, height: 50))
             }
         } else {
-            feedbackMenuView?.removeFromSuperview()
+            optionsMenuView?.removeFromSuperview()
         }
         displayMenu.toggle()
     }
@@ -367,7 +367,7 @@ extension ChatViewController: UITableViewDataSource {
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
         cell.viewProfile = {
-            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, otherUserId: self.messageUser.id), animated: true)
+            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, otherUser: self.messageUser), animated: true)
         }
         cell.selectionStyle = .none
         return cell

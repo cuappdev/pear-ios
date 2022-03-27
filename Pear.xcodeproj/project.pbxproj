@@ -61,7 +61,7 @@
 		50C842C826CC75FA004242FF /* SelectPromptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842C726CC75FA004242FF /* SelectPromptViewController.swift */; };
 		50C842CE26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842CD26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift */; };
 		50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842D326CCD76C004242FF /* PromptLabel.swift */; };
-		50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* FeedbackView.swift */; };
+		50DA489226078B7B007654D5 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* OptionsView.swift */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
 		927E823B27E976660079CE7E /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E823A27E976660079CE7E /* Animations.swift */; };
 		92C552D627E8104100398CFF /* BlurEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C552D527E8104100398CFF /* BlurEffectView.swift */; };
@@ -208,7 +208,7 @@
 		50C842C726CC75FA004242FF /* SelectPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPromptViewController.swift; sourceTree = "<group>"; };
 		50C842CD26CCB67F004242FF /* ProfilePromptsSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePromptsSectionTableViewCell.swift; sourceTree = "<group>"; };
 		50C842D326CCD76C004242FF /* PromptLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptLabel.swift; sourceTree = "<group>"; };
-		50DA489126078B7B007654D5 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		50DA489126078B7B007654D5 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		7E06B84F2543F15900D6B505 /* InterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsViewController.swift; sourceTree = "<group>"; };
 		927E823A27E976660079CE7E /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		92C552D527E8104100398CFF /* BlurEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffectView.swift; sourceTree = "<group>"; };
@@ -501,7 +501,7 @@
 			isa = PBXGroup;
 			children = (
 				D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */,
-				50DA489126078B7B007654D5 /* FeedbackView.swift */,
+				50DA489126078B7B007654D5 /* OptionsView.swift */,
 				D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */,
 				D471EDA7244DBE260079665D /* MessageAlertView.swift */,
 				5029873725389E4700E52EDA /* PausePearView.swift */,
@@ -948,7 +948,7 @@
 				D4DDBF49257560B000D5C43A /* Demographics.swift in Sources */,
 				D474105625C6E7CE0062E2B4 /* UIImage.swift in Sources */,
 				D4349979253C14320024A992 /* LeftAlignedFlowLayour.swift in Sources */,
-				50DA489226078B7B007654D5 /* FeedbackView.swift in Sources */,
+				50DA489226078B7B007654D5 /* OptionsView.swift in Sources */,
 				C8AC096D26FD492300BCC3BE /* PromptResponseView.swift in Sources */,
 				30304E1B23FDF336006DC6C3 /* SchedulingTimeViewController.swift in Sources */,
 				D48F6F3B266FE9BD00D844B7 /* EditInterestsViewController.swift in Sources */,

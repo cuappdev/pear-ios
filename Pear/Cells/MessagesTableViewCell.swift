@@ -89,7 +89,7 @@ class MessagesTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for pair: MatchedUser, status: String, week: Int) {
+    func configure(for pair: CommunityUser, status: String, week: Int) {
         let shouldNotDisplayCurrentPear = status == Constants.Match.canceled || status == Constants.Match.inactive
         profileImage.kf.setImage(with: URL(string: pair.profilePicUrl ?? ""))
         nameLabel.text = "\(pair.firstName) \(pair.lastName)"

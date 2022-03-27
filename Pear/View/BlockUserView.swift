@@ -19,9 +19,10 @@ class BlockUserView: UIView {
     private var blockedUserId: Int?
     private var isBlocking = true
     
-    init(userId: Int) {
+    init(userId: Int, isBlocking: Bool) {
         super.init(frame: .zero)
         self.blockedUserId = userId
+        self.isBlocking = isBlocking
         
         setUpViews()
         setupConstraints()
@@ -41,8 +42,8 @@ class BlockUserView: UIView {
         headerLabel.textAlignment = .center
         headerLabel.textColor = .black
         addSubview(headerLabel)
-        
-        blockButton.setTitle("Block", for: .normal)
+
+        blockButton.setTitle(isBlocking ? "Block" : "Unblock", for: .normal)
         blockButton.setTitleColor(.white, for: .normal)
         blockButton.titleLabel?.font = ._16CircularStdBold
         blockButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2

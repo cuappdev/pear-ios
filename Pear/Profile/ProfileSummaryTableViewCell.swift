@@ -20,7 +20,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageSize = CGSize(width: 150, height: 150)
     private var currentUser: User?
     private var pair: User?
-    var showMessages: ((MatchedUser, User) -> Void)?
+    var showMessages: ((CommunityUser, User) -> Void)?
 
     static let reuseIdentifier = "ProfileSummaryTableViewCell"
 
@@ -151,7 +151,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: MatchedUser) {
+    func configure(for user: CommunityUser) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
 //        netIdLabel.text = "Reach me at \(user.netId)"
         if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {

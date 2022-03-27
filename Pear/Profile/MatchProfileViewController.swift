@@ -17,7 +17,7 @@ class MatchProfileViewController: UIViewController {
     private let reachOutButton = UIButton()
     private var chatStatus: ChatStatus?
     private var match: MatchV2?
-    private var matchedUser: MatchedUser?
+    private var matchedUser: CommunityUser?
     private var meetupStatusView: MeetupStatusView?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)

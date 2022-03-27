@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
     private var feedbackButton = UIButton()
-    private var feedbackMenuView: FeedbackView?
+    private var feedbackMenuView: OptionsView?
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -30,6 +30,7 @@ class HomeViewController: UIViewController {
     private var displayMenu = true
     private let profileButtonSize = CGSize(width: 35, height: 35)
     private let tabs = ["Weekly Pear", "People"]
+    private var menuOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
     private var user: UserV2?
 
     override func viewDidLoad() {
@@ -169,11 +170,10 @@ class HomeViewController: UIViewController {
     @objc private func toggleFeedbackMenu() {
         if displayMenu {
             guard let user = user, let matchId = user.currentMatch?.id, let superView = navigationController?.view else { return }
-            let feedbackOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
-            feedbackMenuView = FeedbackView(
-                delegate: self,
+            feedbackMenuView = OptionsView(
+                feedbackDelegate: self,
                 matchId: matchId,
-                feedbackOptions: feedbackOptions,
+                options: menuOptions,
                 superView: superView
             )
             guard let feedbackMenuView = feedbackMenuView else { return }
@@ -182,7 +182,7 @@ class HomeViewController: UIViewController {
             feedbackMenuView.snp.makeConstraints { make in
                 make.top.equalTo(feedbackButton.snp.bottom).offset(5)
                 make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 170))
+                make.size.equalTo(CGSize(width: 150, height: 43 * menuOptions.count))
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -313,8 +313,11 @@ extension HomeViewController: FeedbackDelegate {
 extension HomeViewController: TabDelegate {
 
     func setActiveTabIndex(to index: Int) {
+        let matchOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+        let communityOptions = ["Send feedback", "Contact us", "Report user"]
         activeTabIndex = index
         tabPageViewController?.setViewController(to: index)
+        menuOptions = index == 0 ? matchOptions : communityOptions
         tabCollectionView.reloadData()
     }
     

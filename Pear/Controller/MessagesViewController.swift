@@ -18,7 +18,7 @@ class MessagesViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private let databaseRef = Database.database().reference()
-    private var matchedUsers: [MatchedUser] = []
+    private var matchedUsers: [CommunityUser] = []
     private var matches: [TempMatchV2] = []
     private var timer: Timer?
     private var user: UserV2
