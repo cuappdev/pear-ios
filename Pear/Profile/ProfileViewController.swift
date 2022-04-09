@@ -14,8 +14,10 @@ class ProfileViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let menuButton = UIButton()
+    private let unblockButton = DynamicButton()
+    private let unblockLabel = UILabel()
     private var currentUser: UserV2
-    private var otherUser: CommunityUser?
+    private var profileUser: CommunityUser?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var optionsMenuView: OptionsView?
@@ -23,10 +25,10 @@ class ProfileViewController: UIViewController {
     // MARK: - Private Data Vars
     private var displayMenu = true
     
-    init(user: UserV2, otherUser: CommunityUser) {
+    init(user: UserV2, profileUserId: Int) {
         self.currentUser = user
-        self.otherUser = otherUser
         super.init(nibName: nil, bundle: nil)
+        getProfileUser(profileUserId: profileUserId)
     }
 
     required init?(coder: NSCoder) {
@@ -75,21 +77,39 @@ class ProfileViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
         tapGesture.cancelsTouchesInView = false
         tapGesture.delegate = self
+        view.isUserInteractionEnabled = true
         view.addGestureRecognizer(tapGesture)
         
-        let isBlocked = true
-        if !isBlocked {
-            setupProfile()
-        } else {
-            setupBlockedProfile()
-        }
         setupConstraints()
     }
+    
+    private func getProfileUser(profileUserId: Int) {
+        NetworkManager.getUser(id: profileUserId) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let user):
+                DispatchQueue.main.async {
+                    self.profileUser = user
+                    if let blocked = self.profileUser?.isBlocked as? Bool, blocked {
+                        self.setupBlockedProfile()
+                    } else {
+                        self.setupProfile()
+                    }
+                    self.profileTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+            
     private func setupBlockedProfile() {
-        self.profileSections = [.summary]
+        profileSections = [.summary]
         menuButton.isHidden = true
+        unblockButton.isHidden = false
+        unblockLabel.isHidden = false
+        profileTableView.isScrollEnabled = false
         
-        let unblockButton = DynamicButton()
         unblockButton.setTitle("Unblock", for: .normal)
         unblockButton.setTitleColor(.white, for: .normal)
         unblockButton.titleLabel?.font = ._20CircularStdBold
@@ -99,7 +119,6 @@ class ProfileViewController: UIViewController {
         unblockButton.addTarget(self, action: #selector(unblockedButtonPressed), for: .touchUpInside)
         view.addSubview(unblockButton)
         
-        let unblockLabel = UILabel()
         unblockLabel.text = "This user is currently blocked."
         unblockLabel.font = ._18CircularStdBook
         unblockLabel.textAlignment = .center
@@ -124,22 +143,24 @@ class ProfileViewController: UIViewController {
     }
 
     private func setupProfile() {
-        guard let user = otherUser else { return }
-        self.profileSections = [.summary, .basics]
+        guard let user = profileUser else { return }
+        profileSections = [.summary, .basics]
+        menuButton.isHidden = false
+        unblockButton.isHidden = true
+        unblockLabel.isHidden = true
+        profileTableView.isScrollEnabled = true
         
         if !user.interests.isEmpty {
-            self.profileSections.append(.interests)
+            profileSections.append(.interests)
         }
         
         if !user.groups.isEmpty {
-            self.profileSections.append(.groups)
+            profileSections.append(.groups)
         }
         
         if !user.prompts.isEmpty {
-            self.profileSections.append(.prompts)
+            profileSections.append(.prompts)
         }
-        
-        self.profileTableView.reloadData()
     }
 
     private func setupConstraints() {
@@ -153,8 +174,8 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func unblockedButtonPressed() {
-        guard let userId = otherUser?.id else { return }
-        let unblockUserView = BlockUserView(userId: userId, isBlocking: false)
+        guard let userId = profileUser?.id else { return }
+        let unblockUserView = BlockUserView(blockDelegate: self, userId: userId, isBlocking: false)
         Animations.presentPopUpView(superView: view, popUpView: unblockUserView)
     }
     
@@ -167,12 +188,14 @@ class ProfileViewController: UIViewController {
     
     @objc private func toggleMenu() {
         if displayMenu {
-            guard let superView = navigationController?.view, let otherUserId = otherUser?.id else { return }
-            let options = ["Block user"]
+            guard let superView = navigationController?.view, let profileUserId = profileUser?.id else { return }
+        
             optionsMenuView = OptionsView(
                 feedbackDelegate: nil,
-                matchId: otherUserId,
-                options: options,
+                blockDelegate: self,
+                matchId: profileUserId,
+                blockId: profileUserId,
+                options: ["Block user"],
                 superView: superView
             )
             
@@ -199,7 +222,7 @@ extension ProfileViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let user = otherUser else { return UITableViewCell() }
+        guard let user = profileUser else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
 
@@ -229,11 +252,30 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UIGestureRecognizerDelegate {
 
-      func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
              navigationController?.popViewController(animated: true)
-         }
-         return false
-     }
+        } else if gestureRecognizer.view == view {
+            return true
+        }
+        return false
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        !(touch.view is UIButton)
+    }
 
-  }
+}
+
+extension ProfileViewController: BlockDelegate {
+    
+    func presentErrorAlert() {
+        present(UIAlertController.getStandardErrortAlert(), animated: true)
+    }
+    
+    func didBlockorUnblockUser() {
+        guard let profileUserId = profileUser?.id else { return }
+        getProfileUser(profileUserId: profileUserId)
+    }
+    
+}

@@ -307,7 +307,9 @@ class ChatViewController: UIViewController {
             let options = ["Block user"]
             optionsMenuView = OptionsView(
                 feedbackDelegate: nil,
+                blockDelegate: nil,
                 matchId: messageUser.id,
+                blockId: messageUser.id,
                 options: options,
                 superView: superView
             )
@@ -365,7 +367,7 @@ extension ChatViewController: UITableViewDataSource {
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
         cell.viewProfile = {
-            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, otherUser: self.messageUser), animated: true)
+            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, profileUserId: self.messageUser.id), animated: true)
         }
         cell.selectionStyle = .none
         return cell

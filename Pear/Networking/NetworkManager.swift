@@ -493,7 +493,7 @@ class NetworkManager {
         }
     }
 
-    static func getUser(id: Int, completion: @escaping (Result<UserV2, Error>) -> Void) {
+    static func getUser(id: Int, completion: @escaping (Result<CommunityUser, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/\(id)/",
             method: .get,
@@ -506,7 +506,7 @@ class NetworkManager {
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 
                 do {
-                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
+                    let userData = try jsonDecoder.decode(Response<CommunityUser>.self, from: data)
                     let user = userData.data
                     completion(.success(user))
                 } catch {

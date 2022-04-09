@@ -30,7 +30,9 @@ class HomeViewController: UIViewController {
     private var displayMenu = true
     private let profileButtonSize = CGSize(width: 35, height: 35)
     private let tabs = ["Weekly Pear", "People"]
-    private var menuOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+    private var menuOptions = ["Send feedback", "Contact us", "Report user"]
+    private let matchOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+    private let communityOptions = ["Send feedback", "Contact us", "Report user"]
     private var user: UserV2?
 
     override func viewDidLoad() {
@@ -169,10 +171,12 @@ class HomeViewController: UIViewController {
 
     @objc private func toggleFeedbackMenu() {
         if displayMenu {
-            guard let user = user, let matchId = user.currentMatch?.id, let superView = navigationController?.view else { return }
+            guard let user = user, let superView = navigationController?.view else { return }
             feedbackMenuView = OptionsView(
                 feedbackDelegate: self,
-                matchId: matchId,
+                blockDelegate: self,
+                matchId: user.currentMatch?.id ?? 0,
+                blockId: user.currentMatch?.matchedUser.id ?? 0,
                 options: menuOptions,
                 superView: superView
             )
@@ -313,11 +317,13 @@ extension HomeViewController: FeedbackDelegate {
 extension HomeViewController: TabDelegate {
 
     func setActiveTabIndex(to index: Int) {
-        let matchOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
-        let communityOptions = ["Send feedback", "Contact us", "Report user"]
         activeTabIndex = index
         tabPageViewController?.setViewController(to: index)
-        menuOptions = index == 0 ? matchOptions : communityOptions
+        if let _ = user?.currentMatch, index == 0 {
+            menuOptions = matchOptions
+        } else {
+            menuOptions = communityOptions
+        }
         tabCollectionView.reloadData()
     }
     
@@ -331,6 +337,18 @@ extension HomeViewController: ProfileMenuDelegate {
     }
     func didUpdateProfileDemographics() {
         updateUserAndTabPage()
+    }
+    
+}
+
+extension HomeViewController: BlockDelegate {
+    
+    func didBlockorUnblockUser() {
+        updateUserAndTabPage()
+    }
+    
+    func presentErrorAlert() {
+        present(UIAlertController.getStandardErrortAlert(), animated: true)
     }
     
 }

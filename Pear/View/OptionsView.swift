@@ -11,6 +11,11 @@ protocol FeedbackDelegate: AnyObject {
     func presentActionSheet(alert: UIAlertController)
 }
 
+protocol BlockDelegate: AnyObject {
+    func didBlockorUnblockUser()
+    func presentErrorAlert()
+}
+
 class OptionsView: UIView {
 
     // MARK: - Private View Vars
@@ -19,17 +24,21 @@ class OptionsView: UIView {
     private let optionsTableView = UITableView()
     private let optionsBackgroundView = UIView()
     private var superView = UIView()
-    private weak var delegate: FeedbackDelegate?
+    private weak var feedbackDelegate: FeedbackDelegate?
+    private weak var blockDelegate: BlockDelegate?
 
     // MARK: - Private Data Vars
     private var matchId: Int?
+    private var blockId: Int?
     private var options = ["Send feedback", "Contact us", "Report user", "Block user"]
     private let size = 20
     private let reuseIdentifier = "FeedbackMenuTableViewCell"
 
-    init(feedbackDelegate: FeedbackDelegate?, matchId: Int, options: [String], superView: UIView) {
-        self.delegate = feedbackDelegate
+    init(feedbackDelegate: FeedbackDelegate?, blockDelegate: BlockDelegate?, matchId: Int, blockId: Int, options: [String], superView: UIView) {
+        self.feedbackDelegate = feedbackDelegate
+        self.blockDelegate = blockDelegate
         self.matchId = matchId
+        self.blockId = blockId
         self.options = options
         self.superView = superView
         
@@ -127,8 +136,8 @@ extension OptionsView: UITableViewDelegate {
             }
         }
         else if optionSelected == "Block user" {
-            guard let matchId = matchId else { return }
-            let blockUserView = BlockUserView(userId: matchId, isBlocking: true)
+            guard let blockId = blockId else { return }
+            let blockUserView = BlockUserView(blockDelegate: blockDelegate, userId: blockId, isBlocking: true)
             Animations.presentPopUpView(superView: superView, popUpView: blockUserView)
         }
         else {
@@ -137,7 +146,7 @@ extension OptionsView: UITableViewDelegate {
                 email: Keys.feedbackEmail,
                 subject: emailSubject
             )
-            delegate?.presentActionSheet(alert: emailAlertController)
+            feedbackDelegate?.presentActionSheet(alert: emailAlertController)
         }
     }
 

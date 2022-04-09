@@ -16,11 +16,13 @@ class BlockUserView: UIView {
     private let cancelButton = UIButton()
     
     // MARK: - Private Data Vars
+    private weak var blockDelegate: BlockDelegate?
     private var blockedUserId: Int?
     private var isBlocking = true
     
-    init(userId: Int, isBlocking: Bool) {
+    init(blockDelegate: BlockDelegate?, userId: Int, isBlocking: Bool) {
         super.init(frame: .zero)
+        self.blockDelegate = blockDelegate
         self.blockedUserId = userId
         self.isBlocking = isBlocking
         
@@ -80,7 +82,7 @@ class BlockUserView: UIView {
         
         cancelButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-40)
+            make.bottom.equalToSuperview().inset(40)
             make.size.equalTo(cancelButtonSize)
         }
     }
@@ -88,6 +90,7 @@ class BlockUserView: UIView {
     @objc private func blockButtonPressed() {
         guard let userId = blockedUserId else { return }
         blockorUnblockUser(isBlocking: isBlocking, userId: userId)
+        Animations.removePopUpView(popUpView: self)
     }
     
     @objc private func cancelBlock() {
@@ -99,7 +102,11 @@ class BlockUserView: UIView {
             [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                Animations.removePopUpView(popUpView: self)
+                if success {
+                    self.blockDelegate?.didBlockorUnblockUser()
+                } else {
+                    self.blockDelegate?.presentErrorAlert()
+                }
             }
         }
     }
