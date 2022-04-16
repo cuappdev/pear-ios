@@ -142,7 +142,6 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func profilePressed() {
-        view.resignFirstResponder()
         presentMenu(animated: true)
     }
 

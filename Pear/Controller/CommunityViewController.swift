@@ -77,12 +77,6 @@ class CommunityViewController: UIViewController {
 
         setupConstraints()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.view.endEditing(true)
-        view.resignFirstResponder()
-        dismissKeyboard()
-    }
 
     private func getAllUsers() {
         NetworkManager.getAllUsers { [weak self] result in
