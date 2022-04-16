@@ -23,7 +23,7 @@ class ProfileViewController: UIViewController {
     private var optionsMenuView: OptionsView?
     
     // MARK: - Private Data Vars
-    private var displayMenu = true
+    private var shouldDisplayMenu = true
     
     init(user: UserV2, profileUserId: Int) {
         self.currentUser = user
@@ -55,7 +55,7 @@ class ProfileViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
-        menuButton.setImage(UIImage(named: "optionicon"), for: .normal)
+        menuButton.setImage(UIImage(named: "optionIcon"), for: .normal)
         menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
 
@@ -126,13 +126,11 @@ class ProfileViewController: UIViewController {
         unblockLabel.textColor = .darkGreen
         view.addSubview(unblockLabel)
         
-        let unblockLabelSize = CGSize(width: 280, height: 25)
         let unblockButtonSize = CGSize(width: 196, height: 53)
         
         unblockLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(50)
-            make.size.equalTo(unblockLabelSize)
         }
         
         unblockButton.snp.makeConstraints { make in
@@ -180,14 +178,17 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func dismissMenu() {
-        if !displayMenu {
+        if !shouldDisplayMenu {
             optionsMenuView?.removeFromSuperview()
-            displayMenu.toggle()
+            shouldDisplayMenu.toggle()
         }
     }
     
     @objc private func toggleMenu() {
-        if displayMenu {
+        let optionsMenuViewSize = CGSize(width: 150, height: 50)
+        let optionsMenuViewPadding = 8
+        
+        if shouldDisplayMenu {
             guard let superView = navigationController?.view, let profileUserId = profileUser?.id else { return }
         
             optionsMenuView = OptionsView(
@@ -203,14 +204,14 @@ class ProfileViewController: UIViewController {
             view.addSubview(optionsMenuView)
 
             optionsMenuView.snp.makeConstraints { make in
-                make.top.equalTo(menuButton.snp.bottom).offset(8)
-                make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 50))
+                make.top.equalTo(menuButton.snp.bottom).offset(optionsMenuViewPadding)
+                make.trailing.equalTo(view.snp.trailing).inset(4 * optionsMenuViewPadding)
+                make.size.equalTo(optionsMenuViewSize)
             }
         } else {
             optionsMenuView?.removeFromSuperview()
         }
-        displayMenu.toggle()
+        shouldDisplayMenu.toggle()
     }
 
 }
@@ -273,7 +274,7 @@ extension ProfileViewController: BlockDelegate {
         present(UIAlertController.getStandardErrortAlert(), animated: true)
     }
     
-    func didBlockorUnblockUser() {
+    func didBlockOrUnblockUser() {
         guard let profileUserId = profileUser?.id else { return }
         getProfileUser(profileUserId: profileUserId)
     }

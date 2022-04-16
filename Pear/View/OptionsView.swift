@@ -12,7 +12,7 @@ protocol FeedbackDelegate: AnyObject {
 }
 
 protocol BlockDelegate: AnyObject {
-    func didBlockorUnblockUser()
+    func didBlockOrUnblockUser()
     func presentErrorAlert()
 }
 
@@ -134,13 +134,11 @@ extension OptionsView: UITableViewDelegate {
             if let url = URL(string: Keys.feedbackURL), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
-        }
-        else if optionSelected == "Block user" {
+        } else if optionSelected == "Block user" {
             guard let blockId = blockId else { return }
             let blockUserView = BlockUserView(blockDelegate: blockDelegate, userId: blockId, isBlocking: true)
             Animations.presentPopUpView(superView: superView, popUpView: blockUserView)
-        }
-        else {
+        } else {
             let emailSubject = optionSelected == "Contact us" ? "Pear Feedback" : "Report User"
             let emailAlertController = UIAlertController.getEmailAlertController(
                 email: Keys.feedbackEmail,

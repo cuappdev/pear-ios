@@ -689,7 +689,7 @@ class NetworkManager {
         }
     }
     
-    static func blockorUnblockUser(isBlocking: Bool, userId: Int, completion: @escaping (Bool) -> Void) {
+    static func blockOrUnblockUser(isBlocking: Bool, userId: Int, completion: @escaping (Bool) -> Void) {
         let requestType = isBlocking ? "block" : "unblock"
         let endpoint = "\(hostEndpoint)/api/users/\(userId)/\(requestType)/"
     

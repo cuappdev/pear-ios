@@ -89,24 +89,24 @@ class BlockUserView: UIView {
     
     @objc private func blockButtonPressed() {
         guard let userId = blockedUserId else { return }
-        blockorUnblockUser(isBlocking: isBlocking, userId: userId)
-        Animations.removePopUpView(popUpView: self)
+        blockOrUnblockUser(isBlocking: isBlocking, userId: userId)
     }
     
     @objc private func cancelBlock() {
         Animations.removePopUpView(popUpView: self)
     }
     
-    private func blockorUnblockUser(isBlocking: Bool, userId: Int) {
-        NetworkManager.blockorUnblockUser(isBlocking: isBlocking, userId: userId) {
+    private func blockOrUnblockUser(isBlocking: Bool, userId: Int) {
+        NetworkManager.blockOrUnblockUser(isBlocking: isBlocking, userId: userId) {
             [weak self] success in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if success {
-                    self.blockDelegate?.didBlockorUnblockUser()
+                    self.blockDelegate?.didBlockOrUnblockUser()
                 } else {
                     self.blockDelegate?.presentErrorAlert()
                 }
+                Animations.removePopUpView(popUpView: self)
             }
         }
     }

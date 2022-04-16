@@ -170,6 +170,9 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func toggleFeedbackMenu() {
+        let feedbackMenuViewSize = CGSize(width: 150, height: 43 * menuOptions.count)
+        let feedbackMenuViewPadding = 5
+        
         if displayMenu {
             guard let user = user, let superView = navigationController?.view else { return }
             feedbackMenuView = OptionsView(
@@ -184,9 +187,9 @@ class HomeViewController: UIViewController {
             view.addSubview(feedbackMenuView)
 
             feedbackMenuView.snp.makeConstraints { make in
-                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
-                make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 43 * menuOptions.count))
+                make.top.equalTo(feedbackButton.snp.bottom).offset(feedbackMenuViewPadding)
+                make.trailing.equalTo(view.snp.trailing).inset(5 * feedbackMenuViewPadding)
+                make.size.equalTo(feedbackMenuViewSize)
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -343,7 +346,7 @@ extension HomeViewController: ProfileMenuDelegate {
 
 extension HomeViewController: BlockDelegate {
     
-    func didBlockorUnblockUser() {
+    func didBlockOrUnblockUser() {
         updateUserAndTabPage()
     }
     

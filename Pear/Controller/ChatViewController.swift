@@ -14,15 +14,15 @@ class ChatViewController: UIViewController {
 
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let menuButton = UIButton()
     private let chatInputContainerView = UIView()
     private let chatInputTextField = UITextField()
     private let chatTableView = UITableView()
     private let emptyBackgroundView = UIView()
     private let emptyChatImage = UIImageView()
+    private let menuButton = UIButton()
+    private var optionsMenuView: OptionsView?
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
-    private var optionsMenuView: OptionsView?
 
     // MARK: - Private Data Vars
     private let currentUser: UserV2
@@ -31,9 +31,9 @@ class ChatViewController: UIViewController {
     private var groupedMessagesByDate: [[PearMessage]] = []
     private var messages: [PearMessage] = []
     private let messageUser: CommunityUser
+    private var shouldDisplayMenu = true
     private let status: String
-    private var displayMenu = true
-
+    
     init(messageUser: CommunityUser, currentUser: UserV2, status: String) {
         self.messageUser = messageUser
         self.currentUser = currentUser
@@ -66,7 +66,7 @@ class ChatViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
-        menuButton.setImage(UIImage(named: "optionicon"), for: .normal)
+        menuButton.setImage(UIImage(named: "optionIcon"), for: .normal)
         menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
 
@@ -295,14 +295,17 @@ class ChatViewController: UIViewController {
     }
     
     @objc private func dismissMenu() {
-        if !displayMenu {
+        if !shouldDisplayMenu {
             optionsMenuView?.removeFromSuperview()
-            displayMenu.toggle()
+            shouldDisplayMenu.toggle()
         }
     }
     
     @objc private func toggleMenu() {
-        if displayMenu {
+        let optionsMenuViewSize = CGSize(width: 150, height: 50)
+        let optionsMenuViewPadding = 8
+        
+        if shouldDisplayMenu {
             guard let superView = navigationController?.view else { return }
             let options = ["Block user"]
             optionsMenuView = OptionsView(
@@ -318,14 +321,14 @@ class ChatViewController: UIViewController {
             view.addSubview(optionsMenuView)
 
             optionsMenuView.snp.makeConstraints { make in
-                make.top.equalTo(menuButton.snp.bottom).offset(8)
-                make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 50))
+                make.top.equalTo(menuButton.snp.bottom).offset(optionsMenuViewPadding)
+                make.trailing.equalTo(view.snp.trailing).inset(4 * optionsMenuViewPadding)
+                make.size.equalTo(optionsMenuViewSize)
             }
         } else {
             optionsMenuView?.removeFromSuperview()
         }
-        displayMenu.toggle()
+        shouldDisplayMenu.toggle()
     }
 
 }

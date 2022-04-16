@@ -27,7 +27,7 @@ struct UserV2: Codable {
     let groups: [Group]
     let hasOnboarded: Bool?
     let pendingFeedback: Bool
-    var currentMatch: MatchV2?
+    let currentMatch: MatchV2?
     let prompts: [Prompt]
 }
 
@@ -66,7 +66,7 @@ struct CommunityUser: Codable {
     let lastName: String
     let hometown: String
     let majors: [MajorV2]
-    var profilePicUrl: String?
+    let profilePicUrl: String?
     let graduationYear: String
     let pronouns: String?
     let interests: [Interest]

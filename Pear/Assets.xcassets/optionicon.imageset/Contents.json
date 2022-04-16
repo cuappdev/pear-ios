@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Bubble Drop Down.png",
+      "filename" : "bubbleDropDown1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Bubble Drop Down (1).png",
+      "filename" : "bubbleDropDown2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Bubble Drop Down (2).png",
+      "filename" : "bubbleDropDown3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
