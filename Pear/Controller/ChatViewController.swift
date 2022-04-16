@@ -16,7 +16,7 @@ class ChatViewController: UIViewController {
     private let backButton = UIButton()
     private let chatInputContainerView = UIView()
     private let chatInputTextField = UITextField()
-    private let chatTableView = UITableView()
+    private let chatTableView = UITableView(frame: .zero, style: .grouped)
     private let emptyBackgroundView = UIView()
     private let emptyChatImage = UIImageView()
     private let sendMessageButton = UIButton()
@@ -29,6 +29,7 @@ class ChatViewController: UIViewController {
     private var groupedMessagesByDate: [[PearMessage]] = []
     private var messages: [PearMessage] = []
     private let messageUser: MatchedUser
+    private var keyboardOffSet: CGFloat = 0
     private let status: String
 
     init(messageUser: MatchedUser, currentUser: UserV2, status: String) {
@@ -52,7 +53,9 @@ class ChatViewController: UIViewController {
         hideKeyboardWhenViewTapped()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 
+        navigationController?.navigationBar.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.titleTextAttributes = [
@@ -65,6 +68,7 @@ class ChatViewController: UIViewController {
 
         chatTableView.separatorStyle = .none
         chatTableView.backgroundColor = .backgroundLightGreen
+        chatTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         chatTableView.register(ChatTableViewCell.self, forCellReuseIdentifier: ChatTableViewCell.reuseId)
         chatTableView.dataSource = self
         chatTableView.delegate = self
@@ -228,16 +232,57 @@ class ChatViewController: UIViewController {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if view.frame.origin.y == 0 {
-                view.frame.origin.y -= keyboardSize.height
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            if keyboardOffSet == 0 {
+                keyboardOffSet = chatInputContainerView.frame.maxY - keyboardSize.minY
+                chatInputContainerView.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().inset(40+keyboardOffSet)
+                }
+                chatTableView.snp.updateConstraints { make in
+                    make.bottom.equalTo(chatInputContainerView.snp.top)
+                }
+                UIView.animate(withDuration: keyboardDuration) {
+                    self.view.layoutIfNeeded()
+                    if self.groupedMessagesByDate.count > 0 {
+                        self.scrollToBottom()
+                    }
+                }
             }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        if view.frame.origin.y != 0 {
-            view.frame.origin.y = 0
+        if let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            keyboardOffSet = 0
+            chatInputContainerView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview().inset(40)
+            }
+            chatTableView.snp.updateConstraints { make in
+                make.bottom.equalTo(chatInputContainerView.snp.top)
+            }
+            UIView.animate(withDuration: keyboardDuration) {
+                self.view.layoutIfNeeded()
+                if self.groupedMessagesByDate.count > 0 {
+                    self.scrollToBottom()
+                }
+            }
+        }
+    }
+
+    @objc func keyboardWillChange(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if keyboardOffSet != 0 {
+                keyboardOffSet += chatInputContainerView.frame.maxY - keyboardSize.minY
+                chatInputContainerView.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().inset(40+keyboardOffSet)
+                }
+                chatTableView.snp.updateConstraints { make in
+                    make.bottom.equalTo(chatInputContainerView.snp.top)
+                }
+                if self.groupedMessagesByDate.count > 0 {
+                    self.scrollToBottom()
+                }
+            }
         }
     }
 
@@ -310,7 +355,7 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        70
+        40
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
