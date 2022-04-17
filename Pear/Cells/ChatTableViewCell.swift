@@ -71,9 +71,9 @@ class ChatTableViewCell: UITableViewCell {
             make.top.bottom.leading.trailing.equalToSuperview().inset(messagePadding * 2)
         }
         pairProfilePic.snp.makeConstraints { make in
-            make.bottom.equalTo(chatBubble).offset(-3)
+            make.bottom.equalTo(chatBubble)
             make.leading.equalTo(contentView.snp.leading).offset(10)
-            make.width.height.equalTo(42)
+            make.width.height.equalTo(chatBubble.snp.height)
         }
     }
 

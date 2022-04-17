@@ -25,6 +25,7 @@ class ChatViewController: UIViewController {
     private let separatorView = UIView()
 
     // MARK: - Private Data Vars
+    private let chatInputContainerPadding: CGFloat = 40
     private let currentUser: UserV2
     private let databaseRef = Database.database().reference()
     private var dateKeys: [Date] = []
@@ -53,12 +54,10 @@ class ChatViewController: UIViewController {
         
         UIApplication.shared.applicationIconBadgeNumber = 0
 
-        hideKeyboardWhenViewTapped()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 
-        navigationController?.navigationBar.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.titleTextAttributes = [
@@ -87,14 +86,14 @@ class ChatViewController: UIViewController {
         emptyBackgroundView.backgroundColor = .clear
         emptyBackgroundView.addSubview(emptyChatImage)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGesture.cancelsTouchesInView = false
         tapGesture.delegate = self
         view.addGestureRecognizer(tapGesture)
 
         setupChatInput()
-        getChatMessages()
         setupConstraints()
+        getChatMessages()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -106,14 +105,11 @@ class ChatViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    private func hideKeyboardWhenViewTapped() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        tap.delegate = self
-        view.addGestureRecognizer(tap)
-    }
-
-    @objc private func dismissKeyboard() {
+    @objc private func handleTap() {
+        if !shouldDisplayMenu {
+            optionsMenuView?.removeFromSuperview()
+            shouldDisplayMenu.toggle()
+        }
         view.endEditing(true)
     }
 
@@ -247,12 +243,7 @@ class ChatViewController: UIViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             if keyboardOffSet == 0 {
                 keyboardOffSet = chatInputContainerView.frame.maxY - keyboardSize.minY
-                chatInputContainerView.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview().inset(40+keyboardOffSet)
-                }
-                chatTableView.snp.updateConstraints { make in
-                    make.bottom.equalTo(chatInputContainerView.snp.top)
-                }
+                updateKeyboardConstraints()
                 UIView.animate(withDuration: keyboardDuration) {
                     self.view.layoutIfNeeded()
                     if self.groupedMessagesByDate.count > 0 {
@@ -266,12 +257,7 @@ class ChatViewController: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             keyboardOffSet = 0
-            chatInputContainerView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview().inset(40)
-            }
-            chatTableView.snp.updateConstraints { make in
-                make.bottom.equalTo(chatInputContainerView.snp.top)
-            }
+            updateKeyboardConstraints()
             UIView.animate(withDuration: keyboardDuration) {
                 self.view.layoutIfNeeded()
                 if self.groupedMessagesByDate.count > 0 {
@@ -285,16 +271,17 @@ class ChatViewController: UIViewController {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if keyboardOffSet != 0 {
                 keyboardOffSet += chatInputContainerView.frame.maxY - keyboardSize.minY
-                chatInputContainerView.snp.updateConstraints { make in
-                    make.bottom.equalToSuperview().inset(40+keyboardOffSet)
-                }
-                chatTableView.snp.updateConstraints { make in
-                    make.bottom.equalTo(chatInputContainerView.snp.top)
-                }
+                updateKeyboardConstraints()
                 if self.groupedMessagesByDate.count > 0 {
                     self.scrollToBottom()
                 }
             }
+        }
+    }
+    
+    private func updateKeyboardConstraints() {
+        chatInputContainerView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(chatInputContainerPadding + keyboardOffSet)
         }
     }
 
@@ -305,12 +292,12 @@ class ChatViewController: UIViewController {
         chatInputContainerView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(chatInputContainerHeight)
-            make.bottom.equalToSuperview().inset(40)
+            make.bottom.equalToSuperview().inset(chatInputContainerPadding)
         }
 
         chatTableView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(chatInputContainerView.snp.top)
         }
 
@@ -339,16 +326,9 @@ class ChatViewController: UIViewController {
         }
     }
     
-    @objc private func dismissMenu() {
-        if !shouldDisplayMenu {
-            optionsMenuView?.removeFromSuperview()
-            shouldDisplayMenu.toggle()
-        }
-    }
-    
     @objc private func toggleMenu() {
         let optionsMenuViewSize = CGSize(width: 150, height: 50)
-        let optionsMenuViewPadding = 8
+        let optionsMenuViewPadding = 10
         
         if shouldDisplayMenu {
             guard let superView = navigationController?.view else { return }

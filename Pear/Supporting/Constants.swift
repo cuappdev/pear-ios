@@ -73,7 +73,7 @@ struct Constants {
         static let nextBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 67)
         static let skipBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 24)
         static let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 64)
-        static let backButtonSize = CGSize(width: 25, height: 25)
+        static let backButtonSize = CGSize(width: 30, height: 30)
         static let mainButtonSize = CGSize(width: 225, height: 54)
         static let secondaryButtonSize = CGSize(width: 244, height: 54)
         static let largeButtonSize = CGSize(width: 273, height: 54)
