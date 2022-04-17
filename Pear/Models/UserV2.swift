@@ -29,13 +29,12 @@ struct UserV2: Codable {
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
     let prompts: [Prompt]
-    
 }
 
 struct MatchV2: Codable {
     let id: Int
     let status: String
-    let matchedUser: MatchedUser
+    let matchedUser: CommunityUser
     let proposerId: Int?
     let acceptedIds: [Int]?
     let proposedMeetingTimes: [String]?
@@ -69,9 +68,11 @@ struct CommunityUser: Codable {
     let majors: [MajorV2]
     let profilePicUrl: String?
     let graduationYear: String
+    let pronouns: String?
     let interests: [Interest]
     let groups: [Group]
     let prompts: [Prompt]
+    var isBlocked: Bool?
 }
 
 struct LocationV2: Codable {
@@ -84,7 +85,7 @@ struct LocationV2: Codable {
 struct TempMatchV2: Codable {
     let id: Int
     let status: String
-    let users: [MatchedUser]
+    let users: [CommunityUser]
     let proposerId: Int?
     let acceptedIds: [Int]?
     let proposedMeetingTimes: [String]?

@@ -71,7 +71,7 @@ class ProfileSectionTableViewCell: UITableViewCell {
         itemsCollectionView.sizeToFit()
     }
 
-    func configure(for user: MatchedUser, type: ProfileSectionType) {
+    func configure(for user: CommunityUser, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         sectionType = type
         switch type {

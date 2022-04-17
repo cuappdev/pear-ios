@@ -18,7 +18,7 @@ class MessagesViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private let databaseRef = Database.database().reference()
-    private var matchedUsers: [MatchedUser] = []
+    private var matchedUsers: [CommunityUser] = []
     private var matches: [TempMatchV2] = []
     private var timer: Timer?
     private var user: UserV2
@@ -70,6 +70,7 @@ class MessagesViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+        getUserMessages()
         Analytics.logEvent(Constants.Analytics.openedViewController, parameters: ["name" : Constants.Analytics.TrackedVCs.messages])
     }
 
@@ -140,7 +141,11 @@ extension MessagesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let match = matchedUsers[indexPath.row]
         let status = matches[indexPath.row].status
-        let chatVC = ChatViewController(messageUser: match, currentUser: user, status: status)
+        let chatVC = ChatViewController(
+            messageUser: match,
+            currentUser: user,
+            status: status
+        )
         navigationController?.pushViewController(chatVC, animated: true)
     }
 

@@ -77,7 +77,7 @@ class ChatTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for message: PearMessage, user: UserV2, pair: MatchedUser) {
+    func configure(for message: PearMessage, user: UserV2, pair: CommunityUser) {
         chatMessage.text = message.message
         if message.senderId == user.id {
             chatBubble.backgroundColor = .darkGreen
