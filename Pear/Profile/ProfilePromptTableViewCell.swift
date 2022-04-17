@@ -74,7 +74,7 @@ class ProfilePromptTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: MatchedUser, type: ProfileSectionType) {
+    func configure(for user: CommunityUser, type: ProfileSectionType) {
         titleLabel.text = type.getTitle(for: user)
         let major = user.majors.first?.name ?? ""
         let graduationText = user.graduationYear == gradStudent ? " as a " : " in the class of "

@@ -7,7 +7,6 @@
 //
 
 struct UserV2: Codable {
-
     let id: Int
     let netId: String
     let firstName: String
@@ -29,35 +28,18 @@ struct UserV2: Codable {
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
     let prompts: [Prompt]
-    
 }
 
 struct MatchV2: Codable {
     let id: Int
     let status: String
-    let matchedUser: MatchedUser
+    let matchedUser: CommunityUser
     let proposerId: Int?
     let acceptedIds: [Int]?
     let proposedMeetingTimes: [String]?
     let proposedLocations: [LocationV2]?
     let meetingLocation: LocationV2?
     let meetingTime: String?
-}
-
-// TODO: MatchedUser and CommunityUser can be combined
-struct MatchedUser: Codable {
-    let id: Int
-    let netId: String
-    let firstName: String
-    let lastName: String
-    let hometown: String
-    let majors: [MajorV2]
-    var profilePicUrl: String?
-    let graduationYear: String
-    let pronouns: String?
-    let interests: [Interest]
-    let groups: [Group]
-    let prompts: [Prompt]
 }
 
 struct CommunityUser: Codable {
@@ -69,9 +51,11 @@ struct CommunityUser: Codable {
     let majors: [MajorV2]
     let profilePicUrl: String?
     let graduationYear: String
+    let pronouns: String?
     let interests: [Interest]
     let groups: [Group]
     let prompts: [Prompt]
+    var isBlocked: Bool?
 }
 
 struct LocationV2: Codable {
@@ -84,7 +68,7 @@ struct LocationV2: Codable {
 struct TempMatchV2: Codable {
     let id: Int
     let status: String
-    let users: [MatchedUser]
+    let users: [CommunityUser]
     let proposerId: Int?
     let acceptedIds: [Int]?
     let proposedMeetingTimes: [String]?

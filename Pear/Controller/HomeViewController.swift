@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private View Vars
     private var feedbackButton = UIButton()
-    private var feedbackMenuView: FeedbackView?
+    private var feedbackMenuView: OptionsView?
     private let profileImageView = UIImageView()
     /// Pill display used to swap between matching and community view controllers
     private var tabCollectionView: UICollectionView!
@@ -30,6 +30,9 @@ class HomeViewController: UIViewController {
     private var displayMenu = true
     private let profileButtonSize = CGSize(width: 35, height: 35)
     private let tabs = ["Weekly Pear", "People"]
+    private var menuOptions = ["Send feedback", "Contact us", "Report user"]
+    private let matchOptions = ["Send feedback", "Contact us", "Report user", "Block user"]
+    private let communityOptions = ["Send feedback", "Contact us", "Report user"]
     private var user: UserV2?
 
     override func viewDidLoad() {
@@ -152,7 +155,7 @@ class HomeViewController: UIViewController {
         let menu = SideMenuNavigationController(rootViewController: profileMenuVC)
         let presentationStyle: SideMenuPresentationStyle = .viewSlideOutMenuPartialIn
         presentationStyle.presentingEndAlpha = 0.85
-        menu.presentationStyle = .viewSlideOutMenuPartialIn
+        menu.presentationStyle = presentationStyle
         menu.leftSide = true
         menu.statusBarEndAlpha = 0
         menu.menuWidth = view.frame.width * 0.8
@@ -167,16 +170,26 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func toggleFeedbackMenu() {
+        let feedbackMenuViewSize = CGSize(width: 150, height: 43 * menuOptions.count)
+        let feedbackMenuViewPadding = 5
+        
         if displayMenu {
-            feedbackMenuView = FeedbackView(delegate: self)
+            guard let user = user, let superView = navigationController?.view else { return }
+            feedbackMenuView = OptionsView(
+                feedbackDelegate: self,
+                blockDelegate: self,
+                matchId: user.currentMatch?.id ?? 0,
+                blockId: user.currentMatch?.matchedUser.id ?? 0,
+                options: menuOptions,
+                superView: superView
+            )
             guard let feedbackMenuView = feedbackMenuView else { return }
-            feedbackMenuView.layer.cornerRadius = 20
             view.addSubview(feedbackMenuView)
 
             feedbackMenuView.snp.makeConstraints { make in
-                make.top.equalTo(feedbackButton.snp.bottom).offset(5)
-                make.trailing.equalTo(view.snp.trailing).offset(-25)
-                make.size.equalTo(CGSize(width: 150, height: 130))
+                make.top.equalTo(feedbackButton.snp.bottom).offset(feedbackMenuViewPadding)
+                make.trailing.equalTo(view.snp.trailing).inset(5 * feedbackMenuViewPadding)
+                make.size.equalTo(feedbackMenuViewSize)
             }
         } else {
             feedbackMenuView?.removeFromSuperview()
@@ -309,6 +322,11 @@ extension HomeViewController: TabDelegate {
     func setActiveTabIndex(to index: Int) {
         activeTabIndex = index
         tabPageViewController?.setViewController(to: index)
+        if let _ = user?.currentMatch, index == 0 {
+            menuOptions = matchOptions
+        } else {
+            menuOptions = communityOptions
+        }
         tabCollectionView.reloadData()
     }
     
@@ -325,3 +343,17 @@ extension HomeViewController: ProfileMenuDelegate {
     }
     
 }
+
+extension HomeViewController: BlockDelegate {
+    
+    func didBlockOrUnblockUser() {
+        updateUserAndTabPage()
+    }
+    
+    func presentErrorAlert() {
+        present(UIAlertController.getStandardErrortAlert(), animated: true)
+    }
+    
+}
+
+

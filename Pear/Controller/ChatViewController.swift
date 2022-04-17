@@ -19,6 +19,8 @@ class ChatViewController: UIViewController {
     private let chatTableView = UITableView(frame: .zero, style: .grouped)
     private let emptyBackgroundView = UIView()
     private let emptyChatImage = UIImageView()
+    private let menuButton = UIButton()
+    private var optionsMenuView: OptionsView?
     private let sendMessageButton = UIButton()
     private let separatorView = UIView()
 
@@ -27,12 +29,13 @@ class ChatViewController: UIViewController {
     private let databaseRef = Database.database().reference()
     private var dateKeys: [Date] = []
     private var groupedMessagesByDate: [[PearMessage]] = []
-    private var messages: [PearMessage] = []
-    private let messageUser: MatchedUser
     private var keyboardOffSet: CGFloat = 0
+    private var messages: [PearMessage] = []
+    private let messageUser: CommunityUser
+    private var shouldDisplayMenu = true
     private let status: String
-
-    init(messageUser: MatchedUser, currentUser: UserV2, status: String) {
+    
+    init(messageUser: CommunityUser, currentUser: UserV2, status: String) {
         self.messageUser = messageUser
         self.currentUser = currentUser
         self.status = status
@@ -65,6 +68,10 @@ class ChatViewController: UIViewController {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+        menuButton.setImage(UIImage(named: "optionIcon"), for: .normal)
+        menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
 
         chatTableView.separatorStyle = .none
         chatTableView.backgroundColor = .backgroundLightGreen
@@ -79,6 +86,11 @@ class ChatViewController: UIViewController {
 
         emptyBackgroundView.backgroundColor = .clear
         emptyBackgroundView.addSubview(emptyChatImage)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
 
         setupChatInput()
         getChatMessages()
@@ -326,6 +338,43 @@ class ChatViewController: UIViewController {
             make.height.equalTo(200)
         }
     }
+    
+    @objc private func dismissMenu() {
+        if !shouldDisplayMenu {
+            optionsMenuView?.removeFromSuperview()
+            shouldDisplayMenu.toggle()
+        }
+    }
+    
+    @objc private func toggleMenu() {
+        let optionsMenuViewSize = CGSize(width: 150, height: 50)
+        let optionsMenuViewPadding = 8
+        
+        if shouldDisplayMenu {
+            guard let superView = navigationController?.view else { return }
+            let options = ["Block user"]
+            optionsMenuView = OptionsView(
+                feedbackDelegate: nil,
+                blockDelegate: nil,
+                matchId: messageUser.id,
+                blockId: messageUser.id,
+                options: options,
+                superView: superView
+            )
+            
+            guard let optionsMenuView = optionsMenuView else { return }
+            view.addSubview(optionsMenuView)
+
+            optionsMenuView.snp.makeConstraints { make in
+                make.top.equalTo(menuButton.snp.bottom).offset(optionsMenuViewPadding)
+                make.trailing.equalTo(view.snp.trailing).inset(4 * optionsMenuViewPadding)
+                make.size.equalTo(optionsMenuViewSize)
+            }
+        } else {
+            optionsMenuView?.removeFromSuperview()
+        }
+        shouldDisplayMenu.toggle()
+    }
 
 }
 
@@ -366,7 +415,7 @@ extension ChatViewController: UITableViewDataSource {
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
         cell.viewProfile = {
-            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, otherUserId: self.messageUser.id), animated: true)
+            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, viewType: .otherUser(self.messageUser.id)), animated: true)
         }
         cell.selectionStyle = .none
         return cell

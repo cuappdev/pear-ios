@@ -17,10 +17,10 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageView = UIImageView()
 
     // MARK: - Private Data Vars
-    private let profileImageSize = CGSize(width: 150, height: 150)
+    private let profileImageSize = CGSize(width: 120, height: 120)
     private var currentUser: User?
     private var pair: User?
-    var showMessages: ((MatchedUser, User) -> Void)?
+    var showMessages: ((CommunityUser, User) -> Void)?
 
     static let reuseIdentifier = "ProfileSummaryTableViewCell"
 
@@ -55,7 +55,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 
     private func setupConstraints() {
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview()
             make.centerX.equalToSuperview()
             make.size.equalTo(profileImageSize)
         }
@@ -151,7 +151,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(for user: MatchedUser) {
+    func configure(for user: CommunityUser) {
         nameLabel.text = "\(user.firstName) \(user.lastName)"
 //        netIdLabel.text = "Reach me at \(user.netId)"
         if let profilePictureURL = URL(string: user.profilePicUrl ?? "") {
