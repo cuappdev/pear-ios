@@ -17,11 +17,13 @@ class MatchProfileViewController: UIViewController {
     private let reachOutButton = UIButton()
     private var chatStatus: ChatStatus?
     private var match: MatchV2?
-    private var matchedUser: MatchedUser?
+    private var matchedUser: CommunityUser?
     private var meetupStatusView: MeetupStatusView?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private let user: UserV2
+    
+    // MARK: - Private Data Vars
 
     init(user: UserV2) {
         self.user = user
@@ -85,11 +87,17 @@ class MatchProfileViewController: UIViewController {
 
         profileTableView.reloadData()
         
-        reachOutButton.setTitle("Reach Out", for: .normal)
+        reachOutButton.setTitle("Send a Message", for: .normal)
         reachOutButton.setTitleColor(.white, for: .normal)
         reachOutButton.titleLabel?.font = ._20CircularStdBold
+        reachOutButton.setImage(UIImage(named: "messageArrow"), for: .normal)
+        reachOutButton.imageEdgeInsets.left = -22
         reachOutButton.backgroundColor = .backgroundOrange
         reachOutButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        reachOutButton.layer.shadowColor = UIColor.black.cgColor
+        reachOutButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        reachOutButton.layer.shadowOpacity = 0.15
+        reachOutButton.layer.shadowRadius = 4
         reachOutButton.addTarget(self, action: #selector(reachOutButtonPressed), for: .touchUpInside)
         view.addSubview(reachOutButton)
 
@@ -120,7 +128,7 @@ class MatchProfileViewController: UIViewController {
         
         reachOutButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.size.equalTo(Constants.Onboarding.largeButtonSize)
+            make.size.equalTo(Constants.Onboarding.secondaryButtonSize)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
                 .inset(Constants.Onboarding.nextBottomPadding)
         }
@@ -136,7 +144,8 @@ class MatchProfileViewController: UIViewController {
         navigationController?.pushViewController(
             ChatViewController(
                 messageUser: matchedUser,
-                currentUser: user, status: match.status
+                currentUser: user,
+                status: match.status
             ),
             animated: true
         )

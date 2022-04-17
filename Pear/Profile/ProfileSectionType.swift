@@ -47,7 +47,7 @@ enum ProfileSectionType {
         }
     }
 
-    func getTitle(for user: MatchedUser) -> String {
+    func getTitle(for user: CommunityUser) -> String {
         switch self {
         case .summary:
             return "\(user.firstName) \(user.lastName)"

@@ -493,7 +493,7 @@ class NetworkManager {
         }
     }
 
-    static func getUser(id: Int, completion: @escaping (Result<UserV2, Error>) -> Void) {
+    static func getUser(id: Int, completion: @escaping (Result<CommunityUser, Error>) -> Void) {
         AF.request(
             "\(hostEndpoint)/api/users/\(id)/",
             method: .get,
@@ -506,7 +506,7 @@ class NetworkManager {
                 jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
                 
                 do {
-                    let userData = try jsonDecoder.decode(Response<UserV2>.self, from: data)
+                    let userData = try jsonDecoder.decode(Response<CommunityUser>.self, from: data)
                     let user = userData.data
                     completion(.success(user))
                 } catch {
@@ -673,6 +673,29 @@ class NetworkManager {
             "\(hostEndpoint)/api/me/",
             method: .post,
             parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    static func blockOrUnblockUser(isBlocking: Bool, userId: Int, completion: @escaping (Bool) -> Void) {
+        let requestType = isBlocking ? "block" : "unblock"
+        let endpoint = "\(hostEndpoint)/api/users/\(userId)/\(requestType)/"
+    
+        AF.request(
+            endpoint,
+            method: .post,
             encoding: JSONEncoding.default,
             headers: headers
         ).validate().responseData { response in
