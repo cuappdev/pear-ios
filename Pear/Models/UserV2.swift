@@ -7,7 +7,6 @@
 //
 
 struct UserV2: Codable {
-
     let id: Int
     let netId: String
     let firstName: String
@@ -41,22 +40,6 @@ struct MatchV2: Codable {
     let proposedLocations: [LocationV2]?
     let meetingLocation: LocationV2?
     let meetingTime: String?
-}
-
-// TODO: MatchedUser and CommunityUser can be combined
-struct MatchedUser: Codable {
-    let id: Int
-    let netId: String
-    let firstName: String
-    let lastName: String
-    let hometown: String
-    let majors: [MajorV2]
-    var profilePicUrl: String?
-    let graduationYear: String
-    let pronouns: String?
-    let interests: [Interest]
-    let groups: [Group]
-    let prompts: [Prompt]
 }
 
 struct CommunityUser: Codable {

@@ -370,7 +370,7 @@ extension ChatViewController: UITableViewDataSource {
         let message = groupedMessagesByDate[indexPath.section][indexPath.row]
         cell.configure(for: message, user: currentUser, pair: messageUser)
         cell.viewProfile = {
-            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, profileUserId: self.messageUser.id), animated: true)
+            self.navigationController?.pushViewController(ProfileViewController(user: self.currentUser, viewType: .otherUser(self.messageUser.id)), animated: true)
         }
         cell.selectionStyle = .none
         return cell

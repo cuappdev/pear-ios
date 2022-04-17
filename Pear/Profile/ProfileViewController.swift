@@ -9,6 +9,11 @@ import GoogleSignIn
 import Kingfisher
 import UIKit
 
+enum ProfileViewing: Equatable {
+    case currentUser
+    case otherUser(Int)
+}
+
 class ProfileViewController: UIViewController {
 
     // MARK: - Private View Vars
@@ -17,18 +22,26 @@ class ProfileViewController: UIViewController {
     private let unblockButton = DynamicButton()
     private let unblockLabel = UILabel()
     private var currentUser: UserV2
+    private let editButton = UIButton()
     private var profileUser: CommunityUser?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var optionsMenuView: OptionsView?
+    private let viewType: ProfileViewing
     
     // MARK: - Private Data Vars
     private var shouldDisplayMenu = true
     
-    init(user: UserV2, profileUserId: Int) {
+    init(user: UserV2, viewType: ProfileViewing) {
         self.currentUser = user
+        self.viewType = viewType
         super.init(nibName: nil, bundle: nil)
-        getProfileUser(profileUserId: profileUserId)
+        switch viewType {
+            case .currentUser:
+                getProfileUser(profileUserId: currentUser.id)
+            case .otherUser(let otherUserId):
+                getProfileUser(profileUserId: otherUserId)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -49,15 +62,31 @@ class ProfileViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.getFont(.medium, size: 24)
+            .font: UIFont._20CircularStdMedium,
+            .foregroundColor: UIColor.primaryText
         ]
+        navigationItem.title = viewType == .currentUser ? "Preview" : ""
+        
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        
+
+        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitleColor(.darkGreen, for: .normal)
+        editButton.titleLabel?.font = ._20CircularStdMedium
+        editButton.isHidden = viewType != .currentUser
+        editButton.addTarget(self, action: #selector(editPressed), for: .touchUpInside)
+
         menuButton.setImage(UIImage(named: "optionIcon"), for: .normal)
         menuButton.addTarget(self, action: #selector(toggleMenu), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
+        menuButton.isHidden = viewType == .currentUser
+        
+        switch viewType {
+            case .currentUser:
+                navigationItem.rightBarButtonItem = UIBarButtonItem(customView: editButton)
+        case .otherUser(_):
+                navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuButton)
+        }
 
         profileTableView.dataSource = self
         profileTableView.backgroundColor = .clear
@@ -70,7 +99,7 @@ class ProfileViewController: UIViewController {
         profileTableView.separatorStyle = .none
         profileTableView.estimatedSectionHeaderHeight = 0
         profileTableView.sectionHeaderHeight = UITableView.automaticDimension
-        profileTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 40, right: 0)
+        profileTableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 40, right: 0)
         profileTableView.showsVerticalScrollIndicator = false
         view.addSubview(profileTableView)
         
@@ -171,6 +200,11 @@ class ProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @objc func editPressed() {
+        //TODO: Push New Edit VC
+        print("edit!")
+    }
+        
     @objc private func unblockedButtonPressed() {
         guard let userId = profileUser?.id else { return }
         let unblockUserView = BlockUserView(blockDelegate: self, userId: userId, isBlocking: false)
@@ -226,26 +260,26 @@ extension ProfileViewController: UITableViewDataSource {
         guard let user = profileUser else { return UITableViewCell() }
         let section = profileSections[indexPath.row]
         let reuseIdentifier = section.reuseIdentifier
-
+        
         switch section {
-        case .summary:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user)
-            return cell
-        case .basics:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user, type: section)
-            return cell
-        case .interests, .groups:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user, type: section)
-            return cell
-        case .matches:
-            return UITableViewCell()
-        case .prompts:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
-            cell.configure(for: user.prompts)
-            return cell
+            case .summary:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSummaryTableViewCell else { return UITableViewCell() }
+                cell.configure(for: user)
+                return cell
+            case .basics:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptTableViewCell else { return UITableViewCell() }
+                cell.configure(for: user, type: section)
+                return cell
+            case .interests, .groups:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfileSectionTableViewCell else { return UITableViewCell() }
+                cell.configure(for: user, type: section)
+                return cell
+            case .matches:
+                return UITableViewCell()
+            case .prompts:
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ProfilePromptsSectionTableViewCell else { return UITableViewCell() }
+                cell.configure(for: user.prompts)
+                return cell
         }
     }
 

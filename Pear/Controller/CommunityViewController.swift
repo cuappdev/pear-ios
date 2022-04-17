@@ -146,7 +146,7 @@ extension CommunityViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let otherUser = users[indexPath.row]
-        navigationController?.pushViewController(ProfileViewController(user: currentUser, profileUserId: otherUser.id), animated: true)
+        navigationController?.pushViewController(ProfileViewController(user: currentUser, viewType: .otherUser(otherUser.id)), animated: true)
     }
 }
 

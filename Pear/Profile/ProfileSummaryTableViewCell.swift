@@ -17,7 +17,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
     private let profileImageView = UIImageView()
 
     // MARK: - Private Data Vars
-    private let profileImageSize = CGSize(width: 150, height: 150)
+    private let profileImageSize = CGSize(width: 120, height: 120)
     private var currentUser: User?
     private var pair: User?
     var showMessages: ((CommunityUser, User) -> Void)?
@@ -55,7 +55,7 @@ class ProfileSummaryTableViewCell: UITableViewCell {
 
     private func setupConstraints() {
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview()
             make.centerX.equalToSuperview()
             make.size.equalTo(profileImageSize)
         }
