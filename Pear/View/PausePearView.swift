@@ -140,6 +140,7 @@ class PausePearView: UIView {
     }
     
     @objc private func saveButtonPressed() {
+        // TODO: pause user
         delegate?.removePauseView(self)
         guard let pauseDelegate = delegate else {return}
         let pauseFinishView = PausePearFinishView(delegate: pauseDelegate)

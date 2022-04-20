@@ -63,10 +63,17 @@
 		50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C842D326CCD76C004242FF /* PromptLabel.swift */; };
 		50DA489226078B7B007654D5 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DA489126078B7B007654D5 /* OptionsView.swift */; };
 		7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06B84F2543F15900D6B505 /* InterestsViewController.swift */; };
+<<<<<<< HEAD
 		927E823B27E976660079CE7E /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E823A27E976660079CE7E /* Animations.swift */; };
 		92C552D627E8104100398CFF /* BlurEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C552D527E8104100398CFF /* BlurEffectView.swift */; };
 		92C552D827E8118A00398CFF /* BlockUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C552D727E8118A00398CFF /* BlockUserView.swift */; };
+=======
+<<<<<<< HEAD
+>>>>>>> c167eb0 (Merge Unpause View)
 		B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A529F27D2E6F000BFA691 /* DynamicButton.swift */; };
+=======
+		9211799D27E670C2008F2F7D /* UnpausePearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9211799C27E670C2008F2F7D /* UnpausePearView.swift */; };
+>>>>>>> 8919a70 (Implement Unpause Pear View)
 		922C872627BDA53C005DCE75 /* BlurEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922C872527BDA53C005DCE75 /* BlurEffectView.swift */; };
 		92FFDAB727D01697006E739E /* PausePearFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FFDAB627D01697006E739E /* PausePearFeedbackView.swift */; };
 		92FFDAB927D01A51006E739E /* PausePearFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FFDAB827D01A51006E739E /* PausePearFinishView.swift */; };
@@ -216,6 +223,7 @@
 		927E823A27E976660079CE7E /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		92C552D527E8104100398CFF /* BlurEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffectView.swift; sourceTree = "<group>"; };
 		92C552D727E8118A00398CFF /* BlockUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserView.swift; sourceTree = "<group>"; };
+		9211799C27E670C2008F2F7D /* UnpausePearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnpausePearView.swift; sourceTree = "<group>"; };
 		922C872527BDA53C005DCE75 /* BlurEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffectView.swift; sourceTree = "<group>"; };
 		92FFDAB627D01697006E739E /* PausePearFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausePearFeedbackView.swift; sourceTree = "<group>"; };
 		92FFDAB827D01A51006E739E /* PausePearFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausePearFinishView.swift; sourceTree = "<group>"; };
@@ -513,6 +521,7 @@
 				5029873725389E4700E52EDA /* PausePearView.swift */,
 				92FFDAB827D01A51006E739E /* PausePearFinishView.swift */,
 				92FFDAB627D01697006E739E /* PausePearFeedbackView.swift */,
+				9211799C27E670C2008F2F7D /* UnpausePearView.swift */,
 				922C872527BDA53C005DCE75 /* BlurEffectView.swift */,
 				4FCE3AE925200DF0004E2E33 /* MeetupStatusView.swift */,
 				D434997A253C14C60024A992 /* SelfSizingCollectionView.swift */,
@@ -978,6 +987,7 @@
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D48F6F4826700BDF00D844B7 /* EditSection.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
+				9211799D27E670C2008F2F7D /* UnpausePearView.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
 				504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */,
 				50705D3A25676AB1000F63EE /* EditLocationAvailabilityViewController.swift in Sources */,

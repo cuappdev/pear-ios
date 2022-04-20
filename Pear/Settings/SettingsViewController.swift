@@ -24,7 +24,7 @@ class SettingsViewController: UIViewController {
     private let settingsTableView = UITableView()
     private var pauseVisualEffectView = BlurEffectView()
     private var pausePearView: PausePearView!
-    private var pausePearFinishView: PausePearFinishView!
+    private var unpausePearView: UnpausePearView!
     private let user: UserV2
 
     // MARK: - Private Data Vars
@@ -87,7 +87,7 @@ class SettingsViewController: UIViewController {
 
     private func setupPausePear() {
         pausePearView = PausePearView(delegate: self)
-        pausePearFinishView = PausePearFinishView(delegate: self)
+        unpausePearView = UnpausePearView(delegate: self)
     }
 
     @objc private func backPressed() {
@@ -118,6 +118,15 @@ class SettingsViewController: UIViewController {
 
     private func pushEditSocialMediaViewController() {
         navigationController?.pushViewController(EditSocialMediaViewController(), animated: true)
+    }
+    
+    private func pausePear() {
+        let isPaused = true // TODO: update based on whether user is paused
+        if isPaused {
+            presentPauseView(unpausePearView)
+        } else {
+            presentPauseView(pausePearView)
+        }
     }
 
 }
@@ -150,7 +159,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Connect Social Media" {
             pushEditSocialMediaViewController()
         } else if option.text == "Pause Pear" {
-            presentPauseView(pausePearView)
+            pausePear()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             do {
