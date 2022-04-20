@@ -21,8 +21,7 @@ class SettingsViewController: UIViewController {
     // MARK: - Private View Vars
     private let backButton = UIButton()
     private let settingsTableView = UITableView()
-    private var pauseBlurEffect: UIBlurEffect!
-    private var pauseVisualEffectView: UIVisualEffectView!
+    private var pauseVisualEffectView = BlurEffectView()
     private var pausePearView: PausePearView!
     private let user: UserV2
 
@@ -32,7 +31,8 @@ class SettingsViewController: UIViewController {
 //        SettingOption(hasSwitch: false, image: "location", switchOn: false, text: "Edit Location Availabilities"),
 //        SettingOption(hasSwitch: false, image: "socialMedia", switchOn: false, text: "Connect Social Media"),
         SettingOption(hasSwitch: false, image: "aboutPear", switchOn: false, text: "About Pear"),
-        SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out")
+        SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out"),
+        SettingOption(hasSwitch: false, image: "pausePear", switchOn: false, text: "Pause Pear")
     ]
 
     override func viewDidLoad() {
@@ -85,8 +85,6 @@ class SettingsViewController: UIViewController {
 
     private func setupPausePear() {
         pausePearView = PausePearView(delegate: self)
-        pauseBlurEffect = UIBlurEffect(style: .regular)
-        pauseVisualEffectView = UIVisualEffectView(effect: pauseBlurEffect)
     }
 
     @objc private func backPressed() {
@@ -148,6 +146,8 @@ extension SettingsViewController: UITableViewDataSource {
             pushEditLocationAvailabilitiesViewController()
         } else if option.text == "Connect Social Media" {
             pushEditSocialMediaViewController()
+        } else if option.text == "Pause Pear" {
+            presentPausePear()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             do {
