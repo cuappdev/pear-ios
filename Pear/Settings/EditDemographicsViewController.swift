@@ -1,4 +1,5 @@
 //
+
 //  EditDemographicsViewController.swift
 //  CoffeeChat
 //
@@ -18,16 +19,14 @@ class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Vars
     private var classSearchFields: [String] = []
-    private var fieldsEntered: [Bool] = [true, true, true, true, true] // Keep track of fields that have been entered
+    private var fieldsEntered = Array(repeating: true, count: 5) // Keep track of fields that have been entered
     private var majorSearchFields: [MajorV2] = []
     private let pronounSearchFields = Constants.Options.pronounSearchFields
     private var user: UserV2
-    private var demographics = Demographics(name: nil, graduationYear: nil, major: nil, hometown: nil, pronouns: nil)
+    private var demographics = Demographics()
 
     // MARK: - Private View Vars
     private var activeDropdownView: UIView? // Keep track of currently active field
-    private var backBarButtonItem: UIBarButtonItem!
-    private let backButton = UIButton()
     private var classDropdownView: OnboardingSelectDropdownView!
     private let editScrollView = UIScrollView()
     private var hometownDropdownView: OnboardingSearchDropdownView!
@@ -36,14 +35,15 @@ class EditDemographicsViewController: UIViewController {
     private let nameTextField = UITextField()
     private let profileImageView = UIImageView()
     private var pronounsDropdownView: OnboardingSearchDropdownView!
-    private let saveBarButtonItem = UIBarButtonItem()
     private let uploadPhotoButton = UIButton()
 
     // MARK: - Private Data Variables
     private let textFieldHeight: CGFloat = 49
     // Keep track of if view scrolled to fit content
-    private var isPageScrolled: Bool = false
+    private var isPageScrolled = false
     private var didUpdatePhoto = false
+    private let profileImageSize = CGSize(width: 120, height: 120)
+    private let uploadPhotoButtonHeight: CGFloat = 31
     
     var delegate: EditDemographicsViewControllerDelegate?
     weak var profileDelegate: ProfileMenuDelegate?
@@ -70,28 +70,9 @@ class EditDemographicsViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         self.title = "Edit info"
 
-        navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.barTintColor = .backgroundLightGreen
-        navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
-        navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont.getFont(.medium, size: 24)
-        ]
-        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-
-        saveBarButtonItem.title = "Save"
-        saveBarButtonItem.tintColor = .darkGreen
-        saveBarButtonItem.setTitleTextAttributes([
-            .font: UIFont.getFont(.medium, size: 20)
-        ], for: .normal)
-        saveBarButtonItem.target = self
-        saveBarButtonItem.action = #selector(savePressed)
-        navigationItem.rightBarButtonItem = saveBarButtonItem
-
         editScrollView.isScrollEnabled = false
         editScrollView.showsVerticalScrollIndicator = false
-        editScrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        editScrollView.contentSize = view.frame.size
         view.addSubview(editScrollView)
 
         profileImageView.layer.backgroundColor = UIColor.inactiveGreen.cgColor
@@ -116,7 +97,7 @@ class EditDemographicsViewController: UIViewController {
         imagePickerController.allowsEditing = true
 
         setupDemographicsTextField(textField: nameTextField, text: "\(user.firstName) \(user.lastName)")
-        nameTextField.isEnabled = false
+        nameTextField.isEnabled = true
         editScrollView.addSubview(nameTextField)
 
         // Renders the valid graduation years based on current year.
@@ -124,10 +105,12 @@ class EditDemographicsViewController: UIViewController {
         let gradYear = currentYear + 4 // Allow only current undergrads and fifth years
         classSearchFields = (currentYear...gradYear).map { "\($0)" }
 
-        classDropdownView = OnboardingSelectDropdownView(delegate: self,
-                                                         placeholder: "Class of...",
-                                                         tableData: classSearchFields,
-                                                         textTemplate: "Class of")
+        classDropdownView = OnboardingSelectDropdownView(
+            delegate: self,
+            placeholder: "Class of...",
+            tableData: classSearchFields,
+            textTemplate: "Class of"
+        )
         classDropdownView.tag = 1 // Set tag to keep track of field selection status.
         classDropdownView.setSelectValue(value: user.graduationYear ?? "")
         editScrollView.addSubview(classDropdownView)
@@ -135,7 +118,7 @@ class EditDemographicsViewController: UIViewController {
         majorDropdownView = OnboardingSearchDropdownView(
             delegate: self,
             placeholder: "Major",
-            tableData: majorSearchFields.map { $0.name },
+            tableData: majorSearchFields.map(\.name),
             searchType: .local
         )
         majorDropdownView.tag = 2 // Set tag to keep track of field selection status.
@@ -184,9 +167,10 @@ class EditDemographicsViewController: UIViewController {
         textField.font = ._20CircularStdBook
         textField.text = text
         textField.clearButtonMode = .never
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        let textFieldRect = CGRect(x: 0, y: 0, width: 12, height: 49)
+        textField.leftView = UIView(frame: textFieldRect)
         textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 49))
+        textField.rightView = UIView(frame: textFieldRect)
         textField.rightViewMode = .always
         textField.layer.cornerRadius = 8
         textField.layer.shadowColor = UIColor.black.cgColor
@@ -196,65 +180,53 @@ class EditDemographicsViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        let textFieldHeight: CGFloat = 49
         let textFieldSidePadding: CGFloat = 40
         let textFieldTopPadding: CGFloat = 20
-        let textFieldTotalPadding: CGFloat = textFieldHeight + textFieldTopPadding
-
-        backButton.snp.makeConstraints { make in
-            make.size.equalTo(Constants.Onboarding.backButtonSize)
-        }
+        let textFieldTotalPadding = textFieldHeight + textFieldTopPadding
 
         editScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-
+        
         profileImageView.snp.makeConstraints { make in
             make.centerX.equalTo(editScrollView)
-            make.height.width.equalTo(120)
+            make.size.equalTo(profileImageSize)
             make.top.equalTo(editScrollView).offset(50)
         }
-
+        
         uploadPhotoButton.snp.makeConstraints { make in
             make.centerX.equalTo(profileImageView)
             make.top.equalTo(profileImageView.snp.bottom).inset(20)
             make.width.equalTo(130)
-            make.height.equalTo(31)
+            make.height.equalTo(uploadPhotoButtonHeight)
         }
 
+        [nameTextField, classDropdownView, majorDropdownView, hometownDropdownView, pronounsDropdownView].forEach { subView in
+            subView.snp.makeConstraints { make in
+               make.centerX.equalTo(editScrollView)
+               make.height.equalTo(textFieldHeight)
+            }
+         }
+        
         nameTextField.snp.makeConstraints { make in
-            make.centerX.equalTo(editScrollView)
             make.top.equalTo(profileImageView.snp.bottom).offset(63)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
-            make.height.equalTo(textFieldHeight)
         }
-
         classDropdownView.snp.makeConstraints { make in
-            make.centerX.equalTo(editScrollView)
             make.top.equalTo(nameTextField.snp.top).offset(textFieldTotalPadding)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
-            make.height.equalTo(textFieldHeight)
         }
-
         majorDropdownView.snp.makeConstraints { make in
-            make.centerX.equalTo(editScrollView)
             make.top.equalTo(classDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
-            make.height.equalTo(textFieldHeight)
         }
-
         hometownDropdownView.snp.makeConstraints { make in
-            make.centerX.equalTo(editScrollView)
             make.top.equalTo(majorDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
-            make.height.equalTo(textFieldHeight)
         }
-
         pronounsDropdownView.snp.makeConstraints { make in
-            make.centerX.equalTo(editScrollView)
             make.top.equalTo(hometownDropdownView.snp.top).offset(textFieldTotalPadding)
             make.leading.equalTo(editScrollView).offset(textFieldSidePadding)
-            make.height.equalTo(textFieldHeight)
         }
     }
 
@@ -273,10 +245,6 @@ class EditDemographicsViewController: UIViewController {
                 print(error.localizedDescription)
             }
         }
-    }
-
-    @objc private func backPressed() {
-        navigationController?.popViewController(animated: true)
     }
 
     private func saveProfile(profilePictureURL: String) {
@@ -349,14 +317,11 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         if isSelected {
             if tag == 1 {
                 demographics.graduationYear = valueSelected
-            }
-            if tag == 2 {
+            } else if tag == 2 {
                 demographics.major = valueSelected
-            }
-            if tag == 3 {
+            } else if tag == 3 {
                 demographics.hometown = valueSelected
-            }
-            if tag == 4 {
+            } else if tag == 4 {
                 demographics.pronouns = valueSelected
             }
         }
@@ -371,17 +336,16 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
     /// Brings field view to the front of the screen and handles keyboard interactions
     /// when switching from select dropdowns to search.
     func bringDropdownViewToFront(dropdownView: UIView, height: CGFloat, isSelect: Bool) {
-        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView,
-            activeDropdownView != dropdownView {
-            editScrollView.sendSubviewToBack(activeDropdownView)
-            updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-            activeDropdownView.hideTableView()
-            activeDropdownView.endEditing(true)
+        if let activeDropdownView = activeDropdownView as? OnboardingSearchDropdownView, activeDropdownView != dropdownView {
+                editScrollView.sendSubviewToBack(activeDropdownView)
+                updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+                activeDropdownView.hideTableView()
+                activeDropdownView.endEditing(true)
         } else if let activeDropdownView = activeDropdownView as? OnboardingSelectDropdownView,
             activeDropdownView != dropdownView {
-            editScrollView.sendSubviewToBack(activeDropdownView)
-            updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
-            activeDropdownView.hideTableView()
+                editScrollView.sendSubviewToBack(activeDropdownView)
+                updateFieldConstraints(fieldView: activeDropdownView, height: textFieldHeight)
+                activeDropdownView.hideTableView()
         } else if let activeDropdownView = activeDropdownView as? UITextField {
             activeDropdownView.endEditing(true)
         }
@@ -402,15 +366,23 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         editScrollView.sendSubviewToBack(dropdownView)
         updateFieldConstraints(fieldView: dropdownView, height: textFieldHeight)
         if isPageScrolled {
-            editScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+            editScrollView.setContentOffset(CGPoint.zero, animated: true)
             isPageScrolled = false
         }
     }
+    
+}
+
+extension EditDemographicsViewController: UITextFieldDelegate {
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeDropdownView = textField
+    }
+    
 }
 
 extension EditDemographicsViewController: UIImagePickerControllerDelegate,
-                                          UINavigationControllerDelegate,
-                                          UITextFieldDelegate {
+                                          UINavigationControllerDelegate {
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
@@ -426,10 +398,7 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
         didUpdatePhoto = true
         dismiss(animated: true, completion: nil)
     }
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeDropdownView = textField
-    }
+    
 }
 
 

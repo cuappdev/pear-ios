@@ -10,10 +10,10 @@ import Foundation
 
 struct Demographics {
     
-    var name: String?
-    var graduationYear: String?
-    var major: String?
-    var hometown: String?
-    var pronouns: String?
+    var name: String? = nil
+    var graduationYear: String? = nil
+    var major: String? = nil
+    var hometown: String? = nil
+    var pronouns: String? = nil
     
 }

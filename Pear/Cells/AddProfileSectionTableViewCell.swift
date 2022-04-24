@@ -9,18 +9,18 @@ import UIKit
 
 class AddProfileSectionTableViewCell: UITableViewCell {
     
-    static let reuseIdentifier = "AddProfileSectionTableViewCell"
-    
     // MARK: - Private View Vars
     private let backdropView = UIView()
     private let label = UILabel()
     private let plusImageView = UIImageView()
     
+    // MARK: - Data Vars
+    static let reuseIdentifier = "AddProfileSectionTableViewCell"
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         backgroundColor = .clear
-        contentView.backgroundColor = .clear
         
         backdropView.backgroundColor = .white
         backdropView.layer.cornerRadius = 8
@@ -63,7 +63,6 @@ class AddProfileSectionTableViewCell: UITableViewCell {
     
     func configure(with labelText: String) {
         label.text = labelText
-        
         setupConstraints()
     }
 

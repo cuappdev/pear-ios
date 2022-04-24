@@ -2,28 +2,28 @@
 //  EditProfileViewController.swift
 //  Pear
 //
-//  Created by Mathew Scullin on 4/17/22.
+//  Created by Mathew Scullin on 4/27/22.
 //  Copyright © 2022 cuappdev. All rights reserved.
 //
 
 import UIKit
 
-class EditProfileViewController: UIViewController {
+class EditProfileViewController: UIPageViewController {
     
     // MARK: - Private View Vars
     private let backButton = UIButton()
-    private let dotView = DotView()
-    private var editOptions = [UIView]()
-    private var profileSectionsCollectionView: FadeWrapperView<UICollectionView>!
-    private var saveButton = UIButton()
+    private var editPages = [UIViewController]()
+    private let saveButton = UIButton()
+
     
     // MARK: - Private Data Vars
     private var currentUser: UserV2
-    private var profileSections = [ProfileSectionType]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataSource = self
+            
         view.backgroundColor = .backgroundLightGreen
 
         navigationController?.navigationBar.isHidden = false
@@ -45,49 +45,32 @@ class EditProfileViewController: UIViewController {
         saveButton.addTarget(self, action: #selector(savePressed), for: .touchUpInside)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: saveButton)
         
-        view.addSubview(dotView)
+        let pageControl = UIPageControl.appearance()
+        pageControl.pageIndicatorTintColor = .inactiveGreen
+        pageControl.currentPageIndicatorTintColor = .darkGreen
         
-        let profileEditCollectionViewLayout = UICollectionViewFlowLayout()
-        profileEditCollectionViewLayout.scrollDirection = .horizontal
-        profileEditCollectionViewLayout.minimumInteritemSpacing = 0
-        profileEditCollectionViewLayout.minimumLineSpacing = 0
-
-        profileSectionsCollectionView = FadeWrapperView(UICollectionView(frame: .zero, collectionViewLayout: profileEditCollectionViewLayout), fadeColor: .backgroundLightGreen)
-        profileSectionsCollectionView.view.register(EditDemographicsCollectionViewCell.self, forCellWithReuseIdentifier: EditDemographicsCollectionViewCell.reuseIdentifier)
-        profileSectionsCollectionView.view.register(EditInterestsGroupsPromptsCollectionViewCell.self, forCellWithReuseIdentifier: EditInterestsGroupsPromptsCollectionViewCell.reuseIdentifier)
-        profileSectionsCollectionView.view.dataSource = self
-        profileSectionsCollectionView.view.delegate = self
-        profileSectionsCollectionView.view.showsHorizontalScrollIndicator = false
-        profileSectionsCollectionView.view.isPagingEnabled = true
-        view.addSubview(profileSectionsCollectionView)
+        let editDemographicsViewController = EditDemographicsViewController(user: currentUser)
+        let editInterestsViewController = EditProfileSectionsViewController(editProfileSectionType: .interests(currentUser.interests))
+        let editGroupsViewController = EditProfileSectionsViewController(editProfileSectionType: .groups(currentUser.groups))
+        let editPromptsViewController = EditProfileSectionsViewController(editProfileSectionType: .prompts(currentUser.prompts))
         
-        profileSections = [.basics, .interests, .groups, .prompts]
+        editPages = [
+            editDemographicsViewController,
+            editInterestsViewController,
+            editGroupsViewController,
+            editPromptsViewController
+        ]
         
-        setupConstraints()
+        setViewControllers([editPages[0]], direction: .forward, animated: true)
     }
     
     init(currentUser: UserV2) {
         self.currentUser = currentUser
-        super.init(nibName: nil, bundle: nil)
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupConstraints() {
-        dotView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.width.equalTo(54)
-            make.height.equalTo(8)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
-        }
-        
-        profileSectionsCollectionView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(dotView.snp.top)
-        }
     }
     
     @objc private func backPressed() {
@@ -97,48 +80,29 @@ class EditProfileViewController: UIViewController {
     @objc private func savePressed() {
         print("save")
     }
+
 }
 
-extension EditProfileViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        profileSections.count
+extension EditProfileViewController: UIPageViewControllerDataSource {
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let index = editPages.firstIndex(of: viewController), index > 0 else { return nil }
+        
+        return editPages[index-1]
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let index = editPages.firstIndex(of: viewController), index < editPages.count - 1 else { return nil }
+        
+        return editPages[index+1]
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let section = profileSections[indexPath.row]
-        switch section {
-        case .basics:
-            guard let cell = profileSectionsCollectionView.view.dequeueReusableCell(withReuseIdentifier: EditDemographicsCollectionViewCell.reuseIdentifier, for: indexPath) as? EditDemographicsCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(user: currentUser)
-            return cell
-        default:
-            guard let cell = profileSectionsCollectionView.view.dequeueReusableCell(withReuseIdentifier: EditInterestsGroupsPromptsCollectionViewCell.reuseIdentifier, for: indexPath) as? EditInterestsGroupsPromptsCollectionViewCell else { return UICollectionViewCell() }
-            cell.configure(editType: section, currentUser: currentUser)
-            return cell
-        }
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        return editPages.count
     }
-    
-}
 
-extension EditProfileViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout
-     collectionViewLayout: UICollectionViewLayout, sizeForItemAt
-     indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: profileSectionsCollectionView.frame.height)
-     }
-    
-}
-
-extension EditProfileViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        for cell in profileSectionsCollectionView.view.visibleCells {
-            if let row = profileSectionsCollectionView.view.indexPath(for: cell)?.item {
-                dotView.updateIndex(newIndex: row)
-            }
-        }
+    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
+        return 0
     }
     
 }

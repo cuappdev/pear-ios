@@ -66,13 +66,11 @@
 		927E823B27E976660079CE7E /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E823A27E976660079CE7E /* Animations.swift */; };
 		92C552D627E8104100398CFF /* BlurEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C552D527E8104100398CFF /* BlurEffectView.swift */; };
 		92C552D827E8118A00398CFF /* BlockUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C552D727E8118A00398CFF /* BlockUserView.swift */; };
-		B636A0E0280CA14300992304 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636A0DF280CA14300992304 /* EditProfileViewController.swift */; };
-		B636A0E22810BC4700992304 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636A0E12810BC4700992304 /* DotView.swift */; };
-		B6992EDB28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */; };
-		B6992EDD2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */; };
 		B6992EE128151781009E5AF8 /* EditProfileSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */; };
 		B6992EE5281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */; };
 		B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A529F27D2E6F000BFA691 /* DynamicButton.swift */; };
+		B6BBC76F2819FDA000F3D497 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBC76E2819FDA000F3D497 /* EditProfileViewController.swift */; };
+		B6BBC771281A026E00F3D497 /* EditProfileSectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBC770281A026E00F3D497 /* EditProfileSectionsViewController.swift */; };
 		C7181E7773F61729712B6986 /* Pods_Pear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C91051C5390EC1176825021 /* Pods_Pear.framework */; };
 		C8584A3B274305730065509F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C8584A3A274305720065509F /* GoogleService-Info.plist */; };
 		C883A56426E58378009A4E1A /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = C883A56326E58378009A4E1A /* Keys.plist */; };
@@ -221,13 +219,11 @@
 		92C552D727E8118A00398CFF /* BlockUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserView.swift; sourceTree = "<group>"; };
 		A279E91A9AB122C9CB91A791 /* Pods-PearTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.release.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.release.xcconfig"; sourceTree = "<group>"; };
 		A62AA1E06DE9C7AEEC89B49D /* Pods-PearTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PearTests.debug.xcconfig"; path = "Target Support Files/Pods-PearTests/Pods-PearTests.debug.xcconfig"; sourceTree = "<group>"; };
-		B636A0DF280CA14300992304 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
-		B636A0E12810BC4700992304 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DotView.swift; path = Pear/View/DotView.swift; sourceTree = SOURCE_ROOT; };
-		B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditDemographicsCollectionViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/EditDemographicsCollectionViewCell.swift"; sourceTree = "<absolute>"; };
-		B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditInterestsGroupsPromptsCollectionViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/EditInterestsGroupsPromptsCollectionViewCell.swift"; sourceTree = "<absolute>"; };
 		B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileSectionTableViewCell.swift; sourceTree = "<group>"; };
 		B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddProfileSectionTableViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/AddProfileSectionTableViewCell.swift"; sourceTree = "<absolute>"; };
 		B69A529F27D2E6F000BFA691 /* DynamicButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicButton.swift; sourceTree = "<group>"; };
+		B6BBC76E2819FDA000F3D497 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		B6BBC770281A026E00F3D497 /* EditProfileSectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditProfileSectionsViewController.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Profile/EditProfileSectionsViewController.swift"; sourceTree = "<absolute>"; };
 		C8584A312742F6B10065509F /* Pear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pear.entitlements; sourceTree = "<group>"; };
 		C8584A3A274305720065509F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C883A56326E58378009A4E1A /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -429,7 +425,8 @@
 			isa = PBXGroup;
 			children = (
 				D480EC0523E2470000513063 /* ProfileViewController.swift */,
-				B636A0DF280CA14300992304 /* EditProfileViewController.swift */,
+				B6BBC76E2819FDA000F3D497 /* EditProfileViewController.swift */,
+				B6BBC770281A026E00F3D497 /* EditProfileSectionsViewController.swift */,
 				D440925025FB145400A4690A /* ProfileSummaryTableViewCell.swift */,
 				D440927F25FDA3CC00A4690A /* ProfileSectionTableViewCell.swift */,
 				D440928425FDA68500A4690A /* ProfilePromptTableViewCell.swift */,
@@ -471,8 +468,6 @@
 		D480EBFD23E2425C00513063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */,
-				B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */,
 				B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */,
 				B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */,
 				D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */,
@@ -517,7 +512,6 @@
 		D480EC0123E2436F00513063 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B636A0E12810BC4700992304 /* DotView.swift */,
 				D444EB3D23F5E86400406978 /* OnboardingSearchDropdownView.swift */,
 				50DA489126078B7B007654D5 /* OptionsView.swift */,
 				D444EB3F23F7CB6700406978 /* OnboardingSelectDropdownView.swift */,
@@ -982,12 +976,12 @@
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
 				7E06B8502543F15900D6B505 /* InterestsViewController.swift in Sources */,
 				D4A812A4265077F700E3EF81 /* OnboardingTableViewCell.swift in Sources */,
-				B6992EDD2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift in Sources */,
 				D48E31D125D9682B009AB253 /* UIAlertController.swift in Sources */,
 				50C842C426CC74CB004242FF /* SelectPromptTableViewCell.swift in Sources */,
 				30304E0123E249AC006DC6C3 /* LoginViewController.swift in Sources */,
 				D444EB4023F7CB6700406978 /* OnboardingSelectDropdownView.swift in Sources */,
 				D48F6F4826700BDF00D844B7 /* EditSection.swift in Sources */,
+				B6BBC76F2819FDA000F3D497 /* EditProfileViewController.swift in Sources */,
 				D440925125FB145400A4690A /* ProfileSummaryTableViewCell.swift in Sources */,
 				D4490F4C2512F9A1002AA934 /* GoalsViewController.swift in Sources */,
 				504CC120263A4AB500C163C4 /* SchedulingLocationCollectionViewController.swift in Sources */,
@@ -1015,8 +1009,8 @@
 				D42961892526012400C677C3 /* SimpleOnboardingCell.swift in Sources */,
 				50C842D426CCD76C004242FF /* PromptLabel.swift in Sources */,
 				D474105B25C6EA350062E2B4 /* String.swift in Sources */,
+				B6BBC771281A026E00F3D497 /* EditProfileSectionsViewController.swift in Sources */,
 				D4CFCDED240CBFCB00875F8D /* NoMatchViewController.swift in Sources */,
-				B6992EDB28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift in Sources */,
 				D42873F5263A0A180033678A /* MatchProfileViewController.swift in Sources */,
 				303F81A224394F95002937CD /* ProfileMenuViewController.swift in Sources */,
 				30304E1423F4BCD4006DC6C3 /* UIFont+Shared.swift in Sources */,
@@ -1031,7 +1025,6 @@
 				D4DD8E4A25E1C92000CF15D5 /* Response.swift in Sources */,
 				D440928A25FDB10700A4690A /* ProfilePillCollectionViewCell.swift in Sources */,
 				D48F6F30266EBE1600D844B7 /* MajorV2.swift in Sources */,
-				B636A0E0280CA14300992304 /* EditProfileViewController.swift in Sources */,
 				D480EC0623E2470000513063 /* ProfileViewController.swift in Sources */,
 				5030DD042532D63100374F7B /* AboutPearTableViewCell.swift in Sources */,
 				D4645ABF25FE2EF30029F9A5 /* ChatStatus.swift in Sources */,
@@ -1072,7 +1065,6 @@
 				D4D6674E2648CDCC00D5E902 /* UserV2.swift in Sources */,
 				5048B4BA263EE70500A382AD /* LocationFooterLabelView.swift in Sources */,
 				30304E1623F5B499006DC6C3 /* MatchSummaryTableViewCell.swift in Sources */,
-				B636A0E22810BC4700992304 /* DotView.swift in Sources */,
 				50C842C226CC7494004242FF /* PromptTableViewCell.swift in Sources */,
 				D498CFDA252646C500F2E2ED /* HomeTabOptionCollectionViewCell.swift in Sources */,
 				D41FC30523F112B300F8673A /* GroupsViewController.swift in Sources */,

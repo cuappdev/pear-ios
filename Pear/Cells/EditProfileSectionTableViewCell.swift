@@ -18,12 +18,12 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
 
+    // MARK: - Data Vars
     static let reuseIdentifier = "EditProfileSectionTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-
         backgroundColor = .clear
         contentView.backgroundColor = .clear
 
@@ -59,16 +59,16 @@ class EditProfileSectionTableViewCell: UITableViewCell {
 
     private func setupConstraints() {
         let imageSize = CGSize(width: 22, height: 22)
-
-        backdropView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(4)
-            make.height.equalTo(52)
-            make.leading.trailing.equalToSuperview()
-        }
         
         closeButton.snp.makeConstraints { make in
             make.size.equalTo(12)
             make.top.trailing.equalToSuperview().inset(12)
+        }
+        
+        backdropView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(4)
+            make.height.equalTo(52)
+            make.leading.trailing.equalToSuperview()
         }
 
         interestImageView.snp.remakeConstraints { make in
