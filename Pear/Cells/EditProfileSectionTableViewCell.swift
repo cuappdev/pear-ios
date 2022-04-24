@@ -1,5 +1,5 @@
 //
-//  EditProfileTableViewCell.swift
+//  EditProfileSectionTableViewCell.swift
 //  Pear
 //
 //  Created by Mathew Scullin on 4/24/22.
@@ -9,24 +9,23 @@
 import Kingfisher
 import UIKit
 
-class EditProfileTableViewCell: UITableViewCell {
+class EditProfileSectionTableViewCell: UITableViewCell {
 
     // MARK: Private View Vars
     private let backdropView = UIView()
     private let categoriesLabel = UILabel()
+    private let closeButton = UIButton()
     private let interestImageView = UIImageView()
     private let titleLabel = UILabel()
 
-    static let reuseIdentifier = "EditProfileTableViewCell"
+    static let reuseIdentifier = "EditProfileSectionTableViewCell"
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
 
         backgroundColor = .clear
-        contentView.backgroundColor = .white
-        backdropView.layer.cornerRadius = 8
-        backdropView.layer.masksToBounds = true
+        contentView.backgroundColor = .clear
 
         interestImageView.layer.cornerRadius = 4
         backdropView.addSubview(interestImageView)
@@ -35,12 +34,19 @@ class EditProfileTableViewCell: UITableViewCell {
         titleLabel.font = ._16CircularStdBook
         backdropView.addSubview(titleLabel)
 
+        backdropView.layer.cornerRadius = 8
+        backdropView.layer.masksToBounds = true
+        backdropView.backgroundColor = .white
         backdropView.clipsToBounds = false
         backdropView.layer.shadowColor = UIColor.black.cgColor
         backdropView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         backdropView.layer.shadowOpacity = 0.1
         backdropView.layer.shadowRadius = 2
         contentView.addSubview(backdropView)
+        
+        closeButton.setImage(UIImage(named: "closeButton"), for: .normal)
+        closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
+        backdropView.addSubview(closeButton)
 
         categoriesLabel.textColor = .greenGray
         categoriesLabel.font = ._12CircularStdBook
@@ -55,9 +61,14 @@ class EditProfileTableViewCell: UITableViewCell {
         let imageSize = CGSize(width: 22, height: 22)
 
         backdropView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.top.bottom.equalToSuperview().inset(4)
             make.height.equalTo(52)
             make.leading.trailing.equalToSuperview()
+        }
+        
+        closeButton.snp.makeConstraints { make in
+            make.size.equalTo(12)
+            make.top.trailing.equalToSuperview().inset(12)
         }
 
         interestImageView.snp.remakeConstraints { make in
@@ -100,6 +111,11 @@ class EditProfileTableViewCell: UITableViewCell {
         }
         setupConstraints()
     }
-
-
+    
+    
+    @objc private func closeButtonPressed() {
+        //TODO: Add delete functionality
+        print("Close button")
+    }
+    
 }

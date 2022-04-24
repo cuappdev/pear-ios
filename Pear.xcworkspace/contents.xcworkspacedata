@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/mathewscullin/Documents/pear-ios/Pear/Cells/EditInterestsCollectionViewCell.swift">
-   </FileRef>
-   <FileRef
       location = "group:Pear.xcodeproj">
    </FileRef>
    <FileRef

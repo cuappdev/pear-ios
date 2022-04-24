@@ -13,6 +13,7 @@ class EditInterestsGroupsPromptsCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "EditInterestsGroupsPromptsCollectionViewCell"
     
     // MARK: - Private View Vars
+    private let backDropView = UIView()
     private let describtorLabel = UILabel()
     private let fadeTableView = FadeWrapperView(
         UITableView(frame: .zero, style: .grouped), fadeColor: .backgroundLightGreen
@@ -34,9 +35,10 @@ class EditInterestsGroupsPromptsCollectionViewCell: UICollectionViewCell {
         fadeTableView.view.isScrollEnabled = true
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.register(
-            EditProfileTableViewCell.self,
-            forCellReuseIdentifier: EditProfileTableViewCell.reuseIdentifier
+            EditProfileSectionTableViewCell.self,
+            forCellReuseIdentifier: EditProfileSectionTableViewCell.reuseIdentifier
         )
+        fadeTableView.view.register(AddProfileSectionTableViewCell.self, forCellReuseIdentifier: AddProfileSectionTableViewCell.reuseIdentifier)
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.separatorStyle = .none
         fadeTableView.view.showsVerticalScrollIndicator = false
@@ -100,11 +102,13 @@ extension EditInterestsGroupsPromptsCollectionViewCell: UITableViewDataSource, U
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch editType {
         case .groups:
-            guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileTableViewCell.reuseIdentifier) as? EditProfileTableViewCell, let group =  tableViewContents[indexPath.row] as? Group else { return UITableViewCell() }
+            guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileSectionTableViewCell.reuseIdentifier) as? EditProfileSectionTableViewCell, let group =  tableViewContents[indexPath.row] as? Group else { return addProfileSectionTableViewCell(tableView, cellForRowAt: indexPath)
+            }
             cell.configure(with: group)
             return cell
         case .interests:
-            guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileTableViewCell.reuseIdentifier) as? EditProfileTableViewCell, let interest =  tableViewContents[indexPath.row] as? Interest else { return UITableViewCell() }
+            guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileSectionTableViewCell.reuseIdentifier) as? EditProfileSectionTableViewCell, let interest =  tableViewContents[indexPath.row] as? Interest else { return addProfileSectionTableViewCell(tableView, cellForRowAt: indexPath)
+            }
             cell.configure(with: interest)
             return cell
         case .prompts:
@@ -112,6 +116,13 @@ extension EditInterestsGroupsPromptsCollectionViewCell: UITableViewDataSource, U
         default:
             return UITableViewCell()
         }
+    }
+    
+    private func addProfileSectionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: AddProfileSectionTableViewCell.reuseIdentifier) as? AddProfileSectionTableViewCell, let labelText =  tableViewContents[indexPath.row] as? String else { return UITableViewCell() }
+        cell.configure(with: labelText)
+        return cell
+        
     }
     
     

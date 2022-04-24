@@ -70,7 +70,8 @@
 		B636A0E22810BC4700992304 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636A0E12810BC4700992304 /* DotView.swift */; };
 		B6992EDB28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */; };
 		B6992EDD2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */; };
-		B6992EE128151781009E5AF8 /* EditProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EE028151781009E5AF8 /* EditProfileTableViewCell.swift */; };
+		B6992EE128151781009E5AF8 /* EditProfileSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */; };
+		B6992EE5281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */; };
 		B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A529F27D2E6F000BFA691 /* DynamicButton.swift */; };
 		C7181E7773F61729712B6986 /* Pods_Pear.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C91051C5390EC1176825021 /* Pods_Pear.framework */; };
 		C8584A3B274305730065509F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C8584A3A274305720065509F /* GoogleService-Info.plist */; };
@@ -224,7 +225,8 @@
 		B636A0E12810BC4700992304 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DotView.swift; path = Pear/View/DotView.swift; sourceTree = SOURCE_ROOT; };
 		B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditDemographicsCollectionViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/EditDemographicsCollectionViewCell.swift"; sourceTree = "<absolute>"; };
 		B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditInterestsGroupsPromptsCollectionViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/EditInterestsGroupsPromptsCollectionViewCell.swift"; sourceTree = "<absolute>"; };
-		B6992EE028151781009E5AF8 /* EditProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileTableViewCell.swift; sourceTree = "<group>"; };
+		B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileSectionTableViewCell.swift; sourceTree = "<group>"; };
+		B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddProfileSectionTableViewCell.swift; path = "/Users/mathewscullin/Documents/pear-ios/Pear/Cells/AddProfileSectionTableViewCell.swift"; sourceTree = "<absolute>"; };
 		B69A529F27D2E6F000BFA691 /* DynamicButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicButton.swift; sourceTree = "<group>"; };
 		C8584A312742F6B10065509F /* Pear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pear.entitlements; sourceTree = "<group>"; };
 		C8584A3A274305720065509F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -471,7 +473,8 @@
 			children = (
 				B6992EDA28148D84009E5AF8 /* EditDemographicsCollectionViewCell.swift */,
 				B6992EDC2814EE52009E5AF8 /* EditInterestsGroupsPromptsCollectionViewCell.swift */,
-				B6992EE028151781009E5AF8 /* EditProfileTableViewCell.swift */,
+				B6992EE4281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift */,
+				B6992EE028151781009E5AF8 /* EditProfileSectionTableViewCell.swift */,
 				D480EBFE23E2429600513063 /* OnboardingDropdownTableViewCell.swift */,
 				502AA5282648716100A790C8 /* ChatTableViewCell.swift */,
 				5048B4BF263F5F4600A382AD /* MessagesTableViewCell.swift */,
@@ -972,7 +975,8 @@
 				D4645AC725FE2F6C0029F9A5 /* ProfileSectionType.swift in Sources */,
 				B69A52A027D2E6F000BFA691 /* DynamicButton.swift in Sources */,
 				D446C1C326E080E800E707F5 /* LocationV1.swift in Sources */,
-				B6992EE128151781009E5AF8 /* EditProfileTableViewCell.swift in Sources */,
+				B6992EE5281588E4009E5AF8 /* AddProfileSectionTableViewCell.swift in Sources */,
+				B6992EE128151781009E5AF8 /* EditProfileSectionTableViewCell.swift in Sources */,
 				4FD8152D23F781790095EC17 /* MatchSummary.swift in Sources */,
 				50298746253C043F00E52EDA /* EditSocialMediaViewController.swift in Sources */,
 				D4490F4F2512FF69002AA934 /* SimpleOnboardingTableViewCell.swift in Sources */,
