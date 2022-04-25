@@ -18,10 +18,17 @@ class NoMatchViewController: UIViewController {
     private let availabilityButton = UIButton()
     private let noMatchLabel = UILabel()
     private let noMatchTitleLabel = UILabel()
-    private let surprisedPearImageView = UIImageView()
+    private let pearImageView = UIImageView()
+    private let unpauseButton = DynamicButton()
+    
+    // MARK: - Private Data Vars
+    weak var profileDelegate: ProfileMenuDelegate?
+    private let isPaused: Bool
 
-    init(user: UserV2) {
+    init(user: UserV2, profileDelegate: ProfileMenuDelegate) {
         self.user = user
+        self.isPaused = user.isPaused ?? false
+        self.profileDelegate = profileDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,44 +42,82 @@ class NoMatchViewController: UIViewController {
         title = "" // To get rid of the "back" text on navigation bar
         view.backgroundColor = .backgroundLightGreen
         navigationController?.navigationBar.isHidden = true
+        setupViews()
+        setupConstraints()
+    }
+    
+    private func getPauseDateString() -> String {
+        let dateFormatter = DateFormatter()
+        let originalStringFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+        let displayStringFormat = "MMMM dd"
+        let pauseExpiration = user.pauseExpiration ?? ""
+        dateFormatter.dateFormat = originalStringFormat
+        if let date = dateFormatter.date(from: pauseExpiration) {
+            dateFormatter.dateFormat = displayStringFormat
+            return dateFormatter.string(from: date)
+        }
+        return ""
+    }
+    
+    private func setupViews() {
+        let pauseDateString = getPauseDateString()
 
-        surprisedPearImageView.image = UIImage(named: "surprisedPear")
-        surprisedPearImageView.contentMode = .scaleAspectFit
-        view.addSubview(surprisedPearImageView)
+        pearImageView.image = UIImage(named: isPaused ? "happyPears" : "surprisedPear")
+        pearImageView.contentMode = .scaleAspectFit
+        view.addSubview(pearImageView)
 
-        noMatchTitleLabel.text = "Meet your new Pear\nnext Sunday"
+        noMatchTitleLabel.text = isPaused ? "Your Pear is currently paused." : "Meet your new Pear\nnext Sunday"
         noMatchTitleLabel.numberOfLines = 0
         noMatchTitleLabel.sizeToFit()
         noMatchTitleLabel.textAlignment = .center
         
         let attributedTitle = NSMutableAttributedString()
         
-        attributedTitle.append(NSAttributedString(string: "Meet your new ", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
-        attributedTitle.append(NSAttributedString(string: "Pear", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.darkGreen]))
-        attributedTitle.append(NSAttributedString(string: "\nnext Sunday", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
+        attributedTitle.append(NSAttributedString(string: isPaused ? "Your Pear is currently " : "Meet your new ", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
+        attributedTitle.append(NSAttributedString(string: isPaused ? "" : "Pear", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.darkGreen]))
+        attributedTitle.append(NSAttributedString(string: isPaused ? "\npaused." : "\nnext Sunday", attributes: [.font : UIFont._24CircularStdMedium, .foregroundColor : UIColor.black]))
         
         noMatchTitleLabel.attributedText = attributedTitle
         view.addSubview(noMatchTitleLabel)
-
-        noMatchLabel.text = "In the meantime, browse the people page to see who else is on the app!"
+        
+        var noMatchLabelText = ""
+        if (isPaused) {
+            if (pauseDateString != "") {
+                noMatchLabelText = "You will be automatically peared on \(pauseDateString)"
+            } else {
+                noMatchLabelText = "Jump back when you're ready!"
+            }
+        } else {
+            noMatchLabelText = "In the meantime, browse the people page to see who else is on the app!"
+        }
+        noMatchLabel.text = noMatchLabelText
         noMatchLabel.numberOfLines = 0
         noMatchLabel.textAlignment = .center
         noMatchLabel.textColor = .greenGray
         noMatchLabel.lineBreakMode = .byWordWrapping
-        noMatchLabel.font = ._16CircularStdMedium
+        noMatchLabel.font = ._18CircularStdMedium
         noMatchLabel.sizeToFit()
         view.addSubview(noMatchLabel)
-
-        setupConstraints()
+        
+        unpauseButton.setTitle("Stop Pausing", for: .normal)
+        unpauseButton.setTitleColor(.white, for: .normal)
+        unpauseButton.titleLabel?.font = ._18CircularStdBold
+        unpauseButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        unpauseButton.backgroundColor = .backgroundOrange
+        unpauseButton.isEnabled = true
+        unpauseButton.isHidden = !isPaused
+        unpauseButton.addTarget(self, action: #selector(unpauseButtonPressed), for: .touchUpInside)
+        view.addSubview(unpauseButton)
     }
 
     private func setupConstraints() {
-        let buttonBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
-        let imageBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 36)
-        let imageWidth = (UIScreen.main.bounds.width / 375) * 176
-        let subtitleLabelPadding: CGFloat = Constants.Onboarding.skipBottomPadding
-        let titleLabelPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 76)
-
+        let subtitleLabelPadding = 15
+        let pearImageViewPadding = 18
+        let titleLabelPadding = 38
+        let imageBottomPadding = isPaused ? 65 : -65
+        let noMatchLabelSize = CGSize(width: 293, height: 50)
+        let unpauseButtonSize = CGSize(width: 195, height: 48)
+        
         noMatchTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(titleLabelPadding)
@@ -81,16 +126,34 @@ class NoMatchViewController: UIViewController {
 
         noMatchLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(293)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(buttonBottomPadding + subtitleLabelPadding)
-            make.height.equalTo(50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(titleLabelPadding + subtitleLabelPadding)
+            make.size.equalTo(noMatchLabelSize)
         }
 
-        surprisedPearImageView.snp.makeConstraints { make in
-            make.top.equalTo(noMatchTitleLabel.snp.bottom).offset(imageBottomPadding)
+        pearImageView.snp.makeConstraints { make in
+            make.top.equalTo(noMatchTitleLabel.snp.bottom).inset(imageBottomPadding)
+            make.bottom.equalTo(unpauseButton.snp.top).offset(imageBottomPadding)
+            make.leading.trailing.equalToSuperview().inset(pearImageViewPadding)
+        }
+        
+        unpauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(noMatchLabel.snp.top).offset(-imageBottomPadding)
-            make.width.equalTo(imageWidth)
+            make.bottom.equalTo(noMatchLabel.snp.top).offset(-subtitleLabelPadding)
+            make.size.equalTo(unpauseButtonSize)
+        }
+    }
+    
+    @objc private func unpauseButtonPressed() {
+        NetworkManager.pauseOrUnpausePear(isPausing: false, pauseWeeks: 0) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.profileDelegate?.didUpdateProfileDemographics()
+                } else {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true)
+                }
+            }
         }
     }
 

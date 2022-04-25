@@ -12,6 +12,7 @@ import UIKit
 protocol ProfileMenuDelegate: AnyObject {
     func didUpdateProfilePicture(image: UIImage?, url: String)
     func didUpdateProfileDemographics()
+    func presentErrorAlert()
 }
 
 class ProfileMenuViewController: UIViewController {
@@ -126,7 +127,9 @@ class ProfileMenuViewController: UIViewController {
     }
 
     private func pushSettingsViewController() {
-        navigationController?.pushViewController(SettingsViewController(user: user), animated: true)
+        let settingsVC = SettingsViewController(user: user)
+        settingsVC.profileMenuDelegate = delegate
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
 
     private func pushMessagingViewController() {

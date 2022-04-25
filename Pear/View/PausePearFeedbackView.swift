@@ -12,7 +12,7 @@ class PausePearFeedbackView: UIView {
 
     // MARK: - Private View Vars
     private let pauseLabel = UILabel()
-    private let finishButton = UIButton()
+    private let finishButton = DynamicButton()
     private let cancelButton = UIButton()
     private var pauseReasonCollectionView: UICollectionView!
 
@@ -113,30 +113,14 @@ class PausePearFeedbackView: UIView {
     
     private func updateFinish() {
         finishButton.isEnabled = selectedReason != ""
-        if finishButton.isEnabled {
-            finishButton.backgroundColor = .backgroundOrange
-            finishButton.layer.shadowColor = UIColor.black.cgColor
-            finishButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            finishButton.layer.shadowOpacity = 0.15
-            finishButton.layer.shadowRadius = 2
-        } else {
-            finishButton.backgroundColor = .inactiveGreen
-            finishButton.layer.shadowColor = .none
-            finishButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            finishButton.layer.shadowOpacity = 0
-            finishButton.layer.shadowRadius = 0
-        }
     }
     
     @objc private func finishButtonPressed() {
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
         // TODO: send user feedback
     }
     
     @objc private func cancelPause() {
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
+        // TODO: remove current pop up view
     }
 
 }

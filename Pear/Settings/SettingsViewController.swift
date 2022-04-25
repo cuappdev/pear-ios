@@ -11,10 +11,8 @@ import GoogleSignIn
 import UIKit
 
 protocol PausePearDelegate: AnyObject {
-    func pausePearAction(state: String)
-    func presentPauseView(_ pauseView: UIView)
-    func removePauseView(_ pauseView: UIView)
-    func removeBlurEffect()
+    func didUpdatePauseStatus()
+    func presentErrorAlert()
 }
 
 class SettingsViewController: UIViewController {
@@ -26,6 +24,8 @@ class SettingsViewController: UIViewController {
     private var pausePearView: PausePearView!
     private var unpausePearView: UnpausePearView!
     private let user: UserV2
+    private var isPaused: Bool?
+    private var didUpdatePause = false
 
     // MARK: - Private Data Vars
     private var settingOptions: [SettingOption] = [
@@ -36,6 +36,8 @@ class SettingsViewController: UIViewController {
         SettingOption(hasSwitch: false, image: "logout", switchOn: false, text: "Log Out"),
         SettingOption(hasSwitch: false, image: "pausePear", switchOn: false, text: "Pause Pear")
     ]
+    
+    var profileMenuDelegate: ProfileMenuDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +61,7 @@ class SettingsViewController: UIViewController {
     
     init(user: UserV2) {
         self.user = user
+        self.isPaused = user.isPaused
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -91,6 +94,9 @@ class SettingsViewController: UIViewController {
     }
 
     @objc private func backPressed() {
+        if didUpdatePause {
+            profileMenuDelegate?.didUpdateProfileDemographics()
+        }
         navigationController?.popViewController(animated: true)
     }
 
@@ -120,12 +126,12 @@ class SettingsViewController: UIViewController {
         navigationController?.pushViewController(EditSocialMediaViewController(), animated: true)
     }
     
-    private func pausePear() {
-        let isPaused = true // TODO: update based on whether user is paused
-        if isPaused {
-            presentPauseView(unpausePearView)
+    private func presentPausePear() {
+        guard let superView = self.navigationController?.view, let pausePearView = pausePearView, let unpausePearView = unpausePearView else { return }
+        if let isPaused = isPaused, isPaused {
+            Animations.presentPopUpView(superView: superView, popUpView: unpausePearView)
         } else {
-            presentPauseView(pausePearView)
+            Animations.presentPopUpView(superView: superView, popUpView: pausePearView)
         }
     }
 
@@ -159,7 +165,7 @@ extension SettingsViewController: UITableViewDataSource {
         } else if option.text == "Connect Social Media" {
             pushEditSocialMediaViewController()
         } else if option.text == "Pause Pear" {
-            pausePear()
+            presentPausePear()
         } else if option.text == "Log Out" {
             GIDSignIn.sharedInstance()?.signOut()
             do {
@@ -187,47 +193,6 @@ extension SettingsViewController: UITableViewDelegate {
 
 }
 
-extension SettingsViewController: PausePearDelegate {
-    
-    func presentPauseView(_ pauseView: UIView) {
-        pauseVisualEffectView.frame = view.frame
-        view.addSubview(pauseVisualEffectView)
-        view.addSubview(pauseView)
-
-        pauseView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-            make.height.equalTo(pauseView.frame.height)
-            make.width.equalTo(pauseView.frame.width)
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            pauseView.transform = .init(scaleX: 1.5, y: 1.5)
-            pauseView.alpha = 1
-            pauseView.transform = .identity
-            self.pauseVisualEffectView.alpha = 1
-        })
-    }
-    
-    func removePauseView(_ pauseView: UIView) {
-        UIView.animate(withDuration: 0.15) {
-            pauseView.alpha = 0
-        } completion: { _ in
-            pauseView.removeFromSuperview()
-        }
-    }
-    
-    func removeBlurEffect() {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.pauseVisualEffectView.alpha = 0
-        })
-    }
-
-    func pausePearAction(state: String) {
-        // TODO: pause pear action after selecting a time
-    }
-    
-}
-
 extension SettingsViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -235,6 +200,19 @@ extension SettingsViewController: UIGestureRecognizerDelegate {
             navigationController?.popViewController(animated: true)
         }
         return false
+    }
+    
+}
+
+extension SettingsViewController: PausePearDelegate {
+    
+    func didUpdatePauseStatus() {
+        didUpdatePause = true
+        isPaused?.toggle()
+    }
+    
+    func presentErrorAlert() {
+        present(UIAlertController.getStandardErrortAlert(), animated: true)
     }
     
 }

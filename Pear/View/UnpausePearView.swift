@@ -12,7 +12,7 @@ class UnpausePearView: UIView {
 
     // MARK: - Private View Vars
     private let headerLabel = UILabel()
-    private let unpauseButton = UIButton()
+    private let unpauseButton = DynamicButton()
     private let cancelButton = UIButton()
 
     // MARK: - Private Data Vars
@@ -44,12 +44,8 @@ class UnpausePearView: UIView {
         unpauseButton.setTitle("Unpause", for: .normal)
         unpauseButton.setTitleColor(.white, for: .normal)
         unpauseButton.titleLabel?.font = ._16CircularStdMedium
-        unpauseButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
-        unpauseButton.backgroundColor = .backgroundOrange
-        unpauseButton.layer.shadowColor = UIColor.black.cgColor
-        unpauseButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        unpauseButton.layer.shadowOpacity = 0.15
-        unpauseButton.layer.shadowRadius = 2
+        unpauseButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        unpauseButton.isEnabled = true
         unpauseButton.addTarget(self, action: #selector(unpauseButtonPressed), for: .touchUpInside)
         addSubview(unpauseButton)
 
@@ -80,20 +76,28 @@ class UnpausePearView: UIView {
 
         cancelButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-40)
+            make.bottom.equalToSuperview().inset(40)
             make.size.equalTo(cancelButtonSize)
         }
     }
     
     @objc private func unpauseButtonPressed() {
-        //TODO: unpause user
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
+        NetworkManager.pauseOrUnpausePear(isPausing: false, pauseWeeks: 0) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.didUpdatePauseStatus()
+                } else {
+                    self.delegate?.presentErrorAlert()
+                }
+                Animations.removePopUpView(popUpView: self)
+            }
+        }
     }
     
     @objc private func cancelPause() {
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
+        Animations.removePopUpView(popUpView: self)
     }
 
 }

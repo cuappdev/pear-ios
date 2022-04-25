@@ -17,19 +17,24 @@ enum PauseTime: String {
     func getTitle() -> String {
         return self.rawValue
     }
+    
+    func getPauseWeeks() -> Int {
+        let prefix = self.getTitle().prefix(1)
+        return Int(prefix) ?? 0
+    }
 }
 
 class PausePearView: UIView {
 
     // MARK: - Private View Vars
     private let pauseLabel = UILabel()
-    private let saveButton = UIButton()
+    private let saveButton = DynamicButton()
     private let cancelButton = UIButton()
     private var timeCollectionView: UICollectionView!
 
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
-    private var selectedState: String = ""
+    private var selectedState: PauseTime?
     private let timeInteritemSpacing: CGFloat = 11
     private let pauseTimes: [PauseTime] = [.oneWeek, .twoWeeks, .threeWeeks, .indefinitely]
     
@@ -71,7 +76,7 @@ class PausePearView: UIView {
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.titleLabel?.font = ._16CircularStdMedium
         saveButton.backgroundColor = .inactiveGreen
-        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2.2
+        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
         saveButton.isEnabled = false
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         addSubview(saveButton)
@@ -95,61 +100,56 @@ class PausePearView: UIView {
     private func setupConstraints() {
         let cancelButtonSize = CGSize(width: 52, height: 20)
         let saveButtonSize = CGSize(width: 195, height: 46)
+        let timeCollectionViewSize = CGSize(width: 135, height: 177)
+        let timeCollectionViewPadding = 26
+        let verticalPadding = 40
 
         pauseLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(36)
-            make.leading.trailing.equalToSuperview().inset(75)
+            make.top.equalToSuperview().offset(verticalPadding)
         }
 
         timeCollectionView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(pauseLabel.snp.bottom).offset(26)
-            make.height.equalTo(177)
-            make.width.equalTo(135)
+            make.top.equalTo(pauseLabel.snp.bottom).offset(timeCollectionViewPadding)
+            make.size.equalTo(timeCollectionViewSize)
         }
         
         saveButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timeCollectionView.snp.bottom).offset(26)
+            make.top.equalTo(timeCollectionView.snp.bottom).offset(timeCollectionViewPadding)
             make.size.equalTo(saveButtonSize)
         }
 
         cancelButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(saveButton.snp.bottom).offset(20)
+            make.bottom.equalToSuperview().inset(verticalPadding)
             make.size.equalTo(cancelButtonSize)
         }
     }
     
     private func updateSave() {
-        saveButton.isEnabled = selectedState != ""
-        if saveButton.isEnabled {
-            saveButton.backgroundColor = .backgroundOrange
-            saveButton.layer.shadowColor = UIColor.black.cgColor
-            saveButton.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-            saveButton.layer.shadowOpacity = 0.15
-            saveButton.layer.shadowRadius = 2
-        } else {
-            saveButton.backgroundColor = .inactiveGreen
-            saveButton.layer.shadowColor = .none
-            saveButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            saveButton.layer.shadowOpacity = 0
-            saveButton.layer.shadowRadius = 0
-        }
+        saveButton.isEnabled = selectedState != nil
     }
     
     @objc private func saveButtonPressed() {
-        // TODO: pause user
-        delegate?.removePauseView(self)
-        guard let pauseDelegate = delegate else {return}
-        let pauseFinishView = PausePearFinishView(delegate: pauseDelegate)
-        delegate?.presentPauseView(pauseFinishView)
+        guard let pauseWeeks = selectedState?.getPauseWeeks() else { return }
+        NetworkManager.pauseOrUnpausePear(isPausing: true, pauseWeeks: pauseWeeks) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.didUpdatePauseStatus()
+                } else {
+                    self.delegate?.presentErrorAlert()
+                }
+                Animations.removePopUpView(popUpView: self)
+            }
+        }
     }
     
     @objc private func cancelPause() {
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
+        Animations.removePopUpView(popUpView: self)
     }
 
 }
@@ -175,12 +175,12 @@ extension PausePearView: UICollectionViewDataSource {
 extension PausePearView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedState = pauseTimes[indexPath.row].getTitle()
+        selectedState = pauseTimes[indexPath.row]
         updateSave()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        selectedState = ""
+        selectedState = nil
         updateSave()
     }
 }

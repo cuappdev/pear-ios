@@ -123,15 +123,11 @@ class PausePearFinishView: UIView {
     }
     
     @objc private func feedbackButtonPressed() {
-        delegate?.removePauseView(self)
-        guard let pauseDelegate = delegate else {return}
-        let pauseFeedBackView = PausePearFeedbackView(delegate: pauseDelegate)
-        delegate?.presentPauseView(pauseFeedBackView)
+        //TODO: present feedback view
     }
     
     @objc private func cancelPause() {
-        delegate?.removePauseView(self)
-        delegate?.removeBlurEffect()
+        //TODO: remove current pop up view
     }
 
 }
