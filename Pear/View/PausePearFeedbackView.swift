@@ -11,16 +11,16 @@ import UIKit
 class PausePearFeedbackView: UIView {
 
     // MARK: - Private View Vars
-    private let pauseLabel = UILabel()
-    private let finishButton = DynamicButton()
     private let cancelButton = UIButton()
+    private let finishButton = DynamicButton()
+    private let pauseLabel = UILabel()
     private var pauseReasonCollectionView: UICollectionView!
 
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
-    private var selectedReason: String = ""
-    private let reasonInteritemSpacing: CGFloat = 11
     private let pauseReasons: [String] = ["Focusing on work", "Won't be on campus", "Bad experience", "Other"]
+    private let reasonInteritemSpacing: CGFloat = 11
+    private var selectedReason: String = ""
     
     init(delegate: PausePearDelegate) {
         super.init(frame: .zero)

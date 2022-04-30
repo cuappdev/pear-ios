@@ -11,10 +11,10 @@ import UIKit
 class PausePearFinishView: UIView {
 
     // MARK: - Private View Vars
+    private let cancelButton = UIButton()
     private let finishLabel = UILabel()
     private let feedbackLabel = UILabel()
     private let feedbackButton = UIButton()
-    private let cancelButton = UIButton()
     private let pearImageView = UIImageView()
 
     // MARK: - Private Data Vars
@@ -131,5 +131,3 @@ class PausePearFinishView: UIView {
     }
 
 }
-
-

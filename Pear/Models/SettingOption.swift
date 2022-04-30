@@ -10,9 +10,9 @@ import Foundation
 
 struct SettingOption {
 
-    let hasSwitch: Bool
+    var hasSwitch: Bool = false
     let image: String
-    var switchOn: Bool
+    var switchOn: Bool = false
     let text: String
 
 }

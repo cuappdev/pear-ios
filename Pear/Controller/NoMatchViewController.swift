@@ -22,8 +22,8 @@ class NoMatchViewController: UIViewController {
     private let unpauseButton = DynamicButton()
     
     // MARK: - Private Data Vars
-    weak var profileDelegate: ProfileMenuDelegate?
     private let isPaused: Bool
+    weak var profileDelegate: ProfileMenuDelegate?
 
     init(user: UserV2, profileDelegate: ProfileMenuDelegate) {
         self.user = user
@@ -46,21 +46,8 @@ class NoMatchViewController: UIViewController {
         setupConstraints()
     }
     
-    private func getPauseDateString() -> String {
-        let dateFormatter = DateFormatter()
-        let originalStringFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-        let displayStringFormat = "MMMM dd"
-        let pauseExpiration = user.pauseExpiration ?? ""
-        dateFormatter.dateFormat = originalStringFormat
-        if let date = dateFormatter.date(from: pauseExpiration) {
-            dateFormatter.dateFormat = displayStringFormat
-            return dateFormatter.string(from: date)
-        }
-        return ""
-    }
-    
     private func setupViews() {
-        let pauseDateString = getPauseDateString()
+        let pauseDateString = Time.getPauseDateString(originalString: user.pauseExpiration ?? "")
 
         pearImageView.image = UIImage(named: isPaused ? "happyPears" : "surprisedPear")
         pearImageView.contentMode = .scaleAspectFit

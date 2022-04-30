@@ -11,10 +11,10 @@ import UIKit
 class UnpausePearView: UIView {
 
     // MARK: - Private View Vars
+    private let cancelButton = UIButton()
     private let headerLabel = UILabel()
     private let unpauseButton = DynamicButton()
-    private let cancelButton = UIButton()
-
+    
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
     
@@ -101,8 +101,3 @@ class UnpausePearView: UIView {
     }
 
 }
-
-
-
-
-
