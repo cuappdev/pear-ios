@@ -131,10 +131,9 @@ class HomeViewController: UIViewController {
     }
 
     private func setupTabPageViewController(user: UserV2) {
-        tabPageViewController = TabPageViewController(user: user, tabDelegate: self)
+        tabPageViewController = TabPageViewController(user: user, tabDelegate: self, profileDelegate: self)
         if let tabPageViewController = tabPageViewController {
             addChild(tabPageViewController)
-
             tabPageViewController.view.frame = tabContainerView.frame
             tabContainerView.addSubview(tabPageViewController.view)
             tabPageViewController.view.snp.makeConstraints { make in

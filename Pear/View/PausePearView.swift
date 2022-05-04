@@ -8,24 +8,40 @@
 
 import UIKit
 
+enum PauseTime: String {
+    case oneWeek = "1 Week"
+    case twoWeeks = "2 Weeks"
+    case threeWeeks = "3 Weeks"
+    case indefinitely = "Indefinitely"
+    
+    func getTitle() -> String {
+        return self.rawValue
+    }
+    
+    func getPauseWeeks() -> Int {
+        let prefix = self.getTitle().prefix(1)
+        return Int(prefix) ?? 0
+    }
+}
+
 class PausePearView: UIView {
 
     // MARK: - Private View Vars
-    private let cancelButton = UIButton()
-    private let oneWeekButton = UIButton()
     private let pauseLabel = UILabel()
-    private let threeWeekButton = UIButton()
-    private let twoWeekButton = UIButton()
+    private let saveButton = DynamicButton()
+    private let cancelButton = UIButton()
+    private var timeCollectionView: UICollectionView!
 
     // MARK: - Private Data Vars
     private weak var delegate: PausePearDelegate?
-    private var selectedState: String = ""
-
+    private var selectedState: PauseTime?
+    private let timeInteritemSpacing: CGFloat = 11
+    private let pauseTimes: [PauseTime] = [.oneWeek, .twoWeeks, .threeWeeks, .indefinitely]
+    
     init(delegate: PausePearDelegate) {
         super.init(frame: .zero)
         self.delegate = delegate
         setUpViews()
-
         setupConstraints()
     }
 
@@ -34,36 +50,44 @@ class PausePearView: UIView {
     }
 
     private func setUpViews() {
-        self.backgroundColor = .backgroundLightGreen
-        self.layer.cornerRadius = 36
+        backgroundColor = .backgroundLightGreen
+        layer.cornerRadius = 36
+        frame.size = CGSize(width: 295, height: 422)
+        
+        let timeCollectionViewLayout = UICollectionViewFlowLayout()
+        timeCollectionViewLayout.minimumInteritemSpacing = timeInteritemSpacing
+        timeCollectionViewLayout.scrollDirection = .vertical
+        
+        timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout)
+        timeCollectionView.allowsMultipleSelection = false
+        timeCollectionView.backgroundColor = .clear
+        timeCollectionView.dataSource = self
+        timeCollectionView.delegate = self
+        timeCollectionView.register(SchedulingTimeCollectionViewCell.self, forCellWithReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier)
+        addSubview(timeCollectionView)
 
         pauseLabel.text = "Pause Pear for..."
         pauseLabel.font = ._20CircularStdBook
         pauseLabel.textAlignment = .center
         pauseLabel.textColor = .black
         addSubview(pauseLabel)
-
-        oneWeekButton.setTitle("1 Week", for: .normal)
-        setButtonAppearance(button: oneWeekButton)
-        oneWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        addSubview(oneWeekButton)
-
-        twoWeekButton.setTitle("2 Weeks", for: .normal)
-        setButtonAppearance(button: twoWeekButton)
-        twoWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        addSubview(twoWeekButton)
-
-        threeWeekButton.setTitle("3 Weeks", for: .normal)
-        setButtonAppearance(button: threeWeekButton)
-        threeWeekButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        addSubview(threeWeekButton)
+        
+        saveButton.setTitle("Save", for: .normal)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.titleLabel?.font = ._16CircularStdMedium
+        saveButton.backgroundColor = .inactiveGreen
+        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        saveButton.isEnabled = false
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        addSubview(saveButton)
 
         cancelButton.setTitle("Cancel", for: .normal)
-        cancelButton.setTitleColor(.textGreen, for: .normal)
+        cancelButton.setTitleColor(.darkGreen, for: .normal)
         cancelButton.backgroundColor = .clear
-        cancelButton.titleLabel?.font = ._16CircularStdBook
+        cancelButton.titleLabel?.font = ._16CircularStdBold
         cancelButton.addTarget(self, action: #selector(cancelPause), for: .touchUpInside)
         addSubview(cancelButton)
+        
     }
 
     private func setButtonAppearance(button: UIButton) {
@@ -74,53 +98,97 @@ class PausePearView: UIView {
     }
 
     private func setupConstraints() {
-        let weekButtonSize = CGSize(width: 110, height: 40)
         let cancelButtonSize = CGSize(width: 52, height: 20)
+        let saveButtonSize = CGSize(width: 195, height: 46)
+        let timeCollectionViewSize = CGSize(width: 135, height: 177)
+        let timeCollectionViewPadding = 26
+        let verticalPadding = 40
 
         pauseLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(36)
-            make.leading.trailing.equalToSuperview().inset(75)
+            make.top.equalToSuperview().offset(verticalPadding)
         }
 
-        oneWeekButton.snp.makeConstraints { make in
+        timeCollectionView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(pauseLabel.snp.bottom).offset(22)
-            make.size.equalTo(weekButtonSize)
+            make.top.equalTo(pauseLabel.snp.bottom).offset(timeCollectionViewPadding)
+            make.size.equalTo(timeCollectionViewSize)
         }
-
-        twoWeekButton.snp.makeConstraints { make in
+        
+        saveButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(oneWeekButton.snp.bottom).offset(12)
-            make.size.equalTo(weekButtonSize)
-        }
-
-        threeWeekButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(twoWeekButton.snp.bottom).offset(12)
-            make.size.equalTo(weekButtonSize)
+            make.top.equalTo(timeCollectionView.snp.bottom).offset(timeCollectionViewPadding)
+            make.size.equalTo(saveButtonSize)
         }
 
         cancelButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(threeWeekButton.snp.bottom).offset(30)
+            make.bottom.equalToSuperview().inset(verticalPadding)
             make.size.equalTo(cancelButtonSize)
         }
     }
-
-    @objc private func buttonAction(button: UIButton) {
-        if let pauseTime = button.titleLabel?.text {
-            selectedState = pauseTime
-            oneWeekButton.backgroundColor = selectedState == "1 Week" ? .pearGreen : .white
-            twoWeekButton.backgroundColor = selectedState == "2 Weeks" ? .pearGreen : .white
-            threeWeekButton.backgroundColor = selectedState == "3 Weeks" ? .pearGreen : .white
-            delegate?.pausePearAction(state: selectedState)
-            cancelPause()
+    
+    private func updateSave() {
+        saveButton.isEnabled = selectedState != nil
+    }
+    
+    @objc private func saveButtonPressed() {
+        guard let pauseWeeks = selectedState?.getPauseWeeks() else { return }
+        NetworkManager.pauseOrUnpausePear(isPausing: true, pauseWeeks: pauseWeeks) {
+            [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    self.delegate?.didUpdatePauseStatus()
+                } else {
+                    self.delegate?.presentErrorAlert()
+                }
+                Animations.removePopUpView(popUpView: self)
+            }
         }
     }
-
+    
     @objc private func cancelPause() {
-        delegate?.removePausePear()
+        Animations.removePopUpView(popUpView: self)
     }
 
+}
+
+extension PausePearView: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        pauseTimes.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: SchedulingTimeCollectionViewCell.reuseIdentifier,
+                for: indexPath
+        ) as? SchedulingTimeCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        cell.configure(for: pauseTimes[indexPath.row].getTitle(), isHeader: false)
+        return cell
+    }
+}
+
+extension PausePearView: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedState = pauseTimes[indexPath.row]
+        updateSave()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        selectedState = nil
+        updateSave()
+    }
+}
+
+extension PausePearView: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 135, height: 36)
+    }
+    
 }

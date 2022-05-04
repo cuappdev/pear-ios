@@ -63,7 +63,7 @@ class SettingOptionTableViewCell: UITableViewCell {
 
     @objc func switchToggled() {
         if switchView.isOn {
-            delegate?.presentPausePear()
+            // TODO: switch toggle action
         }
     }
 

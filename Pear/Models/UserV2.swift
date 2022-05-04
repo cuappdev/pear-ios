@@ -28,6 +28,8 @@ struct UserV2: Codable {
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
     let prompts: [Prompt]
+    let isPaused: Bool?
+    let pauseExpiration: String?
 }
 
 struct MatchV2: Codable {
