@@ -8,12 +8,11 @@
 import UIKit
 
 enum EditProfileSectionType {
-
     case groups([Group])
     case interests([Interest])
     case prompts([Prompt])
     
-    var decriptorLabelText: String {
+    var descriptorLabelText: String {
         switch self {
         case .groups(_):
             return "groups"
@@ -23,13 +22,12 @@ enum EditProfileSectionType {
             return "prompts"
         }
     }
-    
 }
 
 class EditProfileSectionsViewController: UIViewController {
     
     // MARK: - Private View Vars
-    private let describtorLabel = UILabel()
+    private let descriptorLabel = UILabel()
     private let fadeTableView = FadeWrapperView(
         UITableView(frame: .zero, style: .grouped), fadeColor: .backgroundLightGreen
     )
@@ -44,9 +42,9 @@ class EditProfileSectionsViewController: UIViewController {
 
         view.backgroundColor = .backgroundLightGreen
         
-        describtorLabel.textColor = .black
-        describtorLabel.font = ._20CircularStdBook
-        view.addSubview(describtorLabel)
+        descriptorLabel.textColor = .black
+        descriptorLabel.font = ._20CircularStdBook
+        view.addSubview(descriptorLabel)
         
         fadeTableView.fadePositions = [.bottom]
         fadeTableView.view.isScrollEnabled = true
@@ -55,8 +53,14 @@ class EditProfileSectionsViewController: UIViewController {
             EditProfileSectionTableViewCell.self,
             forCellReuseIdentifier: EditProfileSectionTableViewCell.reuseIdentifier
         )
-        fadeTableView.view.register(AddProfileSectionTableViewCell.self, forCellReuseIdentifier: AddProfileSectionTableViewCell.reuseIdentifier)
-        fadeTableView.view.register(PromptTableViewCell.self, forCellReuseIdentifier: PromptTableViewCell.reuseIdentifier)
+        fadeTableView.view.register(
+            AddProfileSectionTableViewCell.self,
+            forCellReuseIdentifier: AddProfileSectionTableViewCell.reuseIdentifier
+        )
+        fadeTableView.view.register(
+            PromptTableViewCell.self,
+            forCellReuseIdentifier: PromptTableViewCell.reuseIdentifier
+        )
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.separatorStyle = .none
         fadeTableView.view.showsVerticalScrollIndicator = false
@@ -71,7 +75,7 @@ class EditProfileSectionsViewController: UIViewController {
     
     init(editProfileSectionType: EditProfileSectionType) {
         self.editProfileSectionType = editProfileSectionType
-        describtorLabel.text = "Your \(editProfileSectionType.decriptorLabelText)"
+        descriptorLabel.text = "Your \(editProfileSectionType.descriptorLabelText)"
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -80,14 +84,14 @@ class EditProfileSectionsViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        describtorLabel.snp.makeConstraints { make in
+        descriptorLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.height.equalTo(25)
         }
         
         fadeTableView.snp.makeConstraints { make in
-            make.top.equalTo(describtorLabel.snp.bottom).inset(10)
+            make.top.equalTo(descriptorLabel.snp.bottom).inset(10)
             make.leading.trailing.equalToSuperview().inset(36)
             make.bottom.equalToSuperview()
         }
@@ -132,7 +136,7 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
     
     private func addProfileSectionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: AddProfileSectionTableViewCell.reuseIdentifier) as? AddProfileSectionTableViewCell else { return UITableViewCell() }
-        cell.configure(with: "Add \(editProfileSectionType.decriptorLabelText)")
+        cell.configure(with: "Add \(editProfileSectionType.descriptorLabelText)")
         return cell
     }
         

@@ -44,9 +44,9 @@ class AddProfileSectionTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         backdropView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(4)
+            make.verticalEdges.equalToSuperview().inset(4)
             make.height.equalTo(48)
-            make.leading.trailing.equalToSuperview()
+            make.horizontalEdges.equalToSuperview()
         }
         
         plusImageView.snp.makeConstraints { make in
@@ -63,7 +63,6 @@ class AddProfileSectionTableViewCell: UITableViewCell {
     
     func configure(with labelText: String) {
         label.text = labelText
-        setupConstraints()
     }
 
     required init?(coder: NSCoder) {

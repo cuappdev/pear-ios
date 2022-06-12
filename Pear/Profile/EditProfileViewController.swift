@@ -14,7 +14,6 @@ class EditProfileViewController: UIPageViewController {
     private let backButton = UIButton()
     private var editPages = [UIViewController]()
     private let saveButton = UIButton()
-
     
     // MARK: - Private Data Vars
     private var currentUser: UserV2
@@ -88,21 +87,21 @@ extension EditProfileViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let index = editPages.firstIndex(of: viewController), index > 0 else { return nil }
         
-        return editPages[index-1]
+        return editPages[index - 1]
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let index = editPages.firstIndex(of: viewController), index < editPages.count - 1 else { return nil }
         
-        return editPages[index+1]
+        return editPages[index + 1]
     }
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        return editPages.count
+        editPages.count
     }
 
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
-        return 0
+        0
     }
     
 }
