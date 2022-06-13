@@ -265,5 +265,17 @@ extension Time {
         let date = Calendar.current.date(from: components)
         return date ?? originalDate
     }
+    
+    static func getPauseDateString(originalString: String) -> String {
+        let dateFormatter = DateFormatter()
+        let originalStringFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+        let displayStringFormat = "MMMM dd"
+        dateFormatter.dateFormat = originalStringFormat
+        if let date = dateFormatter.date(from: originalString) {
+            dateFormatter.dateFormat = displayStringFormat
+            return dateFormatter.string(from: date)
+        }
+        return ""
+    }
 
 }
