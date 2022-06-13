@@ -21,15 +21,15 @@ class ProfileViewController: UIViewController {
     private let menuButton = UIButton()
     private let unblockButton = DynamicButton()
     private let unblockLabel = UILabel()
-    private var currentUser: UserV2
     private let editButton = UIButton()
-    private var profileUser: CommunityUser?
     private var profileSections = [ProfileSectionType]()
     private let profileTableView = UITableView(frame: .zero, style: .plain)
     private var optionsMenuView: OptionsView?
     private let viewType: ProfileViewing
     
     // MARK: - Private Data Vars
+    private var currentUser: UserV2
+    private var profileUser: CommunityUser?
     private var shouldDisplayMenu = true
     
     init(user: UserV2, viewType: ProfileViewing) {
@@ -62,7 +62,7 @@ class ProfileViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont._20CircularStdMedium,
+            .font: UIFont._24CircularStdMedium,
             .foregroundColor: UIColor.primaryText
         ]
         navigationItem.title = viewType == .currentUser ? "Preview" : ""
@@ -201,8 +201,8 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func editPressed() {
-        //TODO: Push New Edit VC
-        print("edit!")
+        let editProfileVC = EditProfileViewController(currentUser: currentUser)
+        navigationController?.pushViewController(editProfileVC, animated: true)
     }
         
     @objc private func unblockedButtonPressed() {
