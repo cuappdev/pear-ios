@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class AddProfileSectionTableViewCell: UITableViewCell {
     
@@ -44,9 +45,9 @@ class AddProfileSectionTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         backdropView.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview().inset(4)
+//            make.verticalEdges.equalToSuperview().inset(4)
             make.height.equalTo(48)
-            make.horizontalEdges.equalToSuperview()
+//            make.horizontalEdges.equalToSuperview()
         }
         
         plusImageView.snp.makeConstraints { make in

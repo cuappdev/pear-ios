@@ -68,7 +68,7 @@ class EditProfileSectionTableViewCell: UITableViewCell {
         backdropView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(4)
             make.height.equalTo(52)
-            make.horizontalEdges.equalToSuperview()
+//            make.horizontalEdges.equalToSuperview()
         }
 
         interestImageView.snp.remakeConstraints { make in
