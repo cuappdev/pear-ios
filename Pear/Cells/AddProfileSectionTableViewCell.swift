@@ -45,7 +45,7 @@ class AddProfileSectionTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         backdropView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(4)
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(48)
         }
         
