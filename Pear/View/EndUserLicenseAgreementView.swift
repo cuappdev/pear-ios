@@ -23,7 +23,7 @@ class EndUserLicenseAgreementView: UIView {
 
     // MARK: - Private Data Vars
     private var delegate: UserAgreementDelegate?
-    private let licenseURL = "https://www.cornellappdev.com/license/pear"
+    private let licenseURL = Keys.pearLicenseURL
     private let licenseButtonText = NSMutableAttributedString.init(string: "End User License Agreement")
     
     init(delegate: UserAgreementDelegate?) {
@@ -93,8 +93,7 @@ class EndUserLicenseAgreementView: UIView {
         }
         
         headerLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.center.equalToSuperview()
         }
         
         descriptionLabel.snp.makeConstraints { make in
@@ -122,7 +121,7 @@ class EndUserLicenseAgreementView: UIView {
     }
     
     @objc private func acceptButtonPressed() {
-        UserDefaults.standard.set(true, forKey: "hasAcceptedTerms")
+        UserDefaults.standard.set(true, forKey: Constants.UserDefaults.userHasAcceptedTerms)
         Animations.removePopUpView(popUpView: self)
     }
     

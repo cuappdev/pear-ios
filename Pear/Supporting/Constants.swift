@@ -43,6 +43,7 @@ struct Constants {
         static let userNetId = "userNetId"
         static let userProfilePictureURL = "userProfilePictureURL"
         static let userPronouns = "userPronouns"
+        static let userHasAcceptedTerms = "userHasAcceptedTerms"
 
         // Matching
         static let matchIDLastReachedOut = "matchIDLastReachedOut"

@@ -21,6 +21,7 @@ struct Keys {
     static let pearServerURL = Keys.keyDict["PEAR_SERVER_URL"] as? String ?? ""
     static let pearServerURLV2 = Keys.keyDict["pear-server-v2"] as? String ?? ""
     static let appdevServerURL = Keys.keyDict["APPDEV_SERVER_URL"] as? String ?? ""
+    static let pearLicenseURL = Keys.keyDict["PEAR_LICENSE_URL"] as? String ?? ""
 
     private static let googleServiceDict: NSDictionary = {
         guard let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) else { return [:] }

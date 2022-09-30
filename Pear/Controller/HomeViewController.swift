@@ -360,7 +360,7 @@ extension HomeViewController: BlockDelegate {
 extension HomeViewController: UserAgreementDelegate {
     func setupUserLicenseAgreementView() {
         let endUserLicenseAgreementView = EndUserLicenseAgreementView(delegate: self)
-        let hasAcceptedTerms = UserDefaults.standard.bool(forKey: "hasAcceptedTerms")
+        let hasAcceptedTerms = UserDefaults.standard.bool(forKey: Constants.UserDefaults.userHasAcceptedTerms)
         if !hasAcceptedTerms {
             Animations.presentPopUpView(superView: view, popUpView: endUserLicenseAgreementView)
         }
