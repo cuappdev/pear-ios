@@ -8,6 +8,7 @@
 import AppDevAnnouncements
 import FirebaseMessaging
 import Kingfisher
+import SafariServices
 import SideMenu
 import UIKit
 import UserNotifications
@@ -88,6 +89,7 @@ class HomeViewController: UIViewController {
 
         setupLocalNotifications()
         setupConstraints()
+        setupUserLicenseAgreementView()
         updateUserAndTabPage()
         getToken()
     }
@@ -355,4 +357,19 @@ extension HomeViewController: BlockDelegate {
     
 }
 
-
+extension HomeViewController: UserAgreementDelegate {
+    func setupUserLicenseAgreementView() {
+        let endUserLicenseAgreementView = EndUserLicenseAgreementView(delegate: self)
+        let hasAcceptedTerms = UserDefaults.standard.bool(forKey: Constants.UserDefaults.userHasAcceptedTerms)
+        if !hasAcceptedTerms {
+            Animations.presentPopUpView(superView: view, popUpView: endUserLicenseAgreementView)
+        }
+    }
+    
+    func presentUserLicenseAgreementWebView(url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.modalPresentationStyle = .overCurrentContext
+        present(safariVC, animated: true, completion: nil)
+    }
+    
+}
