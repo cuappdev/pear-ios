@@ -20,7 +20,14 @@ class EditProfileSectionTableViewCell: UITableViewCell {
 
     // MARK: - Data Vars
     static let reuseIdentifier = "EditProfileSectionTableViewCell"
-
+    private var user: UserV2?
+    private var interestsIndexDeleted: Int = 0
+    private var groupsIndexDeleted: Int = 0
+    private weak var interestsDelegate: didUpdateInterestsDelegate?
+    private weak var groupsDelegate: didUpdateGroupsDelegate?
+    private var check: Int = 0
+    private var cellType: String?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -93,29 +100,48 @@ class EditProfileSectionTableViewCell: UITableViewCell {
              make.top.equalTo(titleLabel.snp.bottom)
         }
     }
-
-    func configure(with interest: Interest) {
+    
+    func configure(with interest: Interest, user: UserV2, index: Int, delegate: didUpdateInterestsDelegate) {
+        self.cellType = "Interest"
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
             interestImageView.kf.setImage(with: interestImageUrl)
         }
+        self.interestsIndexDeleted = index
+        self.user = user
+        self.interestsDelegate = delegate
         setupConstraints()
     }
-
-    func configure(with group: Group) {
+    
+    func configure(with group: Group, user: UserV2, index: Int, delegate: didUpdateGroupsDelegate) {
+        self.cellType = "Group"
         titleLabel.text = group.name
         categoriesLabel.text = nil
         if let groupImageUrl = URL(string: group.imgUrl) {
             interestImageView.kf.setImage(with: groupImageUrl)
         }
+        self.groupsIndexDeleted = index
+        self.user = user
+        self.groupsDelegate = delegate
         setupConstraints()
     }
     
     
     @objc private func closeButtonPressed() {
-        //TODO: Add delete functionality
-        print("Close button")
+        // Remove the selected interest from the datasource and send this updated user back to the previous VC
+        // based on whether or not we're currently on the interests or groups VC.
+        if (self.cellType == "Interest") {
+            self.user?.interests.remove(at: interestsIndexDeleted)
+            if let user = self.user, let interests = self.user?.interests  {
+                interestsDelegate?.updateInterests(updatedUser: user, newInterests: interests)
+            }
+            
+        } else if (self.cellType == "Group") {
+            self.user?.groups.remove(at: groupsIndexDeleted)
+            if let user = self.user, let groups = self.user?.groups  {
+                groupsDelegate?.updateGroups(updatedUser: user, newGroups: groups)
+            }
+        }
     }
-    
 }

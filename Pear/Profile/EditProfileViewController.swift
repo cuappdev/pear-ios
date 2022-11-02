@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol didEditProfileDelegate: AnyObject {
+    func updateUser(updatedUser: UserV2)
+}
+
 class EditProfileViewController: UIPageViewController {
     
     // MARK: - Private View Vars
@@ -17,9 +21,22 @@ class EditProfileViewController: UIPageViewController {
     
     // MARK: - Private Data Vars
     private var currentUser: UserV2
-
+    var profileDelegate: didUpdateProfileViewDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+///        Only make the network request to get the user for the first time that this page loads -> or else
+///        when view appears, we want to be passing the user in rather than getting it again from the backend
+        NetworkManager.getCurrentUser { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let user):
+                self.currentUser = user
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
         
         dataSource = self
             
@@ -48,10 +65,10 @@ class EditProfileViewController: UIPageViewController {
         pageControl.pageIndicatorTintColor = .inactiveGreen
         pageControl.currentPageIndicatorTintColor = .darkGreen
         
-        let editDemographicsViewController = EditDemographicsViewController(user: currentUser)
-        let editInterestsViewController = EditProfileSectionsViewController(editProfileSectionType: .interests(currentUser.interests))
-        let editGroupsViewController = EditProfileSectionsViewController(editProfileSectionType: .groups(currentUser.groups))
-        let editPromptsViewController = EditProfileSectionsViewController(editProfileSectionType: .prompts(currentUser.prompts))
+        let editDemographicsViewController = EditDemographicsViewController(user: currentUser, delegate: self)
+        let editInterestsViewController = EditProfileSectionsViewController(editProfileSectionType: .interests(currentUser.interests), delegate: self, currentUser: currentUser)
+        let editGroupsViewController = EditProfileSectionsViewController(editProfileSectionType: .groups(currentUser.groups), delegate: self, currentUser: currentUser)
+        let editPromptsViewController = EditProfileSectionsViewController(editProfileSectionType: .prompts(currentUser.prompts), delegate: self, currentUser: currentUser)
         
         editPages = [
             editDemographicsViewController,
@@ -63,7 +80,13 @@ class EditProfileViewController: UIPageViewController {
         setViewControllers([editPages[0]], direction: .forward, animated: true)
     }
     
-    init(currentUser: UserV2) {
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    
+    init(currentUser: UserV2, delegate: didUpdateProfileViewDelegate) {
+        self.profileDelegate = delegate
         self.currentUser = currentUser
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
     }
@@ -71,13 +94,15 @@ class EditProfileViewController: UIPageViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    /// Passing back to the ProfileViewController to update the information displayed there
     @objc private func backPressed() {
+        profileDelegate?.updateProfileUser(updatedUser: currentUser)
         navigationController?.popViewController(animated: true)
     }
     
     @objc private func savePressed() {
-        print("save")
+        profileDelegate?.updateProfileUser(updatedUser: currentUser)
+        navigationController?.popViewController(animated: true)
     }
 
 }
@@ -104,4 +129,17 @@ extension EditProfileViewController: UIPageViewControllerDataSource {
         0
     }
     
+}
+
+/// Passes the user back to the ProfileViewController so that it can be updated there
+extension EditProfileViewController: didEditProfileDelegate {
+    func updateUser(updatedUser: UserV2) {
+        currentUser = updatedUser
+    }
+}
+
+extension EditProfileViewController: didEditDemographicsDelegate {
+    func updateDemographics(updatedUser: UserV2) {
+        currentUser = updatedUser
+    }
 }

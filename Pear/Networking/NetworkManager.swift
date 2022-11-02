@@ -167,8 +167,10 @@ class NetworkManager {
             }
         }
     }
-
-    static func updateProfile(
+    
+    static func updateProfileSettings(
+        firstName: String,
+        lastName: String,
         graduationYear: String,
         majors: [Int],
         hometown: String,
@@ -178,6 +180,44 @@ class NetworkManager {
     ) {
         print(profilePicUrl)
 
+        let parameters: [String: Any] = [
+            "first_name": firstName,
+            "last_name": lastName,
+            "graduation_year": graduationYear,
+            "majors": majors,
+            "hometown": hometown,
+            "pronouns": pronouns,
+            "profile_pic_url": profilePicUrl
+        ]
+
+        AF.request(
+            "\(hostEndpoint)/api/me/",
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers
+        ).validate().responseData { response in
+            switch response.result {
+            case .success(let data):
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let successResponse = try? jsonDecoder.decode(SuccessResponse.self, from: data) {
+                    completion(successResponse.success)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    static func updateProfile(
+        graduationYear: String,
+        majors: [Int],
+        hometown: String,
+        pronouns: String,
+        profilePicUrl: String,
+        completion: @escaping (Bool) -> Void
+    ) {
         let parameters: [String: Any] = [
             "graduation_year": graduationYear,
             "majors": majors,
