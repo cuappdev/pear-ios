@@ -42,7 +42,7 @@ class EditProfileViewController: UIPageViewController {
             
         view.backgroundColor = .backgroundLightGreen
 
-        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [
@@ -83,7 +83,6 @@ class EditProfileViewController: UIPageViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
     
     init(currentUser: UserV2, delegate: didUpdateProfileViewDelegate) {
         self.profileDelegate = delegate

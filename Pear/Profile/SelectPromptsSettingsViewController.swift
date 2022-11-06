@@ -40,12 +40,42 @@ class SelectPromptsSettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
-
         view.backgroundColor = .backgroundLightGreen
+        
+        setupTitleLabel()
+        setupBackButton()
+        setupFadeTableView()
+    }
+
+    @objc private func backButtonPressed() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupTitleLabel() {
+        titleLabel.text = "Select a prompt"
+        titleLabel.font = ._24CircularStdMedium
+        view.addSubview(titleLabel)
+        
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(30)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
+        }
+    }
+    
+    private func setupBackButton() {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
-
+        
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
+    }
+    
+    private func setupFadeTableView() {
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.keyboardDismissMode = .onDrag
@@ -55,40 +85,14 @@ class SelectPromptsSettingsViewController: UIViewController {
         fadeTableView.view.dataSource = self
         fadeTableView.view.register(SelectPromptTableViewCell.self, forCellReuseIdentifier: SelectPromptTableViewCell.reuseIdentifier)
         view.addSubview(fadeTableView)
-
-        titleLabel.text = "Select a prompt"
-        titleLabel.font = ._24CircularStdMedium
-        view.addSubview(titleLabel)
-
-        setupConstraints()
-    }
-
-    @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: true)
-    }
-
-    private func setupConstraints() {
+        
         let tableViewTopPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
-
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(30)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
-        }
-
-        backButton.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
-            make.size.equalTo(Constants.Onboarding.backButtonSize)
-            make.leading.equalToSuperview().offset(24)
-        }
-
         fadeTableView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(40)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(57)
         }
     }
-
 }
 
 extension SelectPromptsSettingsViewController: UITableViewDataSource {

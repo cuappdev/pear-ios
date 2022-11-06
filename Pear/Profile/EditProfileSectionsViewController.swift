@@ -62,7 +62,6 @@ class EditProfileSectionsViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .backgroundLightGreen
-        navigationController?.isNavigationBarHidden = true
 
         descriptorLabel.textColor = .black
         descriptorLabel.font = ._20CircularStdBook
@@ -130,10 +129,6 @@ class EditProfileSectionsViewController: UIViewController {
             make.bottom.equalToSuperview()
         }
     }
-    
-    private func updateProfilePrompt(prompt: Prompt, index: Int) {
-    }
-
 }
 
 extension EditProfileSectionsViewController: UITableViewDataSource {
@@ -202,20 +197,17 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
             if !answer.isEmpty {
                 /// User editing a pre-existing prompt's answers
                 let answerPromptViewController = PromptAnswersSettingsViewController(updatingUser: updatingUser, delegate: self, prompt: prompt, addPrompt: { (prompt, index)in
-                    self.updateProfilePrompt(prompt: prompt, index: index)
                 }, index: indexPath.row)
                 indexOfPrompt = indexPath.row
                 navigationController?.pushViewController(answerPromptViewController, animated: true)
             } else {
                 /// Answer is empty, so User adding a new prompt + answer
                 let selectPromptViewController = SelectPromptsSettingsViewController(delegate: self, prompts: promptOptions, addPrompt: {(prompt, index) in
-                    self.updateProfilePrompt(prompt: prompt, index: index)
                 }, index: indexPath.row)
                 /// Adding a new prompt + question combo
                 indexOfPrompt = indexPath.row
                 navigationController?.pushViewController(selectPromptViewController, animated: true)
             }
-            
         }
     }
     
@@ -223,12 +215,10 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
         guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: AddProfileSectionTableViewCell.reuseIdentifier) as? AddProfileSectionTableViewCell else { return UITableViewCell() }
         cell.configure(with: "Add \(editProfileSectionType.descriptorLabelText)")
         return cell
+        }
     }
-        
-}
 
 extension EditProfileSectionsViewController: UITableViewDelegate {
-    
 }
 
 extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpdateGroupsDelegate, didUpdatePromptsDelegate {
@@ -257,7 +247,6 @@ extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpda
     func updateGroups(updatedUser: UserV2, newGroups: [Group]) {
         self.groups = newGroups
         self.updatingUser = updatedUser
-        
         /// Network call to update the user's groups on the backend
         let selectedGroupsIds = self.groups.map { $0.id }
         NetworkManager.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
@@ -276,7 +265,6 @@ extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpda
     func updatePrompts(updatedUser: UserV2, newPrompt: Prompt) {
         // Set global variable prompt
         self.prompts = updatedUser.prompts
-        
         // Set the user in this to this passed in user
         self.updatingUser = updatedUser
         delegate?.updateUser(updatedUser: self.updatingUser)

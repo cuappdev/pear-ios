@@ -320,6 +320,7 @@ extension ProfileViewController: BlockDelegate {
 
 /// Updating the currently displayed ProfileUser with the proper fields. Very wordy because profileUser is of type CommunityUser.
 extension ProfileViewController: didUpdateProfileViewDelegate {
+    
     func updateProfileUser(updatedUser: UserV2) {
         self.currentUser = updatedUser
         self.profileUser?.interests = updatedUser.interests
@@ -348,16 +349,13 @@ extension ProfileViewController: didUpdateProfileViewDelegate {
                 pronouns: pronouns,
                 profilePicUrl: updatedUser.profilePicUrl) { success in
                     DispatchQueue.main.async {
-                        if success {
-                        } else {
-                        }
                     }
             }
         }
+        
         NetworkManager.updatePrompts(prompts: updatedUser.prompts) { success in
             DispatchQueue.main.async {
-                if success {
-                } else {
+                if !success {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }

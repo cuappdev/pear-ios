@@ -88,8 +88,7 @@ class InterestSettingsViewController: UIViewController {
         NetworkManager.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                if success {
-                } else {
+                if !success {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
@@ -130,9 +129,8 @@ class InterestSettingsViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
     }
-
+    
     private func getAllInterests() {
-
         NetworkManager.getAllInterests { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -145,7 +143,6 @@ class InterestSettingsViewController: UIViewController {
                 print(error.localizedDescription)
             }
         }
-
     }
 
     /// Updates the enabled state of save button based on the state of selectedInterests.

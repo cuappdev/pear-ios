@@ -102,28 +102,28 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     }
     
     func configure(with interest: Interest, user: UserV2, index: Int, delegate: didUpdateInterestsDelegate) {
-        self.cellType = "Interest"
+        cellType = "Interest"
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
             interestImageView.kf.setImage(with: interestImageUrl)
         }
-        self.interestsIndexDeleted = index
+        interestsIndexDeleted = index
         self.user = user
-        self.interestsDelegate = delegate
+        interestsDelegate = delegate
         setupConstraints()
     }
     
     func configure(with group: Group, user: UserV2, index: Int, delegate: didUpdateGroupsDelegate) {
-        self.cellType = "Group"
+        cellType = "Group"
         titleLabel.text = group.name
         categoriesLabel.text = nil
         if let groupImageUrl = URL(string: group.imgUrl) {
             interestImageView.kf.setImage(with: groupImageUrl)
         }
-        self.groupsIndexDeleted = index
+        groupsIndexDeleted = index
         self.user = user
-        self.groupsDelegate = delegate
+        groupsDelegate = delegate
         setupConstraints()
     }
     
@@ -131,15 +131,15 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     @objc private func closeButtonPressed() {
         // Remove the selected interest from the datasource and send this updated user back to the previous VC
         // based on whether or not we're currently on the interests or groups VC.
-        if (self.cellType == "Interest") {
+        if (cellType == "Interest") {
             self.user?.interests.remove(at: interestsIndexDeleted)
-            if let user = self.user, let interests = self.user?.interests  {
+            if let user = self.user, let interests = self.user?.interests {
                 interestsDelegate?.updateInterests(updatedUser: user, newInterests: interests)
             }
             
-        } else if (self.cellType == "Group") {
+        } else if (cellType == "Group") {
             self.user?.groups.remove(at: groupsIndexDeleted)
-            if let user = self.user, let groups = self.user?.groups  {
+            if let user = self.user, let groups = self.user?.groups {
                 groupsDelegate?.updateGroups(updatedUser: user, newGroups: groups)
             }
         }

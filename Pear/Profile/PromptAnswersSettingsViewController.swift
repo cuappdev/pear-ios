@@ -43,61 +43,27 @@ class PromptAnswersSettingsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundLightGreen
         navigationController?.isNavigationBarHidden = true
-
-        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        view.addSubview(backButton)
-
-        titleLabel.text = "Enter your response"
-        titleLabel.font = ._24CircularStdMedium
-        titleLabel.textAlignment = .center
-        view.addSubview(titleLabel)
-
-        questionLabel.text = prompt.questionName
-        questionLabel.textColor = .darkGreen
-        questionLabel.numberOfLines = 0
-        questionLabel.font = ._16CircularStdBook
-        view.addSubview(questionLabel)
-
-        responseTextView.delegate = self
-        responseTextView.text = prompt.questionPlaceholder
-        responseTextView.textColor = .inactiveGreen
-        responseTextView.font = ._16CircularStdBook
-        responseTextView.returnKeyType = .default
-        responseTextView.layer.cornerRadius = 8
-        responseTextView.layer.masksToBounds = true
-        responseTextView.clipsToBounds = true
-        responseTextView.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
-        responseTextView.layer.shadowOpacity = 1
-        responseTextView.layer.shadowRadius = 4
-        responseTextView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        responseTextView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
-        view.addSubview(responseTextView)
-
-        characterCountLabel.text = "\(maxCharacters)"
-        characterCountLabel.textColor = .darkGreen
-        characterCountLabel.font = ._12CircularStdBook
-        view.addSubview(characterCountLabel)
+        
+        setupView()
+        setupTitleLabel()
+        setupBackButton()
+        setupQuestionLabel()
+        setupResponseTextView()
+        setupCharacterCountView()
+        setupSaveButtonView()
 
         if let promptResponse = prompt.answer, !promptResponse.isEmpty {
             responseTextView.text = promptResponse
             responseTextView.textColor = .black
             characterCountLabel.text = "\(maxCharacters - promptResponse.count)"
         }
-        saveButton.setTitle("Save", for: .normal)
-        saveButton.setTitleColor(.white, for: .normal)
-        saveButton.titleLabel?.font = ._20CircularStdBold
-        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
-        saveButton.isEnabled = false
-        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        view.addSubview(saveButton)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
 
         updateSave()
-        setupConstraints()
+        
     }
 
     private func updateSave() {
@@ -121,44 +87,102 @@ class PromptAnswersSettingsViewController: UIViewController {
         view.endEditing(true)
     }
 
-    private func setupConstraints() {
-        let questionLabelTopPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
-
+    
+    private func setupView() {
+        super.viewDidLoad()
+        view.backgroundColor = .backgroundLightGreen
+        navigationController?.isNavigationBarHidden = true
+    }
+    
+    private func setupTitleLabel() {
+        titleLabel.text = "Enter your response"
+        titleLabel.font = ._24CircularStdMedium
+        titleLabel.textAlignment = .center
+        view.addSubview(titleLabel)
+        
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
             make.size.equalTo(CGSize(width: 295, height: 61))
             make.centerX.equalToSuperview()
         }
-
+    }
+    
+    private func setupBackButton() {
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+        
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
             make.leading.equalToSuperview().offset(24)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
         }
-
+    }
+    
+    private func setupQuestionLabel() {
+        let questionLabelTopPadding = LayoutHelper.shared.getCustomVerticalPadding(size: 40)
+        questionLabel.text = prompt.questionName
+        questionLabel.textColor = .darkGreen
+        questionLabel.numberOfLines = 0
+        questionLabel.font = ._16CircularStdBook
+        view.addSubview(questionLabel)
+        
         questionLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(40)
             make.top.equalTo(titleLabel.snp.bottom).offset(questionLabelTopPadding)
         }
-
+    }
+    
+    private func setupResponseTextView() {
+        responseTextView.delegate = self
+        responseTextView.text = prompt.questionPlaceholder
+        responseTextView.textColor = .inactiveGreen
+        responseTextView.font = ._16CircularStdBook
+        responseTextView.returnKeyType = .default
+        responseTextView.layer.cornerRadius = 8
+        responseTextView.layer.masksToBounds = true
+        responseTextView.clipsToBounds = true
+        responseTextView.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
+        responseTextView.layer.shadowOpacity = 1
+        responseTextView.layer.shadowRadius = 4
+        responseTextView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        responseTextView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        view.addSubview(responseTextView)
+        
         responseTextView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(40)
             make.top.equalTo(questionLabel.snp.bottom).offset(12)
             make.height.equalTo(215)
         }
-
+    }
+    
+    private func setupCharacterCountView() {
+        characterCountLabel.text = "\(maxCharacters)"
+        characterCountLabel.textColor = .darkGreen
+        characterCountLabel.font = ._12CircularStdBook
+        view.addSubview(characterCountLabel)
+        
         characterCountLabel.snp.makeConstraints { make in
             make.trailing.equalTo(responseTextView)
             make.top.equalTo(responseTextView.snp.bottom).offset(10)
         }
-
+    }
+    
+    private func setupSaveButtonView() {
+        saveButton.setTitle("Save", for: .normal)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.titleLabel?.font = ._20CircularStdBold
+        saveButton.layer.cornerRadius = Constants.Onboarding.mainButtonSize.height / 2
+        saveButton.isEnabled = false
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        view.addSubview(saveButton)
+        
         saveButton.snp.makeConstraints { make in
             make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
             make.top.equalTo(responseTextView.snp.bottom).offset(60)
         }
     }
-
 }
 
 extension PromptAnswersSettingsViewController: UITextViewDelegate {
