@@ -15,6 +15,10 @@ protocol EditDemographicsViewControllerDelegate {
     func didUpdateProfilePicture(image: UIImage?, url: String)
 }
 
+protocol didEditDemographicsDelegate {
+    func updateDemographics(updatedUser: UserV2)
+}
+
 class EditDemographicsViewController: UIViewController {
 
     // MARK: - Private Data Vars
@@ -46,10 +50,12 @@ class EditDemographicsViewController: UIViewController {
     private let uploadPhotoButtonHeight: CGFloat = 31
     
     var delegate: EditDemographicsViewControllerDelegate?
+    var settingsDelegate: didEditDemographicsDelegate?
     weak var profileDelegate: ProfileMenuDelegate?
 
-    init(user: UserV2) {
+    init(user: UserV2, delegate: didEditDemographicsDelegate) {
         self.user = user
+        self.settingsDelegate = delegate
         demographics.name = "\(user.firstName) \(user.lastName)"
         demographics.graduationYear = user.graduationYear
         demographics.major = user.majors.first?.name
@@ -98,6 +104,7 @@ class EditDemographicsViewController: UIViewController {
 
         setupDemographicsTextField(textField: nameTextField, text: "\(user.firstName) \(user.lastName)")
         nameTextField.isEnabled = true
+        nameTextField.tag = 0
         editScrollView.addSubview(nameTextField)
 
         // Renders the valid graduation years based on current year.
@@ -317,13 +324,22 @@ extension EditDemographicsViewController: OnboardingDropdownViewDelegate {
         if isSelected {
             if tag == 1 {
                 demographics.graduationYear = valueSelected
+                user.graduationYear = valueSelected
             } else if tag == 2 {
                 demographics.major = valueSelected
+                // Update the user's majors to be passed back via delegation later
+                if let major = majorSearchFields.first(where: { $0.name == demographics.major }) {
+                    user.majors = [major]
+                }
             } else if tag == 3 {
                 demographics.hometown = valueSelected
+                user.hometown = valueSelected
             } else if tag == 4 {
                 demographics.pronouns = valueSelected
+                user.pronouns = valueSelected
             }
+            // Update the user's information on the previous profile screen (previous VC is also where networking happens)
+            settingsDelegate?.updateDemographics(updatedUser: user)
         }
     }
 
@@ -379,6 +395,20 @@ extension EditDemographicsViewController: UITextFieldDelegate {
         activeDropdownView = textField
     }
     
+    // Update the user's name field via the delegate once the user hits "return" on their keyboard
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.tag == 0 {
+            // Split up the name text field into first + last name, separated by a space
+            if let fullName = nameTextField.text {
+                let nameArray = fullName.components(separatedBy: " ")
+                self.user.firstName = nameArray[0]
+                self.user.lastName = nameArray[1]
+                settingsDelegate?.updateDemographics(updatedUser: self.user)
+            }
+        }
+        textField.resignFirstResponder()
+        return false
+    }
 }
 
 extension EditDemographicsViewController: UIImagePickerControllerDelegate,
@@ -396,6 +426,22 @@ extension EditDemographicsViewController: UIImagePickerControllerDelegate,
 
         profileImageView.image = image.resize(toSize: CGSize(width: 100, height: 100))
         didUpdatePhoto = true
+        // Specifically for updating a user's images on the frontend and the backend
+        if let profileImageBase64 = profileImageView.image?.pngData()?.base64EncodedString() {
+            NetworkManager.uploadPhoto(base64: profileImageBase64) { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let base64Img):
+                    DispatchQueue.main.async {
+                        self.user.profilePicUrl = base64Img
+                        self.settingsDelegate?.updateDemographics(updatedUser: self.user)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
         dismiss(animated: true, completion: nil)
     }
     

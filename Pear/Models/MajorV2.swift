@@ -10,5 +10,5 @@ import Foundation
 
 struct MajorV2: Codable {
     let id: Int
-    let name: String
+    var name: String
 }

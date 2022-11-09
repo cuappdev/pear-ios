@@ -9,25 +9,25 @@
 struct UserV2: Codable {
     let id: Int
     let netId: String
-    let firstName: String
-    let lastName: String
-    let majors: [MajorV2]
-    let hometown: String?
+    var firstName: String
+    var lastName: String
+    var majors: [MajorV2]
+    var hometown: String?
     var profilePicUrl: String
     let facebookUrl: String?
     let instagramUsername: String?
-    let graduationYear: String?
-    let pronouns: String?
+    var graduationYear: String?
+    var pronouns: String?
     let goals: [String]?
     let talkingPoints: [String]?
     let availability: [String]?
     let locations: [LocationV2]?
-    let interests: [Interest]
-    let groups: [Group]
+    var interests: [Interest]
+    var groups: [Group]
     let hasOnboarded: Bool?
     let pendingFeedback: Bool
     let currentMatch: MatchV2?
-    let prompts: [Prompt]
+    var prompts: [Prompt]
     let isPaused: Bool?
     let pauseExpiration: String?
 }
@@ -47,16 +47,16 @@ struct MatchV2: Codable {
 struct CommunityUser: Codable {
     let id: Int
     let netId: String
-    let firstName: String
-    let lastName: String
-    let hometown: String
-    let majors: [MajorV2]
-    let profilePicUrl: String?
-    let graduationYear: String
-    let pronouns: String?
-    let interests: [Interest]
-    let groups: [Group]
-    let prompts: [Prompt]
+    var firstName: String
+    var lastName: String
+    var hometown: String
+    var majors: [MajorV2]
+    var profilePicUrl: String?
+    var graduationYear: String
+    var pronouns: String?
+    var interests: [Interest]
+    var groups: [Group]
+    var prompts: [Prompt]
     var isBlocked: Bool?
 }
 

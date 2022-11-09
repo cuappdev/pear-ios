@@ -47,8 +47,10 @@ class ProfilePromptsSectionTableViewCell: UITableViewCell {
     }
 
     func configure(for prompts: [Prompt]) {
-        guard promptsView.arrangedSubviews.isEmpty else {
-            return
+        // Delete each subview from the promptsView before configures
+        promptsView.arrangedSubviews.forEach { view in
+            promptsView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
         
         self.prompts = prompts

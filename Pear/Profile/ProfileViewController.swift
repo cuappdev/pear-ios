@@ -9,6 +9,10 @@ import GoogleSignIn
 import Kingfisher
 import UIKit
 
+protocol didUpdateProfileViewDelegate {
+    func updateProfileUser(updatedUser: UserV2)
+}
+
 enum ProfileViewing: Equatable {
     case currentUser
     case otherUser(Int)
@@ -201,7 +205,7 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func editPressed() {
-        let editProfileVC = EditProfileViewController(currentUser: currentUser)
+        let editProfileVC = EditProfileViewController(currentUser: currentUser, delegate: self)
         navigationController?.pushViewController(editProfileVC, animated: true)
     }
         
@@ -312,5 +316,48 @@ extension ProfileViewController: BlockDelegate {
         guard let profileUserId = profileUser?.id else { return }
         getProfileUser(profileUserId: profileUserId)
     }
+}
+
+/// Updating the currently displayed ProfileUser with the proper fields. Very wordy because profileUser is of type CommunityUser.
+extension ProfileViewController: didUpdateProfileViewDelegate {
     
+    func updateProfileUser(updatedUser: UserV2) {
+        self.currentUser = updatedUser
+        self.profileUser?.interests = updatedUser.interests
+        self.profileUser?.groups = updatedUser.groups
+        self.profileUser?.prompts = updatedUser.prompts
+        
+        self.profileUser?.firstName = updatedUser.firstName
+        self.profileUser?.lastName = updatedUser.lastName
+        self.profileUser?.pronouns = updatedUser.pronouns
+        self.profileUser?.majors = updatedUser.majors
+        self.profileUser?.profilePicUrl = updatedUser.profilePicUrl
+        
+        profileTableView.reloadData()
+        
+        // Update user's information on the backened
+        if let graduationYear = updatedUser.graduationYear, let hometown = updatedUser.hometown, let pronouns = updatedUser.pronouns {
+            self.profileUser?.graduationYear = graduationYear
+            self.profileUser?.hometown = hometown
+
+            NetworkManager.updateProfileSettings(
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                graduationYear: graduationYear,
+                majors: [updatedUser.majors[0].id],
+                hometown: hometown,
+                pronouns: pronouns,
+                profilePicUrl: updatedUser.profilePicUrl) { success in
+                }
+        }
+        
+        NetworkManager.updatePrompts(prompts: updatedUser.prompts) { success in
+            DispatchQueue.main.async {
+                if !success {
+                    self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
+                }
+            }
+        }
+        
+    }
 }
