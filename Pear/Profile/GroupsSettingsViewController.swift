@@ -53,7 +53,6 @@ class GroupsSettingsViewController: UIViewController {
         setupSaveButton()
         setupFadeTableView()
         
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -226,7 +225,7 @@ extension GroupsSettingsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        displayedGroups.count
+        return displayedGroups.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

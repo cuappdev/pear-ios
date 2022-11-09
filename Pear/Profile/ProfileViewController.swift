@@ -348,9 +348,7 @@ extension ProfileViewController: didUpdateProfileViewDelegate {
                 hometown: hometown,
                 pronouns: pronouns,
                 profilePicUrl: updatedUser.profilePicUrl) { success in
-                    DispatchQueue.main.async {
-                    }
-            }
+                }
         }
         
         NetworkManager.updatePrompts(prompts: updatedUser.prompts) { success in

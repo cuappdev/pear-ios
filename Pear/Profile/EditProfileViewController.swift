@@ -42,7 +42,6 @@ class EditProfileViewController: UIPageViewController {
             
         view.backgroundColor = .backgroundLightGreen
 
-//        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barTintColor = .backgroundLightGreen
         navigationController?.navigationBar.shadowImage = UIImage() // Hide navigation bar bottom shadow
         navigationController?.navigationBar.titleTextAttributes = [

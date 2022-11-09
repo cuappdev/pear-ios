@@ -25,12 +25,12 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     private var groupsIndexDeleted: Int = 0
     private weak var interestsDelegate: EditProfileDelegate?
     private weak var groupsDelegate: EditProfileDelegate?
-    private var currentCellType: cellType?
+    private var currentCellType: CellType?
     
     /// Determines if the cell currently configured is of type Interests, or Groups (used for figuring out which array should be modified when a user hits the cloesButton.
-    enum cellType {
-        case Interests
-        case Groups
+    enum CellType {
+        case interests
+        case groups
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -107,7 +107,7 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     }
     
     func configure(with interest: Interest, user: UserV2, index: Int, delegate: EditProfileDelegate) {
-        currentCellType = .Interests
+        currentCellType = .interests
         titleLabel.text = interest.name
         categoriesLabel.text = interest.subtitle
         if let interestImageUrl = URL(string: interest.imgUrl) {
@@ -120,7 +120,7 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     }
     
     func configure(with group: Group, user: UserV2, index: Int, delegate: EditProfileDelegate) {
-        currentCellType = .Groups
+        currentCellType = .groups
         titleLabel.text = group.name
         categoriesLabel.text = nil
         if let groupImageUrl = URL(string: group.imgUrl) {
@@ -135,12 +135,12 @@ class EditProfileSectionTableViewCell: UITableViewCell {
     @objc private func closeButtonPressed() {
         // Remove the selected interest from the datasource and send this updated user back to the previous VC
         // based on whether or not we're currently on the interests or groups VC.
-        if currentCellType == .Interests {
+        if currentCellType == .interests {
             self.user?.interests.remove(at: interestsIndexDeleted)
             if let user = self.user, let interests = self.user?.interests {
                 interestsDelegate?.updateInterests(updatedUser: user, newInterests: interests)
             }
-        } else if currentCellType == .Groups {
+        } else if currentCellType == .groups {
             self.user?.groups.remove(at: groupsIndexDeleted)
             if let user = self.user, let groups = self.user?.groups {
                 groupsDelegate?.updateGroups(updatedUser: user, newGroups: groups)

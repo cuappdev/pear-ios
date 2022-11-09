@@ -128,11 +128,11 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch editProfileSectionType {
-        case .interests(_):
+        case .interests:
             return interests.count + 1
-        case .groups(_):
+        case .groups:
             return groups.count + 1
-        case .prompts(_):
+        case .prompts:
             return prompts.count
         }
     }
