@@ -23,10 +23,10 @@ class PromptAnswersSettingsViewController: UIViewController {
     private var index: Int
     private let maxCharacters = 150
     private var prompt: Prompt
-    private var delegate: didUpdatePromptsDelegate?
+    private var delegate: EditProfileDelegate?
     private var updatingUser: UserV2
     
-    init(updatingUser: UserV2, delegate: didUpdatePromptsDelegate, prompt: Prompt, addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
+    init(updatingUser: UserV2, delegate: EditProfileDelegate, prompt: Prompt, addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
         self.updatingUser = updatingUser
         self.delegate = delegate
         self.prompt = prompt

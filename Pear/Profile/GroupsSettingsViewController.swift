@@ -12,7 +12,7 @@ import SnapKit
 class GroupsSettingsViewController: UIViewController {
 
     // MARK: - Private Data vars
-    private weak var delegate: didUpdateGroupsDelegate?
+    private weak var delegate: EditProfileDelegate?
     private var displayedGroups: [Group] = []
     private var groups: [Group] = []
     private var selectedGroups: [Group] = []
@@ -29,10 +29,10 @@ class GroupsSettingsViewController: UIViewController {
     private let searchBar = UISearchBar()
     private let subtitleLabel = UILabel()
 
-    init(updatingUser: UserV2, delegate: didUpdateGroupsDelegate) {
-        self.selectedGroups = updatingUser.groups
+    init(updatingUser: UserV2, delegate: EditProfileDelegate) {
+        selectedGroups = updatingUser.groups
         self.delegate = delegate
-        self.updatedUser = updatingUser
+        updatedUser = updatingUser
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,10 +45,37 @@ class GroupsSettingsViewController: UIViewController {
         view.backgroundColor = .backgroundLightGreen
         navigationController?.isNavigationBarHidden = true
         
+        /// Set up all subviews and constrain them
+        setupClubLabel()
+        setupBackButton()
+        setupSearchBar()
+        setupSubtitleLabel()
+        setupSaveButton()
+        setupFadeTableView()
+        
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+
+        displayedGroups = groups
+        getAllGroups()
+    }
+    
+    private func setupBackButton() {
         backButton.setImage(UIImage(named: "backArrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         view.addSubview(backButton)
-
+        
+        backButton.snp.makeConstraints { make in
+            make.centerY.equalTo(clubLabel)
+            make.size.equalTo(Constants.Onboarding.backButtonSize)
+            make.leading.equalToSuperview().offset(24)
+        }
+    }
+    
+    private func setupSearchBar() {
+        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
         searchBar.delegate = self
         searchBar.backgroundColor = .backgroundWhite
         searchBar.backgroundImage = UIImage()
@@ -61,12 +88,27 @@ class GroupsSettingsViewController: UIViewController {
         searchBar.showsCancelButton = false
         view.addSubview(searchBar)
         
+        searchBar.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(clubLabel.snp.bottom).offset(searchBarTopPadding)
+            make.size.equalTo(CGSize(width: 295, height: 40))
+        }
+    }
+    
+    private func setupSubtitleLabel() {
         subtitleLabel.text = "You may select more than 1."
         subtitleLabel.textColor = .greenGray
         subtitleLabel.font = ._12CircularStdBook
         subtitleLabel.textAlignment = .center
         view.addSubview(subtitleLabel)
         
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(clubLabel.snp.bottom).offset(4)
+            make.centerX.width.equalTo(clubLabel)
+        }
+    }
+    
+    private func setupFadeTableView() {
         fadeTableView.view.clipsToBounds = true
         fadeTableView.view.backgroundColor = .none
         fadeTableView.view.allowsMultipleSelection = true
@@ -80,11 +122,28 @@ class GroupsSettingsViewController: UIViewController {
         fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
         fadeTableView.view.separatorColor = .clear
         view.addSubview(fadeTableView)
-
+        
+        fadeTableView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.width.equalTo(295)
+            make.top.equalTo(searchBar.snp.bottom).offset(17)
+            make.bottom.equalTo(saveButton.snp.top).offset(-57)
+        }
+    }
+    
+    private func setupClubLabel() {
         clubLabel.text = "What are you a part of?"
         clubLabel.font = ._24CircularStdMedium
         view.addSubview(clubLabel)
-
+        
+        clubLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(30)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
+        }
+    }
+    
+    private func setupSaveButton() {
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.titleLabel?.font = ._20CircularStdBold
@@ -93,55 +152,11 @@ class GroupsSettingsViewController: UIViewController {
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         view.addSubview(saveButton)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
-
-        displayedGroups = groups
-
-        getAllGroups()
-        setupConstraints()
-    }
-
-    private func setupConstraints() {
-        let searchBarTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
-
-        backButton.snp.makeConstraints { make in
-            make.centerY.equalTo(clubLabel)
-            make.size.equalTo(Constants.Onboarding.backButtonSize)
-            make.leading.equalToSuperview().offset(24)
-        }
-
-        clubLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(30)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
-        }
-        
-        subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(clubLabel.snp.bottom).offset(4)
-            make.centerX.width.equalTo(clubLabel)
-        }
-
-        searchBar.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(clubLabel.snp.bottom).offset(searchBarTopPadding)
-            make.size.equalTo(CGSize(width: 295, height: 40))
-        }
-
-        fadeTableView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.width.equalTo(295)
-            make.top.equalTo(searchBar.snp.bottom).offset(17)
-            make.bottom.equalTo(saveButton.snp.top).offset(-57)
-        }
-
         saveButton.snp.makeConstraints { make in
             make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Constants.Onboarding.nextBottomPadding)
         }
-
     }
 
     // MARK: - Search Bar
@@ -172,8 +187,7 @@ class GroupsSettingsViewController: UIViewController {
         NetworkManager.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                if success {
-                } else {
+                if !success {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
@@ -208,7 +222,7 @@ class GroupsSettingsViewController: UIViewController {
 extension GroupsSettingsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        return 64
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

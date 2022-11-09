@@ -132,13 +132,17 @@ extension EditProfileViewController: UIPageViewControllerDataSource {
 
 /// Passes the user back to the ProfileViewController so that it can be updated there
 extension EditProfileViewController: didEditProfileDelegate {
+    
     func updateUser(updatedUser: UserV2) {
         currentUser = updatedUser
     }
+    
 }
 
 extension EditProfileViewController: didEditDemographicsDelegate {
+    
     func updateDemographics(updatedUser: UserV2) {
         currentUser = updatedUser
     }
+    
 }

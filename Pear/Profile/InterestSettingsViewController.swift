@@ -21,12 +21,12 @@ class InterestSettingsViewController: UIViewController {
     private let titleLabel = UILabel()
 
     // MARK: - Data
-    private weak var delegate: didUpdateInterestsDelegate?
+    private weak var delegate: EditProfileDelegate?
     private var interests: [Interest] = []
     private var selectedInterests: [Interest] = []
     private var updatedUser: UserV2
     
-    init(updatingUser: UserV2, delegate: didUpdateInterestsDelegate) {
+    init(updatingUser: UserV2, delegate: EditProfileDelegate) {
         self.delegate = delegate
         self.selectedInterests = updatingUser.interests
         self.updatedUser = updatingUser
@@ -43,36 +43,13 @@ class InterestSettingsViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .backgroundLightGreen
         
-        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        view.addSubview(backButton)
-
-        titleLabel.text = "What do you love?"
-        titleLabel.font = ._24CircularStdMedium
-        view.addSubview(titleLabel)
-
-        fadeTableView.view.allowsMultipleSelection = true
-        fadeTableView.view.backgroundColor = .none
-        fadeTableView.view.clipsToBounds = true
-        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
-        fadeTableView.view.dataSource = self
-        fadeTableView.view.delegate = self
-        fadeTableView.view.bounces = true
-        fadeTableView.view.keyboardDismissMode = .onDrag
-        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
-        fadeTableView.view.separatorStyle = .none
-        view.addSubview(fadeTableView)
-
-        saveButton.setTitle("Save", for: .normal)
-        saveButton.layer.cornerRadius = 27
-        saveButton.isEnabled = false
-        saveButton.setTitleColor(.white, for: .normal)
-        saveButton.titleLabel?.font = ._20CircularStdBold
-        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-        view.addSubview(saveButton)
-
+        /// Set up all subviews and constrain them
+        setupTitleLabel()
+        setupBackButton()
+        setupSaveButton()
+        setupFadeTableView()
+        
         getAllInterests()
-        setupConstraints()
     }
 
     @objc func backButtonPressed() {
@@ -98,31 +75,65 @@ class InterestSettingsViewController: UIViewController {
         delegate?.updateInterests(updatedUser: updatedUser, newInterests: selectedInterests)
         navigationController?.popViewController(animated: true)
     }
-
-    private func setupConstraints() {
-        let tableViewTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
-        let tableViewBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 44)
-        let titleHeight: CGFloat = 30
-
+    
+    private func setupBackButton() {
+        backButton.setImage(UIImage(named: "backArrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        view.addSubview(backButton)
+        
         backButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
             make.size.equalTo(Constants.Onboarding.backButtonSize)
             make.leading.equalToSuperview().offset(24)
         }
-
+    }
+    
+    private func setupTitleLabel() {
+        titleLabel.text = "What do you love?"
+        titleLabel.font = ._24CircularStdMedium
+        view.addSubview(titleLabel)
+        
+        let titleHeight: CGFloat = 30
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(titleHeight)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Constants.Onboarding.titleLabelPadding)
         }
-
+    }
+    
+    private func setupFadeTableView() {
+        fadeTableView.view.allowsMultipleSelection = true
+        fadeTableView.view.backgroundColor = .none
+        fadeTableView.view.clipsToBounds = true
+        fadeTableView.view.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 30, right: 0)
+        fadeTableView.view.dataSource = self
+        fadeTableView.view.delegate = self
+        fadeTableView.view.bounces = true
+        fadeTableView.view.keyboardDismissMode = .onDrag
+        fadeTableView.view.register(OnboardingTableViewCell.self, forCellReuseIdentifier: OnboardingTableViewCell.reuseIdentifier)
+        fadeTableView.view.separatorStyle = .none
+        view.addSubview(fadeTableView)
+        
+        let tableViewTopPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 48)
+        let tableViewBottomPadding: CGFloat = LayoutHelper.shared.getCustomVerticalPadding(size: 44)
+        
         fadeTableView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(295)
             make.top.equalTo(titleLabel.snp.bottom).offset(tableViewTopPadding)
             make.bottom.equalTo(saveButton.snp.top).offset(-tableViewBottomPadding)
         }
-
+    }
+    
+    private func setupSaveButton() {
+        saveButton.setTitle("Save", for: .normal)
+        saveButton.layer.cornerRadius = 27
+        saveButton.isEnabled = false
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.titleLabel?.font = ._20CircularStdBold
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        view.addSubview(saveButton)
+        
         saveButton.snp.makeConstraints { make in
             make.size.equalTo(Constants.Onboarding.mainButtonSize)
             make.centerX.equalToSuperview()
@@ -144,7 +155,7 @@ class InterestSettingsViewController: UIViewController {
             }
         }
     }
-
+    
     /// Updates the enabled state of save button based on the state of selectedInterests.
     private func updateSave() {
         saveButton.isEnabled = selectedInterests.count > 0

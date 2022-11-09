@@ -23,9 +23,9 @@ class SelectPromptsSettingsViewController: UIViewController {
     private var prompts: [Prompt]
     private var index: Int
     private var addPrompt: (Prompt, Int) -> ()
-    private weak var delegate: didCreateNewPrompt?
+    private weak var delegate: CreateNewPromptDelegate?
 
-    init(delegate: didCreateNewPrompt, prompts: [Prompt], addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
+    init(delegate: CreateNewPromptDelegate, prompts: [Prompt], addPrompt: @escaping (Prompt, Int) -> (), index: Int) {
         self.delegate = delegate
         self.prompts = prompts
         self.addPrompt = addPrompt

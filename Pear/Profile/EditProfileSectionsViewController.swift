@@ -7,20 +7,14 @@
 
 import UIKit
 
-protocol didUpdateInterestsDelegate: AnyObject {
-    func updateInterests(updatedUser: UserV2, newInterests: [Interest])
-}
-
-protocol didUpdateGroupsDelegate: AnyObject {
-    func updateGroups(updatedUser: UserV2, newGroups: [Group])
-}
-
-protocol didUpdatePromptsDelegate: AnyObject {
-    func updatePrompts(updatedUser: UserV2, newPrompt: Prompt)
-}
-
-protocol didCreateNewPrompt: AnyObject {
+protocol CreateNewPromptDelegate: AnyObject {
     func addPrompt(newPrompt: Prompt)
+}
+
+protocol EditProfileDelegate: AnyObject {
+    func updateInterests(updatedUser: UserV2, newInterests: [Interest])
+    func updateGroups(updatedUser: UserV2, newGroups: [Group])
+    func updatePrompts(updatedUser: UserV2, newPrompt: Prompt)
 }
 
 enum EditProfileSectionType {
@@ -60,7 +54,6 @@ class EditProfileSectionsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .backgroundLightGreen
 
         descriptorLabel.textColor = .black
@@ -146,19 +139,18 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch editProfileSectionType {
-        case .interests(_):
+        case .interests:
             guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileSectionTableViewCell.reuseIdentifier) as? EditProfileSectionTableViewCell, indexPath.row < interests.count else { return addProfileSectionTableViewCell(tableView, cellForRowAt: indexPath)
             }
             cell.configure(with: interests[indexPath.row], user: updatingUser, index: indexPath.row, delegate: self)
             return cell
-            
-        case .groups(_):
+        case .groups:
             guard let cell = fadeTableView.view.dequeueReusableCell(withIdentifier: EditProfileSectionTableViewCell.reuseIdentifier) as? EditProfileSectionTableViewCell,
                     indexPath.row < groups.count else { return addProfileSectionTableViewCell(tableView, cellForRowAt: indexPath)
             }
             cell.configure(with: groups[indexPath.row], user: updatingUser, index: indexPath.row, delegate: self)
             return cell
-        case .prompts(_):
+        case .prompts:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: PromptTableViewCell.reuseIdentifier, for: indexPath) as? PromptTableViewCell else { return UITableViewCell() }
             cell.configure(for: prompts[indexPath.row])
                 cell.removePrompt = { [weak self] selectedCell in
@@ -181,17 +173,17 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
     /// If user selects the last row of the section, we need to push the adding controller
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch editProfileSectionType {
-        case .interests(_):
+        case .interests:
             if indexPath.row == interests.count {
                 // Push new addInterestVC
                 navigationController?.pushViewController(InterestSettingsViewController(updatingUser: updatingUser, delegate: self), animated: true)
             }
-        case .groups(_):
+        case .groups:
             if indexPath.row == groups.count {
                 navigationController?.pushViewController(GroupsSettingsViewController(updatingUser: updatingUser, delegate: self), animated: true)
             }
-        case .prompts(_):
-                /// Pushes the prompt options VC here
+        case .prompts:
+            /// Pushes the prompt options VC here
             let prompt = prompts[indexPath.row]
             let answer = prompt.answer ?? ""
             if !answer.isEmpty {
@@ -202,7 +194,7 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
                 navigationController?.pushViewController(answerPromptViewController, animated: true)
             } else {
                 /// Answer is empty, so User adding a new prompt + answer
-                let selectPromptViewController = SelectPromptsSettingsViewController(delegate: self, prompts: promptOptions, addPrompt: {(prompt, index) in
+                let selectPromptViewController = SelectPromptsSettingsViewController(delegate: self, prompts: promptOptions, addPrompt: { (prompt, index) in
                 }, index: indexPath.row)
                 /// Adding a new prompt + question combo
                 indexOfPrompt = indexPath.row
@@ -221,24 +213,22 @@ extension EditProfileSectionsViewController: UITableViewDataSource {
 extension EditProfileSectionsViewController: UITableViewDelegate {
 }
 
-extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpdateGroupsDelegate, didUpdatePromptsDelegate {
+extension EditProfileSectionsViewController: EditProfileDelegate {
+    
     func updateInterests(updatedUser: UserV2, newInterests: [Interest]) {
         /// Update the global "interests" variable with the newly edited [Interest] that was passed in from the InterestSettingsVC + newly updated User
         self.interests = newInterests
         self.updatingUser = updatedUser
-        
         /// Network call to update the user's interest on the backend
         let selectedInterestsIds = self.interests.map { $0.id }
         NetworkManager.updateInterests(interests: selectedInterestsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                if success {
-                } else {
+                if !success {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
         }
-        
         /// Passing the updatedUser back to the EditProfileViewController to reflect the change in this session
         delegate?.updateUser(updatedUser: updatingUser)
         self.fadeTableView.view.reloadData()
@@ -252,8 +242,7 @@ extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpda
         NetworkManager.updateGroups(groups: selectedGroupsIds) { [weak self] (success) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                if success {
-                } else {
+                if !success {
                     self.present(UIAlertController.getStandardErrortAlert(), animated: true, completion: nil)
                 }
             }
@@ -268,12 +257,13 @@ extension EditProfileSectionsViewController: didUpdateInterestsDelegate, didUpda
         // Set the user in this to this passed in user
         self.updatingUser = updatedUser
         delegate?.updateUser(updatedUser: self.updatingUser)
-        
     }
+    
 }
 
 /// Used for when the user is adding a new prompt and creating a new answer for it, rather than editing an existing one.
-extension EditProfileSectionsViewController: didCreateNewPrompt {
+extension EditProfileSectionsViewController: CreateNewPromptDelegate {
+    
     func addPrompt(newPrompt: Prompt) {
         self.prompts[indexOfPrompt] = newPrompt
         self.updatingUser.prompts = self.prompts
